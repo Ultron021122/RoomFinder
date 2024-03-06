@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSessionStore } from "./global";
 
 interface UserInfo {
     email: string;
@@ -14,11 +16,13 @@ interface Data {
 }
 
 const Sigin = () => {
+    const { isLoggedIn, user, login, logout } = useSessionStore();
     const { register, handleSubmit, formState: { errors } } = useForm<UserInfo>({ mode: "onChange" });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
 
-    const onSubmit = (userInfo: UserInfo) => {
+    const onSubmit = async (userInfo: UserInfo) => {
         setIsLoading(true);
         setError(null);
 
@@ -26,24 +30,31 @@ const Sigin = () => {
             email: userInfo.email,
             password: userInfo.password
         };
-        console.log(data)
-        axios.post("http://localhost:1234/users/login", data)
-            .then((response) => {
-                if (response.status === 200) {
-                    localStorage.setItem("isLoggedIn", String(true));
-                } else {
-                    setError("Credenciales incorrectas.");
-                }
-            })
-            .catch((error) => {
-                if (error.response?.status === 401) {
-                    setError("Credenciales incorrectas");
-                }
-            })
-            .finally(() => {
-                setIsLoading(false);
-            })
+
+        try {
+            const response = await axios.post("http://localhost:1234/users/login", data);
+            if (response.status === 200) {
+                // Successful login using the provided login function
+                login(response.data); // Appropriate user data structure
+                localStorage.setItem("isLoggedIn", String(true)); // (Optional)
+            } else {
+                setError("Credenciales incorrectas.");
+            }
+        } catch (Error: any) {
+            if (Error.response?.status == 401) {
+                setError("Ocurrio un error...");
+            } else {
+                console.error(Error); // Handle (Manejar) other errors
+            }
+        } finally {
+            setIsLoading(false);
+        }
     };
+
+    const handleLogout = () => {
+        logout();
+        localStorage.removeItem("isLoggedIn");
+    }
 
     const messages = {
         required: "Este campo es obligatorio",
@@ -55,16 +66,22 @@ const Sigin = () => {
         email: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
     };
 
+    useEffect(() => {
+        if (isLoggedIn) {
+            router.push('/');
+        }
+    }, [isLoggedIn]);
+
     return (
         <>
             <section className="bg-gray-50 dark:bg-gray-900">
                 {isLoading && <p>Iniciando sesión</p>}
                 {error && <p className="text-red-600">{error}</p>}
-                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                    <a href="http://localhost:5173" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
+                    {/* <a href="http://localhost:5173" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
                         <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
                         RoomFinder
-                    </a>
+                    </a> */}
                     <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">

@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Dropdown from "./Dropdown";
+import { useSessionStore } from "../../sesiones/global";
 
 const Navbar = ({
     isOpen,
@@ -9,6 +10,8 @@ const Navbar = ({
     isOpen: boolean,
     toggle: () => void;
 }): JSX.Element => {
+
+    const { isLoggedIn, user, logout } = useSessionStore();
     return (
         <>
             <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-800">
@@ -20,7 +23,14 @@ const Navbar = ({
                             </h1>
                         </Link>
                         <div className="md:hidden flex gap-5">
-                            <Dropdown />
+                            {isLoggedIn ? (
+                                <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} logout={logout} />
+                            ) : (
+                                <Link href="/sesion" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                                    Iniciar sesión
+                                </Link>
+                            )
+                            }
                             <button
                                 onClick={toggle}
                                 className='dark:text-gray-300 text-xl dark:hover:text-white'
@@ -50,10 +60,13 @@ const Navbar = ({
                             <Link href="/" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
                                 Arrendadores
                             </Link>
-                            <Link href="/sesion" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
-                                Iniciar sesión
-                            </Link>
-                            <Dropdown />
+                            {isLoggedIn ? (
+                                <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} logout={logout} />
+                            ) : (
+                                <Link href="/sesion" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                                    Iniciar sesión
+                                </Link>
+                            )}
                         </div>
                     </div>
                     {/* Edit before... */}

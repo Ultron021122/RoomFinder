@@ -2,7 +2,15 @@
 import Image from "next/image";
 import { useState } from "react";
 
-const Dropdown = () => {
+const Dropdown = ({
+    id,
+    name,
+    logout,
+}: {
+    id: number,
+    name: string,
+    logout: () => void;
+}): JSX.Element => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -14,7 +22,7 @@ const Dropdown = () => {
                 <button type="button" onClick={toggleDropdown} className="flex items-center text-sm dark:bg-gray-800 rounded-full md:me-0">
                     <span className="sr-only">Open user menu</span>
                     <Image className="rounded-full mr-2" width="32" height="32" src='/perfil.jpg' alt="User photo" />
-                    <p className="dark:text-white">Username</p>
+                    <p className="dark:text-white">{name}</p>
                 </button>
                 {
                     isOpen && (
@@ -31,9 +39,9 @@ const Dropdown = () => {
                                     <li>
                                         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
                                     </li>
-                                    {/* <li>
+                                    <li>
                                         <a href="#" onClick={(event) => { logout(); }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-                                    </li> */}
+                                    </li>
                                 </ul>
                             </div>
                         </>
