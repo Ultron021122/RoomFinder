@@ -3,7 +3,7 @@ import React from "react";
 const Propiedades = () => {
     return (
         <>
-            <p>Propiedades</p>
+            <p className="text-white">Propiedades</p>
         </>
     );
 }

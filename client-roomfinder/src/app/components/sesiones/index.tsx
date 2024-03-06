@@ -16,7 +16,7 @@ interface Data {
 }
 
 const Sigin = () => {
-    const { isLoggedIn, user, login, logout } = useSessionStore();
+    const { isLoggedIn, login, logout } = useSessionStore();
     const { register, handleSubmit, formState: { errors } } = useForm<UserInfo>({ mode: "onChange" });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -51,11 +51,6 @@ const Sigin = () => {
         }
     };
 
-    const handleLogout = () => {
-        logout();
-        localStorage.removeItem("isLoggedIn");
-    }
-
     const messages = {
         required: "Este campo es obligatorio",
         email: "Debes introducir una dirección correcta",
@@ -78,10 +73,10 @@ const Sigin = () => {
                 {isLoading && <p>Iniciando sesión</p>}
                 {error && <p className="text-red-600">{error}</p>}
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
-                    {/* <a href="http://localhost:5173" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+                    <Link href="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
                         <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
                         RoomFinder
-                    </a> */}
+                    </Link>
                     <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -89,7 +84,7 @@ const Sigin = () => {
                             </h1>
                             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(onSubmit)}>
                                 <div>
-                                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tú email</label>
+                                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo electrónico</label>
                                     <input
                                         {...register("email", {
                                             required: messages.required,

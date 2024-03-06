@@ -18,15 +18,16 @@ const Navbar = ({
                 <div className="container mx-auto p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center">
+                            <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
                             <h1 className="dark:text-gray-300 dark:hover:text-white text-2xl font-semibold">
                                 RoomFinder
                             </h1>
                         </Link>
                         <div className="md:hidden flex gap-5">
                             {isLoggedIn ? (
-                                <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} logout={logout} />
+                                <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} last_name={user ? user.last_name : ''} email={user ? user.email : ''} logout={logout} />
                             ) : (
-                                <Link href="/sesion" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                                <Link href="/sesion" className="text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">
                                     Iniciar sesión
                                 </Link>
                             )
@@ -61,11 +62,19 @@ const Navbar = ({
                                 Arrendadores
                             </Link>
                             {isLoggedIn ? (
-                                <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} logout={logout} />
+                                <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} last_name={user ? user.last_name : ''} email={user ? user.email : ''} logout={logout} />
                             ) : (
-                                <Link href="/sesion" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                                <Link href="/sesion" className="text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">
                                     Iniciar sesión
                                 </Link>
+                                // <div className="space-x-2">
+                                //     <Link href="/sesion" className="text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">
+                                //         Iniciar sesión
+                                //     </Link>
+                                //     <Link href="/registrar" className="text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">
+                                //         Registrar
+                                //     </Link>
+                                // </div>
                             )}
                         </div>
                     </div>

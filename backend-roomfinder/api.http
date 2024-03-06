@@ -1,0 +1,103 @@
+### Recuperar todos los usuarios
+GET http://localhost:3000/users
+
+### Recuperar un usuario
+GET http://localhost:3000/users/type/student
+
+### Recuperar un usuario
+GET http://localhost:3000/users/9
+
+### Recuperar todas las propiedades
+GET http://localhost:3000/properties
+
+### Recuperar todos los arrendadores
+GET http://localhost:3000/lessors
+
+### Recuperar el arrendador
+GET http://localhost:3000/lessors/19
+
+### Iniciar sesión
+POST http://localhost:3000/users/login
+Content-Type: application/json
+
+{
+    "email": "sherlyn.garcia@gmail.com",
+    "password": "12345678"
+}
+
+### Crear un usuario
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "type_user": "lessor",
+    "name": "Sherlyn",
+    "last_name": "García",
+    "email": "sherlyn.garcia@gmail.com",
+    "password": "12345678",
+    "birthday": "2002-11-13T00:00:00.000Z",
+    "status": "inactive"
+}
+
+### Crear un arrendador
+POST http://localhost:3000/lessors
+Content-Type: application/json
+
+{
+    "type_user": "lessor",
+    "name": "Ana Isabel",
+    "last_name": "Martínez López",
+    "email": "ana.isable@gmail.com",
+    "password": "12345",
+    "birthday": "2000-12-25T00:00:00.000Z",
+    "status": "inactive",
+    "phone": "3320302203",
+    "street": "Revolución",
+    "zip": "45402",
+    "suburb": "Cd.Aztlan",
+    "municipality": "Tonalá",
+    "state": "Jalisco"
+}
+
+### Crear un inmueble
+POST http://localhost:3000/properties
+Content-Type: application/json
+
+{
+    "lessor_id": "30",
+    "type_house": "casa",
+    "title": "Prueba de casa 1",
+    "description": "Una casa muy bonita",
+    "street": "Kukulcan #89",
+    "zip": "45402",
+    "suburb": "Rey Xolotl",
+    "municipality": "Tonalá",
+    "state": "Jalisco",
+    "lat": 0.00,
+    "lgn": 1.00,
+    "availability": 1,
+    "price": 1200.20
+}
+
+### Eliminar un usuario
+DELETE http://localhost:3000/users/12
+
+### Eliminar un arrendador
+DELETE http://localhost:3000/lessors/22
+
+### Actualizar una parte del usuario
+PATCH http://localhost:3000/users/30
+Content-Type: application/json
+
+{
+    "email": "smldeveloper02@gmai.com",
+    "password": "87654321"
+}
+
+### Actualizar una parte del lessor
+PATCH  http://localhost:3000/lessors/3
+Content-Type: application/json
+
+{
+    "street": "Av.Tonalá"
+}
