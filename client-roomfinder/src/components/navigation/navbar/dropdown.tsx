@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import { Avatar } from "@nextui-org/react";
 import { useState } from "react";
 
 const Dropdown = ({
@@ -25,7 +25,8 @@ const Dropdown = ({
             <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                 <button type="button" onClick={toggleDropdown} className="flex items-center text-sm dark:bg-gray-800 rounded-full md:me-0">
                     <span className="sr-only">Open user menu</span>
-                    <Image className="rounded-full mr-2" width="32" height="32" src='/perfil.jpg' alt="User photo" />
+                    <Avatar src="/perfil.jpg" size="sm" className="mr-2" />
+                    {/* <Image className="rounded-full mr-2" width="32" height="32" src='/perfil.jpg' alt="User photo" /> */}
                     <p className="dark:text-white">{name}</p>
                 </button>
                 {

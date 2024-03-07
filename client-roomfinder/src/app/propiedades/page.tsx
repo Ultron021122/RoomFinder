@@ -1,11 +1,13 @@
-import React from "react";
+'use client';
 
-const Propiedades = () => {
+import dynamic from "next/dynamic";
+
+export default function Propiedades() {
+    const DynamicMap = dynamic(() => import("@/components/Map"), { ssr: false })
+
     return (
         <>
-            <p className="text-white">Propiedades</p>
+            <DynamicMap position={[20.655080, -103.325448]} zoom={16} />
         </>
     );
 }
-
-export default Propiedades;

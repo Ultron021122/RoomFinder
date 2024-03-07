@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import { useSessionStore } from "../../sesion/global";
 import Dropdown from "./Dropdown";
-import { useSessionStore } from "../../sesiones/global";
+import { Button, Link as NLink } from "@nextui-org/react";
 
 const Navbar = ({
     isOpen,
@@ -14,9 +15,9 @@ const Navbar = ({
     const { isLoggedIn, user, logout } = useSessionStore();
     return (
         <>
-            <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-800">
+            <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-900">
                 <div className="container mx-auto p-4 sm:py-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between md:justify-around">
                         <Link href="/" className="flex items-center">
                             <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
                             <h1 className="dark:text-gray-300 dark:hover:text-white text-2xl font-semibold">
@@ -27,9 +28,9 @@ const Navbar = ({
                             {isLoggedIn ? (
                                 <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} last_name={user ? user.last_name : ''} email={user ? user.email : ''} logout={logout} />
                             ) : (
-                                <Link href="/sesion" className="text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">
-                                    Iniciar sesión
-                                </Link>
+                                <Button as={NLink} href="/registrar" color="primary" variant="bordered" className="font-normal">
+                                    Registrar
+                                </Button>
                             )
                             }
                             <button
@@ -61,22 +62,19 @@ const Navbar = ({
                             <Link href="/" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
                                 Arrendadores
                             </Link>
-                            {isLoggedIn ? (
-                                <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} last_name={user ? user.last_name : ''} email={user ? user.email : ''} logout={logout} />
-                            ) : (
-                                <Link href="/sesion" className="text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">
-                                    Iniciar sesión
-                                </Link>
-                                // <div className="space-x-2">
-                                //     <Link href="/sesion" className="text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">
-                                //         Iniciar sesión
-                                //     </Link>
-                                //     <Link href="/registrar" className="text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">
-                                //         Registrar
-                                //     </Link>
-                                // </div>
-                            )}
                         </div>
+                        {isLoggedIn ? (
+                            <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} last_name={user ? user.last_name : ''} email={user ? user.email : ''} logout={logout} />
+                        ) : (
+                            <div className="hidden md:flex items-center space-x-2">
+                                <Button as={NLink} href="/sesion" color="primary" variant="bordered" className="font-normal">
+                                    Registrar
+                                </Button>
+                                <Button as={NLink} href="/registrar" color="primary" variant="solid" className="font-normal">
+                                    Iniciar sesión
+                                </Button>
+                            </div>
+                        )}
                     </div>
                     {/* Edit before... */}
                     {
