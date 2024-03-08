@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { useSessionStore } from "../../sesion/global";
-import Dropdown from "./Dropdown";
+import Dropdown from "./dropdown";
 import { Button, Link as NLink } from "@nextui-org/react";
 
 const Navbar = ({
@@ -67,10 +67,10 @@ const Navbar = ({
                             <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} last_name={user ? user.last_name : ''} email={user ? user.email : ''} logout={logout} />
                         ) : (
                             <div className="hidden md:flex items-center space-x-2">
-                                <Button as={NLink} href="/sesion" color="primary" variant="bordered" className="font-normal">
+                                <Button as={NLink} href="/registrar" color="primary" variant="bordered" className="font-normal">
                                     Registrar
                                 </Button>
-                                <Button as={NLink} href="/registrar" color="primary" variant="solid" className="font-normal">
+                                <Button as={NLink} href="/sesion" color="primary" variant="solid" className="font-normal">
                                     Iniciar sesión
                                 </Button>
                             </div>

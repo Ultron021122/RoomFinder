@@ -8,7 +8,7 @@
 }
 
 .map-width {
-    height: 88.5vh;
+    height: 91vh;
     width: 100vw;
     position: relative;
     z-index: -20;
@@ -26,4 +26,8 @@
     border-radius: 50%;
     font-size: 1.2rem;
     box-shadow: 0 0 0px 5px var(--white);
+}
+
+.min-screen-90 {
+    min-height: 91vh;
 }
