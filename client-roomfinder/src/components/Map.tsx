@@ -40,7 +40,7 @@ export default function Map({ position, zoom }: MapData) {
                     chunkedLoading
                     iconCreateFunction={createClusterCustomIcon}
                 >
-                    <Marker position={position} icon={customIcon}>
+                    <Marker position={position} icon={universityIcon}>
                         <Popup>
                             A pretty CSS3.
                         </Popup>
@@ -50,7 +50,7 @@ export default function Map({ position, zoom }: MapData) {
                             A 2.
                         </Popup>
                     </Marker>
-                    <Marker position={[20.651617, -103.324075]} icon={universityIcon}>
+                    <Marker position={[20.651617, -103.324075]} icon={customIcon}>
                         <Popup>
                             A 1
                         </Popup>
