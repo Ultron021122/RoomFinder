@@ -1,32 +1,32 @@
 ### Recuperar todos los usuarios
-GET http://localhost:3000/users
+GET http://localhost:1234/users
 
 ### Recuperar un usuario
-GET http://localhost:3000/users/type/student
+GET http://localhost:1234/users/type/student
 
 ### Recuperar un usuario
-GET http://localhost:3000/users/9
+GET http://localhost:1234/users/11
 
 ### Recuperar todas las propiedades
-GET http://localhost:3000/properties
+GET http://localhost:1234/properties
 
 ### Recuperar todos los arrendadores
-GET http://localhost:3000/lessors
+GET http://localhost:1234/lessors
 
 ### Recuperar el arrendador
-GET http://localhost:3000/lessors/19
+GET http://localhost:1234/lessors/19
 
 ### Iniciar sesión
-POST http://localhost:3000/users/login
+POST http://localhost:1234/users/login
 Content-Type: application/json
 
 {
     "email": "sherlyn.garcia@gmail.com",
-    "password": "12345678"
+    "password": "876543216"
 }
 
 ### Crear un usuario
-POST http://localhost:3000/users
+POST http://localhost:1234/users
 Content-Type: application/json
 
 {
@@ -40,7 +40,7 @@ Content-Type: application/json
 }
 
 ### Crear un arrendador
-POST http://localhost:3000/lessors
+POST http://localhost:1234/lessors
 Content-Type: application/json
 
 {
@@ -60,7 +60,7 @@ Content-Type: application/json
 }
 
 ### Crear un inmueble
-POST http://localhost:3000/properties
+POST http://localhost:1234/properties
 Content-Type: application/json
 
 {
@@ -80,22 +80,22 @@ Content-Type: application/json
 }
 
 ### Eliminar un usuario
-DELETE http://localhost:3000/users/12
+DELETE http://localhost:1234/users/10
 
 ### Eliminar un arrendador
-DELETE http://localhost:3000/lessors/22
+DELETE http://localhost:1234/lessors/22
 
 ### Actualizar una parte del usuario
-PATCH http://localhost:3000/users/30
+PATCH http://localhost:1234/users/11
 Content-Type: application/json
 
 {
-    "email": "smldeveloper02@gmai.com",
-    "password": "87654321"
+    "email": "sherlyn.garcia@gmail.com",
+    "password": "876543216"
 }
 
 ### Actualizar una parte del lessor
-PATCH  http://localhost:3000/lessors/3
+PATCH  http://localhost:1234/lessors/3
 Content-Type: application/json
 
 {

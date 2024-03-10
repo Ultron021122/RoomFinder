@@ -23,7 +23,7 @@ const Dropdown = ({
     return (
         <>
             <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                <button type="button" onClick={toggleDropdown} className="flex items-center text-sm dark:bg-gray-800 rounded-full md:me-0">
+                <button type="button" onClick={toggleDropdown} className="flex items-center text-sm dark:bg-gray-900 rounded-full md:me-0">
                     <span className="sr-only">Open user menu</span>
                     <Avatar src="/perfil.jpg" size="sm" className="mr-2" />
                     {/* <Image className="rounded-full mr-2" width="32" height="32" src='/perfil.jpg' alt="User photo" /> */}

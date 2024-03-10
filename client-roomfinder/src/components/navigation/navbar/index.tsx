@@ -17,7 +17,7 @@ const Navbar = ({
         <>
             <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-900">
                 <div className="container mx-auto p-4 sm:py-4">
-                    <div className="flex items-center justify-between md:justify-around">
+                    <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center">
                             <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
                             <h1 className="dark:text-gray-300 dark:hover:text-white text-2xl font-semibold">
@@ -62,19 +62,19 @@ const Navbar = ({
                             <Link href="/" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
                                 Arrendadores
                             </Link>
+                            {isLoggedIn ? (
+                                <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} last_name={user ? user.last_name : ''} email={user ? user.email : ''} logout={logout} />
+                            ) : (
+                                <div className="hidden md:flex items-center space-x-2">
+                                    <Button as={NLink} href="/registrar" color="primary" variant="bordered" className="font-normal">
+                                        Registrar
+                                    </Button>
+                                    <Button as={NLink} href="/sesion" color="primary" variant="solid" className="font-normal">
+                                        Iniciar sesión
+                                    </Button>
+                                </div>
+                            )}
                         </div>
-                        {isLoggedIn ? (
-                            <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} last_name={user ? user.last_name : ''} email={user ? user.email : ''} logout={logout} />
-                        ) : (
-                            <div className="hidden md:flex items-center space-x-2 text-md">
-                                <Button as={NLink} href="/sesion" color="primary" variant="bordered" className="font-normal">
-                                    Sign in
-                                </Button>
-                                <Button as={NLink} href="/registrar" color="primary" variant="solid" className="font-normal">
-                                    Sign up
-                                </Button>
-                            </div>
-                        )}
                     </div>
                     {/* Edit before... */}
                     {

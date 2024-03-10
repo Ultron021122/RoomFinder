@@ -1,22 +1,30 @@
-import axios from "axios";
 import { useForm } from "react-hook-form";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useSessionStore } from "../sesion/global";
 import { useEffect, useState } from "react";
-import { useSessionStore } from "./global";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
+import Link from "next/link";
 
 interface UserInfo {
-    email: string;
-    password: string;
+    type_user: string; // User type ("student" or other valid types)
+    name: string; // User's first name
+    last_name: string; // User's lasta name
+    email: string; // User's email address (validated for correct format)
+    password: string; // User's password (hashed and securely stored)
+    birthday: string; // User's birthday is ISO 8601 format ("YYYY-MM-DDTHH:mm:ss.sssZ")
 }
 
 interface Data {
+    type_user: string;
+    name: string;
+    last_name: string;
     email: string;
     password: string;
+    birthday: string;
 }
 
-const Sigin = () => {
+const Signup = () => {
     const { isLoggedIn, login } = useSessionStore();
     const { register, handleSubmit, formState: { errors } } = useForm<UserInfo>({ mode: "onChange" });
     const [isLoading, setIsLoading] = useState(false);
@@ -28,24 +36,27 @@ const Sigin = () => {
         setError(null);
 
         const data: Data = {
+            type_user: userInfo.type_user,
+            name: userInfo.name,
+            last_name: userInfo.last_name,
             email: userInfo.email,
-            password: userInfo.password
+            password: userInfo.password,
+            birthday: userInfo.birthday,
         };
 
         try {
-            const response = await axios.post("http://localhost:1234/users/login", data);
+            const response = await axios.post("http://localhost:1234/users/create", data);
             if (response.status === 200) {
-                // Successful login using the provided login function
-                login(response.data); // Appropriate user data structure
-                localStorage.setItem("isLoggedIn", String(true)); // (Optional)
+                // Creacion de usuario
+                console.log(response.data) // Mostrar datos
             } else {
-                setError("Credenciales incorrectas.");
+                setError("Ocurrio algun error...");
             }
         } catch (Error: any) {
-            if (Error.response?.status == 401) {
-                setError("Ocurrio un error...");
+            if (Error.response?.status == 400) {
+                setError("Bad Request...");
             } else {
-                console.error(Error); // Handle (Manejar) other errors
+                console.log(Error);
             }
         } finally {
             setIsLoading(false);
@@ -54,8 +65,12 @@ const Sigin = () => {
 
     const messages = {
         required: "Este campo es obligatorio",
+        type_user: "Selecciona un tipo de usuario",
+        name: "Debes introducir un nombre",
+        last_name: "Debes introducir los apellidos correctamente",
         email: "Debes introducir una dirección correcta",
-        password: "Debes introducir una contraseña que cumpla los requerimientos"
+        password: "Debes introducir una contraseña que cumpla los requerimientos",
+        birthday: "Introduce una fecha correcta"
     }
 
     const patterns = {
@@ -71,19 +86,23 @@ const Sigin = () => {
     return (
         <>
             <section className="bg-gray-50 dark:bg-gray-900">
-                {isLoading && <p>Iniciando sesión</p>}
+                {isLoading && <p>Creando usuario</p>}
                 {error && <p className="text-red-600">{error}</p>}
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
-                    {/* <Link href="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-                        <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
-                        RoomFinder
-                    </Link> */}
                     <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                                Iniciar sesión
+                                Registrar
                             </h1>
                             <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
+                                {/* <label htmlFor="underline_select" className="sr-only">Underline select</label>
+                                <select id="underline_select" className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                                    <option selected>Choose a country</option>
+                                    <option value="US">United States</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="FR">France</option>
+                                    <option value="DE">Germany</option>
+                                </select> */}
                                 <div className="relative z-0 w-full mb-5 group">
                                     <input
                                         {...register("email", {
@@ -139,6 +158,6 @@ const Sigin = () => {
             </section>
         </>
     );
-};
+}
 
-export default Sigin;
+export default Signup;

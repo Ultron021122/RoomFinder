@@ -27,3 +27,11 @@
     font-size: 1.2rem;
     box-shadow: 0 0 0px 5px var(--white);
 }
+
+.border-default-200 {
+    border-color: aqua;
+}
+
+.min-screen-90 {
+    min-height: 88.5vh;
+}
