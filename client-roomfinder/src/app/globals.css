@@ -35,3 +35,12 @@
 .min-screen-90 {
     min-height: 88.5vh;
 }
+
+#animation {
+    width: 100%;
+    color: var(--white);
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: darken;
+}

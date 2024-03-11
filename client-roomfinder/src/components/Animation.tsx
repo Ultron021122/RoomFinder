@@ -1,14 +1,21 @@
+'use client';
 import { Application } from '@splinetool/runtime';
+import { useEffect, useRef } from 'react';
 
 const Animation = () => {
-    const canvas = document.getElementById('animation')
-    const app = new Application(canvas);
-    app.load('https://prod.spline.design/9vjzETfyPXOQgXh7/scene.splinecode');
-    
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (canvas) {
+            const app = new Application(canvas);
+            app.load('https://prod.spline.design/9vjzETfyPXOQgXh7/scene.splinecode');
+        }
+    }, []);
+
     return (
-        <>
-            <div id='animation'></div>
-        </>
+        <canvas id='animation' ref={canvasRef}>
+        </canvas>
     );
 }
 
