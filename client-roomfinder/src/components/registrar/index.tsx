@@ -26,6 +26,8 @@ interface Data {
 
 const Signup = () => {
     const { isLoggedIn, login } = useSessionStore();
+    const [selectedUserType, setSelectedUserType] = useState(""); // Variable de estado para el tipo de usuario seleccionado
+
     const { register, handleSubmit, formState: { errors } } = useForm<UserInfo>({ mode: "onChange" });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -95,14 +97,54 @@ const Signup = () => {
                                     Registrar
                                 </h1>
                                 <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
-                                    {/* <label htmlFor="underline_select" className="sr-only">Underline select</label>
-                                <select id="underline_select" className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                                    <option selected>Choose a country</option>
-                                    <option value="US">United States</option>
-                                    <option value="CA">Canada</option>
-                                    <option value="FR">France</option>
-                                    <option value="DE">Germany</option>
-                                </select> */}
+                                    {/* Nombre y Apellidos */}
+                                    <div className="grid sm:grid-cols-2 gap-1 mb-5">
+                                        <div>
+                                            <div className="relative z-0 w-full group">
+                                                <input
+                                                    {...register("name", {
+                                                        required: messages.required,
+                                                        minLength: 3,
+                                                        maxLength: 25,
+                                                    })}
+                                                    type="text"
+                                                    name="name"
+                                                    id="name"
+                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                    placeholder=""
+                                                    autoComplete="off"
+                                                />
+                                                <label htmlFor="name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                    Nombre
+                                                </label>
+                                                {errors?.name?.type === "required" && (
+                                                    <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="relative z-0 w-full group">
+                                                <input
+                                                    {...register("last_name", {
+                                                        required: messages.required
+                                                    })}
+                                                    type="text"
+                                                    name="last_name"
+                                                    id="last_name"
+                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                    placeholder=""
+                                                    autoComplete="off"
+                                                />
+                                                <label htmlFor="last_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                    Apellidos
+                                                </label>
+                                                {errors?.last_name?.type === "required" && (
+                                                    <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* Correo Electrónico */}
                                     <div className="relative z-0 w-full mb-5 group">
                                         <input
                                             {...register("email", {
@@ -119,11 +161,12 @@ const Signup = () => {
                                             placeholder=""
                                             autoComplete="off"
                                         />
-                                        <label htmlFor="email" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Correo electrónico</label>
+                                        <label htmlFor="email" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Correo electrónico</label>
                                         {errors?.email?.type === "required" && (
-                                            <p className="mt-2 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
                                         )}
                                     </div>
+                                    {/* Contraseña */}
                                     <div className="relative z-0 w-full mb-5 group">
                                         <input
                                             {...register("password", {
@@ -137,26 +180,50 @@ const Signup = () => {
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=""
                                         />
-                                        <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Contraseña</label>
+                                        <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Contraseña</label>
                                         {errors?.password?.type === "required" && (
-                                            <p className="mt-2 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
                                         )}
                                         {errors?.password?.type === "minLength" && (
-                                            <p className="mt-2 text-sm text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> Contraseña demasiado corta</p>
+                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> Contraseña demasiado corta</p>
+                                        )}
+                                        {errors?.password?.type === "maxLength" && (
+                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> Contraseña demasiado grande</p>
+                                        )}
+                                    </div>
+                                    {/* Tipo de usuario */}
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <select
+                                            id="type_user"
+                                            {...register("type_user", {
+                                                required: messages.required
+                                            })
+                                            }
+                                            value={selectedUserType} // Variable de estado para el tipo de usuario
+                                            onChange={(e) => setSelectedUserType(e.target.value)} // Función para actualizar la variable de estado
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        >
+                                            <option value="" className="dark:bg-gray-800 mr-5">Elige un tipo de usuario</option>
+                                            <option value="student" className="dark:bg-gray-800">Estudiante</option>
+                                            <option value="lessor" className="dark:bg-gray-800">Arrendador</option>
+                                        </select>
+                                        <label htmlFor="type_user" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tipo de usuario</label>
+                                        {errors?.type_user?.type === "required" && (
+                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
                                         )}
                                     </div>
                                     <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
-                                        Ingresar
+                                        Registrar
                                     </Button>
                                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                                        ¿No tienes una cuenta? <Link href='/registrar' className="text-sky-600 hover:underline dark:text-sky-500">Crear una cuenta</Link>
+                                        ¿Ya tienes una cuenta? <Link href='/sesion' className="text-sky-600 hover:underline dark:text-sky-500">Ingresar</Link>
                                     </p>
                                 </form>
                             </div>
                         </div>
                     }
-                </div>
-            </section>
+                </div >
+            </section >
         </>
     );
 }

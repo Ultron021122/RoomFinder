@@ -10,11 +10,11 @@
 .map-width {
     height: 88.5vh;
     width: 100vw;
+    /* max-width: 2000px; */
     position: relative;
     z-index: -20;
     float: left;
 }
-
 .cluster-icon {
     background-color: var(--gray);
     height: 2em;
