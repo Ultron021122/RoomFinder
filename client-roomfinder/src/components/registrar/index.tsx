@@ -3,7 +3,7 @@ import { useSessionStore } from "../sesion/global";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Button, Spinner } from "@nextui-org/react";
+import { Button, Input, Spinner } from "@nextui-org/react";
 import Link from "next/link";
 
 interface UserInfo {
@@ -22,6 +22,14 @@ interface Data {
     email: string;
     password: string;
     birthday: string;
+}
+
+interface Student {
+    code: number;
+}
+
+interface Lessor {
+    phone: number;
 }
 
 const Signup = () => {
@@ -98,7 +106,7 @@ const Signup = () => {
                                 </h1>
                                 <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
                                     {/* Nombre y Apellidos */}
-                                    <div className="grid sm:grid-cols-2 gap-1 mb-5">
+                                    <div className="grid sm:grid-cols-2 gap-2 mb-5">
                                         <div>
                                             <div className="relative z-0 w-full group">
                                                 <input
@@ -180,7 +188,9 @@ const Signup = () => {
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=""
                                         />
-                                        <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Contraseña</label>
+                                        <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Contraseña
+                                        </label>
                                         {errors?.password?.type === "required" && (
                                             <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
                                         )}
@@ -212,6 +222,48 @@ const Signup = () => {
                                             <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
                                         )}
                                     </div>
+                                    {/* Fecha de nacimiento */}
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <input
+                                            {...register("birthday", {
+                                                required: messages.required
+                                            })}
+                                            type="date"
+                                            name="birthday"
+                                            id="birthday"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder="Enter your date"
+                                            defaultValue="2002-11-22"
+                                            max="2020-01-01"
+                                            min="1900-01-01"
+                                        />
+                                        <label htmlFor="birthday" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Fecha de nacimiento
+                                        </label>
+                                        {errors?.birthday?.type === "required" && (
+                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                        )}
+                                    </div>
+                                    {/* Tipo de usuario - Form */}
+                                    {!selectedUserType ? (
+                                        <Spinner />
+                                    ) : (
+                                        <>
+                                            <h3 className="text-white">Estudiante</h3>
+                                            <div className="relative z-0 w-full mb-5 group">
+                                                <input
+                                                    type="text"
+                                                    name="code"
+                                                    id="code"
+                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                    placeholder=""
+                                                />
+                                                <label htmlFor="code" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                    Codigo de estudiante
+                                                </label>
+                                            </div>
+                                        </>
+                                    )}
                                     <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
                                         Registrar
                                     </Button>
