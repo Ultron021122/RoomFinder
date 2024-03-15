@@ -1,16 +1,19 @@
-import { Client } from 'pg';
+import 'dotenv/config';
+import pkg from "pg";
 import { config } from './config.js';
+const {
+  Pool
+} = pkg;
 export class Database {
   static async query(sql, params) {
-    const client = new Client();
+    const client = new Pool(config);
     try {
-      const res = await client.connect();
-      const result = await res.query(sql, params);
-      return result;
+      const result = await client.query(sql, params);
+      return result.rows;
     } catch (error) {
-      console.log(error);
+      throw new Error(error.message);
     } finally {
-      await pool.end();
+      client.end();
     }
   }
 }

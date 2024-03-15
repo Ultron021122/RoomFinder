@@ -24,19 +24,19 @@ export class UsersModel extends Database {
     this.created_date = created_date;
   }
   static async getAll() {
-    const [users] = await this.query("SELECT * FROM users;");
+    const users = await this.query("SELECT * FROM users;");
     return users.map(user => new UsersModel(user));
   }
   static async getByUser({
     type_user
   }) {
-    const [users] = await this.query("SELECT * FROM users WHERE type_user = ?;", [type_user]);
+    const users = await this.query("SELECT * FROM users WHERE type_user = $1;", [type_user]);
     return users.map(user => new UsersModel(user));
   }
   static async getById({
     id
   }) {
-    const [user] = await this.query('SELECT * FROM users WHERE id = ?;', [id]);
+    const user = await this.query('SELECT * FROM users WHERE id = $1;', [id]);
     return user[0] ? new UsersModel(user[0]) : null;
   }
   static async login({
@@ -47,7 +47,7 @@ export class UsersModel extends Database {
         email,
         password
       } = input;
-      const [user] = await this.query('SELECT * FROM users WHERE email = ?;', [email]);
+      const user = await this.query('SELECT * FROM users WHERE email = $1;', [email]);
       if (user.length == 0) return false;
       const validPassword = await bcrypt.compare(password, user[0].password);
       if (!validPassword) return false;
@@ -69,8 +69,8 @@ export class UsersModel extends Database {
         birthday,
         status
       } = input;
-      const [result] = await this.query('INSERT INTO users (type_user, name, last_name, email, password, birthday, status) VALUES (?, ?, ?, ?, ?, ?, ?);', [type_user, name, last_name, email, password, birthday, status]);
-      const id = result.insertId;
+      const result = await this.query('INSERT INTO users (type_user, name, last_name, email, password, birthday, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;', [type_user, name, last_name, email, password, birthday, status]);
+      const id = result[0].id;
       const newUser = await this.getById({
         id
       });
@@ -83,8 +83,14 @@ export class UsersModel extends Database {
     id
   }) {
     try {
-      const [user] = await this.query('DELETE FROM users WHERE id = ?;', [id]);
-      return user.affectedRows > 0;
+      const validate = await this.getById({
+        id
+      });
+      if (!validate) return false;
+
+      // Eliminar usuario
+      await this.query('DELETE FROM users WHERE id = $1;', [id]);
+      return true;
     } catch (error) {
       throw new Error(`Error deleting user: ${error.message}`);
     }
@@ -115,7 +121,9 @@ export class UsersModel extends Database {
         password,
         birthday,
         status
-      }).filter(([key, value]) => value !== undefined).map(([key, value]) => `${key} = ?`).join(', ');
+      }).filter(([key, value]) => value !== undefined).map(([key, value]) => {
+        return `${key} = $${Object.keys(input).indexOf(key) + 1}`; // Increment position by 1
+      }).join(', ');
       const updateValues = Object.values({
         type_user,
         name,
@@ -126,7 +134,7 @@ export class UsersModel extends Database {
         status
       }).filter(value => value !== undefined);
       if (updateValues.length !== 0) {
-        await this.query(`UPDATE users SET ${updateColumns} WHERE id = ?;`, [...updateValues, id]);
+        await this.query(`UPDATE users SET ${updateColumns} WHERE id = $${updateValues.length + 1};`, [...updateValues, id]);
       }
       return await this.getById({
         id
