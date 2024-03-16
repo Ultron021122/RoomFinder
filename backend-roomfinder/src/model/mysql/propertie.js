@@ -119,7 +119,7 @@ export class PropertiesModel extends Database {
 
             if (updateValues.length !== 0) {
                 await this.query(
-                    `UPDATE estate SET ${this.update} WHERE id = ?;`,
+                    `UPDATE estate SET ${updateColumns} WHERE id = ?;`,
                     [...updateValues, id]
                 );
             }

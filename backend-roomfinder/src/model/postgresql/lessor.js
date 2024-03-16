@@ -1,7 +1,7 @@
 import { UsersModel } from './user.js'
 
 export class LessorsModel extends UsersModel {
-    
+
     constructor({ id, type_user, name, last_name, email, password, birthday, status, created_date, phone, street, zip, suburb, municipality, state }) {
         super({ id, type_user, name, last_name, email, password, birthday, status, created_date });
         this.phone = phone;
@@ -13,14 +13,14 @@ export class LessorsModel extends UsersModel {
     }
 
     static async getAll() {
-        const [lessors] = await this.query(
+        const lessors = await this.query(
             "SELECT * FROM users LEFT JOIN lessors ON users.id = lessors.user_id WHERE users.type_user = 'lessor';"
         )
         return lessors.map((lessor) => new LessorsModel(lessor));
     }
 
     static async getById({ id }) {
-        const [lessor] = await this.query("SELECT * FROM users LEFT JOIN lessors ON users.id = lessors.user_id WHERE users.type_user = 'lessor' AND users.id = ?;",
+        const lessor = await this.query("SELECT * FROM users LEFT JOIN lessors ON users.id = lessors.user_id WHERE users.type_user = 'lessor' AND users.id = $1;",
             [id]
         );
         return lessor[0] ? new LessorsModel(lessor[0]) : null;
@@ -33,8 +33,8 @@ export class LessorsModel extends UsersModel {
             const id = result.id
             const created_date = result.created_date
 
-            const [lessor] = await this.query(
-                'INSERT INTO lessors (user_id, phone, street, zip, suburb, municipality, state) VALUES (?, ?, ?, ?, ?, ?, ?);',
+            const lessor = await this.query(
+                'INSERT INTO lessors (user_id, phone, street, zip, suburb, municipality, state) VALUES ($1, $2, $3, $4, $5, $6, $7);',
                 [id, phone, street, zip, suburb, municipality, state]
             )
 
@@ -57,7 +57,7 @@ export class LessorsModel extends UsersModel {
         try {
             const { type_user, name, last_name, email, password, birthday, status, phone, street, zip, suburb, municipality, state } = input
             const user = await UsersModel.update({ id, input })
-            if (user == false) return false;
+            if (user === false) return false;
 
             const updateColumns = Object.entries({
                 phone,
@@ -68,7 +68,9 @@ export class LessorsModel extends UsersModel {
                 state
             })
                 .filter(([key, value]) => value !== undefined)
-                .map(([key, value]) => `${key} = ?`)
+                .map(([key, value]) => {
+                    return `${key} = $${Object.keys(input).indexOf(key) + 1}`;
+                })
                 .join(', ');
 
             const updateValues = Object.values({
@@ -81,10 +83,12 @@ export class LessorsModel extends UsersModel {
             })
                 .filter(value => value != undefined);
 
-            await this.query(
-                `UPDATE lessors SET ${updateColumns} WHERE user_id = ?;`,
-                [...updateValues, id]
-            );
+            if (updateValues.length !== 0) {
+                await this.query(
+                    `UPDATE lessors SET ${updateColumns} WHERE user_id = $${updateValues.length + 1};`,
+                    [...updateValues, id]
+                );
+            }
 
             return await this.getById({ id });
         } catch (error) {

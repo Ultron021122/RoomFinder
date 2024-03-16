@@ -93,7 +93,7 @@ const Signup = () => {
         }
 
         try {
-            const response = await axios.post("http://localhost:1234/users/create", data);
+            const response = await axios.post("http://localhost:1234/lessors/create", data);
             if (response.status === 200) {
                 // Creacion de usuario
                 console.log(response.data) // Mostrar datos
@@ -130,7 +130,7 @@ const Signup = () => {
                                 </h1>
                                 <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
                                     {/* Nombre y Apellidos */}
-                                    <div className="grid sm:grid-cols-2 gap-2 mb-5">
+                                    <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-5">
                                         <div>
                                             <div className="relative z-0 w-full group">
                                                 <input
@@ -280,6 +280,7 @@ const Signup = () => {
                                                     id="code"
                                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                     placeholder=""
+                                                    autoComplete="off"
                                                 />
                                                 <label htmlFor="code" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                     Codigo de estudiante
@@ -322,6 +323,7 @@ const Signup = () => {
                                                     id="phone"
                                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                     placeholder=""
+                                                    autoComplete="off"
                                                 />
                                                 <label htmlFor="phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                     Teléfono
@@ -341,6 +343,7 @@ const Signup = () => {
                                                     id="street"
                                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                     placeholder=""
+                                                    autoComplete="off"
                                                 />
                                                 <label htmlFor="street" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                     Calle
@@ -360,6 +363,7 @@ const Signup = () => {
                                                     id="suburb"
                                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                     placeholder=""
+                                                    autoComplete="off"
                                                 />
                                                 <label htmlFor="suburb" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                     Colonia
@@ -368,43 +372,47 @@ const Signup = () => {
                                                     <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
                                                 )}
                                             </div>
-                                            <div className="relative z-0 w-full mb-5 group">
-                                                <input
-                                                    {...register("municipality", {
-                                                        required: messages.required
-                                                    })
-                                                    }
-                                                    type="text"
-                                                    name="municipality"
-                                                    id="municipality"
-                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                    placeholder=""
-                                                />
-                                                <label htmlFor="municipality" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                    Municipio
-                                                </label>
-                                                {errors?.municipality?.type === "required" && (
-                                                    <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
-                                                )}
-                                            </div>
-                                            <div className="relative z-0 w-full mb-5 group">
-                                                <input
-                                                    {...register("state", {
-                                                        required: messages.required
-                                                    })
-                                                    }
-                                                    type="text"
-                                                    name="state"
-                                                    id="state"
-                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                    placeholder=""
-                                                />
-                                                <label htmlFor="state" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                    Estado
-                                                </label>
-                                                {errors?.state?.type === "required" && (
-                                                    <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
-                                                )}
+                                            <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-5">
+                                                <div className="relative z-0 w-full group">
+                                                    <input
+                                                        {...register("municipality", {
+                                                            required: messages.required
+                                                        })
+                                                        }
+                                                        type="text"
+                                                        name="municipality"
+                                                        id="municipality"
+                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                        placeholder=""
+                                                        autoComplete="off"
+                                                    />
+                                                    <label htmlFor="municipality" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                        Municipio
+                                                    </label>
+                                                    {errors?.municipality?.type === "required" && (
+                                                        <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                    )}
+                                                </div>
+                                                <div className="relative z-0 w-full mb-5 group">
+                                                    <input
+                                                        {...register("state", {
+                                                            required: messages.required
+                                                        })
+                                                        }
+                                                        type="text"
+                                                        name="state"
+                                                        id="state"
+                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                        placeholder=""
+                                                        autoComplete="off"
+                                                    />
+                                                    <label htmlFor="state" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                        Estado
+                                                    </label>
+                                                    {errors?.state?.type === "required" && (
+                                                        <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                    )}
+                                                </div>
                                             </div>
                                         </>
                                     )}
