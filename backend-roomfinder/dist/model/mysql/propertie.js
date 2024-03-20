@@ -146,7 +146,7 @@ export class PropertiesModel extends Database {
         price
       }).filter(value => value !== undefined);
       if (updateValues.length !== 0) {
-        await this.query(`UPDATE estate SET ${this.update} WHERE id = ?;`, [...updateValues, id]);
+        await this.query(`UPDATE estate SET ${updateColumns} WHERE id = ?;`, [...updateValues, id]);
       }
       return await this.getById({
         id

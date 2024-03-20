@@ -15,7 +15,7 @@ const studentSchema = z.object({
     message: "Too young!"
   }),
   status: z.enum(["active", "inactive"]),
-  code_student: z.number().min(9).max(9),
+  code_student: z.number().positive(),
   university: z.string()
 });
 export function validateStudent(input) {

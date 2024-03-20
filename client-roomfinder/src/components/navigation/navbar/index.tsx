@@ -29,7 +29,7 @@ const Navbar = ({
                                 <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} last_name={user ? user.last_name : ''} email={user ? user.email : ''} logout={logout} />
                             ) : (
                                 <Button as={NLink} href="/registrar" color="primary" variant="bordered" className="font-normal">
-                                    Sign up
+                                    Registrar
                                 </Button>
                             )
                             }

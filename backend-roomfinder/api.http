@@ -39,6 +39,22 @@ Content-Type: application/json
     "status": "inactive"
 }
 
+### Crear un estudiante
+POST http://localhost:1234/students
+Content-Type: application/json
+
+{
+    "type_user": "student",
+    "name": "Ana Isabel",
+    "last_name": "Martínez López",
+    "email": "ana.isable@gmail.com",
+    "password": "12345678",
+    "birthday": "2000-12-25T00:00:00.000Z",
+    "status": "active",
+    "code": 123456789,
+    "university": "CUCEI"
+}
+
 ### Crear un arrendador
 POST http://localhost:1234/lessors
 Content-Type: application/json
@@ -100,4 +116,20 @@ Content-Type: application/json
 
 {
     "street": "Av.Tonalá"
+}
+
+### Crear un usuario student
+POST http://localhost:1234/students
+Content-Type: application/json
+
+{
+    "birthday": "2002-02-11",
+    "code_student": 220976438,
+    "email": "sebastian.martinez7643@alumnos.udg.mx",
+    "last_name": "Martínez López",
+    "name": "Sebastián",
+    "password": "Ultron021122*",
+    "status": "active",
+    "type_user": "student",
+    "university": "Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)"
 }

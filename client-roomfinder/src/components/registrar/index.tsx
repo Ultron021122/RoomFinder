@@ -1,22 +1,27 @@
+import axios from "axios";
+import Alert from "./alert";
+import Link from "next/link";
+
 import { useForm } from "react-hook-form";
 import { useSessionStore } from "../sesion/global";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Button, Spinner } from "@nextui-org/react";
-import Link from "next/link";
 import { messages, patterns } from "./constants";
-
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 type UserInfo<T extends "student" | "lessor"> = {
     type_user: T;
     name: string;
     last_name: string;
     email: string;
+    confirm_password: string;
     password: string;
+    status: string;
     birthday: string;
 } & (T extends "student"
-    ? { code: number; university: string; }
+    ? { code_student: number; university: string; }
     : T extends "lessor"
     ? {
         phone: string;
@@ -33,11 +38,12 @@ interface User {
     last_name: string;
     email: string;
     password: string;
+    status: string;
     birthday: string;
 }
 
 type StudentInfo = User & {
-    code: number;
+    code_student: number;
     university: string;
 }
 
@@ -55,10 +61,15 @@ const Signup = () => {
     const [selectedUserType, setSelectedUserType] = useState(""); // Variable de estado para el tipo de usuario seleccionado
     const [selectedUniversity, setSelectedUniversity] = useState(""); // Variable de estado para la universidad seleccionada
 
-    const { register, handleSubmit, formState: { errors } } = useForm<UserInfo<"student" | "lessor">>({ mode: "onChange" });
+    const { register, handleSubmit, formState: { errors }, watch } = useForm<UserInfo<"student" | "lessor">>({ mode: "onChange", defaultValues: { status: 'active' } });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
+
+    const validatePasswordConfirmation = (value: string) => {
+        const password = watch('password'); // Obtener el valor de la contraseña
+        return value === password || 'Las contraseñas no coinciden'; // Comparar contraseñas
+    }
 
     const onSubmit = async (userInfo: UserInfo<"student" | "lessor">) => {
         setIsLoading(true);
@@ -71,10 +82,43 @@ const Signup = () => {
                 last_name: userInfo.last_name,
                 email: userInfo.email,
                 password: userInfo.password,
+                status: userInfo.status,
                 birthday: userInfo.birthday,
-                code: userInfo.code,
+                code_student: userInfo.code_student,
                 university: userInfo.university,
+            };
+
+            try {
+                const response = await axios.post("http://localhost:1234/students/", data);
+                if (response.status === 201) {
+                    // Creacion de usuario
+                    console.log(response.data) // Mostrar datos
+                    setIsLoading(false);
+                    toast.success('¡Cuenta creada exitosamente', {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
+                    router.push('/sesion');
+                } else {
+                    setError("Ocurrio algun error...");
+                }
+            } catch (Error: any) {
+                if (Error.response?.status == 400) {
+                    setError("Bad Request...");
+                } else {
+                    console.log(Error);
+                }
+            } finally {
+                setIsLoading(false);
             }
+
         } else {
             const data: LessorInfo = {
                 type_user: userInfo.type_user,
@@ -82,6 +126,7 @@ const Signup = () => {
                 last_name: userInfo.last_name,
                 email: userInfo.email,
                 password: userInfo.password,
+                status: userInfo.status,
                 birthday: userInfo.birthday,
                 phone: userInfo.phone,
                 street: userInfo.street,
@@ -89,29 +134,44 @@ const Signup = () => {
                 suburb: userInfo.suburb,
                 municipality: userInfo.municipality,
                 state: userInfo.state,
+            };
+            try {
+                const response = await axios.post("http://localhost:1234/lessors/", data);
+                if (response.status === 201) {
+                    // Creacion de usuario
+                    console.log(response.data) // Mostrar datos
+                    setIsLoading(false);
+                    toast.success('¡Cuenta creada exitosamente', {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
+                    router.push('/sesion');
+                } else {
+                    setError("Ocurrio algun error...");
+                }
+            } catch (Error: any) {
+                if (Error.response?.status == 400) {
+                    setError("Bad Request...");
+                } else {
+                    console.log(Error);
+                }
+            } finally {
+                setIsLoading(false);
             }
-        }
-
-        try {
-            const response = await axios.post("http://localhost:1234/lessors/create", data);
-            if (response.status === 200) {
-                // Creacion de usuario
-                console.log(response.data) // Mostrar datos
-            } else {
-                setError("Ocurrio algun error...");
-            }
-        } catch (Error: any) {
-            if (Error.response?.status == 400) {
-                setError("Bad Request...");
-            } else {
-                console.log(Error);
-            }
-        } finally {
-            setIsLoading(false);
         }
     };
 
     useEffect(() => {
+        const input = document.getElementById('name') as HTMLInputElement;
+        input.focus();
+
         if (isLoggedIn) {
             router.push('/');
         }
@@ -119,18 +179,30 @@ const Signup = () => {
 
     return (
         <>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
             <section className="bg-gray-50 dark:bg-gray-900">
                 {error && <p className="text-red-600">{error}</p>}
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen lg:py-0">
                     {isLoading ? <Spinner /> :
-                        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                        <div className="w-full my-5 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                     Registrar
                                 </h1>
                                 <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
                                     {/* Nombre y Apellidos */}
-                                    <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-5">
+                                    <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-4">
                                         <div>
                                             <div className="relative z-0 w-full group">
                                                 <input
@@ -150,7 +222,7 @@ const Signup = () => {
                                                     Nombre
                                                 </label>
                                                 {errors?.name?.type === "required" && (
-                                                    <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                    <Alert message={messages.required} />
                                                 )}
                                             </div>
                                         </div>
@@ -171,13 +243,13 @@ const Signup = () => {
                                                     Apellidos
                                                 </label>
                                                 {errors?.last_name?.type === "required" && (
-                                                    <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                    <Alert message={messages.required} />
                                                 )}
                                             </div>
                                         </div>
                                     </div>
                                     {/* Correo Electrónico */}
-                                    <div className="relative z-0 w-full mb-5 group">
+                                    <div className="relative z-0 w-full mb-4 group">
                                         <input
                                             {...register("email", {
                                                 required: messages.required,
@@ -195,34 +267,67 @@ const Signup = () => {
                                         />
                                         <label htmlFor="email" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Correo electrónico</label>
                                         {errors?.email?.type === "required" && (
-                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                            <Alert message={messages.required} />
+                                        )}
+                                        {errors?.email?.type === "pattern" && (
+                                            <Alert message={messages.email} />
                                         )}
                                     </div>
-                                    {/* Contraseña */}
-                                    <div className="relative z-0 w-full mb-5 group">
-                                        <input
-                                            {...register("password", {
-                                                required: messages.required,
-                                                minLength: 8,
-                                                maxLength: 16
-                                            })}
-                                            type="password"
-                                            name="password"
-                                            id="password"
-                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                            placeholder=""
-                                        />
-                                        <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                            Contraseña
-                                        </label>
-                                        {errors?.password?.type === "required" && (
-                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
-                                        )}
-                                        {errors?.password?.type === "minLength" && (
-                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> Contraseña demasiado corta</p>
-                                        )}
-                                        {errors?.password?.type === "maxLength" && (
-                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> Contraseña demasiado grande</p>
+                                    <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-4">
+                                        {/* Contraseña */}
+                                        <div>
+                                            <div className="relative z-0 w-full group">
+                                                <input
+                                                    {...register("password", {
+                                                        required: messages.required,
+                                                        minLength: 8,
+                                                        maxLength: 16
+                                                    })}
+                                                    type="password"
+                                                    name="password"
+                                                    id="password"
+                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                    placeholder=""
+                                                />
+                                                <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                    Contraseña
+                                                </label>
+                                                {errors?.password?.type === "required" && (
+                                                    <Alert message={messages.required} />
+                                                )}
+                                                {errors?.password?.type === "minLength" && (
+                                                    <Alert message="Contraseña demasiado corta" />
+                                                )}
+                                                {errors?.password?.type === "maxLength" && (
+                                                    <Alert message="Contraseña demasiado extensa" />
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="relative z-0 w-full group">
+                                                <input
+                                                    {...register("confirm_password", {
+                                                        required: messages.required,
+                                                        minLength: 8,
+                                                        maxLength: 16,
+                                                        validate: validatePasswordConfirmation // Agregar función de validation
+                                                    })}
+                                                    type="password"
+                                                    name="confirm_password"
+                                                    id="confirm_password"
+                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                    placeholder=""
+                                                />
+                                                <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                    Repetir contraseña
+                                                </label>
+                                                {errors?.confirm_password?.type === "required" && (
+                                                    <Alert message={messages.required} />
+                                                )}
+                                            </div>
+                                        </div>
+                                        {errors.confirm_password?.type === "validate" && errors.confirm_password.message && (
+                                            <Alert message={errors.confirm_password.message} />
                                         )}
                                     </div>
                                     {/* Tipo de usuario */}
@@ -243,21 +348,21 @@ const Signup = () => {
                                         </select>
                                         <label htmlFor="type_user" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tipo de usuario</label>
                                         {errors?.type_user?.type === "required" && (
-                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                            <Alert message={messages.required} />
                                         )}
                                     </div>
                                     {/* Fecha de nacimiento */}
                                     <div className="relative z-0 w-full mb-5 group">
                                         <input
                                             {...register("birthday", {
-                                                required: messages.required
+                                                required: messages.required,
+                                                valueAsDate: true,
                                             })}
                                             type="date"
                                             name="birthday"
                                             id="birthday"
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder="Enter your date"
-                                            // defaultValue="2002-11-22"
                                             max="2020-01-01"
                                             min="1900-01-01"
                                         />
@@ -265,28 +370,29 @@ const Signup = () => {
                                             Fecha de nacimiento
                                         </label>
                                         {errors?.birthday?.type === "required" && (
-                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                            <Alert message={messages.required} />
                                         )}
                                     </div>
                                     {selectedUserType === 'student' ? (
                                         <>
                                             <div className="relative z-0 w-full mb-5 group">
                                                 <input
-                                                    {...register("code", {
-                                                        required: messages.required
+                                                    {...register("code_student", {
+                                                        required: messages.required,
+                                                        valueAsNumber: true,
                                                     })}
-                                                    type="text"
-                                                    name="code"
-                                                    id="code"
+                                                    type="number"
+                                                    name="code_student"
+                                                    id="code_student"
                                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                     placeholder=""
                                                     autoComplete="off"
                                                 />
-                                                <label htmlFor="code" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                <label htmlFor="code_student" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                     Codigo de estudiante
                                                 </label>
-                                                {errors?.code?.type === "required" && (
-                                                    <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                {errors?.code_student?.type === "required" && (
+                                                    <Alert message={messages.required} />
                                                 )}
                                             </div>
                                             <div className="relative z-0 w-full mb-5 group">
@@ -306,7 +412,7 @@ const Signup = () => {
                                                 </select>
                                                 <label htmlFor="university" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tipo de usuario</label>
                                                 {errors?.university?.type === "required" && (
-                                                    <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                    <Alert message={messages.required} />
                                                 )}
                                             </div>
                                         </>
@@ -329,7 +435,28 @@ const Signup = () => {
                                                     Teléfono
                                                 </label>
                                                 {errors?.phone?.type === "required" && (
-                                                    <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                    <Alert message={messages.required} />
+                                                )}
+                                            </div>
+                                            <div className="relative z-0 w-full mb-5 group">
+                                                <input
+                                                    {...register("zip", {
+                                                        required: messages.required,
+                                                        valueAsNumber: true
+                                                    })
+                                                    }
+                                                    type="number"
+                                                    name="zip"
+                                                    id="zip"
+                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                    placeholder=""
+                                                    autoComplete="off"
+                                                />
+                                                <label htmlFor="zip" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                    Código Postal
+                                                </label>
+                                                {errors?.zip?.type === "required" && (
+                                                    <Alert message={messages.required} />
                                                 )}
                                             </div>
                                             <div className="relative z-0 w-full mb-5 group">
@@ -349,7 +476,7 @@ const Signup = () => {
                                                     Calle
                                                 </label>
                                                 {errors?.street?.type === "required" && (
-                                                    <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                    <Alert message={messages.required} />
                                                 )}
                                             </div>
                                             <div className="relative z-0 w-full mb-5 group">
@@ -369,7 +496,7 @@ const Signup = () => {
                                                     Colonia
                                                 </label>
                                                 {errors?.suburb?.type === "required" && (
-                                                    <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                    <Alert message={messages.required} />
                                                 )}
                                             </div>
                                             <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-5">
@@ -390,7 +517,7 @@ const Signup = () => {
                                                         Municipio
                                                     </label>
                                                     {errors?.municipality?.type === "required" && (
-                                                        <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                        <Alert message={messages.required} />
                                                     )}
                                                 </div>
                                                 <div className="relative z-0 w-full mb-5 group">
@@ -410,7 +537,7 @@ const Signup = () => {
                                                         Estado
                                                     </label>
                                                     {errors?.state?.type === "required" && (
-                                                        <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                                        <Alert message={messages.required} />
                                                     )}
                                                 </div>
                                             </div>
