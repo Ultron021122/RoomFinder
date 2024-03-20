@@ -15,6 +15,7 @@
     z-index: -20;
     float: left;
 }
+
 .cluster-icon {
     background-color: var(--gray);
     height: 2em;
@@ -43,4 +44,16 @@
     background-position: center;
     background-color: rgba(0, 0, 0, 0.5);
     background-blend-mode: darken;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
 }

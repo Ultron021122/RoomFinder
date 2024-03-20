@@ -64,6 +64,9 @@ const Sigin = () => {
     };
 
     useEffect(() => {
+        const input = document.getElementById('email') as HTMLInputElement;
+        input.focus();
+
         if (isLoggedIn) {
             router.push('/');
         }

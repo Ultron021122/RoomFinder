@@ -1,19 +1,19 @@
 import { validateProperty, validatePartialProperty } from '../schemas/property.js';
 export class PropertyController {
   constructor({
-    propertyModel
+    propertieModel
   }) {
-    this.propertyModel = propertyModel;
+    this.propertieModel = propertieModel;
   }
   getAll = async (req, res) => {
-    const properties = await this.propertyModel.getAll();
+    const properties = await this.propertieModel.getAll();
     res.json(properties);
   };
   getById = async (req, res) => {
     const {
       id
     } = req.params;
-    const propertie = await this.propertyModel.getById({
+    const propertie = await this.propertieModel.getById({
       id
     });
     if (propertie) return res.json(propertie);
@@ -23,7 +23,7 @@ export class PropertyController {
   };
   create = async (req, res) => {
     const result = req.body;
-    const newProperty = await this.propertyModel.create({
+    const newProperty = await this.propertieModel.create({
       input: result
     });
     res.status(201).json(newProperty);
@@ -32,7 +32,7 @@ export class PropertyController {
     const {
       id
     } = req.params;
-    const result = await this.propertyModel.delete({
+    const result = await this.propertieModel.delete({
       id
     });
     if (result == false) {
@@ -54,7 +54,7 @@ export class PropertyController {
     const {
       id
     } = req.params;
-    const updateProperty = await this.propertyModel.update({
+    const updateProperty = await this.propertieModel.update({
       id,
       input: result.data
     });
