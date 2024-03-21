@@ -1,14 +1,14 @@
 import axios from "axios";
-import Alert from "./alert";
 import Link from "next/link";
-
 import { useForm } from "react-hook-form";
-import { useSessionStore } from "../sesion/global";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Spinner } from "@nextui-org/react";
 import { messages, patterns } from "./constants";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { useSessionStore } from "../sesion/global";
+import { Alert } from "./alert";
+// Toastify
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 type UserInfo<T extends "student" | "lessor"> = {
@@ -57,11 +57,11 @@ type LessorInfo = User & {
 }
 
 const Signup = () => {
-    const { isLoggedIn, login } = useSessionStore();
+    const { isLoggedIn } = useSessionStore();
     const [selectedUserType, setSelectedUserType] = useState(""); // Variable de estado para el tipo de usuario seleccionado
     const [selectedUniversity, setSelectedUniversity] = useState(""); // Variable de estado para la universidad seleccionada
 
-    const { register, handleSubmit, formState: { errors }, watch } = useForm<UserInfo<"student" | "lessor">>({ mode: "onChange", defaultValues: { status: 'active' } });
+    const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<UserInfo<"student" | "lessor">>({ mode: "onChange", defaultValues: { status: 'active' } });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -91,10 +91,12 @@ const Signup = () => {
             try {
                 const response = await axios.post("http://localhost:1234/students/", data);
                 if (response.status === 201) {
-                    // Creacion de usuario
-                    console.log(response.data) // Mostrar datos
                     setIsLoading(false);
-                    toast.success('¡Cuenta creada exitosamente', {
+                    reset();
+                    // router.push('/sesion');
+                } else {
+                    setError("Ocurrio algun error...");
+                    toast.error(error, {
                         position: "bottom-right",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -105,15 +107,34 @@ const Signup = () => {
                         theme: "colored",
                         transition: Bounce,
                     });
-                    router.push('/sesion');
-                } else {
-                    setError("Ocurrio algun error...");
                 }
             } catch (Error: any) {
                 if (Error.response?.status == 400) {
                     setError("Bad Request...");
+                    toast.error(error, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
                 } else {
-                    console.log(Error);
+                    setError("Network Error");
+                    toast.error(error, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
                 }
             } finally {
                 setIsLoading(false);
@@ -138,10 +159,11 @@ const Signup = () => {
             try {
                 const response = await axios.post("http://localhost:1234/lessors/", data);
                 if (response.status === 201) {
-                    // Creacion de usuario
-                    console.log(response.data) // Mostrar datos
                     setIsLoading(false);
-                    toast.success('¡Cuenta creada exitosamente', {
+                    router.push('/sesion');
+                } else {
+                    setError("Ocurrio algun error...");
+                    toast.error(error, {
                         position: "bottom-right",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -152,15 +174,34 @@ const Signup = () => {
                         theme: "colored",
                         transition: Bounce,
                     });
-                    router.push('/sesion');
-                } else {
-                    setError("Ocurrio algun error...");
                 }
             } catch (Error: any) {
                 if (Error.response?.status == 400) {
                     setError("Bad Request...");
+                    toast.error(error, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
                 } else {
-                    console.log(Error);
+                    setError("Network Error");
+                    toast.error(error, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
                 }
             } finally {
                 setIsLoading(false);
@@ -180,7 +221,7 @@ const Signup = () => {
     return (
         <>
             <ToastContainer
-                position="bottom-right"
+                position="top-right"
                 autoClose={5000}
                 hideProgressBar={false}
                 newestOnTop={false}
@@ -189,20 +230,23 @@ const Signup = () => {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-                theme="colored"
+                theme="light"
             />
             <section className="bg-gray-50 dark:bg-gray-900">
-                {error && <p className="text-red-600">{error}</p>}
-                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen lg:py-0">
-                    {isLoading ? <Spinner /> :
-                        <div className="w-full my-5 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                {isLoading ?
+                    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen lg:py-0">
+                        <Spinner />
+                    </div>
+                    :
+                    <div className="flex flex-col items-center px-6 py-8 mx-auto min-h-screen lg:py-0">
+                        <div className="w-full my-5 bg-white rounded-lg shadow dark:border sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                     Registrar
                                 </h1>
                                 <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
                                     {/* Nombre y Apellidos */}
-                                    <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-4">
+                                    <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
                                         <div>
                                             <div className="relative z-0 w-full group">
                                                 <input
@@ -249,7 +293,7 @@ const Signup = () => {
                                         </div>
                                     </div>
                                     {/* Correo Electrónico */}
-                                    <div className="relative z-0 w-full mb-4 group">
+                                    <div className="relative z-0 w-full mb-2 group">
                                         <input
                                             {...register("email", {
                                                 required: messages.required,
@@ -273,7 +317,7 @@ const Signup = () => {
                                             <Alert message={messages.email} />
                                         )}
                                     </div>
-                                    <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-4">
+                                    <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
                                         {/* Contraseña */}
                                         <div>
                                             <div className="relative z-0 w-full group">
@@ -331,7 +375,7 @@ const Signup = () => {
                                         )}
                                     </div>
                                     {/* Tipo de usuario */}
-                                    <div className="relative z-0 w-full mb-5 group">
+                                    <div className="relative z-0 w-full mb-2 group">
                                         <select
                                             id="type_user"
                                             {...register("type_user", {
@@ -352,7 +396,7 @@ const Signup = () => {
                                         )}
                                     </div>
                                     {/* Fecha de nacimiento */}
-                                    <div className="relative z-0 w-full mb-5 group">
+                                    <div className="relative z-0 w-full mb-2 group">
                                         <input
                                             {...register("birthday", {
                                                 required: messages.required,
@@ -375,7 +419,7 @@ const Signup = () => {
                                     </div>
                                     {selectedUserType === 'student' ? (
                                         <>
-                                            <div className="relative z-0 w-full mb-5 group">
+                                            <div className="relative z-0 w-full mb-2 group">
                                                 <input
                                                     {...register("code_student", {
                                                         required: messages.required,
@@ -395,7 +439,7 @@ const Signup = () => {
                                                     <Alert message={messages.required} />
                                                 )}
                                             </div>
-                                            <div className="relative z-0 w-full mb-5 group">
+                                            <div className="relative z-0 w-full mb-2 group">
                                                 <select
                                                     id="university"
                                                     {...register("university", {
@@ -410,7 +454,7 @@ const Signup = () => {
                                                     <option className="dark:bg-gray-800">Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)</option>
                                                     <option className="dark:bg-gray-800">Centro Universitario de Arte, Arquitectura y Diseño (CUAAD)</option>
                                                 </select>
-                                                <label htmlFor="university" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tipo de usuario</label>
+                                                <label htmlFor="university" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Universidad</label>
                                                 {errors?.university?.type === "required" && (
                                                     <Alert message={messages.required} />
                                                 )}
@@ -418,48 +462,54 @@ const Signup = () => {
                                         </>
                                     ) : selectedUserType === 'lessor' && (
                                         <>
-                                            <div className="relative z-0 w-full mb-5 group">
-                                                <input
-                                                    {...register("phone", {
-                                                        required: messages.required
-                                                    })
-                                                    }
-                                                    type="text"
-                                                    name="phone"
-                                                    id="phone"
-                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                    placeholder=""
-                                                    autoComplete="off"
-                                                />
-                                                <label htmlFor="phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                    Teléfono
-                                                </label>
-                                                {errors?.phone?.type === "required" && (
-                                                    <Alert message={messages.required} />
-                                                )}
+                                            <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
+                                                <div>
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("phone", {
+                                                                required: messages.required
+                                                            })
+                                                            }
+                                                            type="text"
+                                                            name="phone"
+                                                            id="phone"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label htmlFor="phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                            Teléfono
+                                                        </label>
+                                                        {errors?.phone?.type === "required" && (
+                                                            <Alert message={messages.required} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("zip", {
+                                                                required: messages.required,
+                                                                valueAsNumber: true
+                                                            })
+                                                            }
+                                                            type="number"
+                                                            name="zip"
+                                                            id="zip"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label htmlFor="zip" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                            Código Postal
+                                                        </label>
+                                                        {errors?.zip?.type === "required" && (
+                                                            <Alert message={messages.required} />
+                                                        )}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="relative z-0 w-full mb-5 group">
-                                                <input
-                                                    {...register("zip", {
-                                                        required: messages.required,
-                                                        valueAsNumber: true
-                                                    })
-                                                    }
-                                                    type="number"
-                                                    name="zip"
-                                                    id="zip"
-                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                    placeholder=""
-                                                    autoComplete="off"
-                                                />
-                                                <label htmlFor="zip" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                    Código Postal
-                                                </label>
-                                                {errors?.zip?.type === "required" && (
-                                                    <Alert message={messages.required} />
-                                                )}
-                                            </div>
-                                            <div className="relative z-0 w-full mb-5 group">
+                                            <div className="relative z-0 w-full mb-2 group">
                                                 <input
                                                     {...register("street", {
                                                         required: messages.required
@@ -479,7 +529,7 @@ const Signup = () => {
                                                     <Alert message={messages.required} />
                                                 )}
                                             </div>
-                                            <div className="relative z-0 w-full mb-5 group">
+                                            <div className="relative z-0 w-full mb-2 group">
                                                 <input
                                                     {...register("suburb", {
                                                         required: messages.required
@@ -499,7 +549,7 @@ const Signup = () => {
                                                     <Alert message={messages.required} />
                                                 )}
                                             </div>
-                                            <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-5">
+                                            <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
                                                 <div className="relative z-0 w-full group">
                                                     <input
                                                         {...register("municipality", {
@@ -520,7 +570,7 @@ const Signup = () => {
                                                         <Alert message={messages.required} />
                                                     )}
                                                 </div>
-                                                <div className="relative z-0 w-full mb-5 group">
+                                                <div className="relative z-0 w-full mb-2 group">
                                                     <input
                                                         {...register("state", {
                                                             required: messages.required
@@ -552,8 +602,8 @@ const Signup = () => {
                                 </form>
                             </div>
                         </div>
-                    }
-                </div >
+                    </div >
+                }
             </section >
         </>
     );
