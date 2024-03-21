@@ -7,30 +7,8 @@ import { Button, Spinner } from "@nextui-org/react";
 import { messages, patterns } from "./constants";
 import { useSessionStore } from "../sesion/global";
 import { Alert } from "./alert";
-// Toastify
-import { ToastContainer, toast, Bounce } from 'react-toastify';
+import { ToastContainer, toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-type UserInfo<T extends "student" | "lessor"> = {
-    type_user: T;
-    name: string;
-    last_name: string;
-    email: string;
-    confirm_password: string;
-    password: string;
-    status: string;
-    birthday: string;
-} & (T extends "student"
-    ? { code_student: number; university: string; }
-    : T extends "lessor"
-    ? {
-        phone: string;
-        street: string;
-        zip: number;
-        suburb: string;
-        municipality: string;
-        state: string;
-    } : {});
 
 interface User {
     type_user: string;
@@ -38,16 +16,25 @@ interface User {
     last_name: string;
     email: string;
     password: string;
+    confirm_password: string;
     status: string;
     birthday: string;
 }
 
-type StudentInfo = User & {
+interface StudentInfo extends User {
     code_student: number;
     university: string;
+    phone?: string;
+    street?: string;
+    zip?: number;
+    suburb?: string;
+    municipality?: string;
+    state?: string;
 }
 
-type LessorInfo = User & {
+interface LessorInfo extends User {
+    code_student?: number;
+    university?: string;
     phone: string;
     street: string;
     zip: number;
@@ -61,7 +48,7 @@ const Signup = () => {
     const [selectedUserType, setSelectedUserType] = useState(""); // Variable de estado para el tipo de usuario seleccionado
     const [selectedUniversity, setSelectedUniversity] = useState(""); // Variable de estado para la universidad seleccionada
 
-    const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<UserInfo<"student" | "lessor">>({ mode: "onChange", defaultValues: { status: 'active' } });
+    const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<StudentInfo | LessorInfo>({ mode: "onChange", defaultValues: { status: 'active' } });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -71,27 +58,27 @@ const Signup = () => {
         return value === password || 'Las contraseñas no coinciden'; // Comparar contraseñas
     }
 
-    const onSubmit = async (userInfo: UserInfo<"student" | "lessor">) => {
+    const onSubmit = async (userInfo: StudentInfo | LessorInfo) => {
         setIsLoading(true);
         setError(null);
 
         if (selectedUserType === "student") {
-            const data: StudentInfo = {
-                type_user: userInfo.type_user,
-                name: userInfo.name,
-                last_name: userInfo.last_name,
-                email: userInfo.email,
-                password: userInfo.password,
-                status: userInfo.status,
-                birthday: userInfo.birthday,
-                code_student: userInfo.code_student,
-                university: userInfo.university,
-            };
-
+            const data = userInfo as StudentInfo;
             try {
                 const response = await axios.post("http://localhost:1234/students/", data);
                 if (response.status === 201) {
                     setIsLoading(false);
+                    toast.success('Usuario creado correctamente', {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Slide,
+                    });
                     reset();
                     // router.push('/sesion');
                 } else {
@@ -141,26 +128,24 @@ const Signup = () => {
             }
 
         } else {
-            const data: LessorInfo = {
-                type_user: userInfo.type_user,
-                name: userInfo.name,
-                last_name: userInfo.last_name,
-                email: userInfo.email,
-                password: userInfo.password,
-                status: userInfo.status,
-                birthday: userInfo.birthday,
-                phone: userInfo.phone,
-                street: userInfo.street,
-                zip: userInfo.zip,
-                suburb: userInfo.suburb,
-                municipality: userInfo.municipality,
-                state: userInfo.state,
-            };
+            const data = userInfo as LessorInfo;
             try {
                 const response = await axios.post("http://localhost:1234/lessors/", data);
                 if (response.status === 201) {
                     setIsLoading(false);
-                    router.push('/sesion');
+                    toast.success('Usuario creado correctamente', {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Slide,
+                    });
+                    reset();
+                    // router.push('/sesion');
                 } else {
                     setError("Ocurrio algun error...");
                     toast.error(error, {
@@ -218,10 +203,193 @@ const Signup = () => {
         }
     }, [isLoggedIn]);
 
+    const renderStudent = () => {
+        return (
+            <>
+                <div className="relative z-0 w-full mb-2 group">
+                    <input
+                        {...register("code_student", {
+                            required: messages.required,
+                            valueAsNumber: true,
+                        })}
+                        type="number"
+                        name="code_student"
+                        id="code_student"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=""
+                        autoComplete="off"
+                    />
+                    <label htmlFor="code_student" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                        Codigo de estudiante
+                    </label>
+                    {errors?.code_student?.type === "required" && (
+                        <Alert message={messages.required} />
+                    )}
+                </div>
+                <div className="relative z-0 w-full mb-2 group">
+                    <select
+                        id="university"
+                        {...register("university", {
+                            required: messages.required
+                        })
+                        }
+                        value={selectedUniversity} // Variable de estado para la universidad
+                        onChange={(e) => setSelectedUniversity(e.target.value)} // Función para actualizar la variable de estado
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    >
+                        <option value="" className="dark:bg-gray-800 mr-5">Elige una universidad</option>
+                        <option className="dark:bg-gray-800">Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)</option>
+                        <option className="dark:bg-gray-800">Centro Universitario de Arte, Arquitectura y Diseño (CUAAD)</option>
+                    </select>
+                    <label htmlFor="university" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Universidad</label>
+                    {errors?.university?.type === "required" && (
+                        <Alert message={messages.required} />
+                    )}
+                </div>
+            </>
+        );
+    };
+
+    const renderLessor = () => {
+        return (
+            <>
+                <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
+                    <div>
+                        <div className="relative z-0 w-full group">
+                            <input
+                                {...register("phone", {
+                                    required: messages.required
+                                })
+                                }
+                                type="text"
+                                name="phone"
+                                id="phone"
+                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                placeholder=""
+                                autoComplete="off"
+                            />
+                            <label htmlFor="phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                Teléfono
+                            </label>
+                            {errors?.phone?.type === "required" && (
+                                <Alert message={messages.required} />
+                            )}
+                        </div>
+                    </div>
+                    <div>
+                        <div className="relative z-0 w-full group">
+                            <input
+                                {...register("zip", {
+                                    required: messages.required,
+                                    valueAsNumber: true
+                                })
+                                }
+                                type="number"
+                                name="zip"
+                                id="zip"
+                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                placeholder=""
+                                autoComplete="off"
+                            />
+                            <label htmlFor="zip" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                Código Postal
+                            </label>
+                            {errors?.zip?.type === "required" && (
+                                <Alert message={messages.required} />
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <div className="relative z-0 w-full mb-2 group">
+                    <input
+                        {...register("street", {
+                            required: messages.required
+                        })
+                        }
+                        type="text"
+                        name="street"
+                        id="street"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=""
+                        autoComplete="off"
+                    />
+                    <label htmlFor="street" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                        Calle
+                    </label>
+                    {errors?.street?.type === "required" && (
+                        <Alert message={messages.required} />
+                    )}
+                </div>
+                <div className="relative z-0 w-full mb-2 group">
+                    <input
+                        {...register("suburb", {
+                            required: messages.required
+                        })
+                        }
+                        type="text"
+                        name="suburb"
+                        id="suburb"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=""
+                        autoComplete="off"
+                    />
+                    <label htmlFor="suburb" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                        Colonia
+                    </label>
+                    {errors?.suburb?.type === "required" && (
+                        <Alert message={messages.required} />
+                    )}
+                </div>
+                <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
+                    <div className="relative z-0 w-full group">
+                        <input
+                            {...register("municipality", {
+                                required: messages.required
+                            })
+                            }
+                            type="text"
+                            name="municipality"
+                            id="municipality"
+                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            placeholder=""
+                            autoComplete="off"
+                        />
+                        <label htmlFor="municipality" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                            Municipio
+                        </label>
+                        {errors?.municipality?.type === "required" && (
+                            <Alert message={messages.required} />
+                        )}
+                    </div>
+                    <div className="relative z-0 w-full mb-2 group">
+                        <input
+                            {...register("state", {
+                                required: messages.required
+                            })
+                            }
+                            type="text"
+                            name="state"
+                            id="state"
+                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            placeholder=""
+                            autoComplete="off"
+                        />
+                        <label htmlFor="state" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                            Estado
+                        </label>
+                        {errors?.state?.type === "required" && (
+                            <Alert message={messages.required} />
+                        )}
+                    </div>
+                </div>
+            </>
+        );
+    };
+
     return (
         <>
             <ToastContainer
-                position="top-right"
+                position="bottom-right"
                 autoClose={5000}
                 hideProgressBar={false}
                 newestOnTop={false}
@@ -417,182 +585,8 @@ const Signup = () => {
                                             <Alert message={messages.required} />
                                         )}
                                     </div>
-                                    {selectedUserType === 'student' ? (
-                                        <>
-                                            <div className="relative z-0 w-full mb-2 group">
-                                                <input
-                                                    {...register("code_student", {
-                                                        required: messages.required,
-                                                        valueAsNumber: true,
-                                                    })}
-                                                    type="number"
-                                                    name="code_student"
-                                                    id="code_student"
-                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                    placeholder=""
-                                                    autoComplete="off"
-                                                />
-                                                <label htmlFor="code_student" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                    Codigo de estudiante
-                                                </label>
-                                                {errors?.code_student?.type === "required" && (
-                                                    <Alert message={messages.required} />
-                                                )}
-                                            </div>
-                                            <div className="relative z-0 w-full mb-2 group">
-                                                <select
-                                                    id="university"
-                                                    {...register("university", {
-                                                        required: messages.required
-                                                    })
-                                                    }
-                                                    value={selectedUniversity} // Variable de estado para la universidad
-                                                    onChange={(e) => setSelectedUniversity(e.target.value)} // Función para actualizar la variable de estado
-                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                >
-                                                    <option value="" className="dark:bg-gray-800 mr-5">Elige una universidad</option>
-                                                    <option className="dark:bg-gray-800">Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)</option>
-                                                    <option className="dark:bg-gray-800">Centro Universitario de Arte, Arquitectura y Diseño (CUAAD)</option>
-                                                </select>
-                                                <label htmlFor="university" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Universidad</label>
-                                                {errors?.university?.type === "required" && (
-                                                    <Alert message={messages.required} />
-                                                )}
-                                            </div>
-                                        </>
-                                    ) : selectedUserType === 'lessor' && (
-                                        <>
-                                            <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
-                                                <div>
-                                                    <div className="relative z-0 w-full group">
-                                                        <input
-                                                            {...register("phone", {
-                                                                required: messages.required
-                                                            })
-                                                            }
-                                                            type="text"
-                                                            name="phone"
-                                                            id="phone"
-                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                            placeholder=""
-                                                            autoComplete="off"
-                                                        />
-                                                        <label htmlFor="phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                            Teléfono
-                                                        </label>
-                                                        {errors?.phone?.type === "required" && (
-                                                            <Alert message={messages.required} />
-                                                        )}
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <div className="relative z-0 w-full group">
-                                                        <input
-                                                            {...register("zip", {
-                                                                required: messages.required,
-                                                                valueAsNumber: true
-                                                            })
-                                                            }
-                                                            type="number"
-                                                            name="zip"
-                                                            id="zip"
-                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                            placeholder=""
-                                                            autoComplete="off"
-                                                        />
-                                                        <label htmlFor="zip" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                            Código Postal
-                                                        </label>
-                                                        {errors?.zip?.type === "required" && (
-                                                            <Alert message={messages.required} />
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="relative z-0 w-full mb-2 group">
-                                                <input
-                                                    {...register("street", {
-                                                        required: messages.required
-                                                    })
-                                                    }
-                                                    type="text"
-                                                    name="street"
-                                                    id="street"
-                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                    placeholder=""
-                                                    autoComplete="off"
-                                                />
-                                                <label htmlFor="street" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                    Calle
-                                                </label>
-                                                {errors?.street?.type === "required" && (
-                                                    <Alert message={messages.required} />
-                                                )}
-                                            </div>
-                                            <div className="relative z-0 w-full mb-2 group">
-                                                <input
-                                                    {...register("suburb", {
-                                                        required: messages.required
-                                                    })
-                                                    }
-                                                    type="text"
-                                                    name="suburb"
-                                                    id="suburb"
-                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                    placeholder=""
-                                                    autoComplete="off"
-                                                />
-                                                <label htmlFor="suburb" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                    Colonia
-                                                </label>
-                                                {errors?.suburb?.type === "required" && (
-                                                    <Alert message={messages.required} />
-                                                )}
-                                            </div>
-                                            <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
-                                                <div className="relative z-0 w-full group">
-                                                    <input
-                                                        {...register("municipality", {
-                                                            required: messages.required
-                                                        })
-                                                        }
-                                                        type="text"
-                                                        name="municipality"
-                                                        id="municipality"
-                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                        placeholder=""
-                                                        autoComplete="off"
-                                                    />
-                                                    <label htmlFor="municipality" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                        Municipio
-                                                    </label>
-                                                    {errors?.municipality?.type === "required" && (
-                                                        <Alert message={messages.required} />
-                                                    )}
-                                                </div>
-                                                <div className="relative z-0 w-full mb-2 group">
-                                                    <input
-                                                        {...register("state", {
-                                                            required: messages.required
-                                                        })
-                                                        }
-                                                        type="text"
-                                                        name="state"
-                                                        id="state"
-                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                        placeholder=""
-                                                        autoComplete="off"
-                                                    />
-                                                    <label htmlFor="state" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                        Estado
-                                                    </label>
-                                                    {errors?.state?.type === "required" && (
-                                                        <Alert message={messages.required} />
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </>
-                                    )}
+                                    {selectedUserType === "student" && renderStudent()}
+                                    {selectedUserType === "lessor" && renderLessor()}
                                     <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
                                         Registrar
                                     </Button>
