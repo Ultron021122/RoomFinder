@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useSessionStore } from "../../sesion/global";
 import Dropdown from "./dropdown";
 import { Button, Link as NLink } from "@nextui-org/react";
+import Image from "next/image";
 
 const Navbar = ({
     isOpen,
