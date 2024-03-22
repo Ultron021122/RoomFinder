@@ -74,6 +74,22 @@ export class UsersModel extends Database {
         }
     }
 
+    static async verifyEmail({ token }) {
+        try {
+            const validate = { token };
+        } catch (error) {
+            throw new Error(`Error checking email: ${error.message}`)
+        }
+    }
+
+    static async updateVerified({ id }) {
+        try {
+            const validate = { id };
+        } catch (error) {
+            throw new Error(`Error updating user: ${error.message}`)
+        }
+    }
+
     static async delete({ id }) {
         try {
             const validate = await this.getById({ id });

@@ -1,4 +1,5 @@
 import { validateUser, validatePartialUser } from '../schemas/user.js'
+import { EmailService } from '../server/emailService.js'
 import bcrypt from 'bcrypt'
 
 export class UserController {
@@ -45,7 +46,23 @@ export class UserController {
         result.data.password = hashedPassword;
 
         const newUser = await this.userModel.create({ input: result.data })
-        res.status(201).json(newUser)
+        
+        const token = await EmailService.generarTokenVerification();
+        console.log(newUser.email);
+        await EmailService.sendEmailVerificate(newUser.email, token);
+        return res.status(201).json(newUser)
+    }
+
+    verifyEmail = async (req, res) => {
+        const { token } = req.params;
+        const verifiedUser = await this.userModel.verifyEmail({ token });
+        
+        if (!verifiedUser) {
+            return res.status(400).json({ message: 'Invalid verification token' });
+        }
+        
+        await this.userModel.updateVerified({ id: verifiedUser.id });
+        return res.status(200).json({ message: 'Email verified successfully' });
     }
 
     delete = async (req, res) => {

@@ -134,7 +134,7 @@ const Signup = () => {
                 if (response.status === 201) {
                     setIsLoading(false);
                     toast.success('Usuario creado correctamente', {
-                        position: "top-right",
+                        position: "bottom-right",
                         autoClose: 5000,
                         hideProgressBar: false,
                         closeOnClick: true,

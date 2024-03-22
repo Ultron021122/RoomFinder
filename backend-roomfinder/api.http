@@ -30,10 +30,10 @@ POST http://localhost:1234/users
 Content-Type: application/json
 
 {
-    "type_user": "lessor",
+    "type_user": "student",
     "name": "Sherlyn",
     "last_name": "García",
-    "email": "sherlyn.garcia@gmail.com",
+    "email": "marvelsml25@gmail.com",
     "password": "12345678",
     "birthday": "2002-11-13T00:00:00.000Z",
     "status": "inactive"
@@ -51,7 +51,7 @@ Content-Type: application/json
     "password": "12345678",
     "birthday": "2000-12-25T00:00:00.000Z",
     "status": "active",
-    "code": 123456789,
+    "code_student": 123456789,
     "university": "CUCEI"
 }
 
@@ -96,7 +96,7 @@ Content-Type: application/json
 }
 
 ### Eliminar un usuario
-DELETE http://localhost:1234/users/10
+DELETE http://localhost:1234/users/27
 
 ### Eliminar un arrendador
 DELETE http://localhost:1234/lessors/22
