@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Spinner } from "@nextui-org/react";
-import { messages, patterns } from "./constants";
+import { messages, patterns, universities } from "./constants";
 import { useSessionStore } from "../sesion/global";
 import { Alert } from "./alert";
 import { ToastContainer, toast, Bounce, Slide } from 'react-toastify';
@@ -238,6 +238,11 @@ const Signup = () => {
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     >
                         <option value="" className="dark:bg-gray-800 mr-5">Elige una universidad</option>
+                        {
+                            universities.map((university, index) => (
+                                <option className="dark:bg-gray-800" value={university.name} key={index}>{university.name}</option>
+                            ))
+                        }
                         <option className="dark:bg-gray-800">Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)</option>
                         <option className="dark:bg-gray-800">Centro Universitario de Arte, Arquitectura y Diseño (CUAAD)</option>
                     </select>
