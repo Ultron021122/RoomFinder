@@ -60,7 +60,7 @@ const Navbar = ({
                             <Link href="/propiedades" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
                                 Propiedades
                             </Link>
-                            <Link href="/" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                            <Link href="/arrendadores" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
                                 Arrendadores
                             </Link>
                             {isLoggedIn ? (
@@ -93,7 +93,7 @@ const Navbar = ({
                                         </Link>
                                     </li>
                                     <li className="block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-700">
-                                        <Link href="/" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                                        <Link href="/arrendadores" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
                                             Arrendadores
                                         </Link>
                                     </li>
