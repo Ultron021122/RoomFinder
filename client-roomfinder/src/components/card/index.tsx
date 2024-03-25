@@ -17,10 +17,10 @@ export const CardItem = ({
             <Card className="max-w-full bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 transition-background min-h-80" key={id}>
                 <Image
                     alt="Imagen de perfil del arrendador"
-                    className="h-[300px] object-cover"
+                    className="object-cover"
                     src={`/${url}`}
                 />
-                <CardBody className="py-2 px-4 flex-col items-start">
+                <CardBody className="mb-4 py-2 px-4 flex-col items-start">
                     <h4 className="dark:text-gray-200 font-bold text-large">{name + ' ' + last_name}</h4>
                     {/* <Divider className="dark:bg-gray-200" /> */}
                     <p className="dark:text-gray-300 text-small uppercase font-bold">Contacto</p>
@@ -72,12 +72,12 @@ export const CardBlurred = () => {
 export const ListItems = () => {
     return (
         <>
-            <div className="my-2 grid grid-flow-row sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                <CardItem id={1} name="Sebastián" last_name="Martínez López" email="example@gmail.com" url="perfil.jpg" />
-                <CardItem id={2} name="Sebastián" last_name="Martínez López" email="example@gmail.com" url="perfil2.jpg" />
-                <CardItem id={3} name="Sebastián" last_name="Martínez López" email="example@gmail.com" url="perfil3.jpg" />
-                <CardItem id={2} name="Sebastián" last_name="Martínez López" email="example@gmail.com" url="perfil2.jpg" />
-                <CardItem id={2} name="Sebastián" last_name="Martínez López" email="example@gmail.com" url="perfil2.jpg" />
+            <div className="grid grid-flow-row sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                <CardItem id={1} name="Sebastián" last_name="Martínez López" email="example@gmail.com" url="perfiles/perfil.png" />
+                <CardItem id={2} name="Sebastián" last_name="Martínez López" email="example@gmail.com" url="perfiles/perfil2.png" />
+                <CardItem id={3} name="Sebastián" last_name="Martínez López" email="example@gmail.com" url="perfiles/perfil3.png" />
+                <CardItem id={4} name="Sebastián" last_name="Martínez López" email="example@gmail.com" url="perfiles/perfil.png" />
+                <CardItem id={5} name="Sebastián" last_name="Martínez López" email="example@gmail.com" url="perfiles/perfil3.png" />
             </div>
         </>
     );
