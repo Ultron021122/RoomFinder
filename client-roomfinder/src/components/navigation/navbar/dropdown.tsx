@@ -1,60 +1,94 @@
 "use client";
-import { Avatar } from "@nextui-org/react";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, User } from "@nextui-org/react";
 import { useState } from "react";
+import { PlusIcon } from "./icon";
+import { useSessionStore } from "@/components/sesion/global";
 
-const Dropdown = ({
-    id,
-    name,
-    last_name,
-    email,
-    logout,
-}: {
-    id: number,
-    name: string,
-    last_name: string,
-    email: string,
-    logout: () => void;
-}): JSX.Element => {
-    const [isOpen, setIsOpen] = useState(false);
-    const toggleDropdown = () => {
-        setIsOpen(!isOpen);
-    };
-
+const DropdownUser = () => {
+    const { user, logout } = useSessionStore();
     return (
         <>
-            <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                <button type="button" onClick={toggleDropdown} className="flex items-center text-sm dark:bg-gray-900 rounded-full md:me-0">
-                    <span className="sr-only">Open user menu</span>
-                    <Avatar src="/perfil.jpg" size="sm" className="mr-2" />
-                    {/* <Image className="rounded-full mr-2" width="32" height="32" src='/perfil.jpg' alt="User photo" /> */}
-                    <p className="dark:text-white">{name}</p>
-                </button>
-                {
-                    isOpen && (
-                        <>
-                            <div className="absolute top-20 right-3 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
-                                <div className="px-4 py-3">
-                                    <span className="block text-sm text-gray-900 dark:text-white">{name + ' ' + last_name}</span>
-                                    <span className="block text-sm  text-gray-500 truncate dark:text-gray-400">{email}</span>
-                                </div>
-                                <ul className="py-2">
-                                    <li>
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" onClick={(event) => { logout(); }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </>
-                    )
-                }
-            </div>
+            <Dropdown placement="bottom-start" classNames={{
+                content: "dark:bg-gray-800 border dark:border-gray-700 rounded-md"
+            }}>
+                <DropdownTrigger>
+                    <User
+                        as="button"
+                        avatarProps={{
+                            isBordered: true,
+                            color: "primary",
+                            classNames: {
+                                base: "ring-offset-gray-900 mr-1"
+                            },
+                            src: "perfiles/perfil.png",
+                        }}
+                        className="transition-transform"
+                        description={user?.type_user} // Tipo de usuario (Modificar)
+                        name={user?.name}
+                        classNames={{
+                            name: "dark:text-gray-200",
+                            description: "capitalize"
+                        }}
+                    />
+                </DropdownTrigger>
+                <DropdownMenu
+                    aria-label="User Actions"
+                    classNames={{
+                        base: "dark:bg-gray-800"
+                    }}
+                    itemClasses={{
+                        base: [
+                            "rounded-md",
+                            "text-default-700 dark:text-default-300",
+                            "transition-opacity",
+                            "data-[hover=true]:text-foreground",
+                            "data-[hover=true]:bg-default-300",
+                            "dark:data-[hover=true]:bg-default-400",
+                            "data-[selectable=true]:focus:bg-default-50",
+                            "data-[pressed=true]:opacity-70",
+                            "data-[focus-visible=true]:ring-default-500",
+                        ],
+                    }}
+                >
+                    <DropdownSection
+                        aria-label="Profile & actions"
+                        showDivider
+                        classNames={{
+                            divider: "dark:bg-gray-700"
+                        }}
+                    >
+                        <DropdownItem isReadOnly key="profile" className="h-14 gap-2" textValue="Pérfil">
+                            <p className="font-semibold text-sm capitalize">{user?.name + " " + user?.last_name}</p>
+                            <p className="text-small">{user?.email}</p>
+                        </DropdownItem>
+                        <DropdownItem key="dashboard" textValue="Panel de administración">
+                            Dashboard
+                        </DropdownItem>
+                        <DropdownItem key="settings" textValue="Configuraciones">Settings</DropdownItem>
+                        <DropdownItem
+                            key="new_project"
+                            textValue="Create a new project"
+                            endContent={<PlusIcon className="text-large"></PlusIcon>}
+                        >
+                            New Project
+                        </DropdownItem>
+                    </DropdownSection>
+                    <DropdownItem key="settings" textValue="Configuraciones">
+                        My Settings
+                    </DropdownItem>
+                    <DropdownItem key="team_settings" textValue="Configuraciones de equipo">Team Settings</DropdownItem>
+                    <DropdownSection aria-label="Help & Feedback">
+                        <DropdownItem key="help_and_feedback" textValue="Ayuda">
+                            Help & Feedback
+                        </DropdownItem>
+                        <DropdownItem key="logout" color="danger" textValue="Cerrar sesión" onClick={(event) => { logout(); }}>
+                            Log Out
+                        </DropdownItem>
+                    </DropdownSection>
+                </DropdownMenu>
+            </Dropdown>
         </>
     );
 };
 
-export default Dropdown;
+export default DropdownUser;

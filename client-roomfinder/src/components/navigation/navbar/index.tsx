@@ -1,9 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import { useSessionStore } from "../../sesion/global";
-import Dropdown from "./dropdown";
 import { Button, Link as NLink } from "@nextui-org/react";
-import Image from "next/image";
+import DropdownUser from "./dropdown";
 
 const Navbar = ({
     isOpen,
@@ -13,7 +12,7 @@ const Navbar = ({
     toggle: () => void;
 }): JSX.Element => {
 
-    const { isLoggedIn, user, logout } = useSessionStore();
+    const { isLoggedIn} = useSessionStore();
     return (
         <>
             <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-900">
@@ -27,7 +26,7 @@ const Navbar = ({
                         </Link>
                         <div className="md:hidden flex gap-5">
                             {isLoggedIn ? (
-                                <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} last_name={user ? user.last_name : ''} email={user ? user.email : ''} logout={logout} />
+                                <DropdownUser />
                             ) : (
                                 <Button as={NLink} href="/registrar" color="primary" variant="bordered" className="font-normal">
                                     Registrar
@@ -64,7 +63,7 @@ const Navbar = ({
                                 Arrendadores
                             </Link>
                             {isLoggedIn ? (
-                                <Dropdown id={user ? user.id : 0} name={user ? user.name : ''} last_name={user ? user.last_name : ''} email={user ? user.email : ''} logout={logout} />
+                                <DropdownUser />
                             ) : (
                                 <div className="hidden md:flex items-center space-x-2">
                                     <Button as={NLink} href="/registrar" color="primary" variant="bordered" className="font-normal">

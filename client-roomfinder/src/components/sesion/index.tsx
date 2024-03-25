@@ -40,6 +40,7 @@ const Sigin = () => {
                 // Successful login using the provided login function
                 login(response.data); // Appropriate user data structure
                 localStorage.setItem("isLoggedIn", String(true)); // (Optional)
+                router.push('/')
             } else {
                 setError("Credenciales incorrectas.");
             }
