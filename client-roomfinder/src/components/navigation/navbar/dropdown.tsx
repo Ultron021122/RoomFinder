@@ -81,7 +81,7 @@ const DropdownUser = () => {
                         <DropdownItem key="help_and_feedback" textValue="Ayuda">
                             Help & Feedback
                         </DropdownItem>
-                        <DropdownItem key="logout" color="danger" textValue="Cerrar sesión" onClick={(event) => { logout(); }}>
+                        <DropdownItem key="logout" textValue="Cerrar sesión" onClick={(event) => { logout(); }}>
                             Log Out
                         </DropdownItem>
                     </DropdownSection>

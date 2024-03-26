@@ -3,17 +3,66 @@ export interface University {
 }
 
 export const messages = {
-    required: "Este campo es obligatorio",
-    type_user: "Selecciona un tipo de usuario",
-    name: "Debes introducir un nombre",
-    last_name: "Debes introducir los apellidos correctamente",
-    email: "Debes introducir una dirección correcta",
-    password: "Debes introducir una contraseña que cumpla los requerimientos",
-    birthday: "Introduce una fecha correcta"
+    type_user: {
+        required: "Selecciona un tipo de usuario"
+    },
+    name: {
+        required: "Debes introducir un nombre",
+        min: "Debe ser mayor a 3 caracteres",
+        max: "Debe ser menor a 25 caracteres"
+    },
+    last_name: {
+        required: "Debes introducir los apellidos correctamente"
+    },
+    email: {
+        required: "Correo electrónico es requerido",
+        pattern: "Debes introducir una dirección correcta",
+    },
+    password: {
+        required: "Contraseña requerida",
+        min: "Debe ser mayor a 8 caracteres",
+        max: "Debe ser menor a 16 caracteres"
+    },
+    confirm_password: {
+        required: "Confirmar contraseña es requerida",
+        min: "Debe ser mayor a 8 caracteres",
+        max: "Debe ser menor a 16 caracteres",
+        validate: "Las contraseñas no coinciden"
+    },
+    birthday: {
+        required: "Fecha de nacimiento es requerida",
+        age: "Debes ser mayor de edad"
+    },
+    code_student: {
+        required: "Código de estudiante es requerido"
+    },
+    university: {
+        required: "Universad es requerida"
+    },
+    phone: {
+        required: "Teléfono es requerido",
+    },
+    zip: {
+        required: "Código postal es requerido",
+    },
+    street: {
+        required: "El campo Calle es requerido",
+    },
+    suburb: {
+        required: "El campo Colonia es requerido",
+    },
+    municipality: {
+        required: "El campo Municipio es requerido",
+    },
+    state: {
+        required: "El campo Estado es requerido",
+    },
+
 }
 
 export const patterns = {
-    email: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-.])*$/
+    // email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
 };
 
 export const universities: University[] = [
