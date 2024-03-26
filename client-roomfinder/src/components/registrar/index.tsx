@@ -56,6 +56,22 @@ const Signup = () => {
         return value === password || messages.confirm_password.validate; // Comparar contraseñas
     }
 
+    useEffect(() => {
+        if (error) {
+            toast.error(error, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        }
+    }, [error]);
+
     const onSubmit = async (userInfo: StudentInfo | LessorInfo) => {
         setIsLoading(true);
         setError(null);
@@ -78,48 +94,14 @@ const Signup = () => {
                         transition: Slide,
                     });
                     reset();
-                    // router.push('/sesion');
                 } else {
                     setError("Ocurrio algun error...");
-                    toast.error(error, {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
-                    });
                 }
             } catch (Error: any) {
                 if (Error.response?.status == 400) {
                     setError("Bad Request...");
-                    toast.error(error, {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
-                    });
                 } else {
                     setError("Network Error");
-                    toast.error(error, {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
-                    });
                 }
             } finally {
                 setIsLoading(false);
@@ -145,45 +127,12 @@ const Signup = () => {
                     reset();
                 } else {
                     setError("Ocurrio algun error...");
-                    toast.error(error, {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
-                    });
                 }
             } catch (Error: any) {
                 if (Error.response?.status == 400) {
                     setError("Bad Request...");
-                    toast.error(error, {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
-                    });
                 } else {
                     setError("Network Error");
-                    toast.error(error, {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
-                    });
                 }
             } finally {
                 setIsLoading(false);
@@ -596,7 +545,7 @@ const Signup = () => {
                                             {...register("type_user", {
                                                 required: {
                                                     value: true,
-                                                    message: messages.type_user.required                                                    
+                                                    message: messages.type_user.required
                                                 }
                                             })
                                             }
