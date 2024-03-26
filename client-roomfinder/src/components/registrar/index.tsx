@@ -45,8 +45,6 @@ interface LessorInfo extends User {
 
 const Signup = () => {
     const { isLoggedIn } = useSessionStore();
-    const [selectedUserType, setSelectedUserType] = useState(""); // Variable de estado para el tipo de usuario seleccionado
-    const [selectedUniversity, setSelectedUniversity] = useState(""); // Variable de estado para la universidad seleccionada
 
     const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<StudentInfo | LessorInfo>({ mode: "onChange", defaultValues: { status: 'active' } });
     const [isLoading, setIsLoading] = useState(false);
@@ -55,14 +53,14 @@ const Signup = () => {
 
     const validatePasswordConfirmation = (value: string) => {
         const password = watch('password'); // Obtener el valor de la contraseña
-        return value === password || 'Las contraseñas no coinciden'; // Comparar contraseñas
+        return value === password || messages.confirm_password.validate; // Comparar contraseñas
     }
 
     const onSubmit = async (userInfo: StudentInfo | LessorInfo) => {
         setIsLoading(true);
         setError(null);
 
-        if (selectedUserType === "student") {
+        if (userInfo.type_user === "student") {
             const data = userInfo as StudentInfo;
             try {
                 const response = await axios.post("http://localhost:1234/students/", data);
@@ -145,7 +143,6 @@ const Signup = () => {
                         transition: Slide,
                     });
                     reset();
-                    // router.push('/sesion');
                 } else {
                     setError("Ocurrio algun error...");
                     toast.error(error, {
@@ -209,7 +206,10 @@ const Signup = () => {
                 <div className="relative z-0 w-full mb-2 group">
                     <input
                         {...register("code_student", {
-                            required: messages.required,
+                            required: {
+                                value: true,
+                                message: messages.code_student.required
+                            },
                             valueAsNumber: true,
                         })}
                         type="number"
@@ -222,19 +222,20 @@ const Signup = () => {
                     <label htmlFor="code_student" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                         Codigo de estudiante
                     </label>
-                    {errors?.code_student?.type === "required" && (
-                        <Alert message={messages.required} />
+                    {errors?.code_student && (
+                        <Alert message={errors?.code_student.message} />
                     )}
                 </div>
                 <div className="relative z-0 w-full mb-2 group">
                     <select
                         id="university"
                         {...register("university", {
-                            required: messages.required
+                            required: {
+                                value: true,
+                                message: messages.university.required
+                            }
                         })
                         }
-                        value={selectedUniversity} // Variable de estado para la universidad
-                        onChange={(e) => setSelectedUniversity(e.target.value)} // Función para actualizar la variable de estado
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     >
                         <option value="" className="dark:bg-gray-800 mr-5">Elige una universidad</option>
@@ -247,8 +248,8 @@ const Signup = () => {
                         <option className="dark:bg-gray-800">Centro Universitario de Arte, Arquitectura y Diseño (CUAAD)</option>
                     </select>
                     <label htmlFor="university" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Universidad</label>
-                    {errors?.university?.type === "required" && (
-                        <Alert message={messages.required} />
+                    {errors?.university && (
+                        <Alert message={errors?.university.message} />
                     )}
                 </div>
             </>
@@ -263,7 +264,10 @@ const Signup = () => {
                         <div className="relative z-0 w-full group">
                             <input
                                 {...register("phone", {
-                                    required: messages.required
+                                    required: {
+                                        value: true,
+                                        message: messages.phone.required
+                                    }
                                 })
                                 }
                                 type="text"
@@ -276,8 +280,8 @@ const Signup = () => {
                             <label htmlFor="phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                 Teléfono
                             </label>
-                            {errors?.phone?.type === "required" && (
-                                <Alert message={messages.required} />
+                            {errors?.phone && (
+                                <Alert message={errors?.phone.message} />
                             )}
                         </div>
                     </div>
@@ -285,7 +289,10 @@ const Signup = () => {
                         <div className="relative z-0 w-full group">
                             <input
                                 {...register("zip", {
-                                    required: messages.required,
+                                    required: {
+                                        value: true,
+                                        message: messages.zip.required
+                                    },
                                     valueAsNumber: true
                                 })
                                 }
@@ -299,8 +306,8 @@ const Signup = () => {
                             <label htmlFor="zip" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                 Código Postal
                             </label>
-                            {errors?.zip?.type === "required" && (
-                                <Alert message={messages.required} />
+                            {errors?.zip && (
+                                <Alert message={errors?.zip.message} />
                             )}
                         </div>
                     </div>
@@ -308,7 +315,10 @@ const Signup = () => {
                 <div className="relative z-0 w-full mb-2 group">
                     <input
                         {...register("street", {
-                            required: messages.required
+                            required: {
+                                value: true,
+                                message: messages.street.required
+                            }
                         })
                         }
                         type="text"
@@ -321,14 +331,17 @@ const Signup = () => {
                     <label htmlFor="street" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                         Calle
                     </label>
-                    {errors?.street?.type === "required" && (
-                        <Alert message={messages.required} />
+                    {errors?.street && (
+                        <Alert message={errors?.street.message} />
                     )}
                 </div>
                 <div className="relative z-0 w-full mb-2 group">
                     <input
                         {...register("suburb", {
-                            required: messages.required
+                            required: {
+                                value: true,
+                                message: messages.suburb.required
+                            }
                         })
                         }
                         type="text"
@@ -341,15 +354,18 @@ const Signup = () => {
                     <label htmlFor="suburb" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                         Colonia
                     </label>
-                    {errors?.suburb?.type === "required" && (
-                        <Alert message={messages.required} />
+                    {errors?.suburb && (
+                        <Alert message={errors?.suburb.message} />
                     )}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
                     <div className="relative z-0 w-full group">
                         <input
                             {...register("municipality", {
-                                required: messages.required
+                                required: {
+                                    value: true,
+                                    message: messages.municipality.required
+                                }
                             })
                             }
                             type="text"
@@ -362,14 +378,17 @@ const Signup = () => {
                         <label htmlFor="municipality" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                             Municipio
                         </label>
-                        {errors?.municipality?.type === "required" && (
-                            <Alert message={messages.required} />
+                        {errors?.municipality && (
+                            <Alert message={errors?.municipality.message} />
                         )}
                     </div>
                     <div className="relative z-0 w-full mb-2 group">
                         <input
                             {...register("state", {
-                                required: messages.required
+                                required: {
+                                    value: true,
+                                    message: messages.state.required
+                                }
                             })
                             }
                             type="text"
@@ -382,8 +401,8 @@ const Signup = () => {
                         <label htmlFor="state" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                             Estado
                         </label>
-                        {errors?.state?.type === "required" && (
-                            <Alert message={messages.required} />
+                        {errors?.state && (
+                            <Alert message={errors?.state.message} />
                         )}
                     </div>
                 </div>
@@ -418,15 +437,25 @@ const Signup = () => {
                                     Registrar
                                 </h1>
                                 <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
+                                    {/* <PanelImage /> */}
                                     {/* Nombre y Apellidos */}
                                     <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
                                         <div>
                                             <div className="relative z-0 w-full group">
                                                 <input
                                                     {...register("name", {
-                                                        required: messages.required,
-                                                        minLength: 3,
-                                                        maxLength: 25,
+                                                        required: {
+                                                            value: true,
+                                                            message: messages.name.required
+                                                        },
+                                                        minLength: {
+                                                            value: 3,
+                                                            message: messages.name.min
+                                                        },
+                                                        maxLength: {
+                                                            value: 25,
+                                                            message: messages.name.max
+                                                        },
                                                     })}
                                                     type="text"
                                                     name="name"
@@ -438,8 +467,8 @@ const Signup = () => {
                                                 <label htmlFor="name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                     Nombre
                                                 </label>
-                                                {errors?.name?.type === "required" && (
-                                                    <Alert message={messages.required} />
+                                                {errors?.name && (
+                                                    <Alert message={errors?.name.message} />
                                                 )}
                                             </div>
                                         </div>
@@ -447,7 +476,10 @@ const Signup = () => {
                                             <div className="relative z-0 w-full group">
                                                 <input
                                                     {...register("last_name", {
-                                                        required: messages.required
+                                                        required: {
+                                                            value: true,
+                                                            message: messages.last_name.required
+                                                        }
                                                     })}
                                                     type="text"
                                                     name="last_name"
@@ -459,8 +491,8 @@ const Signup = () => {
                                                 <label htmlFor="last_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                     Apellidos
                                                 </label>
-                                                {errors?.last_name?.type === "required" && (
-                                                    <Alert message={messages.required} />
+                                                {errors?.last_name && (
+                                                    <Alert message={errors?.last_name.message} />
                                                 )}
                                             </div>
                                         </div>
@@ -469,10 +501,13 @@ const Signup = () => {
                                     <div className="relative z-0 w-full mb-2 group">
                                         <input
                                             {...register("email", {
-                                                required: messages.required,
+                                                required: {
+                                                    value: true,
+                                                    message: messages.email.required
+                                                },
                                                 pattern: {
                                                     value: patterns.email,
-                                                    message: messages.email
+                                                    message: messages.email.pattern
                                                 }
                                             })}
                                             type="email"
@@ -483,22 +518,29 @@ const Signup = () => {
                                             autoComplete="off"
                                         />
                                         <label htmlFor="email" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Correo electrónico</label>
-                                        {errors?.email?.type === "required" && (
-                                            <Alert message={messages.required} />
-                                        )}
-                                        {errors?.email?.type === "pattern" && (
-                                            <Alert message={messages.email} />
+                                        {errors?.email && (
+                                            <Alert message={errors?.email.message} />
                                         )}
                                     </div>
+                                    {/* Seguridad */}
                                     <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
                                         {/* Contraseña */}
                                         <div>
                                             <div className="relative z-0 w-full group">
                                                 <input
                                                     {...register("password", {
-                                                        required: messages.required,
-                                                        minLength: 8,
-                                                        maxLength: 16
+                                                        required: {
+                                                            value: true,
+                                                            message: messages.password.required
+                                                        },
+                                                        minLength: {
+                                                            value: 8,
+                                                            message: messages.password.min
+                                                        },
+                                                        maxLength: {
+                                                            value: 16,
+                                                            message: messages.password.max
+                                                        }
                                                     })}
                                                     type="password"
                                                     name="password"
@@ -509,14 +551,8 @@ const Signup = () => {
                                                 <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                     Contraseña
                                                 </label>
-                                                {errors?.password?.type === "required" && (
-                                                    <Alert message={messages.required} />
-                                                )}
-                                                {errors?.password?.type === "minLength" && (
-                                                    <Alert message="Contraseña demasiado corta" />
-                                                )}
-                                                {errors?.password?.type === "maxLength" && (
-                                                    <Alert message="Contraseña demasiado extensa" />
+                                                {errors?.password && (
+                                                    <Alert message={errors?.password.message} />
                                                 )}
                                             </div>
                                         </div>
@@ -524,9 +560,18 @@ const Signup = () => {
                                             <div className="relative z-0 w-full group">
                                                 <input
                                                     {...register("confirm_password", {
-                                                        required: messages.required,
-                                                        minLength: 8,
-                                                        maxLength: 16,
+                                                        required: {
+                                                            value: true,
+                                                            message: messages.confirm_password.required
+                                                        },
+                                                        minLength: {
+                                                            value: 8,
+                                                            message: messages.confirm_password.min
+                                                        },
+                                                        maxLength: {
+                                                            value: 16,
+                                                            message: messages.confirm_password.max
+                                                        },
                                                         validate: validatePasswordConfirmation // Agregar función de validation
                                                     })}
                                                     type="password"
@@ -538,25 +583,23 @@ const Signup = () => {
                                                 <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                     Repetir contraseña
                                                 </label>
-                                                {errors?.confirm_password?.type === "required" && (
-                                                    <Alert message={messages.required} />
+                                                {errors?.confirm_password && (
+                                                    <Alert message={errors?.confirm_password.message} />
                                                 )}
                                             </div>
                                         </div>
-                                        {errors.confirm_password?.type === "validate" && errors.confirm_password.message && (
-                                            <Alert message={errors.confirm_password.message} />
-                                        )}
                                     </div>
                                     {/* Tipo de usuario */}
                                     <div className="relative z-0 w-full mb-2 group">
                                         <select
                                             id="type_user"
                                             {...register("type_user", {
-                                                required: messages.required
+                                                required: {
+                                                    value: true,
+                                                    message: messages.type_user.required                                                    
+                                                }
                                             })
                                             }
-                                            value={selectedUserType} // Variable de estado para el tipo de usuario
-                                            onChange={(e) => setSelectedUserType(e.target.value)} // Función para actualizar la variable de estado
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         >
                                             <option value="" className="dark:bg-gray-800 mr-5">Elige un tipo de usuario</option>
@@ -564,34 +607,43 @@ const Signup = () => {
                                             <option value="lessor" className="dark:bg-gray-800">Arrendador</option>
                                         </select>
                                         <label htmlFor="type_user" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tipo de usuario</label>
-                                        {errors?.type_user?.type === "required" && (
-                                            <Alert message={messages.required} />
+                                        {errors?.type_user && (
+                                            <Alert message={errors?.type_user.message} />
                                         )}
                                     </div>
                                     {/* Fecha de nacimiento */}
                                     <div className="relative z-0 w-full mb-2 group">
                                         <input
                                             {...register("birthday", {
-                                                required: messages.required,
+                                                required: {
+                                                    value: true,
+                                                    message: messages.birthday.required
+                                                },
                                                 valueAsDate: true,
+                                                validate: (value) => {
+                                                    const fechaNacimiento = new Date(value);
+                                                    const fechaActual = new Date();
+                                                    const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+                                                    return edad >= 18 || messages.birthday.age;
+                                                },
                                             })}
                                             type="date"
                                             name="birthday"
                                             id="birthday"
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder="Enter your date"
-                                            max="2020-01-01"
+                                            max="2007-01-01"
                                             min="1900-01-01"
                                         />
                                         <label htmlFor="birthday" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Fecha de nacimiento
                                         </label>
-                                        {errors?.birthday?.type === "required" && (
-                                            <Alert message={messages.required} />
+                                        {errors?.birthday && (
+                                            <Alert message={errors?.birthday?.message} />
                                         )}
                                     </div>
-                                    {selectedUserType === "student" && renderStudent()}
-                                    {selectedUserType === "lessor" && renderLessor()}
+                                    {watch("type_user") === "student" && renderStudent()}
+                                    {watch("type_user") === "lessor" && renderLessor()}
                                     <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
                                         Registrar
                                     </Button>

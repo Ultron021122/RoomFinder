@@ -1,4 +1,4 @@
-export const Alert = ({ message }: { message: string }) => {
+export const Alert = ({ message }: { message: any }) => {
     return (
         <>
             <div className="mt-1 text-tiny border-l-4 border-red-500 text-red-500 p-2" role="alert">
