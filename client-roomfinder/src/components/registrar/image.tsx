@@ -1,14 +1,11 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
+import "react-image-crop/dist/ReactCrop.css";
 
-// Extend the Crop type to include aspect property
-interface ExtendedCrop extends Crop {
-    aspect?: number;
-}
-
-function setCanvasImage(image: HTMLImageElement, canvas: HTMLCanvasElement, crop: ExtendedCrop) {
+function setCanvasImage(image: HTMLImageElement, canvas: HTMLCanvasElement, crop: Crop) {
     if (!crop || !canvas || !image) return;
 
     const scaleX = image.naturalWidth / image.width;
@@ -36,65 +33,91 @@ function setCanvasImage(image: HTMLImageElement, canvas: HTMLCanvasElement, crop
     );
 }
 
-export default function ImageProfile() {
-    const [upImg, setUpImg] = useState<string | undefined>();
+export default function ModalImage() {
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null);
 
-    const imgRef = useRef<HTMLImageElement | null>(null);
-    const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);
-
-    const [crop, setCrop] = useState<ExtendedCrop>({
-        unit: "px",
-        x: 0,
-        y: 0,
-        width: 100,
-        height: 100,
-        aspect: 1
-    });
-    const [completeCrop, setCompleteCrop] = useState<ExtendedCrop | null>(null);
-
-    const min = 100;
-    const max = 600;
-
-    // On selecting file we set load the image on to cropper
     const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
-            const reader = new FileReader();
-            reader.addEventListener("load", () => setUpImg(reader.result as string));
-            reader.readAsDataURL(e.target.files[0]);
+            setSelectedFile(e.target.files[0]);
+            onOpen();
         }
+        e.target.value = '';
     };
 
-    const onLoad = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        // Set image reference to image element
-        imgRef.current = event.currentTarget;
+    const handleSave = (canvas: HTMLCanvasElement) => {
+        setCroppedImageUrl(canvas.toDataURL());
+        onOpenChange();
     };
 
-    useEffect(() => {
-        if (completeCrop) {
-            setCanvasImage(imgRef.current!, previewCanvasRef.current!, completeCrop);
-        }
-    }, [completeCrop]);
+    const ImageProfile = ({
+        selectedFile,
+        onCropComplete,
+    }: {
+        selectedFile: File | null,
+        onCropComplete: (canvas: HTMLCanvasElement) => void;
+    }) => {
+        const [upImg, setUpImg] = useState<string | undefined>();
 
-    return (
-        <div>
+        const imgRef = useRef<HTMLImageElement | null>(null);
+        const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);
+
+        const [crop, setCrop] = useState<Crop | undefined>(undefined);
+        const [completeCrop, setCompleteCrop] = useState<Crop | null>(null);
+
+        const min = 100;
+        const max = 600;
+
+        useEffect(() => {
+            if (selectedFile) {
+                const reader = new FileReader();
+                reader.addEventListener("load", () => {
+                    setUpImg(reader.result as string);
+                    setCrop({
+                        unit: "px",
+                        x: 0,
+                        y: 0,
+                        width: 100,
+                        height: 100
+                    });
+                    const img = new Image();
+                    img.src = reader.result as string;
+                });
+                reader.readAsDataURL(selectedFile);
+            }
+        }, [selectedFile]);
+
+        const onLoad = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            // Set image reference to image element
+            imgRef.current = event.currentTarget;
+        };
+
+        useEffect(() => {
+            if (completeCrop) {
+                const canvas = document.createElement('canvas');
+                setCanvasImage(imgRef.current!, previewCanvasRef.current!, completeCrop);
+            }
+        }, [completeCrop]);
+
+        return (
             <div>
-                <input type='file' accept='image/*' onChange={onSelectFile} />
-            </div>
-            <div className='bg-gray-200'>
-                <ReactCrop
-                    className='w-[600px]'
-                    ruleOfThirds
-                    crop={crop}
-                    minWidth={min}
-                    maxWidth={max}
-                    keepSelection={true}
-                    onChange={(c) => setCrop(c)}
-                    onComplete={(c) => setCompleteCrop(c)}
-                >
-                    {upImg && <img src={upImg} alt='Crop' onLoad={onLoad} />}
-                </ReactCrop>
-            </div>
-            <div>
+                <div className='flex items-center justify-center w-full bg-transparent'>
+                    <ReactCrop
+                        className='w-auto h-auto'
+                        circularCrop
+                        ruleOfThirds
+                        crop={crop}
+                        minWidth={min}
+                        maxWidth={max}
+                        keepSelection={true}
+                        onChange={(c) => setCrop(c)}
+                        onComplete={(c) => setCompleteCrop(c)}
+                        aspect={1}
+                    >
+                        {upImg && <img src={upImg} alt='Crop' onLoad={onLoad} />}
+                    </ReactCrop>
+                </div>
                 {/* Canvas to display cropped image */}
                 <canvas
                     ref={previewCanvasRef}
@@ -103,8 +126,70 @@ export default function ImageProfile() {
                         width: Math.round(completeCrop?.width ?? 0),
                         height: Math.round(completeCrop?.height ?? 0),
                     }}
+                    className='hidden'
                 />
+                <Button fullWidth color='success' variant='solid' radius='sm' className='mt-5 dark:text-gray-50' onPress={() => onCropComplete(previewCanvasRef.current!)}>
+                    Establecer imagen de pérfil
+                </Button>
             </div>
-        </div>
+        );
+    }
+    return (
+        <>
+            <div className='flex items-center justify-center w-full bg-blue-500 rounded-md'>
+                <label htmlFor='dropzone-file' className='flex flex-col items-center justify-center my-2 w-56 h-56 rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'>
+                    {croppedImageUrl ? (
+                        <div>
+                            <img
+                                src={croppedImageUrl}
+                                alt='Profile Picture'
+                                className='rounded-full'
+                            />
+                        </div>
+                    ) : (
+                        <div className='w-full h-full border-2 border-gray-300 border-dashed rounded-full'>
+                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                </svg>
+                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                            </div>
+                        </div>
+                    )}
+                    <input id='dropzone-file' type='file' accept='image/*' className='hidden' onChange={onSelectFile} />
+                </label>
+            </div>
+            <Modal
+                isOpen={isOpen}
+                placement='bottom'
+                scrollBehavior='inside'
+                onOpenChange={onOpenChange}
+                isDismissable={false}
+                isKeyboardDismissDisabled={true}
+                radius='sm'
+                classNames={{
+                    header: 'bg-white dark:bg-gray-800 dark:text-gray-100 border-b dark:border-gray-600',
+                    body: 'bg-white dark:bg-gray-800 h-96',
+                    footer: 'bg-white dark:bg-gray-800 border-t dark:border-gray-600'
+                }}
+            >
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader>Imagen de pérfil</ModalHeader>
+                            <ModalBody>
+                                <ImageProfile selectedFile={selectedFile} onCropComplete={handleSave} />
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color='danger' variant='solid' onPress={onClose}>
+                                    Salir
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+        </>
     );
 }

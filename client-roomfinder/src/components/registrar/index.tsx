@@ -9,6 +9,7 @@ import { useSessionStore } from "../sesion/global";
 import { Alert } from "./alert";
 import { ToastContainer, toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ModalImage from "./image";
 
 interface User {
     type_user: string;
@@ -383,10 +384,10 @@ const Signup = () => {
                         <div className="w-full my-5 bg-white rounded-lg shadow dark:border sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                                    Registrar
+                                    Registrar Usuario
                                 </h1>
                                 <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
-                                    {/* <PanelImage /> */}
+                                    <ModalImage />
                                     {/* Nombre y Apellidos */}
                                     <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
                                         <div>
