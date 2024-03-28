@@ -13,6 +13,7 @@
     "@splinetool/runtime": "^1.0.63",
     "@types/react-leaflet": "^3.0.0",
     "axios": "1.6.7",
+    "cloudinary": "^2.0.3",
     "data-fns": "^1.1.0",
     "date-fns": "^3.5.0",
     "framer-motion": "^11.0.8",
