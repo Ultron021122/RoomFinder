@@ -130,10 +130,10 @@ const Signup = () => {
             } else {
                 const data = userInfo as LessorInfo;
                 try {
-                    const response = await axios.post("http://localhost:1234/lessors/", data);
+                    const response = await axios.post("/api/users/lessor", data);
                     if (response.status === 201) {
                         setIsLoading(false);
-                        toast.success('Usuario creado correctamente', {
+                        toast.success(response.data.message, {
                             position: "bottom-right",
                             autoClose: 5000,
                             hideProgressBar: false,
@@ -146,13 +146,13 @@ const Signup = () => {
                         });
                         reset();
                     } else {
-                        setErrorSystem("Ocurrio algun error...");
+                        setErrorSystem(response.data.message);
                     }
                 } catch (Error: any) {
                     if (Error.response?.status == 400) {
-                        setErrorSystem("Bad Request...");
+                        setErrorSystem(Error.response?.data.message);
                     } else {
-                        setErrorSystem("Network Error");
+                        setErrorSystem(Error.response?.data.message);
                     }
                 } finally {
                     setIsLoading(false);
@@ -411,7 +411,7 @@ const Signup = () => {
                                     {errors?.profileImage && (
                                         <Alert message={errors?.profileImage.message} />
                                     )}
-                                    <h4 className="mt-7 text-center text-lg font-semibold leading-tight tracking-tight text-gray-700 md:text-xl dark:text-gray-200">
+                                    <h4 className="mt-7 text-center text-lg font-semibold leading-tight tracking-tight text-gray-700 dark:text-gray-200">
                                         Datos del usuario
                                     </h4>
                                     {/* Nombre y Apellidos */}

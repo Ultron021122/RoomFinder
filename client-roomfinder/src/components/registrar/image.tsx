@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from '@nextui-org/react';
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
 import "react-image-crop/dist/ReactCrop.css";
@@ -18,7 +18,7 @@ function setCanvasImage(image: HTMLImageElement, canvas: HTMLCanvasElement, crop
     canvas.height = crop.height * pixelRatio * scaleY;
 
     ctx!.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    ctx!.imageSmoothingQuality = 'high';
+    ctx!.imageSmoothingQuality = 'medium';
 
     ctx!.drawImage(
         image,
@@ -56,7 +56,7 @@ export default function ModalImage({ onImageSave }: { onImageSave: (image: strin
 
     const handleSave = (canvas: HTMLCanvasElement) => {
         if (canvas) {
-            const dataUrl = canvas.toDataURL();
+            const dataUrl = canvas.toDataURL('image/jpg');
             setCroppedImageUrl(dataUrl);
             onOpenChange();
             onImageSave(dataUrl);
@@ -144,12 +144,14 @@ export default function ModalImage({ onImageSave }: { onImageSave: (image: strin
                     }}
                     className='hidden'
                 />
+                {/* Botón para establecer imagen de perfil */}
                 <Button
                     fullWidth
                     color='success'
                     variant='solid'
                     radius='sm'
-                    className='mt-5 dark:text-gray-50'
+                    className='my-3 text-gray-100 hover:text-white bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700'
+
                     onPress={() => onCropComplete(previewCanvasRef.current!)}
                     isDisabled={!hasUserMadeCrop}
                 >
@@ -160,27 +162,35 @@ export default function ModalImage({ onImageSave }: { onImageSave: (image: strin
     }
     return (
         <>
-            <div className='flex items-center justify-center w-full rounded-md'>
+            {/* Campo para seleccionar la imagen */}
+            <div className='flex flex-col items-center justify-center w-full rounded-md'>
                 <label htmlFor='dropzone-file' className='flex flex-col items-center justify-center my-2 w-40 h-40 sm:w-56 sm:h-56 ring-4 ring-offset-gray-50 dark:ring-offset-gray-900 ring-offset-4 ring-blue-500 rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'>
                     {croppedImageUrl ? (
-                        <div>
+                        <>
                             <img
                                 src={croppedImageUrl}
                                 alt='Profile Picture'
                                 className='rounded-full object-cover w-40 h-40 sm:w-56 sm:h-56'
                             />
-                        </div>
+                        </>
                     ) : (
                         <>
-                            <svg className="w-16 h-16 sm:w-24 sm:h-24 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <svg className="w-16 h-16 sm:w-20 sm:h-20 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                             </svg>
                         </>
                     )}
                     <input id='dropzone-file' type='file' accept='image/*' className='hidden' onChange={onSelectFile} />
                 </label>
+                {croppedImageUrl ? (
+                    <p className='text-tiny text-blue-500 dark:text-blue-400 mt-2'>Imagen establecida correctamente</p>
+                ) : (
+                    <p className='text-tiny text-gray-500 dark:text-gray-400 mt-2'>Imagen aún no establecida</p>
+                )}
             </div>
+            {/* Peso de imagen excedido 2MB */}
             {errorMessage && <p className='text-center text-sm text-red-500 dark:text-red-400'>{errorMessage}</p>}
+            {/* Modal */}
             <Modal
                 isOpen={isOpen}
                 placement='bottom'
@@ -192,18 +202,19 @@ export default function ModalImage({ onImageSave }: { onImageSave: (image: strin
                 classNames={{
                     header: 'bg-white dark:bg-gray-800 dark:text-gray-100 border-b dark:border-gray-600',
                     body: 'bg-white dark:bg-gray-800 h-96',
-                    footer: 'bg-white dark:bg-gray-800 border-t dark:border-gray-600'
+                    footer: 'bg-white dark:bg-gray-800 border-t dark:border-gray-600 justify-center'
                 }}
             >
                 <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalHeader>Imagen de pérfil</ModalHeader>
-                            <ModalBody>
-                                <ImageProfile selectedFile={selectedFile} onCropComplete={handleSave} />
-                            </ModalBody>
-                        </>
-                    )}
+                    <>
+                        <ModalHeader>Imagen de pérfil</ModalHeader>
+                        <ModalBody>
+                            <ImageProfile selectedFile={selectedFile} onCropComplete={handleSave} />
+                        </ModalBody>
+                        <ModalFooter>
+                            <p className='text-tiny text-gray-600 dark:text-gray-300'>Selecciona la imagen que deseas establecer como tu foto de perfil.</p>
+                        </ModalFooter>
+                    </>
                 </ModalContent>
             </Modal>
         </>
