@@ -20,6 +20,7 @@ interface User {
     confirm_password: string;
     status: string;
     birthday: string;
+    profileImage: string;
 }
 
 interface StudentInfo extends User {
@@ -47,9 +48,9 @@ interface LessorInfo extends User {
 const Signup = () => {
     const { isLoggedIn } = useSessionStore();
 
-    const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<StudentInfo | LessorInfo>({ mode: "onChange", defaultValues: { status: 'active' } });
+    const { register, handleSubmit, formState: { errors }, watch, reset, setValue, setError, clearErrors } = useForm<StudentInfo | LessorInfo>({ mode: "onChange", defaultValues: { status: 'active' } });
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [errorSystem, setErrorSystem] = useState<string | null>(null);
     const router = useRouter();
 
     const validatePasswordConfirmation = (value: string) => {
@@ -57,9 +58,21 @@ const Signup = () => {
         return value === password || messages.confirm_password.validate; // Comparar contraseñas
     }
 
+    const handleImageSave = (imageFile: string | null) => {
+        if (imageFile) {
+            setValue("profileImage", imageFile);
+            clearErrors("profileImage");
+        } else {
+            setError("profileImage", {
+                type: "required",
+                message: messages.profilImage.required
+            });
+        }
+    };
+
     useEffect(() => {
-        if (error) {
-            toast.error(error, {
+        if (errorSystem) {
+            toast.error(errorSystem, {
                 position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -71,72 +84,79 @@ const Signup = () => {
                 transition: Bounce,
             });
         }
-    }, [error]);
+    }, [errorSystem]);
 
     const onSubmit = async (userInfo: StudentInfo | LessorInfo) => {
-        setIsLoading(true);
-        setError(null);
-
-        if (userInfo.type_user === "student") {
-            const data = userInfo as StudentInfo;
-            try {
-                const response = await axios.post("http://localhost:1234/students/", data);
-                if (response.status === 201) {
-                    setIsLoading(false);
-                    toast.success('Usuario creado correctamente', {
-                        position: "top-center",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Slide,
-                    });
-                    reset();
-                } else {
-                    setError("Ocurrio algun error...");
-                }
-            } catch (Error: any) {
-                if (Error.response?.status == 400) {
-                    setError("Bad Request...");
-                } else {
-                    setError("Network Error");
-                }
-            } finally {
-                setIsLoading(false);
-            }
-
+        if (!userInfo.profileImage) {
+            setError("profileImage", {
+                type: "required",
+                message: messages.profilImage.required
+            });
         } else {
-            const data = userInfo as LessorInfo;
-            try {
-                const response = await axios.post("http://localhost:1234/lessors/", data);
-                if (response.status === 201) {
+            setIsLoading(true);
+            setErrorSystem(null);
+
+            if (userInfo.type_user === "student") {
+                const data = userInfo as StudentInfo;
+                try {
+                    const response = await axios.post("/api/users/student", data);
+                    if (response.status === 201) {
+                        setIsLoading(false);
+                        toast.success('Usuario creado correctamente', {
+                            position: "bottom-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Slide,
+                        });
+                        // reset();
+                    } else {
+                        setErrorSystem("Ocurrio algun error...");
+                    }
+                } catch (Error: any) {
+                    if (Error.response?.status == 400) {
+                        setErrorSystem("Bad Request...");
+                    } else {
+                        setErrorSystem("Network Error");
+                    }
+                } finally {
                     setIsLoading(false);
-                    toast.success('Usuario creado correctamente', {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Slide,
-                    });
-                    reset();
-                } else {
-                    setError("Ocurrio algun error...");
                 }
-            } catch (Error: any) {
-                if (Error.response?.status == 400) {
-                    setError("Bad Request...");
-                } else {
-                    setError("Network Error");
+
+            } else {
+                const data = userInfo as LessorInfo;
+                try {
+                    const response = await axios.post("http://localhost:1234/lessors/", data);
+                    if (response.status === 201) {
+                        setIsLoading(false);
+                        toast.success('Usuario creado correctamente', {
+                            position: "bottom-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Slide,
+                        });
+                        reset();
+                    } else {
+                        setErrorSystem("Ocurrio algun error...");
+                    }
+                } catch (Error: any) {
+                    if (Error.response?.status == 400) {
+                        setErrorSystem("Bad Request...");
+                    } else {
+                        setErrorSystem("Network Error");
+                    }
+                } finally {
+                    setIsLoading(false);
                 }
-            } finally {
-                setIsLoading(false);
             }
         }
     };
@@ -387,7 +407,13 @@ const Signup = () => {
                                     Registrar Usuario
                                 </h1>
                                 <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
-                                    <ModalImage />
+                                    <ModalImage onImageSave={handleImageSave} />
+                                    {errors?.profileImage && (
+                                        <Alert message={errors?.profileImage.message} />
+                                    )}
+                                    <h4 className="mt-7 text-center text-lg font-semibold leading-tight tracking-tight text-gray-700 md:text-xl dark:text-gray-200">
+                                        Datos del usuario
+                                    </h4>
                                     {/* Nombre y Apellidos */}
                                     <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
                                         <div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react';
+import { Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from '@nextui-org/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
 import "react-image-crop/dist/ReactCrop.css";
@@ -33,7 +33,7 @@ function setCanvasImage(image: HTMLImageElement, canvas: HTMLCanvasElement, crop
     );
 }
 
-export default function ModalImage() {
+export default function ModalImage({ onImageSave }: { onImageSave: (image: string | null) => void }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null);
@@ -47,8 +47,14 @@ export default function ModalImage() {
     };
 
     const handleSave = (canvas: HTMLCanvasElement) => {
-        setCroppedImageUrl(canvas.toDataURL());
-        onOpenChange();
+        if (canvas) {
+            const dataUrl = canvas.toDataURL();
+            setCroppedImageUrl(dataUrl);
+            onOpenChange();
+            onImageSave(dataUrl);
+        } else {
+            onImageSave(null);
+        }
     };
 
     const ImageProfile = ({
@@ -65,6 +71,8 @@ export default function ModalImage() {
 
         const [crop, setCrop] = useState<Crop | undefined>(undefined);
         const [completeCrop, setCompleteCrop] = useState<Crop | null>(null);
+
+        const [hasUserMadeCrop, setHasUserMadeCrop] = useState(false);
 
         const min = 100;
         const max = 600;
@@ -111,7 +119,7 @@ export default function ModalImage() {
                         minWidth={min}
                         maxWidth={max}
                         keepSelection={true}
-                        onChange={(c) => setCrop(c)}
+                        onChange={(c) => { setCrop(c); setHasUserMadeCrop(true); }}
                         onComplete={(c) => setCompleteCrop(c)}
                         aspect={1}
                     >
@@ -128,7 +136,15 @@ export default function ModalImage() {
                     }}
                     className='hidden'
                 />
-                <Button fullWidth color='success' variant='solid' radius='sm' className='mt-5 dark:text-gray-50' onPress={() => onCropComplete(previewCanvasRef.current!)}>
+                <Button
+                    fullWidth
+                    color='success'
+                    variant='solid'
+                    radius='sm'
+                    className='mt-5 dark:text-gray-50'
+                    onPress={() => onCropComplete(previewCanvasRef.current!)}
+                    isDisabled={!hasUserMadeCrop}
+                >
                     Establecer imagen de pérfil
                 </Button>
             </div>
@@ -136,26 +152,22 @@ export default function ModalImage() {
     }
     return (
         <>
-            <div className='flex items-center justify-center w-full bg-blue-500 rounded-md'>
-                <label htmlFor='dropzone-file' className='flex flex-col items-center justify-center my-2 w-56 h-56 rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'>
+            <div className='flex items-center justify-center w-full rounded-md'>
+                <label htmlFor='dropzone-file' className='flex flex-col items-center justify-center my-2 w-40 h-40 sm:w-56 sm:h-56 ring-4 ring-offset-gray-50 dark:ring-offset-gray-900 ring-offset-4 ring-blue-500 rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'>
                     {croppedImageUrl ? (
                         <div>
                             <img
                                 src={croppedImageUrl}
                                 alt='Profile Picture'
-                                className='rounded-full'
+                                className='rounded-full object-cover w-40 h-40 sm:w-56 sm:h-56'
                             />
                         </div>
                     ) : (
-                        <div className='w-full h-full border-2 border-gray-300 border-dashed rounded-full'>
-                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                </svg>
-                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                            </div>
-                        </div>
+                        <>
+                            <svg className="w-16 h-16 sm:w-24 sm:h-24 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                            </svg>
+                        </>
                     )}
                     <input id='dropzone-file' type='file' accept='image/*' className='hidden' onChange={onSelectFile} />
                 </label>
@@ -181,11 +193,6 @@ export default function ModalImage() {
                             <ModalBody>
                                 <ImageProfile selectedFile={selectedFile} onCropComplete={handleSave} />
                             </ModalBody>
-                            <ModalFooter>
-                                <Button color='danger' variant='solid' onPress={onClose}>
-                                    Salir
-                                </Button>
-                            </ModalFooter>
                         </>
                     )}
                 </ModalContent>

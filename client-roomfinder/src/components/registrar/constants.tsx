@@ -33,6 +33,9 @@ export const messages = {
         required: "Fecha de nacimiento es requerida",
         age: "Debes ser mayor de edad"
     },
+    profilImage: {
+        required: "Imagen de perfil es requerida"
+    },
     code_student: {
         required: "Código de estudiante es requerido"
     },
@@ -61,7 +64,7 @@ export const messages = {
 }
 
 export const patterns = {
-    email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-.])*$/
+    email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     // email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
 };
 
