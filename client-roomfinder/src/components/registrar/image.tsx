@@ -37,11 +37,19 @@ export default function ModalImage({ onImageSave }: { onImageSave: (image: strin
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
-            setSelectedFile(e.target.files[0]);
-            onOpen();
+            const file = e.target.files[0];
+            const fileSize = file.size / 1024 / 1024; // in MB
+            if (fileSize > 2) {
+                setErrorMessage('El tamaño de la imagen no debe ser mayor a 2MB.');
+            } else {
+                setErrorMessage(null);
+                setSelectedFile(e.target.files[0]);
+                onOpen();
+            }
         }
         e.target.value = '';
     };
@@ -172,6 +180,7 @@ export default function ModalImage({ onImageSave }: { onImageSave: (image: strin
                     <input id='dropzone-file' type='file' accept='image/*' className='hidden' onChange={onSelectFile} />
                 </label>
             </div>
+            {errorMessage && <p className='text-center text-sm text-red-500 dark:text-red-400'>{errorMessage}</p>}
             <Modal
                 isOpen={isOpen}
                 placement='bottom'

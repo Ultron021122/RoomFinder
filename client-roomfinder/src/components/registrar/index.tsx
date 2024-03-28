@@ -102,7 +102,7 @@ const Signup = () => {
                     const response = await axios.post("/api/users/student", data);
                     if (response.status === 201) {
                         setIsLoading(false);
-                        toast.success('Usuario creado correctamente', {
+                        toast.success(response.data.message, {
                             position: "bottom-right",
                             autoClose: 5000,
                             hideProgressBar: false,
@@ -115,13 +115,13 @@ const Signup = () => {
                         });
                         // reset();
                     } else {
-                        setErrorSystem("Ocurrio algun error...");
+                        setErrorSystem(response.data.message);
                     }
                 } catch (Error: any) {
                     if (Error.response?.status == 400) {
-                        setErrorSystem("Bad Request...");
+                        setErrorSystem(Error.response?.data.message);
                     } else {
-                        setErrorSystem("Network Error");
+                        setErrorSystem(Error.response?.data.message);
                     }
                 } finally {
                     setIsLoading(false);
