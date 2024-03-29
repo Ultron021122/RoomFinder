@@ -32,7 +32,7 @@ export class UserController {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
         const login = await this.userModel.login({ input: result.data })
-        if (login == false) return res.status(401).json({ message: "Invalid credentials" })
+        if (login === false) return res.status(401).json({ message: "Invalid credentials" })
         res.status(200).json(login)
     }
 
@@ -41,26 +41,28 @@ export class UserController {
         if (result.error) {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
+        // Encrypt password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(result.data.password, salt);
         result.data.password = hashedPassword;
 
         const newUser = await this.userModel.create({ input: result.data })
-        
-        const token = await EmailService.generarTokenVerification();
-        console.log(newUser.email);
-        await EmailService.sendEmailVerificate(newUser.email, token);
+        if (newUser === false) return res.status(409).json({ message: "User already exists" })
+
+        // const token = await EmailService.generarTokenVerification();
+        // await EmailService.sendEmailVerificate(newUser.email, token);
+
         return res.status(201).json(newUser)
     }
 
     verifyEmail = async (req, res) => {
         const { token } = req.params;
         const verifiedUser = await this.userModel.verifyEmail({ token });
-        
+
         if (!verifiedUser) {
             return res.status(400).json({ message: 'Invalid verification token' });
         }
-        
+
         await this.userModel.updateVerified({ id: verifiedUser.id });
         return res.status(200).json({ message: 'Email verified successfully' });
     }
@@ -87,6 +89,8 @@ export class UserController {
         }
         const { id } = req.params
         const updateUser = await this.userModel.update({ id, input: result.data })
+        if (updateUser === false) return res.status(409).json({ message: 'Email already exists' })
+        if (!updateUser) return res.status(404).json({ message: 'User not found' })
         return res.json(updateUser)
     }
 }

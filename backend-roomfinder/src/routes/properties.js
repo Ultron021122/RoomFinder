@@ -1,4 +1,5 @@
 import { Router } from "express"
+import { param, validationResult } from 'express-validator'
 import { PropertyController } from "../controller/properties.js"
 
 export const createPropertiesRouter = ({ propertieModel }) => {
@@ -6,10 +7,40 @@ export const createPropertiesRouter = ({ propertieModel }) => {
     const propertyController = new PropertyController({ propertieModel })
 
     propertiesRouter.get('/', propertyController.getAll)
-    propertiesRouter.get('/:id', propertyController.getById)
+    propertiesRouter.get('/:id', [
+        param('id').isInt().withMessage('id must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        propertyController.getById
+    ])
     propertiesRouter.post('/', propertyController.create)
-    propertiesRouter.delete('/:id', propertyController.delete)
-    propertiesRouter.patch('/:id', propertyController.updateProperty)
+    propertiesRouter.delete('/:id', [
+        param('id').isInt().withMessage('id must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        propertyController.delete
+    ])
+    propertiesRouter.patch('/:id', [
+        param('id').isInt().withMessage('id must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        propertyController.updateProperty
+    ])
 
     return propertiesRouter
 }

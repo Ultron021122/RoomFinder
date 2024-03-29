@@ -39,19 +39,24 @@ export class UsersModel extends Database {
         return user[0] ? new UsersModel(user[0]) : null;
     }
 
+    static async getByEmail({ email }) {
+        const user = await this.query(
+            'SELECT * FROM users WHERE email = $1;',
+            [email]
+        );
+        return user[0] ? new UsersModel(user[0]) : null;
+    }
+
     static async login({ input }) {
         try {
             const { email, password } = input
-            const user = await this.query(
-                'SELECT * FROM users WHERE email = $1;',
-                [email]
-            );
-            if (user.length == 0) return false;
+            const user = await this.getByEmail({ email });
+            if (!user) return false;
 
-            const validPassword = await bcrypt.compare(password, user[0].password)
+            const validPassword = await bcrypt.compare(password, user.password)
             if (!validPassword) return false;
 
-            return new UsersModel(user[0]);
+            return user;
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
@@ -60,6 +65,9 @@ export class UsersModel extends Database {
     static async create({ input }) {
         try {
             const { type_user, name, last_name, email, password, birthday, status } = input
+            const validate = await this.getByEmail({ email });
+            if (validate) return false;
+
             const result = await this.query(
                 'INSERT INTO users (type_user, name, last_name, email, password, birthday, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;',
                 [type_user, name, last_name, email, password, birthday, status]
@@ -109,8 +117,10 @@ export class UsersModel extends Database {
     static async update({ id, input }) {
         try {
             const { type_user, name, last_name, email, password, birthday, status } = input
+            const validate = email ? await this.getByEmail({ email }) : null;
+            if (validate) return false;
             const user = await this.getById({ id })
-            if (user === null) return false;
+            if (!user) return null;
 
             const updateColumns = Object.entries({
                 type_user,

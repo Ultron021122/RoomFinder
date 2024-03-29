@@ -1,4 +1,5 @@
 import { Router } from "express"
+import { param, validationResult } from 'express-validator'
 import { UserController } from '../controller/users.js'
 
 export const createUsersRouter = ({ userModel }) => {
@@ -119,7 +120,19 @@ export const createUsersRouter = ({ userModel }) => {
      *          default:
      *              description: Unexpected error
      */
-    usersRouter.get('/:id', userController.getById)
+    usersRouter.get('/:id', [
+        // Validation
+        param('id').isInt().withMessage('id must be an integer'),
+        (req, res, next) => {
+            // Check for errors
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        userController.getById
+    ])
     /**
      * @swagger
      * /users/type/{type_user}:
@@ -151,7 +164,19 @@ export const createUsersRouter = ({ userModel }) => {
      *      summary: Delete a user
      *      tags: [Users]
      */
-    usersRouter.delete('/:id', userController.delete)
+    usersRouter.delete('/:id', [
+        // Validation
+        param('id').isInt().withMessage('id must be an integer'),
+        (req, res, next) => {
+            // Check for errors
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        userController.delete
+    ])
     /**
      * @swagger
      * /users/{id}:
@@ -190,7 +215,19 @@ export const createUsersRouter = ({ userModel }) => {
      *          '200':
      *              description: Return a user.
      */
-    usersRouter.patch('/:id', userController.updateUser)
+    usersRouter.patch('/:id', [
+        // Validation
+        param('id').isInt().withMessage('id must be an integer'),
+        (req, res, next) => {
+            // Check for errors
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        userController.updateUser
+    ])
 
     return usersRouter
 }
