@@ -67,6 +67,7 @@ export class LessorsModel extends UsersModel {
       const result = await UsersModel.create({
         input
       });
+      if (result === false) return false;
       const id = result.id;
       const created_date = result.created_date;
       const lessor = await this.query('INSERT INTO lessors (user_id, phone, street, zip, suburb, municipality, state) VALUES ($1, $2, $3, $4, $5, $6, $7);', [id, phone, street, zip, suburb, municipality, state]);
@@ -128,6 +129,7 @@ export class LessorsModel extends UsersModel {
         input
       });
       if (user === false) return false;
+      if (!user) return null;
       const updateColumns = Object.entries({
         phone,
         street,
