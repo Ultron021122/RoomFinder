@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { param, validationResult } from 'express-validator'
 import { LessorController } from '../controller/lessors.js'
 
 export const createLessorsRouter = ({ lessorModel }) => {
@@ -24,10 +25,40 @@ export const createLessorsRouter = ({ lessorModel }) => {
      *              description: A JSON array of lessor data
      */
     lessorsRouter.get('/', lessorController.getAll)
-    lessorsRouter.get('/:id', lessorController.getById)
+    lessorsRouter.get('/:id', [
+        param('id').isInt().withMessage('id must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        lessorController.getById
+    ])
     lessorsRouter.post('/', lessorController.create)
-    lessorsRouter.delete('/:id', lessorController.delete)
-    lessorsRouter.patch('/:id', lessorController.updateLessor)
+    lessorsRouter.delete('/:id', [
+        param('id').isInt().withMessage('id must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        lessorController.delete
+    ])
+    lessorsRouter.patch('/:id', [
+        param('id').isInt().withMessage('id must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        lessorController.updateLessor
+    ])
 
     return lessorsRouter
 }

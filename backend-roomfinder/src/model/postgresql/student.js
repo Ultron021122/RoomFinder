@@ -27,6 +27,7 @@ export class StudentsModel extends UsersModel {
         try {
             const { type_user, name, last_name, email, password, birthday, status, code_student, university } = input
             const result = await UsersModel.create({ input })
+            if (result === false) return false;
             const id = result.id
             const created_date = result.created_date
 
@@ -55,6 +56,7 @@ export class StudentsModel extends UsersModel {
             const { type_user, name, last_name, email, password, birthday, status, code_student, university } = input
             const user = await UsersModel.update({ id, input })
             if (user === false) return false;
+            if (!user) return null;
 
             const updateColumns = Object.entries({
                 code_student,

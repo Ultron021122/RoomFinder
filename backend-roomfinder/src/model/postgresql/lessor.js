@@ -20,7 +20,8 @@ export class LessorsModel extends UsersModel {
     }
 
     static async getById({ id }) {
-        const lessor = await this.query("SELECT * FROM users LEFT JOIN lessors ON users.id = lessors.user_id WHERE users.type_user = 'lessor' AND users.id = $1;",
+        const lessor = await this.query(
+            "SELECT * FROM users LEFT JOIN lessors ON users.id = lessors.user_id WHERE users.type_user = 'lessor' AND users.id = $1;",
             [id]
         );
         return lessor[0] ? new LessorsModel(lessor[0]) : null;
@@ -30,6 +31,7 @@ export class LessorsModel extends UsersModel {
         try {
             const { type_user, name, last_name, email, password, birthday, status, phone, street, zip, suburb, municipality, state } = input
             const result = await UsersModel.create({ input })
+            if (result === false) return false;
             const id = result.id
             const created_date = result.created_date
 
@@ -58,6 +60,7 @@ export class LessorsModel extends UsersModel {
             const { type_user, name, last_name, email, password, birthday, status, phone, street, zip, suburb, municipality, state } = input
             const user = await UsersModel.update({ id, input })
             if (user === false) return false;
+            if (!user) return null;
 
             const updateColumns = Object.entries({
                 phone,
