@@ -6,6 +6,13 @@ export const createStudentsRouter = ({ studentModel }) => {
     const studentsRouter = Router()
     const studentController = new StudentController({ studentModel })
 
+    /**
+     * @swagger
+     * tags:
+     *  name: Students
+     *  description: Students manage.
+     */
+
     studentsRouter.get('/', studentController.getAll)
     studentsRouter.get('/:id', [
         param('id').isInt().withMessage('id must be an integer'),

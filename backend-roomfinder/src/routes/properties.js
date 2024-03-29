@@ -6,6 +6,13 @@ export const createPropertiesRouter = ({ propertieModel }) => {
     const propertiesRouter = Router()
     const propertyController = new PropertyController({ propertieModel })
 
+    /**
+     * @swagger
+     * tags:
+     *  name: Properties
+     *  description: Properties manage.
+     */
+    
     propertiesRouter.get('/', propertyController.getAll)
     propertiesRouter.get('/:id', [
         param('id').isInt().withMessage('id must be an integer'),
