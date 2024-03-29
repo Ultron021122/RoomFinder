@@ -36,7 +36,7 @@ const Sigin = () => {
         };
 
         try {
-            const response = await axios.post("http://localhost:1234/users/login", data);
+            const response = await axios.post("/api/users", data);
             if (response.status === 200) {
                 // Successful login using the provided login function
                 login(response.data); // Appropriate user data structure
