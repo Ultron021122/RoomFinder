@@ -39,6 +39,12 @@ export class UsersModel extends Database {
     const user = await this.query('SELECT * FROM users WHERE id = $1;', [id]);
     return user[0] ? new UsersModel(user[0]) : null;
   }
+  static async getByEmail({
+    email
+  }) {
+    const user = await this.query('SELECT * FROM users WHERE email = $1;', [email]);
+    return user[0] ? new UsersModel(user[0]) : null;
+  }
   static async login({
     input
   }) {
@@ -47,11 +53,13 @@ export class UsersModel extends Database {
         email,
         password
       } = input;
-      const user = await this.query('SELECT * FROM users WHERE email = $1;', [email]);
-      if (user.length == 0) return false;
-      const validPassword = await bcrypt.compare(password, user[0].password);
+      const user = await this.getByEmail({
+        email
+      });
+      if (!user) return false;
+      const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) return false;
-      return new UsersModel(user[0]);
+      return user;
     } catch (error) {
       throw new Error(`Error: ${error.message}`);
     }
@@ -69,6 +77,10 @@ export class UsersModel extends Database {
         birthday,
         status
       } = input;
+      const validate = await this.getByEmail({
+        email
+      });
+      if (validate) return false;
       const result = await this.query('INSERT INTO users (type_user, name, last_name, email, password, birthday, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;', [type_user, name, last_name, email, password, birthday, status]);
       const id = result[0].id;
       const newUser = await this.getById({
@@ -77,6 +89,28 @@ export class UsersModel extends Database {
       return newUser;
     } catch (error) {
       throw new Error(`Error creating user: ${error.message}`);
+    }
+  }
+  static async verifyEmail({
+    token
+  }) {
+    try {
+      const validate = {
+        token
+      };
+    } catch (error) {
+      throw new Error(`Error checking email: ${error.message}`);
+    }
+  }
+  static async updateVerified({
+    id
+  }) {
+    try {
+      const validate = {
+        id
+      };
+    } catch (error) {
+      throw new Error(`Error updating user: ${error.message}`);
     }
   }
   static async delete({
@@ -109,10 +143,14 @@ export class UsersModel extends Database {
         birthday,
         status
       } = input;
+      const validate = email ? await this.getByEmail({
+        email
+      }) : null;
+      if (validate) return false;
       const user = await this.getById({
         id
       });
-      if (user === null) return false;
+      if (!user) return null;
       const updateColumns = Object.entries({
         type_user,
         name,

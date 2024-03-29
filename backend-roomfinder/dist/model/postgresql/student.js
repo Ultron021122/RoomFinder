@@ -55,6 +55,7 @@ export class StudentsModel extends UsersModel {
       const result = await UsersModel.create({
         input
       });
+      if (result === false) return false;
       const id = result.id;
       const created_date = result.created_date;
       const student = await this.query('INSERT INTO students (code_student, user_id, university) VALUES($1, $2, $3);', [code_student, id, university]);
@@ -108,6 +109,7 @@ export class StudentsModel extends UsersModel {
         input
       });
       if (user === false) return false;
+      if (!user) return null;
       const updateColumns = Object.entries({
         code_student,
         university
