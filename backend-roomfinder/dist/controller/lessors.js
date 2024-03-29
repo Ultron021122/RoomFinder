@@ -29,11 +29,15 @@ export class LessorController {
         error: JSON.parse(result.error.message)
       });
     }
+    // Encrypt password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(result.data.password, salt);
     result.data.password = hashedPassword;
     const newLessor = await this.lessorModel.create({
       input: result.data
+    });
+    if (newLessor === false) return res.status(409).json({
+      message: 'Email already exists'
     });
     res.status(201).json(newLessor);
   };
@@ -71,6 +75,12 @@ export class LessorController {
     const updateLessor = await this.lessorModel.update({
       id,
       input: result.data
+    });
+    if (updateLessor === false) return res.status(409).json({
+      message: 'Email already exists'
+    });
+    if (!updateLessor) return res.status(404).json({
+      message: 'Lessor not found'
     });
     return res.json(updateLessor);
   };

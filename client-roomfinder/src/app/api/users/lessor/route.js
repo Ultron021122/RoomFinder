@@ -56,25 +56,27 @@ export async function POST(req, res) {
             municipality,
             state
         });
-        if (response.status === 201) {
-            return NextResponse.json(
-                { message: "Usuario creado con éxito", data: response.data },
-                { status: 201 }
-            );
-        } else {
-            return NextResponse.json(
-                { message: "Error al crear el usuario" },
-                { status: 500 }
-            );
-        }
+        
+        const statusMessageMap = {
+            201: { message: 'Estudiante creado correctamente', data: response.data },
+            409: { message: 'El correo ya está registrado' },
+            400: { message: response.data.message },
+            default: { message: 'Error al crear el estudiante' },
+        };
+
+        const message = statusMessageMap[response.status] || statusMessageMap.default;
+        return NextResponse.json(
+            { message },
+            { status: response.status }
+        );
+
     } catch (error) {
         if (image && image.public_id) {
-            const deleteImage = await deleteImage(image.public_id);
-            console.log(deleteImage);
+            const deleteResult = await deleteImage(image.public_id);
         }
         return NextResponse.json(
             { message: error.message },
-            { status: 400 }
+            { status: 503 }
         );
     }
 }

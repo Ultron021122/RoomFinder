@@ -113,7 +113,7 @@ const Signup = () => {
                             theme: "colored",
                             transition: Slide,
                         });
-                        // reset();
+                        reset();
                     } else {
                         setErrorSystem(response.data.message);
                     }
