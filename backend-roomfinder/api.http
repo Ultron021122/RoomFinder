@@ -16,13 +16,22 @@ GET http://localhost:1234/lessors
 ### Recuperar el arrendador
 GET http://localhost:1234/lessors/19
 
-### Iniciar sesión
+### Iniciar sesión - Usuario erroneo
 POST http://localhost:1234/users/login
 Content-Type: application/json
 
 {
     "email": "sherlyn.garcia@gmail.com",
     "password": "876543216"
+}
+
+### Iniciar sesión - Usuario correcto
+POST http://localhost:1234/users/login
+Content-Type: application/json
+
+{
+    "email": "sebastian.martinez7643@alumnos.udg.mx",
+    "password": "12345678"
 }
 
 ### Crear un usuario
@@ -96,17 +105,20 @@ Content-Type: application/json
 }
 
 ### Eliminar un usuario
-DELETE http://localhost:1234/users/27
+DELETE http://localhost:1234/users/11
+
+### Eliminar un estudiante
+DELETE http://localhost:1234/students/11
 
 ### Eliminar un arrendador
 DELETE http://localhost:1234/lessors/22
 
 ### Actualizar una parte del usuario
-PATCH http://localhost:1234/users/11
+PATCH http://localhost:1234/users/8
 Content-Type: application/json
 
 {
-    "email": "sherlyn.garcia@gmail.com",
+    "email": "sherlyn@gmail.com",
     "password": "876543216"
 }
 

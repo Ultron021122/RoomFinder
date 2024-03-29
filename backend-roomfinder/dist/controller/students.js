@@ -29,11 +29,15 @@ export class StudentController {
         error: JSON.parse(result.error.message)
       });
     }
+    // Encrypt password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(result.data.password, salt);
     result.data.password = hashedPassword;
     const newStudent = await this.studentModel.create({
       input: result.data
+    });
+    if (newStudent === false) return res.status(409).json({
+      message: 'Email already exists'
     });
     res.status(201).json(newStudent);
   };
@@ -71,6 +75,12 @@ export class StudentController {
     const updateStudent = await this.studentModel.update({
       id,
       input: result.data
+    });
+    if (updateStudent === false) return res.status(409).json({
+      message: 'Email already exists'
+    });
+    if (!updateStudent) return res.status(404).json({
+      message: 'Student not found'
     });
     return res.json(updateStudent);
   };

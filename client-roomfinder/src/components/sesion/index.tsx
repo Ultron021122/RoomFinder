@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import { useSessionStore } from "./global";
 import { Button } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/react";
-import Image from "next/image";
+import { Alert } from "../registrar/alert";
+import { messages, patterns } from "../registrar/constants";
 
 interface UserInfo {
     email: string;
@@ -55,16 +56,6 @@ const Sigin = () => {
         }
     };
 
-    const messages = {
-        required: "Este campo es obligatorio",
-        email: "Debes introducir una dirección correcta",
-        password: "Debes introducir una contraseña que cumpla los requerimientos"
-    }
-
-    const patterns = {
-        email: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-    };
-
     useEffect(() => {
         const input = document.getElementById('email') as HTMLInputElement;
         input.focus();
@@ -93,10 +84,13 @@ const Sigin = () => {
                                     <div className="relative z-0 w-full mb-5 group">
                                         <input
                                             {...register("email", {
-                                                required: messages.required,
+                                                required: {
+                                                    value: true,
+                                                    message: messages.email.required
+                                                },
                                                 pattern: {
                                                     value: patterns.email,
-                                                    message: messages.email
+                                                    message: messages.email.pattern
                                                 }
                                             })}
                                             type="email"
@@ -107,16 +101,25 @@ const Sigin = () => {
                                             autoComplete="off"
                                         />
                                         <label htmlFor="email" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Correo electrónico</label>
-                                        {errors?.email?.type === "required" && (
-                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
+                                        {errors?.email && (
+                                            <Alert message={errors?.email.message} />
                                         )}
                                     </div>
                                     <div className="relative z-0 w-full mb-5 group">
                                         <input
                                             {...register("password", {
-                                                required: messages.required,
-                                                minLength: 8,
-                                                maxLength: 16
+                                                required: {
+                                                    value: true,
+                                                    message: messages.password.required
+                                                },
+                                                minLength: {
+                                                    value: 8,
+                                                    message: messages.password.min
+                                                },
+                                                maxLength: {
+                                                    value: 16,
+                                                    message: messages.password.max
+                                                }
                                             })}
                                             type="password"
                                             name="password"
@@ -125,11 +128,8 @@ const Sigin = () => {
                                             placeholder=""
                                         />
                                         <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Contraseña</label>
-                                        {errors?.password?.type === "required" && (
-                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> {messages.required}</p>
-                                        )}
-                                        {errors?.password?.type === "minLength" && (
-                                            <p className="mt-2 text-xs text-red-600 dark:text-red-500"><span className="font-medium">Oops!</span> Contraseña demasiado corta</p>
+                                        {errors?.password && (
+                                            <Alert message={errors?.password.message} />
                                         )}
                                     </div>
                                     <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">

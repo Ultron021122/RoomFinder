@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export async function GET() {
     try {
-        const response = await axios.get(`${process.env.REST_URL}/students/`);
+        const response = await axios.get(`${process.env.REST_URL}/lessors/`);
         return NextResponse.json(
             { data: response.data },
             { status: 200 }
@@ -18,12 +18,12 @@ export async function GET() {
 }
 
 export async function POST(req, res) {
-    const { type_user, name, last_name, email, password, confirm_password, status, birthday, profileImage, code_student, university } = await req.json();
+    const { type_user, name, last_name, email, password, confirm_password, status, birthday, profileImage, phone, street, zip, suburb, municipality, state } = await req.json();
     let image;
     try {
         image = await uploadImage(
             profileImage,
-            'students',
+            'lessors',
             {
                 transformation: [
                     { width: 600, height: 600, crop: "fill" },
@@ -40,7 +40,7 @@ export async function POST(req, res) {
     }
 
     try {
-        const response = await axios.post(`${process.env.REST_URL}/students/`, {
+        const response = await axios.post(`${process.env.REST_URL}/lessors/`, {
             type_user,
             name,
             last_name,
@@ -49,10 +49,14 @@ export async function POST(req, res) {
             confirm_password,
             status,
             birthday,
-            code_student,
-            university,
+            phone,
+            street,
+            zip,
+            suburb,
+            municipality,
+            state
         });
-
+        
         const statusMessageMap = {
             201: { message: 'Estudiante creado correctamente', data: response.data },
             409: { message: 'El correo ya está registrado' },
@@ -71,7 +75,7 @@ export async function POST(req, res) {
             const deleteResult = await deleteImage(image.public_id);
         }
         return NextResponse.json(
-            { message: 'Server error'},
+            { message: error.message },
             { status: 503 }
         );
     }
