@@ -180,6 +180,14 @@ const Signup = () => {
                                 value: true,
                                 message: messages.code_student.required
                             },
+                            min: {
+                                value: 100000000,
+                                message: messages.code_student.min
+                            },
+                            max: {
+                                value: 999999999,
+                                message: messages.code_student.max
+                            },
                             valueAsNumber: true,
                         })}
                         type="number"
@@ -262,6 +270,14 @@ const Signup = () => {
                                     required: {
                                         value: true,
                                         message: messages.zip.required
+                                    },
+                                    min: {
+                                        value: 10000,
+                                        message: messages.zip.min
+                                    },
+                                    max: {
+                                        value: 99999,
+                                        message: messages.zip.max
                                     },
                                     valueAsNumber: true
                                 })
@@ -394,7 +410,7 @@ const Signup = () => {
                 pauseOnHover
                 theme="light"
             />
-            <section className="bg-gray-50 dark:bg-gray-900">
+            <section className="bg-zinc-200 dark:bg-gray-900">
                 {isLoading ?
                     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen lg:py-0">
                         <Spinner />

@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
@@ -14,7 +15,10 @@ export async function uploadImage(image, folder, transformationOptions = {}) {
         });
         return response;
     } catch (error) {
-        throw new Error(error);
+        return NextResponse.json(
+            { message: 'Server error' },
+            { status: 503 }
+        );
     }
 }
 
@@ -23,6 +27,9 @@ export async function deleteImage(public_id) {
         const response = await cloudinary.uploader.destroy(public_id);
         return response;
     } catch (error) {
-        throw new Error(error);
+        return NextResponse.json(
+            { message: 'Server error' },
+            { status: 503 }
+        );
     }
 }

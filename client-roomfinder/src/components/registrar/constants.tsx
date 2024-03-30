@@ -1,3 +1,5 @@
+import { min } from "date-fns";
+
 export interface University {
     name: string;
 }
@@ -37,7 +39,9 @@ export const messages = {
         required: "Imagen de perfil es requerida"
     },
     code_student: {
-        required: "Código de estudiante es requerido"
+        required: "Código de estudiante es requerido",
+        min: "No es un código de estudiante válido",
+        max: "No es un código de estudiante válido"
     },
     university: {
         required: "Universad es requerida"
@@ -47,6 +51,8 @@ export const messages = {
     },
     zip: {
         required: "Código postal es requerido",
+        min: "No es un código postal válido",
+        max: "No es un código postal válido"
     },
     street: {
         required: "El campo Calle es requerido",
