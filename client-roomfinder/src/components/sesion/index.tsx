@@ -8,6 +8,9 @@ import { Button } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/react";
 import { Alert } from "../registrar/alert";
 import { messages, patterns } from "../registrar/constants";
+import { ToastContainer, toast, Bounce, Slide } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 interface UserInfo {
     email: string;
@@ -23,12 +26,12 @@ const Sigin = () => {
     const { isLoggedIn, login } = useSessionStore();
     const { register, handleSubmit, formState: { errors } } = useForm<UserInfo>({ mode: "onChange" });
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [errorSystem, setErrorSystem] = useState<string | null>(null);
     const router = useRouter();
 
     const onSubmit = async (userInfo: UserInfo) => {
         setIsLoading(true);
-        setError(null);
+        setErrorSystem(null);
 
         const data: Data = {
             email: userInfo.email,
@@ -41,20 +44,47 @@ const Sigin = () => {
                 // Successful login using the provided login function
                 login(response.data); // Appropriate user data structure
                 localStorage.setItem("isLoggedIn", String(true)); // (Optional)
+                toast.success(response.data.message, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Slide,
+                });
                 router.push('/')
             } else {
-                setError("Credenciales incorrectas.");
+                setErrorSystem(response.data.message);
             }
         } catch (Error: any) {
-            if (Error.response?.status == 401) {
-                setError("Ocurrio un error...");
+            if (Error.response?.status == 400) {
+                setErrorSystem(Error.response?.data.message);
             } else {
-                console.error(Error); // Handle (Manejar) other errors
+                setErrorSystem(Error.response?.data.message);
             }
         } finally {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (errorSystem) {
+            toast.error(errorSystem, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        }
+    }, [errorSystem]);
 
     useEffect(() => {
         const input = document.getElementById('email') as HTMLInputElement;
@@ -67,14 +97,29 @@ const Sigin = () => {
 
     return (
         <>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             <section className="bg-gray-50 dark:bg-gray-900">
-                {error && <p className="text-red-600">{error}</p>}
-                <div className="flex flex-col items-center px-6 py-8 mx-auto min-h-screen lg:py-0">
-                    {/* <Link href="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+                {isLoading ?
+                    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen lg:py-0">
+                        <Spinner />
+                    </div>
+                    :
+                    <div className="flex flex-col items-center px-6 py-8 mx-auto min-h-screen lg:py-0">
+                        {/* <Link href="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
                         <Image width={32} height={32} className="mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
                         RoomFinder
                     </Link> */}
-                    {isLoading ? <Spinner /> :
                         <div className="w-full my-5 bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -141,8 +186,8 @@ const Sigin = () => {
                                 </form>
                             </div>
                         </div>
-                    }
-                </div>
+                    </div>
+                }
             </section>
         </>
     );
