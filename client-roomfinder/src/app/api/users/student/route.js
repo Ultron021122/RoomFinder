@@ -11,8 +11,8 @@ export async function GET() {
         );
     } catch (error) {
         return NextResponse.json(
-            { message: error.message },
-            { status: 400 }
+            { message: 'Server error' },
+            { status: 503 }
         );
     }
 }
@@ -34,8 +34,8 @@ export async function POST(req, res) {
         );
     } catch (error) {
         return NextResponse.json(
-            { messages: "Error al subir la imagen" },
-            { status: 500 }
+            { messages: "Server error" },
+            { status: 503 }
         );
     }
 
@@ -68,7 +68,7 @@ export async function POST(req, res) {
 
     } catch (error) {
         if (image && image.public_id) {
-            const deleteResult = await deleteImage(image.public_id);
+            await deleteImage(image.public_id);
         }
         return NextResponse.json(
             { message: 'Server error'},
