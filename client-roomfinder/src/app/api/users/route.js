@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { sign } from 'jsonwebtoken';
 import axios from 'axios';
 
 export async function POST(req, res) {
@@ -17,6 +18,33 @@ export async function POST(req, res) {
         };
 
         const message = statusMessageMap[response.status] || statusMessageMap.default;
+
+        if (response.status === 200) {
+            const token = sign({
+                exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7), // 1 week (7 days
+                id: response.data.id,
+                email: response.data.email,
+                type_user: response.data.type_user,
+            }, process.env.JWT_SECRET);
+
+            const respuesta = NextResponse.json({
+                message,
+                token,
+                status: response.status
+            });
+
+            respuesta.cookies.set({
+                name: 'login',
+                value: token,
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 60 * 60 * 24 * 7, // 1 week
+                path: '/',
+            });
+
+            return respuesta;
+        }
         return NextResponse.json(
             { message },
             { status: response.status }
