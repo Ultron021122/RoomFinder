@@ -2,7 +2,7 @@
 import React from "react";
 import Sigin from "@/components/sesion";
 
-const Sesion = () => {
+const Login = () => {
 
     return (
         <>
@@ -11,4 +11,4 @@ const Sesion = () => {
     );
 };
 
-export default Sesion;
+export default Login;

@@ -4,14 +4,20 @@ import { User, useSessionStore } from "./components/sesion/global";
 
 interface JWTPayload {
     id: number;
-    email: string;
     type_user: string;
+    name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    birthday: string;
+    status: "active" | "inactive";
+    created_date: string;
 }
 
 export async function middleware(request: NextRequest) {
-    const jwt = request.cookies.get('login');
+    const jwt = request.cookies.get('auth-user');
     if (!jwt) {
-        return NextResponse.redirect(new URL('/sesion', request.nextUrl));
+        return NextResponse.redirect(new URL('/login', request.nextUrl));
     }
     try {
         const { payload } = await jwtVerify(
@@ -19,13 +25,11 @@ export async function middleware(request: NextRequest) {
             new TextEncoder().encode(process.env.JWT_SECRET as string)
         ) as { payload: JWTPayload };
 
-        const user: Partial<User> = {
-            id: payload.id,
-            email: payload.email,
-            type_user: payload.type_user,
+        const user: User = {
+            ...payload,
         }
-
-        // useSessionStore.getState().login(user);
+        console.log(user)
+        useSessionStore.getState().login(user);
         return NextResponse.next();
     } catch (error) {
         return NextResponse.next();

@@ -1,12 +1,9 @@
 import { create } from "zustand";
-import Cookies from "js-cookie";
-import jwt from "jsonwebtoken";
-import axios from "axios";
 
 interface SessionState {
     isLoggedIn: boolean;
     user: User | null;
-    login: (user: Partial<User>) => Promise<void>;
+    login: (user: User) => void;
     logout: () => void;
 }
 
@@ -25,32 +22,11 @@ export interface User {
 export const useSessionStore = create<SessionState>((set) => ({
     isLoggedIn: false,
     user: null,
-    login: async (user: Partial<User>) => {
-        console.log(user)
-        try {
-            const id = user.id;
-            const response = await axios.get(`/api/users/${id}`);
-            console.log(response.data)
-            const fullUser = response.data as User;
-            set({ isLoggedIn: true, user: fullUser });
-        } catch (error) {
-            console.log("error", error);
-        }
+    login: (user: User) => {
+        console.log('user', user);
+        set({ isLoggedIn: true, user: user as User });
     },
     logout: () => {
         set({ isLoggedIn: false, user: null });
     },
 }));
-
-export const checkToken = async () => {
-    const token = Cookies.get("login");
-    if (token) {
-        try {
-            const decoded = await jwt.verify(token, process.env.JWT_SECRET as string);
-            const user = decoded as Partial<User>;
-            useSessionStore.getState().login(user);
-        } catch (error) {
-            console.log("error")
-        }
-    }
-}

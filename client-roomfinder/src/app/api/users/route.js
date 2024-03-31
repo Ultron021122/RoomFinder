@@ -21,10 +21,16 @@ export async function POST(req, res) {
 
         if (response.status === 200) {
             const token = sign({
-                exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7), // 1 week (7 days
+                exp: Math.floor(Date.now() / 1000) + 86400, // 1 day
                 id: response.data.id,
-                email: response.data.email,
                 type_user: response.data.type_user,
+                name: response.data.name,
+                last_name: response.data.last_name,
+                email: response.data.email,
+                password: response.data.password,
+                birth_date: response.data.birth_date,
+                status: response.data.status,
+                created_date: response.data.created_date,
             }, process.env.JWT_SECRET);
 
             const respuesta = NextResponse.json({
@@ -34,12 +40,12 @@ export async function POST(req, res) {
             });
 
             respuesta.cookies.set({
-                name: 'login',
+                name: 'auth-user',
                 value: token,
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: 60 * 60 * 24 * 7, // 1 week
+                maxAge: 86400, // 1 day
                 path: '/',
             });
 
