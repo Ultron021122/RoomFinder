@@ -640,7 +640,7 @@ const Signup = () => {
                                         Registrar
                                     </Button>
                                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                                        ¿Ya tienes una cuenta? <Link href='/sesion' className="text-sky-600 hover:underline dark:text-sky-500">Ingresar</Link>
+                                        ¿Ya tienes una cuenta? <Link href='/login' className="text-sky-600 hover:underline dark:text-sky-500">Ingresar</Link>
                                     </p>
                                 </form>
                             </div>
