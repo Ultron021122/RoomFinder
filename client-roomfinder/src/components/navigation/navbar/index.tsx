@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { useSessionStore } from "../../sesion/global";
+import { useSessionStore } from "@/components/sesion/global";
 import { Button, Link as NLink } from "@nextui-org/react";
 import DropdownUser from "./dropdown";
 
@@ -12,7 +12,7 @@ const Navbar = ({
     toggle: () => void;
 }): JSX.Element => {
 
-    const { isLoggedIn} = useSessionStore();
+    const { isLoggedIn } = useSessionStore();
     return (
         <>
             <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-900">
@@ -69,7 +69,7 @@ const Navbar = ({
                                     <Button as={NLink} href="/registrar" color="primary" variant="bordered" className="font-normal">
                                         Registrar
                                     </Button>
-                                    <Button as={NLink} href="/sesion" color="primary" variant="solid" className="font-normal">
+                                    <Button as={NLink} href="/login" color="primary" variant="solid" className="font-normal">
                                         Iniciar sesión
                                     </Button>
                                 </div>

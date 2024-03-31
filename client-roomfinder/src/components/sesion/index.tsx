@@ -42,9 +42,8 @@ const Sigin = () => {
             const response = await axios.post("/api/users", data);
             if (response.status === 200) {
                 // Successful login using the provided login function
-                login(response.data); // Appropriate user data structure
-                localStorage.setItem("isLoggedIn", String(true)); // (Optional)
-                toast.success(response.data.message, {
+                login(response.data.message.data); // Appropriate user data structure
+                toast.success(response.data.message.message, {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
