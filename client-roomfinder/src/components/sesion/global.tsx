@@ -7,7 +7,7 @@ interface SessionState {
     logout: () => void;
 }
 
-interface User {
+export interface User {
     id: number; // User ID (integer)
     type_user: string; // User type ("student" or other valid types)
     name: string; // User's first name
@@ -23,8 +23,8 @@ export const useSessionStore = create<SessionState>((set) => ({
     isLoggedIn: false,
     user: null,
     login: (user: User) => {
-        // Manejo del estado
-        set({ isLoggedIn: true, user });
+        console.log('user', user);
+        set({ isLoggedIn: true, user: user as User });
     },
     logout: () => {
         set({ isLoggedIn: false, user: null });
