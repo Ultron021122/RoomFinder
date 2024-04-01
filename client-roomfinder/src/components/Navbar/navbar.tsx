@@ -1,34 +1,35 @@
 import React from "react";
 import Link from "next/link";
-import { useSessionStore } from "@/components/sesion/global";
 import { Button, Link as NLink } from "@nextui-org/react";
 import DropdownUser from "./dropdown";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
-const Navbar = ({
+function Navbar({
     isOpen,
     toggle,
 }: {
     isOpen: boolean,
     toggle: () => void;
-}): JSX.Element => {
+}) {
+    const { data: session } = useSession();
 
-    const { isLoggedIn } = useSessionStore();
     return (
         <>
             <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-900">
                 <div className="container mx-auto p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center">
-                            <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
+                            <Image className="mr-2" width={32} height={32} src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
                             <h1 className="dark:text-gray-300 dark:hover:text-white text-2xl font-semibold">
                                 RoomFinder
                             </h1>
                         </Link>
                         <div className="md:hidden flex gap-5">
-                            {isLoggedIn ? (
+                            {session ? (
                                 <DropdownUser />
                             ) : (
-                                <Button as={NLink} href="/registrar" color="primary" variant="bordered" className="font-normal">
+                                <Button as={NLink} href="/register" color="primary" variant="bordered" className="font-normal">
                                     Registrar
                                 </Button>
                             )
@@ -62,11 +63,11 @@ const Navbar = ({
                             <Link href="/arrendadores" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
                                 Arrendadores
                             </Link>
-                            {isLoggedIn ? (
+                            {session ? (
                                 <DropdownUser />
                             ) : (
                                 <div className="hidden md:flex items-center space-x-2">
-                                    <Button as={NLink} href="/registrar" color="primary" variant="bordered" className="font-normal">
+                                    <Button as={NLink} href="/register" color="primary" variant="bordered" className="font-normal">
                                         Registrar
                                     </Button>
                                     <Button as={NLink} href="/login" color="primary" variant="solid" className="font-normal">

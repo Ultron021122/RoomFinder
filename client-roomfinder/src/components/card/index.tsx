@@ -18,11 +18,10 @@ export const CardItem = ({
                 <Image
                     alt="Imagen de perfil del arrendador"
                     className="object-cover"
-                    src={`/${url}`}
+                    src={`${url}`}
                 />
                 <CardBody className="mb-4 py-2 px-4 flex-col items-start">
                     <h4 className="dark:text-gray-200 font-bold text-large">{name + ' ' + last_name}</h4>
-                    {/* <Divider className="dark:bg-gray-200" /> */}
                     <p className="dark:text-gray-300 text-small uppercase font-bold">Contacto</p>
                     <small className="dark:text-gray-300 text-default-500">{email}</small>
                 </CardBody>
