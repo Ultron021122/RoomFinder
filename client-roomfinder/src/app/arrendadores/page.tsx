@@ -1,6 +1,6 @@
 'use client';
 
-import { CardItem, ListItems } from "@/components/card";
+import { ListItems } from "@/components/Card";
 
 export default function Arrendadores() {
     return (

@@ -1,14 +1,12 @@
 "use client";
-import React from "react";
-import Sigin from "@/components/sesion";
+import Login from "@/components/Sessions";
 
-const Login = () => {
+function Signin() {
+  return (
+    <>
+      <Login />
+    </>
+  );
+}
 
-    return (
-        <>
-            <Sigin />
-        </>
-    );
-};
-
-export default Login;
+export default Signin;
