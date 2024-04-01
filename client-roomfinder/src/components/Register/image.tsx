@@ -4,6 +4,7 @@ import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDi
 import React, { useEffect, useRef, useState } from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
 import "react-image-crop/dist/ReactCrop.css";
+import Image from 'next/image';
 
 function setCanvasImage(image: HTMLImageElement, canvas: HTMLCanvasElement, crop: Crop) {
     if (!crop || !canvas || !image) return;
@@ -97,7 +98,7 @@ export default function ModalImage({ onImageSave }: { onImageSave: (image: strin
                         width: 100,
                         height: 100
                     });
-                    const img = new Image();
+                    const img = new window.Image();
                     img.src = reader.result as string;
                 });
                 reader.readAsDataURL(selectedFile);
@@ -131,7 +132,7 @@ export default function ModalImage({ onImageSave }: { onImageSave: (image: strin
                         onComplete={(c) => setCompleteCrop(c)}
                         aspect={1}
                     >
-                        {upImg && <img src={upImg} alt='Crop' onLoad={onLoad} />}
+                        {upImg && <Image width={40} height={40} src={upImg} alt='Profile Picture' className="w-auto h-auto" onLoad={onLoad} />}
                     </ReactCrop>
                 </div>
                 {/* Canvas to display cropped image */}
@@ -166,13 +167,17 @@ export default function ModalImage({ onImageSave }: { onImageSave: (image: strin
             <div className='flex flex-col items-center justify-center w-full rounded-md'>
                 <label htmlFor='dropzone-file' className='flex flex-col items-center justify-center my-2 w-40 h-40 sm:w-48 sm:h-48 ring-4 ring-offset-gray-50 dark:ring-offset-gray-900 ring-offset-4 hover:ring-blue-500 rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'>
                     {croppedImageUrl ? (
-                        <img
+                        <Image
+                            width={160}
+                            height={160}
                             src={croppedImageUrl}
                             alt='Profile Picture'
                             className='rounded-full object-cover w-40 h-40 sm:w-48 sm:h-48'
                         />
                     ) : (
-                        <img
+                        <Image
+                            width={160}
+                            height={160}
                             src='/perfiles/astronauta.jpg'
                             alt='Profile Picture'
                             className='rounded-full opacity-50 object-center object-cover w-40 h-40 sm:w-48 sm:h-48'
