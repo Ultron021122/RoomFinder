@@ -1,11 +1,13 @@
 "use client";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, User } from "@nextui-org/react";
-import { useState } from "react";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, User } from "@nextui-org/react";
 import { PlusIcon } from "./icon";
-import { useSessionStore } from "@/components/sesion/global";
+import { useSession, signOut } from "next-auth/react";
 
 const DropdownUser = () => {
-    const { user, logout } = useSessionStore();
+    const { data: session, status } = useSession();
+    console.log(session, status);
+    const user = session?.user;
+
     return (
         <>
             <Dropdown placement="bottom-start" classNames={{
@@ -20,10 +22,10 @@ const DropdownUser = () => {
                             classNames: {
                                 base: "ring-offset-gray-900 mr-1"
                             },
-                            src: "perfiles/perfil.png",
+                            src: "https://upload.wikimedia.org/wikipedia/en/9/90/The_DuckDuckGo_Duck.png",
                         }}
                         className="transition-transform"
-                        description={user?.type_user} // Tipo de usuario (Modificar)
+                        description={(user as any)?.type_user}
                         name={user?.name}
                         classNames={{
                             name: "dark:text-gray-200",
@@ -58,7 +60,7 @@ const DropdownUser = () => {
                         }}
                     >
                         <DropdownItem isReadOnly key="profile" className="h-14 gap-2" textValue="Pérfil">
-                            <p className="font-semibold text-sm capitalize">{user?.name + " " + user?.last_name}</p>
+                            <p className="font-semibold text-sm capitalize">{user?.name + " " + (user as any)?.last_name}</p>
                             <p className="text-small">{user?.email}</p>
                         </DropdownItem>
                         <DropdownItem key="dashboard" textValue="Panel de administración">
@@ -81,7 +83,7 @@ const DropdownUser = () => {
                         <DropdownItem key="help_and_feedback" textValue="Ayuda">
                             Help & Feedback
                         </DropdownItem>
-                        <DropdownItem key="logout" textValue="Cerrar sesión" onClick={(event) => { logout(); }}>
+                        <DropdownItem key="logout" textValue="Cerrar sesión" onClick={() => { signOut(); }}>
                             Log Out
                         </DropdownItem>
                     </DropdownSection>

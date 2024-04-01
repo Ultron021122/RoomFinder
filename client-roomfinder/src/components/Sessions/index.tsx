@@ -1,15 +1,14 @@
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSessionStore } from "./global";
 import { Button } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/react";
-import { Alert } from "../registrar/alert";
-import { messages, patterns } from "../registrar/constants";
+import { Alert } from "@/utils/alert";
+import { messages, patterns } from "@/utils/constants";
 import { ToastContainer, toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { signIn } from "next-auth/react";
 
 
 interface UserInfo {
@@ -22,8 +21,7 @@ interface Data {
     password: string;
 }
 
-const Sigin = () => {
-    const { isLoggedIn, login } = useSessionStore();
+function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm<UserInfo>({ mode: "onChange" });
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
@@ -39,25 +37,14 @@ const Sigin = () => {
         };
 
         try {
-            const response = await axios.post("/api/users", data);
-            if (response.status === 200) {
-                // Successful login using the provided login function
-                login(response.data.message.data); // Appropriate user data structure
-                toast.success(response.data.message.message, {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Slide,
-                });
-                router.push('/')
-            } else {
-                setErrorSystem(response.data.message);
-            }
+            const response = await signIn("credentials", {
+                email: data.email,
+                password: data.password,
+                redirect: false
+            });
+            if (response?.error) setErrorSystem(response.error as string);
+
+            if (response?.ok) return router.push("/dashboard/profile");
         } catch (Error: any) {
             if (Error.response?.status == 400) {
                 setErrorSystem(Error.response?.data.message);
@@ -88,11 +75,7 @@ const Sigin = () => {
     useEffect(() => {
         const input = document.getElementById('email') as HTMLInputElement;
         input.focus();
-
-        if (isLoggedIn) {
-            router.push('/');
-        }
-    }, [isLoggedIn]);
+    }, []);
 
     return (
         <>
@@ -115,10 +98,6 @@ const Sigin = () => {
                     </div>
                     :
                     <div className="flex flex-col items-center px-6 py-8 mx-auto min-h-screen lg:py-0">
-                        {/* <Link href="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-                        <Image width={32} height={32} className="mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
-                        RoomFinder
-                    </Link> */}
                         <div className="w-full my-5 bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -192,4 +171,4 @@ const Sigin = () => {
     );
 };
 
-export default Sigin;
+export default Login;

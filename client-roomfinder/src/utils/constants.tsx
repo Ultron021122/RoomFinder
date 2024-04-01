@@ -1,5 +1,3 @@
-import { min } from "date-fns";
-
 export interface University {
     name: string;
 }

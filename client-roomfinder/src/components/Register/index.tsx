@@ -4,12 +4,12 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Spinner } from "@nextui-org/react";
-import { messages, patterns, universities } from "./constants";
-import { useSessionStore } from "../sesion/global";
-import { Alert } from "./alert";
+import { messages, patterns, universities } from "@/utils/constants";
+import { Alert } from '@/utils/alert';
 import { ToastContainer, toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ModalImage from "./image";
+import { useSession } from "next-auth/react";
 
 interface User {
     type_user: string;
@@ -45,8 +45,8 @@ interface LessorInfo extends User {
     state: string;
 }
 
-const Signup = () => {
-    const { isLoggedIn } = useSessionStore();
+const Registrar = () => {
+    const { status } = useSession();
 
     const { register, handleSubmit, formState: { errors }, watch, reset, setValue, setError, clearErrors } = useForm<StudentInfo | LessorInfo>({ mode: "onChange", defaultValues: { status: 'active' } });
     const [isLoading, setIsLoading] = useState(false);
@@ -102,7 +102,7 @@ const Signup = () => {
                     const response = await axios.post("/api/users/student", data);
                     if (response.status === 201) {
                         setIsLoading(false);
-                        toast.success(response.data.message, {
+                        toast.success(response.data.message.message, {
                             position: "bottom-right",
                             autoClose: 5000,
                             hideProgressBar: false,
@@ -133,7 +133,7 @@ const Signup = () => {
                     const response = await axios.post("/api/users/lessor", data);
                     if (response.status === 201) {
                         setIsLoading(false);
-                        toast.success(response.data.message, {
+                        toast.success(response.data.message.message, {
                             position: "bottom-right",
                             autoClose: 5000,
                             hideProgressBar: false,
@@ -165,10 +165,10 @@ const Signup = () => {
         const input = document.getElementById('name') as HTMLInputElement;
         input.focus();
 
-        if (isLoggedIn) {
+        if (status === "authenticated") {
             router.push('/');
         }
-    }, [isLoggedIn]);
+    }, [status, router]);
 
     const renderStudent = () => {
         return (
@@ -640,7 +640,7 @@ const Signup = () => {
                                         Registrar
                                     </Button>
                                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                                        ¿Ya tienes una cuenta? <Link href='/sesion' className="text-sky-600 hover:underline dark:text-sky-500">Ingresar</Link>
+                                        ¿Ya tienes una cuenta? <Link href='/login' className="text-sky-600 hover:underline dark:text-sky-500">Ingresar</Link>
                                     </p>
                                 </form>
                             </div>
@@ -652,4 +652,4 @@ const Signup = () => {
     );
 }
 
-export default Signup;
+export default Registrar;
