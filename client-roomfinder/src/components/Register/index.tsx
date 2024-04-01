@@ -168,7 +168,7 @@ const Registrar = () => {
         if (status === "authenticated") {
             router.push('/');
         }
-    }, [status]);
+    }, [status, router]);
 
     const renderStudent = () => {
         return (

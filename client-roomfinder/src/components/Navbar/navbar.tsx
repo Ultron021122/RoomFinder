@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button, Link as NLink } from "@nextui-org/react";
 import DropdownUser from "./dropdown";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 function Navbar({
     isOpen,
@@ -19,7 +20,7 @@ function Navbar({
                 <div className="container mx-auto p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center">
-                            <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
+                            <Image className="mr-2" width={32} height={32} src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
                             <h1 className="dark:text-gray-300 dark:hover:text-white text-2xl font-semibold">
                                 RoomFinder
                             </h1>
