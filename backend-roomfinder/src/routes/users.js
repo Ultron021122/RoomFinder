@@ -54,6 +54,9 @@ export const createUsersRouter = ({ userModel }) => {
      *                                  status:
      *                                      type: string
      *                                      example: inactive
+     *                                  image:
+     *                                      type: string
+     *                                      example: https://www.google.com
      *                                  created_date:
      *                                      type: string
      *                                      example: 2024-01-22T04:15:16.000Z
@@ -104,6 +107,9 @@ export const createUsersRouter = ({ userModel }) => {
      *                              status:
      *                                  type: string
      *                                  example: inactive
+     *                              image:
+     *                                  type: string
+     *                                  example: https://www.google.com
      *                              created_date:
      *                                  type: string
      *                                  example: 2024-01-22T04:15:16.000Z
@@ -208,6 +214,8 @@ export const createUsersRouter = ({ userModel }) => {
      *                          password:
      *                              type: string
      *                          birthday:
+     *                              type: string
+     *                          image:
      *                              type: string
      *                          status:
      *                              type: string
