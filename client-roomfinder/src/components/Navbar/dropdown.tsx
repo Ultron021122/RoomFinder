@@ -1,5 +1,6 @@
 "use client";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, User } from "@nextui-org/react";
+import Link from 'next/link';
 import { PlusIcon } from "./icon";
 import { useSession, signOut } from "next-auth/react";
 
@@ -11,7 +12,7 @@ const DropdownUser = () => {
     return (
         <>
             <Dropdown placement="bottom-start" classNames={{
-                content: "dark:bg-gray-800 border dark:border-gray-700 rounded-md"
+                content: "dark:bg-gray-900 border dark:border-gray-800 rounded-md"
             }}>
                 <DropdownTrigger>
                     <User
@@ -20,9 +21,9 @@ const DropdownUser = () => {
                             isBordered: true,
                             color: "primary",
                             classNames: {
-                                base: "ring-offset-gray-900 mr-1"
+                                base: "ring-offset-gray-950 mr-1"
                             },
-                            src: "https://upload.wikimedia.org/wikipedia/en/9/90/The_DuckDuckGo_Duck.png",
+                            src: `${(user as any)?.image}`
                         }}
                         className="transition-transform"
                         description={(user as any)?.type_user}
@@ -36,16 +37,16 @@ const DropdownUser = () => {
                 <DropdownMenu
                     aria-label="User Actions"
                     classNames={{
-                        base: "dark:bg-gray-800"
+                        base: "dark:bg-gray-900"
                     }}
                     itemClasses={{
                         base: [
                             "rounded-md",
                             "text-default-700 dark:text-default-300",
                             "transition-opacity",
-                            "data-[hover=true]:text-foreground",
+                            "data-[hover=true]:text-foreground dark:data-[hover=true]:text-default-50",
                             "data-[hover=true]:bg-default-300",
-                            "dark:data-[hover=true]:bg-default-400",
+                            "dark:data-[hover=true]:bg-default-700",
                             "data-[selectable=true]:focus:bg-default-50",
                             "data-[pressed=true]:opacity-70",
                             "data-[focus-visible=true]:ring-default-500",
@@ -56,7 +57,7 @@ const DropdownUser = () => {
                         aria-label="Profile & actions"
                         showDivider
                         classNames={{
-                            divider: "dark:bg-gray-700"
+                            divider: "dark:bg-gray-800"
                         }}
                     >
                         <DropdownItem isReadOnly key="profile" className="h-14 gap-2" textValue="Pérfil">
@@ -64,7 +65,7 @@ const DropdownUser = () => {
                             <p className="text-small">{user?.email}</p>
                         </DropdownItem>
                         <DropdownItem key="dashboard" textValue="Panel de administración">
-                            Dashboard
+                            <Link href="/dashboard/profile">Dashboard</Link>
                         </DropdownItem>
                         <DropdownItem key="settings" textValue="Configuraciones">Settings</DropdownItem>
                         <DropdownItem
@@ -84,7 +85,7 @@ const DropdownUser = () => {
                             Help & Feedback
                         </DropdownItem>
                         <DropdownItem key="logout" textValue="Cerrar sesión" onClick={() => { signOut(); }}>
-                            Log Out
+                            Cerrar Sesión
                         </DropdownItem>
                     </DropdownSection>
                 </DropdownMenu>

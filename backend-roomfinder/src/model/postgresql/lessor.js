@@ -2,8 +2,8 @@ import { UsersModel } from './user.js'
 
 export class LessorsModel extends UsersModel {
 
-    constructor({ id, type_user, name, last_name, email, password, birthday, status, created_date, phone, street, zip, suburb, municipality, state }) {
-        super({ id, type_user, name, last_name, email, password, birthday, status, created_date });
+    constructor({ id, type_user, name, last_name, email, password, birthday, status, image, created_date, phone, street, zip, suburb, municipality, state }) {
+        super({ id, type_user, name, last_name, email, password, birthday, status, image, created_date });
         this.phone = phone;
         this.street = street;
         this.zip = zip;
@@ -29,7 +29,7 @@ export class LessorsModel extends UsersModel {
 
     static async create({ input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status, phone, street, zip, suburb, municipality, state } = input
+            const { type_user, name, last_name, email, password, birthday, status, image, phone, street, zip, suburb, municipality, state } = input
             const result = await UsersModel.create({ input })
             if (result === false) return false;
             const id = result.id
@@ -57,7 +57,7 @@ export class LessorsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status, phone, street, zip, suburb, municipality, state } = input
+            const { type_user, name, last_name, email, password, birthday, status, image, phone, street, zip, suburb, municipality, state } = input
             const user = await UsersModel.update({ id, input })
             if (user === false) return false;
             if (!user) return null;

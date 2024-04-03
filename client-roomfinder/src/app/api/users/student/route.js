@@ -39,6 +39,8 @@ export async function POST(req, res) {
         );
     }
 
+    console.log(image)
+
     try {
         const response = await axios.post(`${process.env.REST_URL}/students/`, {
             type_user,
@@ -46,9 +48,9 @@ export async function POST(req, res) {
             last_name,
             email,
             password,
-            confirm_password,
-            status,
             birthday,
+            status,
+            image: image.secure_url,
             code_student,
             university,
         });

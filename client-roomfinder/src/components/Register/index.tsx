@@ -100,8 +100,8 @@ const Registrar = () => {
                 const data = userInfo as StudentInfo;
                 try {
                     const response = await axios.post("/api/users/student", data);
+                    setIsLoading(false);
                     if (response.status === 201) {
-                        setIsLoading(false);
                         toast.success(response.data.message.message, {
                             position: "bottom-right",
                             autoClose: 5000,
@@ -131,8 +131,8 @@ const Registrar = () => {
                 const data = userInfo as LessorInfo;
                 try {
                     const response = await axios.post("/api/users/lessor", data);
+                    setIsLoading(false);
                     if (response.status === 201) {
-                        setIsLoading(false);
                         toast.success(response.data.message.message, {
                             position: "bottom-right",
                             autoClose: 5000,
@@ -417,7 +417,7 @@ const Registrar = () => {
                     </div>
                     :
                     <div className="flex flex-col items-center px-6 py-8 mx-auto min-h-screen lg:py-0">
-                        <div className="w-full my-5 bg-white rounded-lg shadow dark:border sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                        <div className="w-full my-5 bg-white rounded-lg shadow dark:border sm:max-w-lg xl:p-0 dark:bg-gray-900 dark:border-gray-800">
                             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                     Registrar Usuario
