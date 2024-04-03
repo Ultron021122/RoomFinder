@@ -15,7 +15,8 @@ const userSchema = z.object({
     birthday: z.coerce.date().max(new Date(), {
         message: "Too young!"
     }),
-    status: z.enum(["active", "inactive"])
+    status: z.enum(["active", "inactive"]),
+    image: z.string().url(),
 })
 
 export function validateUser(input) {

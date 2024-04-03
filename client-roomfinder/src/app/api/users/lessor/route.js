@@ -12,7 +12,7 @@ export async function GET() {
     } catch (error) {
         return NextResponse.json(
             { message: error.message },
-            { status: 400 }
+            { status: 503 }
         );
     }
 }
@@ -46,9 +46,9 @@ export async function POST(req, res) {
             last_name,
             email,
             password,
-            confirm_password,
-            status,
             birthday,
+            status,
+            image: image.secure_url,
             phone,
             street,
             zip,
@@ -56,7 +56,7 @@ export async function POST(req, res) {
             municipality,
             state
         });
-        
+
         const statusMessageMap = {
             201: { message: 'Estudiante creado correctamente', data: response.data },
             409: { message: 'El correo ya está registrado' },
@@ -72,7 +72,7 @@ export async function POST(req, res) {
 
     } catch (error) {
         if (image && image.public_id) {
-            const deleteResult = await deleteImage(image.public_id);
+            await deleteImage(image.public_id);
         }
         return NextResponse.json(
             { message: error.message },

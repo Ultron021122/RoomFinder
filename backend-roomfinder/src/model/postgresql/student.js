@@ -2,8 +2,8 @@ import { UsersModel } from './user.js'
 
 export class StudentsModel extends UsersModel {
 
-    constructor({ id, type_user, name, last_name, email, password, birthday, status, created_date, code_student, university }) {
-        super({ id, type_user, name, last_name, email, password, birthday, status, created_date });
+    constructor({ id, type_user, name, last_name, email, password, birthday, status, image, created_date, code_student, university }) {
+        super({ id, type_user, name, last_name, email, password, birthday, status, image, created_date });
         this.code_student = code_student;
         this.university = university;
     }
@@ -25,7 +25,7 @@ export class StudentsModel extends UsersModel {
 
     static async create({ input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status, code_student, university } = input
+            const { type_user, name, last_name, email, password, birthday, status, image, code_student, university } = input
             const result = await UsersModel.create({ input })
             if (result === false) return false;
             const id = result.id
@@ -36,7 +36,7 @@ export class StudentsModel extends UsersModel {
                 [code_student, id, university]
             )
 
-            return new StudentsModel({ id, type_user, name, last_name, email, password, birthday, status, created_date, code_student, university })
+            return new StudentsModel({ id, type_user, name, last_name, email, password, birthday, status, image, created_date, code_student, university })
         } catch (error) {
             throw new Error(`Error creating student: ${error.message}`);
         }
@@ -53,7 +53,7 @@ export class StudentsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status, code_student, university } = input
+            const { type_user, name, last_name, email, password, birthday, status, image, code_student, university } = input
             const user = await UsersModel.update({ id, input })
             if (user === false) return false;
             if (!user) return null;

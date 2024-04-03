@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 
 export class UsersModel extends Database {
 
-    constructor({ id, type_user, name, last_name, email, password, birthday, status, created_date }) {
+    constructor({ id, type_user, name, last_name, email, password, birthday, status, image, created_date }) {
         super();
         this.id = id;
         this.type_user = type_user;
@@ -13,6 +13,7 @@ export class UsersModel extends Database {
         this.password = password;
         this.birthday = birthday;
         this.status = status;
+        this.image = image;
         this.created_date = created_date;
     }
 
@@ -64,13 +65,13 @@ export class UsersModel extends Database {
 
     static async create({ input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status } = input
+            const { type_user, name, last_name, email, password, birthday, status, image } = input
             const validate = await this.getByEmail({ email });
             if (validate) return false;
 
             const result = await this.query(
-                'INSERT INTO users (type_user, name, last_name, email, password, birthday, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;',
-                [type_user, name, last_name, email, password, birthday, status]
+                'INSERT INTO users (type_user, name, last_name, email, password, birthday, status, image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;',
+                [type_user, name, last_name, email, password, birthday, status, image]
             )
 
             const id = result[0].id;
@@ -116,7 +117,7 @@ export class UsersModel extends Database {
 
     static async update({ id, input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status } = input
+            const { type_user, name, last_name, email, password, birthday, status, image } = input
             const validate = email ? await this.getByEmail({ email }) : null;
             if (validate) return false;
             const user = await this.getById({ id })
@@ -130,6 +131,7 @@ export class UsersModel extends Database {
                 password,
                 birthday,
                 status,
+                image
             })
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
@@ -144,7 +146,8 @@ export class UsersModel extends Database {
                 email,
                 password,
                 birthday,
-                status
+                status,
+                image
             })
                 .filter(value => value !== undefined);
 

@@ -9,6 +9,7 @@ export class LessorsModel extends UsersModel {
     password,
     birthday,
     status,
+    image,
     created_date,
     phone,
     street,
@@ -26,6 +27,7 @@ export class LessorsModel extends UsersModel {
       password,
       birthday,
       status,
+      image,
       created_date
     });
     this.phone = phone;
@@ -57,6 +59,7 @@ export class LessorsModel extends UsersModel {
         password,
         birthday,
         status,
+        image,
         phone,
         street,
         zip,
@@ -117,6 +120,7 @@ export class LessorsModel extends UsersModel {
         password,
         birthday,
         status,
+        image,
         phone,
         street,
         zip,

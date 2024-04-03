@@ -16,6 +16,7 @@ const studentSchema = z.object({
         message: "Too young!"
     }),
     status: z.enum(["active", "inactive"]),
+    image: z.string().url(),
     code_student: z.number().positive(),
     university: z.string()
 })
