@@ -21,6 +21,7 @@ export class LessorController {
     create = async (req, res) => {
         const result = validateLessor(req.body)
         if (result.error) {
+            console.log(result.error)
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
         // Encrypt password

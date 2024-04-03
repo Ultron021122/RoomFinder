@@ -10,6 +10,7 @@ export class UsersModel extends Database {
     password,
     birthday,
     status,
+    image,
     created_date
   }) {
     super();
@@ -21,6 +22,7 @@ export class UsersModel extends Database {
     this.password = password;
     this.birthday = birthday;
     this.status = status;
+    this.image = image;
     this.created_date = created_date;
   }
   static async getAll() {
@@ -75,13 +77,14 @@ export class UsersModel extends Database {
         email,
         password,
         birthday,
-        status
+        status,
+        image
       } = input;
       const validate = await this.getByEmail({
         email
       });
       if (validate) return false;
-      const result = await this.query('INSERT INTO users (type_user, name, last_name, email, password, birthday, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;', [type_user, name, last_name, email, password, birthday, status]);
+      const result = await this.query('INSERT INTO users (type_user, name, last_name, email, password, birthday, status, image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;', [type_user, name, last_name, email, password, birthday, status, image]);
       const id = result[0].id;
       const newUser = await this.getById({
         id
@@ -141,7 +144,8 @@ export class UsersModel extends Database {
         email,
         password,
         birthday,
-        status
+        status,
+        image
       } = input;
       const validate = email ? await this.getByEmail({
         email
@@ -158,7 +162,8 @@ export class UsersModel extends Database {
         email,
         password,
         birthday,
-        status
+        status,
+        image
       }).filter(([key, value]) => value !== undefined).map(([key, value]) => {
         return `${key} = $${Object.keys(input).indexOf(key) + 1}`; // Increment position by 1
       }).join(', ');
@@ -169,7 +174,8 @@ export class UsersModel extends Database {
         email,
         password,
         birthday,
-        status
+        status,
+        image
       }).filter(value => value !== undefined);
       if (updateValues.length !== 0) {
         await this.query(`UPDATE users SET ${updateColumns} WHERE id = $${updateValues.length + 1};`, [...updateValues, id]);

@@ -9,6 +9,7 @@ export class StudentsModel extends UsersModel {
     password,
     birthday,
     status,
+    image,
     created_date,
     code_student,
     university
@@ -22,6 +23,7 @@ export class StudentsModel extends UsersModel {
       password,
       birthday,
       status,
+      image,
       created_date
     });
     this.code_student = code_student;
@@ -49,6 +51,7 @@ export class StudentsModel extends UsersModel {
         password,
         birthday,
         status,
+        image,
         code_student,
         university
       } = input;
@@ -68,6 +71,7 @@ export class StudentsModel extends UsersModel {
         password,
         birthday,
         status,
+        image,
         created_date,
         code_student,
         university
@@ -101,6 +105,7 @@ export class StudentsModel extends UsersModel {
         password,
         birthday,
         status,
+        image,
         code_student,
         university
       } = input;
