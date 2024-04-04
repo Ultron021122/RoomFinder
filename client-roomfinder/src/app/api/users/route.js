@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function POST(req, res) {
+export async function POST(req) {
     const { email, password } = await req.json();
     try {
         const response = await axios.post(`${process.env.REST_URL}/users/login`, {

@@ -4,6 +4,7 @@ import { Button, Link as NLink } from "@nextui-org/react";
 import DropdownUser from "./dropdown";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { usePathname } from 'next/navigation'
 
 function Navbar({
     isOpen,
@@ -13,6 +14,7 @@ function Navbar({
     toggle: () => void;
 }) {
     const { data: session } = useSession();
+    const pathname = usePathname();
 
     return (
         <>
@@ -53,14 +55,14 @@ function Navbar({
                                 </svg>
                             </button>
                         </div>
-                        <div className="hidden md:flex items-center space-x-8">
-                            <Link href="/" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                        <div className="hidden md:flex items-center space-x-6">
+                            <Link href="/" className={`block lg:inline-block dark:hover:text-white ${pathname === '/' ? 'dark:text-blue-500' : 'dark:text-gray-300'}`}>
                                 Inicio
                             </Link>
-                            <Link href="/propiedades" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                            <Link href="/propiedades" className={`block lg:inline-block dark:hover:text-white ${pathname === '/propiedades' ? 'dark:text-blue-500' : 'dark:text-gray-300'}`}>
                                 Propiedades
                             </Link>
-                            <Link href="/arrendadores" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                            <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'dark:text-blue-500' : 'dark:text-gray-300'}`}>
                                 Arrendadores
                             </Link>
                             {session ? (
@@ -82,18 +84,18 @@ function Navbar({
                         isOpen && (
                             <div className="md:hidden text-sm mt-2 transition-opacity">
                                 <ul>
-                                    <li className="block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-800">
-                                        <Link href="/" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-800 ${pathname === '/' ? 'bg-gray-800' : ''}`}>
+                                        <Link href="/" className={`block lg:inline-block dark:hover:text-white ${pathname === '/' ? 'dark:text-blue-500' : 'dark:text-gray-300'}`}>
                                             Inicio
                                         </Link>
                                     </li>
-                                    <li className="block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-800">
-                                        <Link href="/propiedades" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-800 ${pathname === '/propiedades' ? 'bg-gray-800' : ''}`}>
+                                        <Link href="/propiedades" className={`block lg:inline-block dark:hover:text-white ${pathname === '/propiedades' ? 'dark:text-blue-500' : 'dark:text-gray-300'}`}>
                                             Propiedades
                                         </Link>
                                     </li>
-                                    <li className="block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-800">
-                                        <Link href="/arrendadores" className="block lg:inline-block dark:text-gray-300 dark:hover:text-white">
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-800 ${pathname === '/arrendadores' ? 'bg-gray-800' : ''}`}>
+                                        <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'dark:text-blue-500' : 'dark:text-gray-300'}`}>
                                             Arrendadores
                                         </Link>
                                     </li>
