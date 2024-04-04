@@ -6,7 +6,6 @@ import { useSession, signOut } from "next-auth/react";
 
 const DropdownUser = () => {
     const { data: session, status } = useSession();
-    console.log(session, status);
     const user = session?.user;
 
     return (
@@ -73,7 +72,7 @@ const DropdownUser = () => {
                             textValue="Create a new project"
                             endContent={<PlusIcon className="text-large"></PlusIcon>}
                         >
-                            New Project
+                            Nueva Propiedad
                         </DropdownItem>
                     </DropdownSection>
                     <DropdownItem key="settings" textValue="Configuraciones">

@@ -1,4 +1,3 @@
-import axios from "axios";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -20,20 +19,28 @@ const handler = NextAuth({
                         },
                         body: JSON.stringify(credentials),
                     })
+
                     if (userFound.status === 400) {
                         const error = await userFound.json();
                         throw new Error(error?.message);
                     };
-                    if (userFound.status === 401) throw new Error("Credenciales invalidas");
+                    if (userFound.status === 401) {
+                        throw new Error("Credenciales incorrectas. Por favor, inténtelo de nuevo.");
+                    }
                     return userFound.json();
                 } catch (error) {
-                    throw new Error("Server error, please try again later.");
+                    if (error instanceof Error) {
+                        throw new Error(error.message);
+                    } else {
+                        throw new Error("Algo salió mal. Por favor, inténtelo de nuevo");
+                    }
                 }
             },
         }),
     ],
     pages: {
         signIn: "/login",
+        signOut: "/",
     },
     session: {
         strategy: "jwt",
