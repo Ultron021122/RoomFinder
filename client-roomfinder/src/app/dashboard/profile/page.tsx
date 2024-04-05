@@ -1,34 +1,32 @@
 "use client";
+import { Image } from "@nextui-org/react";
 import { useSession, signOut } from "next-auth/react";
 
 function ProfilePage() {
-  const { data: session, status } = useSession();
-
-  console.log(session, status);
+  const { data: session } = useSession();
+  const user = session?.user;
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col gap-y-10 items-center justify-center">
-      <h1 className="font-bold text-3xl">Profile</h1>
-
-      <pre className="bg-zinc-800 p-4">
-        {JSON.stringify(
-          {
-            session,
-            status,
-          },
-          null,
-          2
-        )}
-      </pre>
-
-      <button
-        className="bg-zinc-800 px-4 py-2 block mb-2"
-        onClick={() => {
-          signOut();
-        }}
-      >
-        Signout
-      </button>
+    <div className="container mx-auto min-h-[calc(100vh-73px)]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+        <Image
+          src={`${(user as any)?.image}`}
+          alt="User avatar"
+          className="min-w-full rounded-md"
+        />
+        <div>
+          <h1 className="font-bold text-3xl dark:text-gray-200">Perfil</h1>
+          <p className="dark:text-gray-400">
+            <strong>Nombre:</strong> {user?.name}
+          </p>
+          <p className="dark:text-gray-400">
+            <strong>Apellidos:</strong> {(user as any)?.last_name}
+          </p>
+          <p className="dark:text-gray-400">
+            <strong>Email:</strong> {user?.email}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
