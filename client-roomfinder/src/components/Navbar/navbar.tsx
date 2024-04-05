@@ -27,11 +27,11 @@ function Navbar({
                                 RoomFinder
                             </h1>
                         </Link>
-                        <div className="md:hidden flex gap-5">
+                        <div className="md:hidden flex gap-3">
                             {session ? (
                                 <DropdownUser />
                             ) : (
-                                <Button as={NLink} href="/register" color="primary" variant="bordered" className="font-normal">
+                                <Button as={NLink} href="/register" size="sm" color="primary" variant="bordered" className="font-normal">
                                     Registrar
                                 </Button>
                             )

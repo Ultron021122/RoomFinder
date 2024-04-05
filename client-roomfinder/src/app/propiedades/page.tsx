@@ -1,5 +1,5 @@
 'use client';
-
+import Sidebar from "@/components/Sidebar";
 import dynamic from "next/dynamic";
 
 export default function Propiedades() {
@@ -7,7 +7,10 @@ export default function Propiedades() {
 
     return (
         <>
-            <DynamicMap position={[20.655080, -103.325448]} zoom={16} />
+            <Sidebar />
+            <div className="sm:ml-64">
+                <DynamicMap position={[20.655080, -103.325448]} zoom={16} />
+            </div>
         </>
     );
 }
