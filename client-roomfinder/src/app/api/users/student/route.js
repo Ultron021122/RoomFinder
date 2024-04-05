@@ -39,8 +39,6 @@ export async function POST(req, res) {
         );
     }
 
-    console.log(image)
-
     try {
         const response = await axios.post(`${process.env.REST_URL}/students/`, {
             type_user,

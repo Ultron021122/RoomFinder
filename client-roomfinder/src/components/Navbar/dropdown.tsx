@@ -28,6 +28,7 @@ const DropdownUser = () => {
                         description={(user as any)?.type_user}
                         name={user?.name}
                         classNames={{
+                            wrapper: "hidden sm:inline-flex flex-col items-start",
                             name: "dark:text-gray-200",
                             description: "capitalize"
                         }}
