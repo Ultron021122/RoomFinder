@@ -16,11 +16,6 @@ interface UserInfo {
     password: string;
 }
 
-interface Data {
-    email: string;
-    password: string;
-}
-
 function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm<UserInfo>({ mode: "onChange" });
     const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +26,7 @@ function Login() {
         setIsLoading(true);
         setErrorSystem(null);
 
-        const data: Data = {
+        const data: UserInfo = {
             email: userInfo.email,
             password: userInfo.password
         };
@@ -159,7 +154,7 @@ function Login() {
                                         Ingresar
                                     </Button>
                                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                                        ¿No tienes una cuenta? <Link href='/registrar' className="text-sky-600 hover:underline dark:text-sky-500">Crear una cuenta</Link>
+                                        ¿No tienes una cuenta? <Link href='/register' className="text-sky-600 hover:underline dark:text-sky-500">Crear una cuenta</Link>
                                     </p>
                                 </form>
                             </div>
