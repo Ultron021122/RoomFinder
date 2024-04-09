@@ -27,6 +27,7 @@ export default function RootLayout({
           <ToastContainer limit={3} />
           <Navigate />
           {children}
+          <SpeedInsights />
         </Providers>
       </body>
     </html>
