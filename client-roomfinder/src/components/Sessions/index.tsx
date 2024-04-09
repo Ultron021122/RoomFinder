@@ -6,7 +6,7 @@ import { Button } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/react";
 import { Alert } from "@/utils/alert";
 import { messages, patterns } from "@/utils/constants";
-import { toast, Bounce } from "react-toastify";
+import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { signIn } from "next-auth/react";
 
@@ -39,7 +39,20 @@ function Login() {
             });
             if (response?.error) setErrorSystem(response.error as string);
 
-            if (response?.ok) return router.push("/dashboard/profile");
+            if (response?.ok) {
+                toast.success('Inicio de sesión exitoso', {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Slide,
+                });
+                return router.push("/dashboard/profile");
+            }
         } catch (Error: any) {
             if (Error.response?.status == 400) {
                 setErrorSystem(Error.response?.data.message);

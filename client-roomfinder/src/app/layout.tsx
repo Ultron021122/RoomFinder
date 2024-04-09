@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={mainClass}>
         <Providers>
-          <ToastContainer />
+          <ToastContainer limit={3} />
           <Navigate />
           {children}
         </Providers>

@@ -23,6 +23,13 @@
     }
 }
 
+@media (min-width: 1024px) {
+    .map-width {
+        min-width: calc(100vw - 16rem);
+        height: calc(100vh - 73px);
+    }
+}
+
 .cluster-icon {
     background-color: var(--gray);
     height: 2em;

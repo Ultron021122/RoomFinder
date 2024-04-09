@@ -1,7 +1,10 @@
+import { universities } from "@/utils/constants";
+import { Select, SelectItem } from "@nextui-org/react";
+
 const Sidebar = () => {
     return (
         <>
-            <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-56 h-screen pt-[73px] transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-950 dark:border-gray-950" aria-label="Sidebar">
+            <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-56 lg:w-64 min-h-screen pt-[73px] transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-950 dark:border-gray-950" aria-label="Sidebar">
                 <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-950">
                     {/* <div className="flex items-center">
                         <h5 id="drawer-navigation-label" className="flex-1 ms-3 text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Menu</h5>
@@ -10,7 +13,63 @@ const Sidebar = () => {
                             <span className="sr-only">Close menu</span>
                         </button>
                     </div> */}
+                    <h5 className="flex items-center py-2 text-gray-900 rounded-lg dark:text-white">
+                        <span>Búsqueda de Inmueble</span>
+                    </h5>
                     <ul className="space-y-2 font-medium">
+                        <li>
+                            <div className="p-2">
+                                <div className="relative z-0 w-full group">
+                                    {/* Selecciona un centro universitario */}
+                                    <select
+                                        id="university"
+                                        className="block py-2.5 px-1 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600"
+                                    >
+                                        <option value="" className="dark:bg-gray-800 mr-5">Elige un centro universitario</option>
+                                        {
+                                            universities.map((university, index) => (
+                                                <option className="dark:bg-gray-800" value={university.name} key={index}>{university.name}</option>
+                                            ))
+                                        }
+                                    </select>
+                                    <label htmlFor="type_user" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 px-1">
+                                        Selecciona un CU
+                                    </label>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div className="p-2">
+                                <div className="relative z-0 w-full group">
+                                    {/* Selecciona un tipo de inmueble */}
+                                    <select
+                                        id=""
+                                        className="block py-2.5 px-1 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    >
+                                        <option value="" className="dark:bg-gray-800">Elige un tipo de inmueble</option>
+                                        <option className="dark:bg-gray-800" value="apartamento">Apartamento</option>
+                                        <option className="dark:bg-gray-800" value="casa">Casa</option>
+                                        <option className="dark:bg-gray-800" value="habitacion">Habitación</option>
+                                        <option className="dark:bg-gray-800" value="habitacion">Todas</option>
+                                    </select>
+                                    <label htmlFor="type_user" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 px-1">
+                                        Tipo de inmueble
+                                    </label>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <Select
+                                variant="underlined"
+                                label="Tipo de inmueble"
+                                className="max-w-xs"
+                                color="primary"
+                            >
+                                <SelectItem key={1} value={1}>Apartamento</SelectItem>
+                                <SelectItem key={2} value={2}>Casa</SelectItem>
+                                <SelectItem key={3} value={3}>Habitación</SelectItem>
+                            </Select>
+                        </li>
                         <li>
                             <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                 <svg className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
