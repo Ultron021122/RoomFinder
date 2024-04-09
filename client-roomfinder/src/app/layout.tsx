@@ -3,6 +3,7 @@ import Navigate from "@/components/Navbar";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={mainClass}>
         <Providers>
+          <ToastContainer limit={3} />
           <Navigate />
           {children}
         </Providers>
