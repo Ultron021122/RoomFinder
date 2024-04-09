@@ -8,7 +8,7 @@ export default function Propiedades() {
     return (
         <>
             <Sidebar />
-            <div className="sm:ml-56">
+            <div className="sm:ml-56 lg:ml-64">
                 <DynamicMap position={[20.655080, -103.325448]} zoom={16} />
             </div>
         </>

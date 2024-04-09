@@ -19,6 +19,14 @@
 @media (min-width: 640px) {
     .map-width {
         min-width: calc(100vw - 14rem);
+        height: calc(100vh - 65px);
+    }
+}
+
+@media (min-width: 1024px) {
+    .map-width {
+        min-width: calc(100vw - 16rem);
+        height: calc(100vh - 73px);
     }
 }
 
