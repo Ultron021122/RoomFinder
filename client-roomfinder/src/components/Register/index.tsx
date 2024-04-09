@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button, Spinner } from "@nextui-org/react";
 import { messages, patterns, universities } from "@/utils/constants";
 import { Alert } from '@/utils/alert';
-import { ToastContainer, toast, Bounce, Slide } from 'react-toastify';
+import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ModalImage from "./image";
 import { useSession } from "next-auth/react";
@@ -398,18 +398,6 @@ const Registrar = () => {
 
     return (
         <>
-            <ToastContainer
-                position="bottom-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
             <section className="bg-zinc-200 dark:bg-gray-900">
                 {isLoading ?
                     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen lg:py-0">
