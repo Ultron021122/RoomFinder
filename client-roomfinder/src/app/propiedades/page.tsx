@@ -11,7 +11,7 @@ export default function Propiedades() {
     return (
         <>
             <Sidebar onUniversityChange={setSelectedUniversity} />
-            <div className="sm:ml-56 lg:ml-64">
+            <div className="sm:ml-56 md:ml-60 lg:ml-64">
                 <DynamicMap position={[20.655080, -103.325448]} zoom={16} name={selectedUniversity} />
             </div>
         </>

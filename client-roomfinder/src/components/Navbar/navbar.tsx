@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button, Link as NLink } from "@nextui-org/react";
 import DropdownUser from "./dropdown";
@@ -15,10 +15,24 @@ function Navbar({
 }) {
     const { data: session } = useSession();
     const pathname = usePathname();
+    const [buttonSize, setButtonSize] = useState<"sm" | "md" | "lg" | undefined>("sm");
+
+    // useEffect(() => {
+    //     console.log(buttonSize)
+    //     const updateSize = () => {
+    //         console.log(window.innerWidth)
+    //         setButtonSize(window.innerWidth < 1024 ? "sm" : "sm");
+    //         console.log(buttonSize)
+    //     };
+    //     window.addEventListener("resize", updateSize);
+    //     updateSize();
+
+    //     return () => window.removeEventListener("resize", updateSize);
+    // }, []);
 
     return (
         <>
-            <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-950 dark:border-gray-950 sticky top-0 z-50">
+            <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-950 dark:border-gray-900 sticky top-0 z-50">
                 <div className="container mx-auto p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center">
@@ -55,7 +69,7 @@ function Navbar({
                                 </svg>
                             </button>
                         </div>
-                        <div className="hidden md:flex items-center space-x-6">
+                        <div className="hidden md:flex items-center space-x-6 text-sm">
                             <Link href="/" className={`block lg:inline-block dark:hover:text-white ${pathname === '/' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                 Inicio
                             </Link>
@@ -69,10 +83,10 @@ function Navbar({
                                 <DropdownUser />
                             ) : (
                                 <div className="hidden md:flex items-center space-x-2">
-                                    <Button as={NLink} href="/register" color="primary" variant="bordered" className="font-normal">
+                                    <Button as={NLink} href="/register" size={buttonSize} color="primary" variant="bordered" className="font-normal">
                                         Registrar
                                     </Button>
-                                    <Button as={NLink} href="/login" color="primary" variant="solid" className="font-normal">
+                                    <Button as={NLink} href="/login" size={buttonSize} color="primary" variant="solid" className="font-normal">
                                         Iniciar sesión
                                     </Button>
                                 </div>
