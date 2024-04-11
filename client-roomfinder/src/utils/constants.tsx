@@ -1,4 +1,4 @@
-import { UniversityData } from '@/utils/interfaces';
+import { UniversityData, Roles } from '@/utils/interfaces';
 
 export const messages = {
     type_user: {
@@ -68,6 +68,17 @@ export const messages = {
 export const patterns = {
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 };
+
+export const roles: Roles[] = [
+    {
+        name: "Estudiante",
+        value: "student",
+    },
+    {
+        name: "Arrendador",
+        value: "lessor",
+    },
+]
 
 export const universities: UniversityData[] = [
     {
