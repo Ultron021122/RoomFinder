@@ -1,74 +1,235 @@
+import { useState, useEffect } from "react";
 import { universities } from "@/utils/constants";
-import { Select, SelectItem } from "@nextui-org/react";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { FormControl, InputLabel, FormHelperText } from "@mui/material";
+import MenuItem from '@mui/material/MenuItem';
 
 const Sidebar = () => {
+    const [type_property, setTypeProperty] = useState('');
+    const [university, setUniversity] = useState('');
+    const [darkMode, setDarkMode] = useState(false);
+
+    useEffect(() => {
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const setDarkModeFromMediaQuery = () => setDarkMode(darkModeMediaQuery.matches);
+
+        setDarkModeFromMediaQuery();
+        darkModeMediaQuery.addEventListener('change', setDarkModeFromMediaQuery);
+
+        return () => {
+            darkModeMediaQuery.removeEventListener('change', setDarkModeFromMediaQuery);
+        };
+    }, []);
+
+    // console.log('Theme:', darkMode);
+    const handleChangeUniversity = (event: SelectChangeEvent) => {
+        setUniversity(event.target.value);
+    };
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setTypeProperty(event.target.value);
+    };
+
     return (
         <>
             <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-56 lg:w-64 min-h-screen pt-[73px] transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-950 dark:border-gray-950" aria-label="Sidebar">
                 <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-950">
-                    {/* <div className="flex items-center">
-                        <h5 id="drawer-navigation-label" className="flex-1 ms-3 text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Menu</h5>
-                        <button type="button" data-drawer-hide="drawer-navigation" aria-controls="drawer-navigation" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 justify-center inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" >
-                            <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                            <span className="sr-only">Close menu</span>
-                        </button>
-                    </div> */}
                     <h5 className="flex items-center py-2 text-gray-900 rounded-lg dark:text-white">
                         <span>Búsqueda de Inmueble</span>
                     </h5>
                     <ul className="space-y-2 font-medium">
-                        <li>
-                            <div className="p-2">
-                                <div className="relative z-0 w-full group">
-                                    {/* Selecciona un centro universitario */}
-                                    <select
+                        <li> {/* University */}
+                            <div className="px-2">
+                                <FormControl
+                                    variant="standard"
+                                    className="w-full"
+                                    sx={{
+                                        '.MuiInput-underline:after': {
+                                            borderBottomColor: darkMode === true ? '#3b82f6' : '#2563eb',
+                                        },
+                                        '.MuiInput-underline:before': {
+                                            borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                            borderBottomWidth: '2px',
+                                        },
+                                        '.MuiInput-underline:hover:not(.Mui-disabled):before': {
+                                            borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                        },
+                                    }}
+                                >
+                                    <InputLabel
                                         id="university"
-                                        className="block py-2.5 px-1 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600"
+                                        classes={{
+                                            root: 'peer-focus:font-medium text-sm peer-focus:text-sm text-gray-500 dark:text-gray-400',
+                                        }}
                                     >
-                                        <option value="" className="dark:bg-gray-800 mr-5">Elige un centro universitario</option>
+                                        Universidad
+                                    </InputLabel>
+                                    <Select
+                                        labelId="Universidad"
+                                        id="university"
+                                        value={university}
+                                        onChange={handleChangeUniversity}
+                                        label="Universidad"
+                                        className="text-sm"
+                                        sx={{
+                                            fontFamily: '__Inter_aaf875',
+                                            fontStyle: 'normal',
+                                            color: darkMode ? "white" : "#111827",
+                                            '.MuiSvgIcon-root ': {
+                                                fill: darkMode ? "white !important" : "#111827 !important",
+                                            }
+                                        }}
+                                        MenuProps={{
+                                            PaperProps: {
+                                                sx: {
+                                                    backgroundColor: darkMode ? "#374151" : "#f3f4f6",
+                                                    color: darkMode ? "#fff" : "#111827",
+                                                    height: '200px',
+                                                },
+                                            },
+                                        }}
+                                    >
                                         {
-                                            universities.map((university, index) => (
-                                                <option className="dark:bg-gray-800" value={university.name} key={index}>{university.name}</option>
+                                            universities.map((universidad, index) => (
+                                                <MenuItem
+                                                    value={universidad.name}
+                                                    key={index}
+                                                    sx={{
+                                                        fontSize: '0.875rem',
+                                                        lineHeight: '1.25rem',
+                                                        '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                                        '&.Mui-selected:hover': {
+                                                            backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                            color: darkMode ? '#3b82f6' : '#fff',
+                                                        }, // Style when selected and hovered
+                                                        '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                                    }}
+                                                >
+                                                    {universidad.name}
+                                                </MenuItem>
                                             ))
                                         }
-                                    </select>
-                                    <label htmlFor="type_user" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 px-1">
-                                        Selecciona un CU
-                                    </label>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="p-2">
-                                <div className="relative z-0 w-full group">
-                                    {/* Selecciona un tipo de inmueble */}
-                                    <select
-                                        id=""
-                                        className="block py-2.5 px-1 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    </Select>
+                                    <FormHelperText
+                                        className="text-gray-600 dark:text-gray-300"
                                     >
-                                        <option value="" className="dark:bg-gray-800">Elige un tipo de inmueble</option>
-                                        <option className="dark:bg-gray-800" value="apartamento">Apartamento</option>
-                                        <option className="dark:bg-gray-800" value="casa">Casa</option>
-                                        <option className="dark:bg-gray-800" value="habitacion">Habitación</option>
-                                        <option className="dark:bg-gray-800" value="habitacion">Todas</option>
-                                    </select>
-                                    <label htmlFor="type_user" className="peer-focus:font-medium absolute peer-focus:text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 px-1">
-                                        Tipo de inmueble
-                                    </label>
-                                </div>
+                                        Selecciona una universidad
+                                    </FormHelperText>
+                                </FormControl>
                             </div>
                         </li>
-                        <li>
-                            <Select
-                                variant="underlined"
-                                label="Tipo de inmueble"
-                                className="max-w-xs"
-                                color="primary"
-                            >
-                                <SelectItem key={1} value={1}>Apartamento</SelectItem>
-                                <SelectItem key={2} value={2}>Casa</SelectItem>
-                                <SelectItem key={3} value={3}>Habitación</SelectItem>
-                            </Select>
+                        <li> {/* Type of property */}
+                            <div className="px-2">
+                                <FormControl
+                                    variant="standard"
+                                    className="w-full"
+                                    sx={{
+                                        '.MuiInput-underline:after': {
+                                            borderBottomColor: darkMode === true ? '#3b82f6' : '#2563eb',
+                                        },
+                                        '.MuiInput-underline:before': {
+                                            borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                            borderBottomWidth: '2px',
+                                        },
+                                        '.MuiInput-underline:hover:not(.Mui-disabled):before': {
+                                            borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                        },
+                                    }}
+                                >
+                                    <InputLabel
+                                        id="type_property"
+                                        classes={{
+                                            root: 'peer-focus:font-medium text-sm peer-focus:text-sm text-gray-500 dark:text-gray-400',
+                                        }}
+                                    >
+                                        Tipo de inmueble
+                                    </InputLabel>
+                                    <Select
+                                        labelId="Tipo de inmueble"
+                                        id="type_property"
+                                        value={type_property}
+                                        onChange={handleChange}
+                                        label="Tipo de inmueble"
+                                        className="text-sm"
+                                        sx={{
+                                            fontFamily: '__Inter_aaf875',
+                                            fontStyle: 'normal',
+                                            color: darkMode ? "white" : "#111827",
+                                            '.MuiSvgIcon-root ': {
+                                                fill: darkMode ? "white !important" : "#111827 !important",
+                                            }
+                                        }}
+                                        MenuProps={{
+                                            PaperProps: {
+                                                sx: {
+                                                    backgroundColor: darkMode ? "#374151" : "#f3f4f6",
+                                                    color: darkMode ? "#fff" : "#111827",
+                                                },
+                                            },
+                                        }}
+                                    >
+                                        <MenuItem
+                                            value="Apartamento"
+                                            sx={{
+                                                fontSize: '0.875rem',
+                                                lineHeight: '1.25rem',
+                                                '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                                '&.Mui-selected:hover': {
+                                                    backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                    color: darkMode ? '#3b82f6' : '#fff',
+                                                }, // Style when selected and hovered
+                                                '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                            }}
+                                        >
+                                            Apartamento
+                                        </MenuItem>
+                                        <MenuItem
+                                            value="Casa"
+                                            sx={{
+                                                '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                                '&.Mui-selected:hover': {
+                                                    backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                    color: darkMode ? '#3b82f6' : '#fff',
+                                                }, // Style when selected and hovered
+                                                '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                            }}
+                                        >
+                                            Casa
+                                        </MenuItem>
+                                        <MenuItem
+                                            value="Habitación"
+                                            sx={{
+                                                '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                                '&.Mui-selected:hover': {
+                                                    backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                    color: darkMode ? '#3b82f6' : '#fff',
+                                                }, // Style when selected and hovered
+                                                '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                            }}
+                                        >
+                                            Habitación
+                                        </MenuItem>
+                                        <MenuItem
+                                            value="Todas"
+                                            sx={{
+                                                '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                                '&.Mui-selected:hover': {
+                                                    backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                    color: darkMode ? '#3b82f6' : '#fff',
+                                                }, // Style when selected and hovered
+                                                '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                            }}
+                                        >
+                                            Todas
+                                        </MenuItem>
+                                    </Select>
+                                    <FormHelperText
+                                        className="text-gray-600 dark:text-gray-300"
+                                    >
+                                        Selecciona un tipo de inmueble
+                                    </FormHelperText>
+                                </FormControl>
+                            </div>
                         </li>
                         <li>
                             <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -133,7 +294,7 @@ const Sidebar = () => {
                         </li> */}
                     </ul>
                 </div>
-            </aside>
+            </aside >
         </>
     );
 }
