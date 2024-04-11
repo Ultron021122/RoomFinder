@@ -92,11 +92,11 @@ function Login() {
             <section className="bg-gray-50 dark:bg-gray-900">
                 <PerfectScrollbar>
                     {isLoading ?
-                        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto sm:h-[calc(100vh-73px)] h-[calc(100vh-65px)] lg:py-0">
+                        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[calc(100vh-65px)] lg:py-0">
                             <Spinner />
                         </div>
                         :
-                        <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto sm:h-[calc(100vh-73px)] h-[calc(100vh-65px)] lg:py-0">
+                        <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[calc(100vh-65px)] lg:py-0">
                             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-900 dark:border-gray-800">
                                 <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                     <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
