@@ -44,7 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onUniversityChange }) => {
 
     return (
         <>
-            <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-56 lg:w-64 min-h-screen pt-[73px] transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-950 dark:border-gray-950" aria-label="Sidebar">
+            <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-56 md:w-60 lg:w-64 min-h-screen pt-[65px] transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-950 dark:border-gray-950" aria-label="Sidebar">
                 <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-950">
                     <h5 className="flex items-center py-2 text-gray-900 rounded-lg dark:text-white">
                         <span>Búsqueda de Inmueble</span>
