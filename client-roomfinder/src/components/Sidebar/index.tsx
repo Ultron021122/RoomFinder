@@ -58,9 +58,7 @@ const Sidebar = () => {
                                 >
                                     <InputLabel
                                         id="university"
-                                        classes={{
-                                            root: 'peer-focus:font-medium text-sm peer-focus:text-sm text-gray-500 dark:text-gray-400',
-                                        }}
+                                        className="peer-focus:font-medium text-sm peer-focus:text-sm text-gray-500 dark:text-gray-400"
                                     >
                                         Universidad
                                     </InputLabel>
@@ -138,9 +136,7 @@ const Sidebar = () => {
                                 >
                                     <InputLabel
                                         id="type_property"
-                                        classes={{
-                                            root: 'peer-focus:font-medium text-sm peer-focus:text-sm text-gray-500 dark:text-gray-400',
-                                        }}
+                                        className="peer-focus:font-medium text-sm peer-focus:text-sm text-gray-500 dark:text-gray-400"
                                     >
                                         Tipo de inmueble
                                     </InputLabel>
@@ -186,6 +182,8 @@ const Sidebar = () => {
                                         <MenuItem
                                             value="Casa"
                                             sx={{
+                                                fontSize: '0.875rem',
+                                                lineHeight: '1.25rem',
                                                 '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
                                                 '&.Mui-selected:hover': {
                                                     backgroundColor: darkMode ? '#111827' : "#6b7280",
@@ -199,6 +197,8 @@ const Sidebar = () => {
                                         <MenuItem
                                             value="Habitación"
                                             sx={{
+                                                fontSize: '0.875rem',
+                                                lineHeight: '1.25rem',
                                                 '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
                                                 '&.Mui-selected:hover': {
                                                     backgroundColor: darkMode ? '#111827' : "#6b7280",
@@ -212,6 +212,8 @@ const Sidebar = () => {
                                         <MenuItem
                                             value="Todas"
                                             sx={{
+                                                fontSize: '0.875rem',
+                                                lineHeight: '1.25rem',
                                                 '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
                                                 '&.Mui-selected:hover': {
                                                     backgroundColor: darkMode ? '#111827' : "#6b7280",
