@@ -47,3 +47,8 @@ export interface MapCoordenada {
     popUp: string;
 }
 
+export interface UniversityData {
+    name: string;
+    geocode: [number, number];
+    popUp: string;
+}

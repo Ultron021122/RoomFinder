@@ -1,11 +1,15 @@
 import { MapContainer, TileLayer, Marker, Tooltip, Popup } from "react-leaflet";
+import { useMap } from 'react-leaflet/hooks';
+import { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
-import { Icon, divIcon, point } from "leaflet";
+import { Icon, divIcon, point, Map as Mapa } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import { universities } from "@/utils/constants";
 
 interface MapData {
+    name: string;
     position: [number, number];
     zoom: number;
 }
@@ -13,6 +17,12 @@ interface MapData {
 interface MapCoordenada {
     geocode: [number, number];
     popUp: string;
+}
+
+interface DynamicMapProps {
+    position: [number, number];
+    zoom: number;
+    university: string;
 }
 
 const customIcon = new Icon({
@@ -32,66 +42,6 @@ const createClusterCustomIcon = function (cluster: any) {
         iconSize: point(33, 33, true)
     });
 };
-
-// Pruebas University
-const university: MapCoordenada[] = [
-    {
-        geocode: [20.655080, -103.325448],
-        popUp: "Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)"
-    },
-    {
-        geocode: [20.738857, -103.311808],
-        popUp: "Centro Universitario de Arte, Arquitectura y Diseño (CUAAD)"
-    },
-    {
-        geocode: [20.746758, -103.513747],
-        popUp: "Centro Universitario de Ciencias Biológicas y Agropecuarias (CUCBA)"
-    },
-    {
-        geocode: [20.739602, -103.381788],
-        popUp: "Centro Universitario de Ciencias Económico Administrativas (CUCEA)"
-    },
-    {
-        geocode: [20.686401, -103.331540],
-        popUp: "Centro Universitario de Ciencias de la Salud (CUCS)"
-    },
-    {
-        geocode: [20.693131, -103.349932],
-        popUp: "Centro Universitario de Ciencias Sociales y Humanidades (CUCSH)"
-    },
-    {
-        geocode: [20.370837, -102.768468],
-        popUp: "Centro Universitario de la Ciénega (CUCIÉNEGA)"
-    },
-    {
-        geocode: [20.706166, -105.220636],
-        popUp: "Centro Universitario de la Costa (CUCOSTA)"
-    },
-    {
-        geocode: [19.774326, -104.357906],
-        popUp: "Centro Universitario del Sur (CUCSUR)"
-    },
-    {
-        geocode: [21.356874, -101.951558],
-        popUp: "Centro Universitario de los Lagos (CULAGOS)"
-    },
-    {
-        geocode: [22.136822, -103.243725],
-        popUp: "Centro Universitario del Norte (CUNORTE)"
-    },
-    {
-        geocode: [19.723689, -103.462188],
-        popUp: "Centro Universitario del Sur (CUSUR)"
-    },
-    {
-        geocode: [20.566657, -103.225693],
-        popUp: "Centro Universitario de Tonalá (CUTONALÁ)"
-    },
-    {
-        geocode: [20.534568, -103.967400],
-        popUp: "Centro Universitario de los Valles (CUVALLES)"
-    }
-];
 
 // Pruebas Properties
 const properties: MapCoordenada[] = [
@@ -121,10 +71,33 @@ const properties: MapCoordenada[] = [
     }
 ];
 
-export default function Map({ position, zoom }: MapData) {
+export default function Map({ position, zoom, name }: MapData) {
+    const mapRef = useRef<Mapa | null>(null);
+    const SetMapRef = () => {
+        const map = useMap();
+        mapRef.current = map;
+        return null;
+    };
+
+    const getUniversityLocation = (name: string) => {
+        const filteredUniversities = universities.filter((universidad) => universidad.name === name);
+        if (filteredUniversities.length > 0) {
+            return filteredUniversities[0].geocode;
+        }
+        return position;
+    }
+
+    useEffect(() => {
+        if (mapRef.current && name) {
+            const universityLocation = getUniversityLocation(name); // Obtén la ubicación de la universidad de alguna manera
+            mapRef.current.flyTo(universityLocation, zoom, { animate: true, duration: 3 }); // Mueve el mapa a la ubicación de la universidad
+        }
+    }, [name]);
+
     return (
         <div>
             <MapContainer center={position} zoom={zoom} className="map-width">
+                <SetMapRef />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -134,9 +107,9 @@ export default function Map({ position, zoom }: MapData) {
                     chunkedLoading
                     iconCreateFunction={createClusterCustomIcon}
                 >
-                    {university.map((univer, index) => (
-                        <Marker position={univer.geocode} icon={universityIcon} key={index}>
-                            <Popup>{univer.popUp}</Popup>
+                    {universities.map((universidad, index) => (
+                        <Marker position={universidad.geocode} icon={universityIcon} key={index}>
+                            <Popup>{universidad.popUp}</Popup>
                         </Marker>
                     ))
                     }
