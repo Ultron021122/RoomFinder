@@ -52,3 +52,8 @@ export interface UniversityData {
     geocode: [number, number];
     popUp: string;
 }
+
+export interface Roles {
+    name: string;
+    value: string;
+}

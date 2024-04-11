@@ -178,6 +178,7 @@ export default function ModalImage({ onImageSave }: { onImageSave: (image: strin
                         <Image
                             width={160}
                             height={160}
+                            priority
                             src='/perfiles/astronauta.jpg'
                             alt='Profile Picture'
                             className='rounded-full opacity-50 object-center object-cover w-40 h-40 sm:w-48 sm:h-48'
