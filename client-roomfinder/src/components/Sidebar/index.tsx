@@ -1,13 +1,18 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { universities } from "@/utils/constants";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { FormControl, InputLabel, FormHelperText } from "@mui/material";
 import MenuItem from '@mui/material/MenuItem';
 
-const Sidebar = () => {
+interface SidebarProps {
+    onUniversityChange: (university: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onUniversityChange }) => {
     const [type_property, setTypeProperty] = useState('');
-    const [university, setUniversity] = useState('');
+    const [university, setUniversity] = useState<string>('');
     const [darkMode, setDarkMode] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -15,6 +20,8 @@ const Sidebar = () => {
 
         setDarkModeFromMediaQuery();
         darkModeMediaQuery.addEventListener('change', setDarkModeFromMediaQuery);
+
+        setIsLoaded(true);
 
         return () => {
             darkModeMediaQuery.removeEventListener('change', setDarkModeFromMediaQuery);
@@ -24,11 +31,16 @@ const Sidebar = () => {
     // console.log('Theme:', darkMode);
     const handleChangeUniversity = (event: SelectChangeEvent) => {
         setUniversity(event.target.value);
+        onUniversityChange(event.target.value);
     };
 
     const handleChange = (event: SelectChangeEvent) => {
         setTypeProperty(event.target.value);
     };
+
+    if (!isLoaded) {
+        return null;
+    }
 
     return (
         <>
@@ -58,7 +70,12 @@ const Sidebar = () => {
                                 >
                                     <InputLabel
                                         id="university"
-                                        className="peer-focus:font-medium text-sm peer-focus:text-sm text-gray-500 dark:text-gray-400"
+                                        className="peer-focus:font-medium text-sm peer-focus:text-sm"
+                                        sx={{
+                                            color: darkMode ? '#9ca3af' : '#6b7280',
+                                            fontSize: '0.875rem',
+                                            lineHeight: '1.25rem',
+                                        }}
                                     >
                                         Universidad
                                     </InputLabel>
@@ -71,6 +88,8 @@ const Sidebar = () => {
                                         className="text-sm"
                                         sx={{
                                             fontFamily: '__Inter_aaf875',
+                                            fontSize: '0.875rem',
+                                            lineHeight: '1.25rem',
                                             fontStyle: 'normal',
                                             color: darkMode ? "white" : "#111827",
                                             '.MuiSvgIcon-root ': {
@@ -109,7 +128,9 @@ const Sidebar = () => {
                                         }
                                     </Select>
                                     <FormHelperText
-                                        className="text-gray-600 dark:text-gray-300"
+                                        sx={{
+                                            color: darkMode ? '#d1d5db' : '#4b5563',
+                                        }}
                                     >
                                         Selecciona una universidad
                                     </FormHelperText>
@@ -136,7 +157,12 @@ const Sidebar = () => {
                                 >
                                     <InputLabel
                                         id="type_property"
-                                        className="peer-focus:font-medium text-sm peer-focus:text-sm text-gray-500 dark:text-gray-400"
+                                        className="peer-focus:font-medium text-sm peer-focus:text-sm"
+                                        sx={{
+                                            color: darkMode ? '#9ca3af' : '#6b7280',
+                                            fontSize: '0.875rem',
+                                            lineHeight: '1.25rem',
+                                        }}
                                     >
                                         Tipo de inmueble
                                     </InputLabel>
@@ -149,17 +175,20 @@ const Sidebar = () => {
                                         className="text-sm"
                                         sx={{
                                             fontFamily: '__Inter_aaf875',
+                                            fontSize: '0.875rem',
+                                            lineHeight: '1.25rem',
                                             fontStyle: 'normal',
                                             color: darkMode ? "white" : "#111827",
                                             '.MuiSvgIcon-root ': {
                                                 fill: darkMode ? "white !important" : "#111827 !important",
-                                            }
+                                            },
                                         }}
                                         MenuProps={{
                                             PaperProps: {
                                                 sx: {
                                                     backgroundColor: darkMode ? "#374151" : "#f3f4f6",
                                                     color: darkMode ? "#fff" : "#111827",
+                                                    maxHeight: '200px',
                                                 },
                                             },
                                         }}
@@ -226,7 +255,9 @@ const Sidebar = () => {
                                         </MenuItem>
                                     </Select>
                                     <FormHelperText
-                                        className="text-gray-600 dark:text-gray-300"
+                                        sx={{
+                                            color: darkMode ? '#d1d5db' : '#4b5563',
+                                        }}
                                     >
                                         Selecciona un tipo de inmueble
                                     </FormHelperText>
