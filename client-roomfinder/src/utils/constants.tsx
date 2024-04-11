@@ -1,6 +1,4 @@
-export interface University {
-    name: string;
-}
+import { UniversityData } from '@/utils/interfaces';
 
 export const messages = {
     type_user: {
@@ -69,50 +67,77 @@ export const messages = {
 
 export const patterns = {
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-    // email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
 };
 
-export const universities: University[] = [
+export const universities: UniversityData[] = [
     {
-        name: "Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)"
+        name: "Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)",
+        geocode: [20.655080, -103.325448],
+        popUp: "Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)"
     },
     {
-        name: "Centro Universitario de Arte, Arquitectura y Diseño (CUAAD)"
+        name: "Centro Universitario de Arte, Arquitectura y Diseño (CUAAD)",
+        geocode: [20.738857, -103.311808],
+        popUp: "Centro Universitario de Arte, Arquitectura y Diseño (CUAAD)"
     },
     {
-        name: "Centro Universitario de Ciencias Biológicas y Agropecuarias (CUCBA)"
+        name: "Centro Universitario de Ciencias Biológicas y Agropecuarias (CUCBA)",
+        geocode: [20.746758, -103.513747],
+        popUp: "Centro Universitario de Ciencias Biológicas y Agropecuarias (CUCBA)"
     },
     {
-        name: "Centro Universitario de Ciencias Económico Administrativas (CUCEA)"
+        name: "Centro Universitario de Ciencias Económico Administrativas (CUCEA)",
+        geocode: [20.739602, -103.381788],
+        popUp: "Centro Universitario de Ciencias Económico Administrativas (CUCEA)"
     },
     {
-        name: "Centro Universitario de Ciencias de la Salud (CUCS)"
+        name: "Centro Universitario de Ciencias de la Salud (CUCS)",
+        geocode: [20.686401, -103.331540],
+        popUp: "Centro Universitario de Ciencias de la Salud (CUCS)"
     },
     {
-        name: "Centro Universitario de Ciencias Sociales y Humanidades (CUCSH)"
+        name: "Centro Universitario de Ciencias Sociales y Humanidades (CUCSH)",
+        geocode: [20.693131, -103.349932],
+        popUp: "Centro Universitario de Ciencias Sociales y Humanidades (CUCSH)"
     },
     {
-        name: "Centro Universitario de la Ciénega (CUCIÉNEGA)"
+        name: "Centro Universitario de la Ciénega (CUCIÉNEGA)",
+        geocode: [20.370837, -102.768468],
+        popUp: "Centro Universitario de la Ciénega (CUCIÉNEGA)"
     },
     {
-        name: "Centro Universitario de la Costa (CUCOSTA)"
+        name: "Centro Universitario de la Costa (CUCOSTA)",
+        geocode: [20.706166, -105.220636],
+        popUp: "Centro Universitario de la Costa (CUCOSTA)"
     },
     {
-        name: "Centro Universitario del Sur (CUCSUR)"
+        name: "Centro Universitario de la Costa Sur (CUCSUR)",
+        geocode: [19.774326, -104.357906],
+        popUp: "Centro Universitario de la Costa Sur (CUCSUR)"
     },
     {
-        name: "Centro Universitario de los Lagos (CULAGOS)"
+        name: "Centro Universitario de los Lagos (CULAGOS)",
+        geocode: [21.356874, -101.951558],
+        popUp: "Centro Universitario de los Lagos (CULAGOS)"
     },
     {
-        name: "Centro Universitario del Norte (CUNORTE)"
+        name: "Centro Universitario del Norte (CUNORTE)",
+        geocode: [22.136822, -103.243725],
+        popUp: "Centro Universitario del Norte (CUNORTE)"
     },
     {
-        name: "Centro Universitario del Sur (CUSUR)"
+        name: "Centro Universitario del Sur (CUSUR)",
+        geocode: [19.723689, -103.462188],
+        popUp: "Centro Universitario del Sur (CUSUR)"
     },
     {
-        name: "Centro Universitario de Tonalá (CUTONALÁ)"
+        name: "Centro Universitario de Tonalá (CUTONALÁ)",
+        geocode: [20.566657, -103.225693],
+        popUp: "Centro Universitario de Tonalá (CUTONALÁ)"
     },
     {
-        name: "Centro Universitario de los Valles (CUVALLES)"
+        name: "Centro Universitario de los Valles (CUVALLES)",
+        geocode: [20.534568, -103.967400],
+        popUp: "Centro Universitario de los Valles (CUVALLES)"
     }
 ]
