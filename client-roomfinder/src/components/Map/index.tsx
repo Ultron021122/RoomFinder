@@ -1,10 +1,10 @@
 import { MapContainer, TileLayer, Marker, Tooltip, Popup } from "react-leaflet";
 import { useMap } from 'react-leaflet/hooks';
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
-import { Icon, divIcon, point, Map as Mapa } from "leaflet";
+import { Icon, divIcon, point, Map as Mapa, Marker as LeafletMarker } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { universities } from "@/utils/constants";
 
@@ -73,6 +73,8 @@ const properties: MapCoordenada[] = [
 
 export default function Map({ position, zoom, name }: MapData) {
     const mapRef = useRef<Mapa | null>(null);
+    const markerRefs = useRef<Record<string, React.RefObject<LeafletMarker>>>({});
+
     const SetMapRef = () => {
         const map = useMap();
         mapRef.current = map;
@@ -91,6 +93,13 @@ export default function Map({ position, zoom, name }: MapData) {
         if (mapRef.current && name) {
             const universityLocation = getUniversityLocation(name); // Obtén la ubicación de la universidad de alguna manera
             mapRef.current.flyTo(universityLocation, zoom, { animate: true, duration: 3 }); // Mueve el mapa a la ubicación de la universidad
+
+            setTimeout(() => {
+                const markerRef = markerRefs.current[name];
+                if (markerRef && markerRef.current) {
+                    markerRef.current.openPopup();
+                }
+            }, 4000);
         }
     }, [name]);
 
@@ -107,12 +116,22 @@ export default function Map({ position, zoom, name }: MapData) {
                     chunkedLoading
                     iconCreateFunction={createClusterCustomIcon}
                 >
-                    {universities.map((universidad, index) => (
-                        <Marker position={universidad.geocode} icon={universityIcon} key={index}>
-                            <Popup>{universidad.popUp}</Popup>
-                        </Marker>
-                    ))
-                    }
+                    {universities.map((universidad, index) => {
+                        if (!markerRefs.current[universidad.name]) {
+                            markerRefs.current[universidad.name] = React.createRef();
+                        }
+
+                        return (
+                            <Marker
+                                position={universidad.geocode}
+                                icon={universityIcon}
+                                key={index}
+                                ref={markerRefs.current[universidad.name]}
+                            >
+                                <Popup>{universidad.popUp}</Popup>
+                            </Marker>
+                        );
+                    })}
                 </MarkerClusterGroup>
 
                 <MarkerClusterGroup
