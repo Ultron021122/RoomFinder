@@ -45,7 +45,8 @@ Content-Type: application/json
     "email": "marvelsml25@gmail.com",
     "password": "12345678",
     "birthday": "2002-11-13T00:00:00.000Z",
-    "status": "inactive"
+    "status": "inactive",
+    "image": "https://res.cloudinary.com/dal8aivch/image/upload/v1712875535/students/v1smuum8jpcgvk1qppkw.png"
 }
 
 ### Crear un estudiante
@@ -105,7 +106,7 @@ Content-Type: application/json
 }
 
 ### Eliminar un usuario
-DELETE http://localhost:1234/users/11
+DELETE http://localhost:1234/users/9
 
 ### Eliminar un estudiante
 DELETE http://localhost:1234/students/11

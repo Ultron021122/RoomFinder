@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 import { v4 as uuidv4 } from 'uuid';
-const resend = new Resend('re_12345678');
+const resend = new Resend('re_123456789');
 export function generateUniqueToken() {
   const token = uuidv4();
   return token;
@@ -16,7 +16,7 @@ export class EmailService {
         data,
         error
       } = await resend.emails.send({
-        from: 'RoomFinder <onboarding@resend.dev>',
+        from: `RoomFinder <onboarding@${process.env.RESEND_DOMAIN}>`,
         to: [`${email}`],
         subject: 'Verificación de correo',
         html: `<strong>It works! ${token}</strong>`
