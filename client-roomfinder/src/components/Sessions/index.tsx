@@ -1,28 +1,27 @@
-import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button } from "@nextui-org/react";
-import { Spinner } from "@nextui-org/react";
-import { Alert } from "@/utils/alert";
-import { messages, patterns } from "@/utils/constants";
-import { toast, Bounce, Slide } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
+// Componentes
+import { Button, Spinner } from "@nextui-org/react";
+// Utilidades
+import { messages, patterns } from "@/utils/constants";
+import { UserInfo } from "@/utils/interfaces";
+import { Alert } from "@/utils/alert";
+// Estilos de algunos componentes
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-
-interface UserInfo {
-    email: string;
-    password: string;
-}
+import { toast, Bounce, Slide } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm<UserInfo>({ mode: "onChange" });
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
-    const router = useRouter();
-
+    
+    // Función para enviar los datos del formulario
     const onSubmit = async (userInfo: UserInfo) => {
         setIsLoading(true);
         setErrorSystem(null);
@@ -66,6 +65,7 @@ function Login() {
         }
     };
 
+    // Mostrar mensaje de error
     useEffect(() => {
         if (errorSystem) {
             toast.error(errorSystem, {
@@ -81,7 +81,7 @@ function Login() {
             });
         }
     }, [errorSystem]);
-
+    // Enfocar el input email al cargar la página
     useEffect(() => {
         const input = document.getElementById('email') as HTMLInputElement;
         input.focus();

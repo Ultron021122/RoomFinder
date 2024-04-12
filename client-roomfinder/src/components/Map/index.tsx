@@ -1,30 +1,17 @@
-import { MapContainer, TileLayer, Marker, Tooltip, Popup } from "react-leaflet";
 import { useMap } from 'react-leaflet/hooks';
 import React, { useEffect, useRef } from "react";
+import MarkerClusterGroup from "react-leaflet-cluster";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { Icon, divIcon, point, Map as Mapa, Marker as LeafletMarker } from "leaflet";
+// Datos de las propiedades y universidades
+import { MapData } from '@/utils/interfaces';
+import { universities, properties } from "@/utils/constants";
+// Estilos de leaflet
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
-import { Icon, divIcon, point, Map as Mapa, Marker as LeafletMarker } from "leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
-import { universities } from "@/utils/constants";
 
-interface MapData {
-    name: string;
-    position: [number, number];
-    zoom: number;
-}
-
-interface MapCoordenada {
-    geocode: [number, number];
-    popUp: string;
-}
-
-interface DynamicMapProps {
-    position: [number, number];
-    zoom: number;
-    university: string;
-}
-
+// Icons personalizados
 const customIcon = new Icon({
     iconUrl: "/images/property.png",
     iconSize: [52, 52]
@@ -35,6 +22,7 @@ const universityIcon = new Icon({
     iconSize: [52, 52]
 });
 
+// Clúster
 const createClusterCustomIcon = function (cluster: any) {
     return divIcon({
         html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
@@ -42,34 +30,6 @@ const createClusterCustomIcon = function (cluster: any) {
         iconSize: point(33, 33, true)
     });
 };
-
-// Pruebas Properties
-const properties: MapCoordenada[] = [
-    {
-        geocode: [20.656114, -103.331217],
-        popUp: "Propiedad Número 1"
-    },
-    {
-        geocode: [20.651617, -103.324075],
-        popUp: "Propiedad Número 2"
-    },
-    {
-        geocode: [20.657007, -103.316989],
-        popUp: "Propiedad Número 3"
-    },
-    {
-        geocode: [20.659820, -103.328892],
-        popUp: "Propiedad Número 4"
-    },
-    {
-        geocode: [20.650588, -103.329476],
-        popUp: "Propiedad Número 5"
-    },
-    {
-        geocode: [20.653525, -103.319747],
-        popUp: "Propiedad Número 6"
-    }
-];
 
 export default function Map({ position, zoom, name }: MapData) {
     const mapRef = useRef<Mapa | null>(null);
