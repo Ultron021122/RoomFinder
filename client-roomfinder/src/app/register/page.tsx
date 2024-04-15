@@ -1,13 +1,15 @@
-"use client";
 import React from "react";
+import { Metadata } from 'next';
 import Registrar from "@/components/Register";
 
-const Signup = () => {
+export const metadata: Metadata = {
+    title: 'Registro de usuario',
+};
+
+export default function Signup() {
     return (
         <>
             <Registrar />
         </>
     );
-}
-
-export default Signup;
+};
