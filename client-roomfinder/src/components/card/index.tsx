@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Divider, Image, Button, CardFooter } from "@nextui-org/react";
+import { Card, CardBody, Image } from "@nextui-org/react";
 
 const CardItem = ({
     id,

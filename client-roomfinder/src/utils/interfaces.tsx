@@ -38,6 +38,7 @@ export interface LessorInfo extends User {
 }
 
 export interface MapData {
+    name: string;
     position: [number, number];
     zoom: number;
 }

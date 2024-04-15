@@ -1,60 +1,30 @@
 import axios from "axios";
 import Link from "next/link";
-import { Controller, useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+// Componentes
+import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
+import { Controller, useForm } from "react-hook-form";
 import { Button, Spinner } from "@nextui-org/react";
-import { messages, patterns, universities, roles } from "@/utils/constants";
-import { Alert } from '@/utils/alert';
-import { toast, Bounce, Slide } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import ModalImage from "./image";
-import { useSession } from "next-auth/react";
+// Estilos de algunos componentes
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
-
-interface User {
-    type_user: string;
-    name: string;
-    last_name: string;
-    email: string;
-    password: string;
-    confirm_password: string;
-    status: string;
-    birthday: string;
-    profileImage: string;
-}
-
-interface StudentInfo extends User {
-    code_student: number;
-    university: string;
-    phone?: string;
-    street?: string;
-    zip?: number;
-    suburb?: string;
-    municipality?: string;
-    state?: string;
-}
-
-interface LessorInfo extends User {
-    code_student?: number;
-    university?: string;
-    phone: string;
-    street: string;
-    zip: number;
-    suburb: string;
-    municipality: string;
-    state: string;
-}
+import { toast, Bounce, Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// Utilidades
+import { messages, patterns, universities, roles } from "@/utils/constants";
+import { StudentInfo, LessorInfo } from "@/utils/interfaces";
+import { Alert } from '@/utils/alert';
 
 const Registrar = () => {
     const { status } = useSession();
+    const router = useRouter();
 
     const { control, register, handleSubmit, formState: { errors }, watch, reset, setValue, setError, clearErrors } = useForm<StudentInfo | LessorInfo>({ mode: "onChange", defaultValues: { status: 'active' } });
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
-    const router = useRouter();
 
     const [darkMode, setDarkMode] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -76,6 +46,7 @@ const Registrar = () => {
         }
     };
 
+    // Errores
     useEffect(() => {
         if (errorSystem) {
             toast.error(errorSystem, {
@@ -92,6 +63,7 @@ const Registrar = () => {
         }
     }, [errorSystem]);
 
+    // Registro de usuarios
     const onSubmit = async (userInfo: StudentInfo | LessorInfo) => {
         if (!userInfo.profileImage) {
             setError("profileImage", {
@@ -166,7 +138,7 @@ const Registrar = () => {
             }
         }
     };
-
+    // Efectos
     useEffect(() => {
         const input = document.getElementById('name') as HTMLInputElement;
         if (input) {
@@ -177,7 +149,7 @@ const Registrar = () => {
             router.push('/');
         }
     }, [status, router]);
-
+    // Dark Mode 
     useEffect(() => {
         const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         const setDarkModeFromMediaQuery = () => setDarkMode(darkModeMediaQuery.matches);
@@ -195,7 +167,7 @@ const Registrar = () => {
     if (!isLoaded) {
         return null;
     }
-
+    // Render de Estudiante
     const renderStudent = () => {
         return (
             <>
@@ -333,7 +305,7 @@ const Registrar = () => {
             </>
         );
     };
-
+    // Render de Arrendador 
     const renderLessor = () => {
         return (
             <>
