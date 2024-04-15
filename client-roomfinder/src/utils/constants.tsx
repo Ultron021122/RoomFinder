@@ -1,5 +1,9 @@
-import { UniversityData, Roles } from '@/utils/interfaces';
+import { UniversityData, Roles, MapCoordenada } from '@/utils/interfaces';
 
+// Iconos
+// ...
+
+// Constants - Messages or data
 export const messages = {
     type_user: {
         required: "Selecciona un tipo de usuario"
@@ -80,6 +84,7 @@ export const roles: Roles[] = [
     },
 ]
 
+// Pruebas Universities
 export const universities: UniversityData[] = [
     {
         name: "Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)",
@@ -152,3 +157,30 @@ export const universities: UniversityData[] = [
         popUp: "Centro Universitario de los Valles (CUVALLES)"
     }
 ]
+// Pruebas Properties
+export const properties: MapCoordenada[] = [
+    {
+        geocode: [20.656114, -103.331217],
+        popUp: "Propiedad Número 1"
+    },
+    {
+        geocode: [20.651617, -103.324075],
+        popUp: "Propiedad Número 2"
+    },
+    {
+        geocode: [20.657007, -103.316989],
+        popUp: "Propiedad Número 3"
+    },
+    {
+        geocode: [20.659820, -103.328892],
+        popUp: "Propiedad Número 4"
+    },
+    {
+        geocode: [20.650588, -103.329476],
+        popUp: "Propiedad Número 5"
+    },
+    {
+        geocode: [20.653525, -103.319747],
+        popUp: "Propiedad Número 6"
+    }
+];
