@@ -1,12 +1,14 @@
-"use client";
+import { Metadata } from 'next';
 import Login from "@/components/Sessions";
 
-function Signin() {
+export const metadata: Metadata = {
+  title: 'Iniciar sesión',
+};
+
+export default function Signin() {
   return (
     <>
       <Login />
     </>
   );
-}
-
-export default Signin;
+};
