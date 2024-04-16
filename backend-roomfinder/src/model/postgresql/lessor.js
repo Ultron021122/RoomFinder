@@ -40,7 +40,7 @@ export class LessorsModel extends UsersModel {
                 [id, phone, street, zip, suburb, municipality, state]
             )
 
-            return new LessorsModel({ id, type_user, name, last_name, email, password, birthday, status, created_date, phone, street, zip, suburb, municipality, state })
+            return new LessorsModel({ id, type_user, name, last_name, email, password, birthday, status, image, created_date, phone, street, zip, suburb, municipality, state })
         } catch (error) {
             throw new Error(`Error creating lessor: ${error.message}`)
         }
