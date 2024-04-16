@@ -38,10 +38,10 @@ const Registrar = () => {
 
     const handleImageSave = (imageFile: string | null) => {
         if (imageFile) {
-            setValue("profileImage", imageFile);
-            clearErrors("profileImage");
+            setValue("image", imageFile);
+            clearErrors("image");
         } else {
-            setError("profileImage", {
+            setError("image", {
                 type: "required",
                 message: messages.profilImage.required
             });
@@ -67,8 +67,8 @@ const Registrar = () => {
 
     // Registro de usuarios
     const onSubmit = async (userInfo: StudentInfo | LessorInfo) => {
-        if (!userInfo.profileImage) {
-            setError("profileImage", {
+        if (!userInfo.image) {
+            setError("image", {
                 type: "required",
                 message: messages.profilImage.required
             });
@@ -488,8 +488,8 @@ const Registrar = () => {
                                         </h1>
                                         <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
                                             <ModalImage onImageSave={handleImageSave} />
-                                            {errors?.profileImage && (
-                                                <Alert message={errors?.profileImage.message} />
+                                            {errors?.image && (
+                                                <Alert message={errors?.image.message} />
                                             )}
                                             <h4 className="mt-7 text-center text-lg font-semibold leading-tight tracking-tight text-gray-700 dark:text-gray-200">
                                                 Datos del usuario

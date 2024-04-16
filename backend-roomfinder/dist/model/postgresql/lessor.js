@@ -83,6 +83,7 @@ export class LessorsModel extends UsersModel {
         password,
         birthday,
         status,
+        image,
         created_date,
         phone,
         street,
