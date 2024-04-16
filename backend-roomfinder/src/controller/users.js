@@ -1,5 +1,5 @@
 import { validateUser, validatePartialUser } from '../schemas/user.js'
-import { EmailService } from '../server/emailService.js'
+// import { EmailService } from '../server/emailService.js'
 import bcrypt from 'bcrypt'
 
 export class UserController {
@@ -49,8 +49,8 @@ export class UserController {
         const newUser = await this.userModel.create({ input: result.data })
         if (newUser === false) return res.status(409).json({ message: "User already exists" })
 
-        const token = await EmailService.generarTokenVerification();
-        await EmailService.sendEmailVerificate(newUser.email, token);
+        // const token = await EmailService.generarTokenVerification();
+        // await EmailService.sendEmailVerificate(newUser.email, token);
 
         return res.status(201).json(newUser)
     }

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Button, Link as NLink } from "@nextui-org/react";
+import { Button, Link as LinkUI } from "@nextui-org/react";
 import DropdownUser from "./dropdown";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -15,29 +14,15 @@ function Navbar({
 }) {
     const { data: session } = useSession();
     const pathname = usePathname();
-    const [buttonSize, setButtonSize] = useState<"sm" | "md" | "lg" | undefined>("sm");
-
-    // useEffect(() => {
-    //     console.log(buttonSize)
-    //     const updateSize = () => {
-    //         console.log(window.innerWidth)
-    //         setButtonSize(window.innerWidth < 1024 ? "sm" : "sm");
-    //         console.log(buttonSize)
-    //     };
-    //     window.addEventListener("resize", updateSize);
-    //     updateSize();
-
-    //     return () => window.removeEventListener("resize", updateSize);
-    // }, []);
 
     return (
         <>
             <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-950 dark:border-gray-900 sticky top-0 z-50">
-                <div className="container mx-auto p-4 sm:py-4">
+                <div className="max-w-screen-xl mx-auto p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center">
                             <Image className="w-8 h-8 mr-2" width={32} height={32} src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" priority={true} alt="logo" />
-                            <h1 className="dark:text-gray-300 dark:hover:text-white text-2xl font-semibold">
+                            <h1 className="dark:text-gray-100 dark:hover:text-white text-2xl font-semibold">
                                 RoomFinder
                             </h1>
                         </Link>
@@ -45,7 +30,7 @@ function Navbar({
                             {session ? (
                                 <DropdownUser />
                             ) : (
-                                <Button as={NLink} href="/register" size="sm" color="primary" variant="bordered" className="font-normal">
+                                <Button as={LinkUI} href="/register" size="sm" color="primary" variant="bordered" className="font-normal">
                                     Registrar
                                 </Button>
                             )
@@ -83,10 +68,10 @@ function Navbar({
                                 <DropdownUser />
                             ) : (
                                 <div className="hidden md:flex items-center space-x-2">
-                                    <Button as={NLink} href="/register" size={buttonSize} color="primary" variant="bordered" className="font-normal">
+                                    <Button as={LinkUI} href="/register" size='sm' color="primary" variant="bordered" className="font-normal">
                                         Registrar
                                     </Button>
-                                    <Button as={NLink} href="/login" size={buttonSize} color="primary" variant="solid" className="font-normal">
+                                    <Button as={LinkUI} href="/login" size='sm' color="primary" variant="solid" className="font-normal">
                                         Iniciar sesión
                                     </Button>
                                 </div>
