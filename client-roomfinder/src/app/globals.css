@@ -5,41 +5,37 @@
 :root {
     --white: #FFFFFF;
     --gray: #333;
-    --primario: #007aff;
+    --primary: #007aff;
+    --secondary: #dc2626;
 }
 
+/* Mapa */
 .map-width {
-    height: calc(100vh - 73px);
+    height: calc(100vh - 65px);
     min-width: 100vw;
     position: relative;
     z-index: -20;
     float: left;
 }
-
 @media (min-width: 640px) {
     .map-width {
         min-width: calc(100vw - 14rem);
-        height: calc(100vh - 65px);
     }
 }
-
 @media (min-width: 768px) {
     .map-width {
         min-width: calc(100vw - 15rem);
-        height: calc(100vh - 73px);
     }
 
 }
-
 @media (min-width: 1024px) {
     .map-width {
         min-width: calc(100vw - 16rem);
-        height: calc(100vh - 73px);
     }
 }
 
 .cluster-icon {
-    background-color: var(--gray);
+    background-color: var(--secondary);
     height: 2em;
     width: 2em;
     color: var(--white);
@@ -49,14 +45,6 @@
     border-radius: 50%;
     font-size: 1.2rem;
     box-shadow: 0 0 0px 5px var(--white);
-}
-
-.border-default-200 {
-    border-color: aqua;
-}
-
-.min-screen-90 {
-    min-height: 88.5vh;
 }
 
 #animation {
