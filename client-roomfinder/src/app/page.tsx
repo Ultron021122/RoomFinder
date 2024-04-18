@@ -7,10 +7,10 @@ export default function Home() {
   return (
     <>
       <Layout key={1}>
-        <div className="h-[calc(100vh-105px)] w-full">
+        <div className="h-[calc(100vh-65px)] w-full">
           <main className="container mx-auto">
             <div className="mb-5">
-              <h1 className="text-white text-2xl font-bold mt-10">Proyecto Modular</h1>
+              <h1 className="dark:text-white text-2xl font-bold">Proyecto Modular</h1>
               <p className="dark:text-white">
                 Este proyecto fue creado con el objetivo de mostrar la modularización de una aplicación
               </p>

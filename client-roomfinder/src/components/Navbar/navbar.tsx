@@ -18,7 +18,7 @@ function Navbar({
     return (
         <>
             <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-950 dark:border-gray-900 sticky top-0 z-50">
-                <div className="max-w-screen-xl mx-auto p-4 sm:py-4">
+                <div className="max-w-screen-2xl mx-auto p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center">
                             <Image className="w-8 h-8 mr-2" width={32} height={32} src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" priority={true} alt="logo" />
