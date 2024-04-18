@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Button, Link as LinkUI } from "@nextui-org/react";
-import DropdownUser from "./dropdown";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname } from 'next/navigation'
+import { useSession } from "next-auth/react";
+import { Button, Link as LinkUI } from "@nextui-org/react";
+import DropdownUser from "./dropdown";
 
 function Navbar({
     isOpen,
