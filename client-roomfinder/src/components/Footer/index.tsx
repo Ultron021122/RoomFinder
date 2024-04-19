@@ -1,21 +1,26 @@
+import Link from 'next/link';
+
 export default function Footer() {
     return (
         <footer className="bg-white mt-12 border-t border-gray-200 shadow dark:bg-gray-950 dark:border-gray-900">
             <div className="w-full mx-auto max-w-screen-2xl p-4 md:flex md:items-center md:justify-between">
-                <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="https://roomfinder.site" className="hover:underline">RoomFinder™</a>. All Rights Reserved.
+                <span className="text-sm text-neutral-950 sm:text-center dark:text-gray-300 dark:hover:text-white">© 2024 <Link href="/" className="hover:underline">RoomFinder™</Link>. Todos Los Derechos Reservados.
                 </span>
-                <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+                <ul className="flex flex-wrap items-center mt-3 text-sm font-medium sm:mt-0">
                     <li>
-                        <a href="#" className="hover:underline me-4 md:me-6">About</a>
+                        <Link href="/" className="dark:hover:text-white me-4 md:me-6 text-neutral-950 dark:text-gray-300">
+                            Sobre nosotros
+                        </Link>
                     </li>
                     <li>
-                        <a href="#" className="hover:underline me-4 md:me-6">Privacy Policy</a>
+                        <Link href="/" className="dark:hover:text-white me-4 md:me-6 text-neutral-950 dark:text-gray-300">
+                            Politica de privacidad
+                        </Link>
                     </li>
                     <li>
-                        <a href="#" className="hover:underline me-4 md:me-6">Licensing</a>
-                    </li>
-                    <li>
-                        <a href="#" className="hover:underline mr-2">Contact</a>
+                        <Link href="/" className="dark:hover:text-white me-4 md:me-6 text-neutral-950 dark:text-gray-300">
+                            Contacto
+                        </Link>
                     </li>
                 </ul>
             </div>
