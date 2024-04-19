@@ -8,12 +8,8 @@ import { LessorInfo } from '@/utils/interfaces';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
-interface Lessor extends LessorInfo {
-    id: number;
-}
-
 interface LessorResponse {
-    data: Lessor[];
+    data: LessorInfo[];
 }
 
 export default function ListItems() {
@@ -55,7 +51,7 @@ export default function ListItems() {
                         :
                         (
                             lessors ? (
-                                <div className='h-[calc(100vh-189px)] lg:w-4/6'>
+                                <div className='h-[950px] lg:w-4/6'>
                                     <PerfectScrollbar>
                                         <div className="grid grid-cols-1 gap-y-5 pr-1">
                                             {
@@ -68,7 +64,6 @@ export default function ListItems() {
                                             }
                                         </div>
                                     </PerfectScrollbar>
-
                                 </div>
                             ) : (
                                 <div className='flex flex-col items-center justify-center h-[calc(100vh-189px)]'>
@@ -84,6 +79,12 @@ export default function ListItems() {
                             )
                         )
                     }
+
+                    <section className='mt-10'>
+                        <p className='dark:text-gray-200'>
+                            Más contenido próximamente
+                        </p>
+                    </section>
                 </div>
             </PerfectScrollbar>
         </>
