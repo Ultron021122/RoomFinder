@@ -18,6 +18,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // Utilidades
 import { messages, patterns, universities, roles } from "@/utils/constants";
 import { StudentInfo, LessorInfo } from "@/utils/interfaces";
+import Footer from "@/components/Footer";
 import { Alert } from '@/utils/alert';
 
 const Registrar = () => {
@@ -789,6 +790,7 @@ const Registrar = () => {
                                     </div>
                                 </div>
                             </div >
+                            <Footer />
                         </div>
                     }
                 </PerfectScrollbar>
