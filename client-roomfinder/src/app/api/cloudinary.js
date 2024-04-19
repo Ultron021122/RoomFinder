@@ -15,6 +15,7 @@ export async function uploadImage(image, folder, transformationOptions = {}) {
         });
         return response;
     } catch (error) {
+        console.log(error);
         return NextResponse.json(
             { message: 'Server error' },
             { status: 503 }

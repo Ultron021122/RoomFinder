@@ -18,11 +18,11 @@ export async function GET() {
 }
 
 export async function POST(req, res) {
-    const { type_user, name, last_name, email, password, confirm_password, status, birthday, profileImage, phone, street, zip, suburb, municipality, state } = await req.json();
-    let image;
+    const { type_user, name, last_name, email, password, confirm_password, status, birthday, image, phone, street, zip, suburb, municipality, state } = await req.json();
+    let imageUrl;
     try {
-        image = await uploadImage(
-            profileImage,
+        imageUrl = await uploadImage(
+            image,
             'lessors',
             {
                 transformation: [
@@ -48,7 +48,7 @@ export async function POST(req, res) {
             password,
             birthday,
             status,
-            image: image.secure_url,
+            image: imageUrl.secure_url,
             phone,
             street,
             zip,
@@ -71,8 +71,8 @@ export async function POST(req, res) {
         );
 
     } catch (error) {
-        if (image && image.public_id) {
-            await deleteImage(image.public_id);
+        if (imageUrl && imageUrl.public_id) {
+            await deleteImage(imageUrl.public_id);
         }
         return NextResponse.json(
             { message: error.message },

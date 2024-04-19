@@ -57,7 +57,7 @@ export default function ModalImage({ onImageSave }: { onImageSave: (image: strin
 
     const handleSave = (canvas: HTMLCanvasElement) => {
         if (canvas) {
-            const dataUrl = canvas.toDataURL('image/jpg');
+            const dataUrl = canvas.toDataURL('image/jpeg');
             setCroppedImageUrl(dataUrl);
             onOpenChange();
             onImageSave(dataUrl);

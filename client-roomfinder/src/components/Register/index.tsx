@@ -475,11 +475,11 @@ const Registrar = () => {
             <section className="bg-zinc-200 dark:bg-gray-900">
                 <PerfectScrollbar>
                     {isLoading ?
-                        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[calc(100vh-65px)] lg:py-0">
+                        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[calc(100vh-73px)] lg:py-0">
                             <Spinner />
                         </div>
                         :
-                        <div className="h-[calc(100vh-65px)] ">
+                        <div className="h-[calc(100vh-73px)] ">
                             <div className="flex flex-col items-center px-6 py-8 mx-auto lg:py-0">
                                 <div className="w-full my-5 bg-white rounded-lg shadow dark:border sm:max-w-lg xl:p-0 dark:bg-gray-900 dark:border-gray-800">
                                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
