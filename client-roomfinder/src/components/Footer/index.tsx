@@ -1,6 +1,6 @@
 export default function Footer() {
     return (
-        <footer className="bg-white border-t border-gray-200 shadow dark:bg-gray-950 dark:border-gray-900">
+        <footer className="bg-white mt-12 border-t border-gray-200 shadow dark:bg-gray-950 dark:border-gray-900">
             <div className="w-full mx-auto max-w-screen-2xl p-4 md:flex md:items-center md:justify-between">
                 <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="https://roomfinder.site" className="hover:underline">RoomFinder™</a>. All Rights Reserved.
                 </span>

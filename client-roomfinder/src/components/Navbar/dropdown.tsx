@@ -5,7 +5,7 @@ import { PlusIcon } from "./icon";
 import { useSession, signOut } from "next-auth/react";
 
 const DropdownUser = () => {
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const user = session?.user;
 
     return (

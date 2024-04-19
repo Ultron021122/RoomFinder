@@ -23,6 +23,12 @@ export interface UserInfo {
  */
 export interface User {
     /**
+     * User id
+     * @example
+     * id: 1
+     */
+    id: number | null;
+    /**
      * User type
      * @example
      * type_user: 'student' | 'lessor'
