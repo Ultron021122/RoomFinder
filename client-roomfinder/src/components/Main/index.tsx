@@ -1,13 +1,14 @@
 'use client';
 import Layout from "@/components/layout";
 import Footer from '@/components/Footer';
+import { images } from "@/utils/constants";
 import MasonryImageList from "@/components/Imagelist";
 
 export default function Inicio() {
     return (
         <Layout key={1}>
             <div className='h-[calc(100vh-73px)] w-full'>
-                <div className='h-[calc(100vh-73px)] max-w-screen-2xl mx-auto bg-cover bg-no-repeat bg-center bg-black bg-opacity-45 bg-blend-darken flex justify-end items-start p-5 flex-col' style={{ backgroundImage: `url(/images/home_1.webp)` }}>
+                <div className='h-[calc(100vh-73px)] max-w-screen-2xl mx-auto bg-cover bg-no-repeat bg-center bg-black bg-opacity-45 bg-blend-darken flex justify-end items-start p-5 flex-col' style={{ backgroundImage: `url(${images[0].url})` }}>
                     <h2 className="dark:text-white text-4xl sm:text-5xl font-bold">
                         RoomFinder.
                         <span className="ml-2 dark:text-gray-200 font-light">
