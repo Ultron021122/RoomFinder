@@ -18,11 +18,11 @@ export async function GET() {
 }
 
 export async function POST(req, res) {
-    const { type_user, name, last_name, email, password, confirm_password, status, birthday, profileImage, code_student, university } = await req.json();
-    let image;
+    const { type_user, name, last_name, email, password, confirm_password, status, birthday, image, code_student, university } = await req.json();
+    let imageUrl;
     try {
-        image = await uploadImage(
-            profileImage,
+        imageUrl = await uploadImage(
+            image,
             'students',
             {
                 transformation: [
@@ -48,7 +48,7 @@ export async function POST(req, res) {
             password,
             birthday,
             status,
-            image: image.secure_url,
+            image: imageUrl.secure_url,
             code_student,
             university,
         });
@@ -67,8 +67,8 @@ export async function POST(req, res) {
         );
 
     } catch (error) {
-        if (image && image.public_id) {
-            await deleteImage(image.public_id);
+        if (imageUrl && imageUrl.public_id) {
+            await deleteImage(imageUrl.public_id);
         }
         return NextResponse.json(
             { message: 'Server error'},
