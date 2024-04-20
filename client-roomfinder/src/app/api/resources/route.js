@@ -3,9 +3,8 @@ import { deleteImage, uploadImage } from '../cloudinary';
 
 export async function POST(request) {
     const { image } = await request.json();
-    let imageUrl;
     try {
-        imageUrl = await uploadImage(
+        const imageUrl = await uploadImage(
             image,
             'resources',
             {
@@ -16,9 +15,8 @@ export async function POST(request) {
                 ]
             }
         );
-        console.log(imageUrl)
         return NextResponse.json(
-            { message: "Image uploaded successfully", imageUrl: imageUrl.secure_url },
+            { message: "Image uploaded successfully" },
             { status: 201 }
         );
 

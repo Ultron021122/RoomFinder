@@ -69,6 +69,17 @@ export const messages = {
 
 }
 
+export const images = [
+    {
+        name: 'portada',
+        url: 'https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg',
+    },
+    {
+        name: 'portada2',
+        url: 'https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg',
+    },
+];
+
 export const patterns = {
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,16}$/,
