@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { deleteImage, uploadImage } from '../../cloudinary';
+import { deleteImage, uploadImage } from '../cloudinary';
 
 export async function POST(request) {
     const { image } = await request.json();
