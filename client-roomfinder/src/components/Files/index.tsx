@@ -4,12 +4,13 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
-import { Button } from '@nextui-org/react';
+import { Button, Divider } from '@nextui-org/react';
 // Estilos de algunos componentes
 import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // Utilidades
 import { Alert } from '@/utils/alert';
+import { FolderIcon } from '@/utils/icons';
 
 type Imagen = {
   image: string;
@@ -98,62 +99,108 @@ export default function ImageUploader() {
     }
   };
 
+  const handleClick = () => {
+    const fileInput = document.getElementById('drop-file');
+    if (fileInput) { // Verifica si fileInput no es null
+      (fileInput as HTMLInputElement).click(); // Asegura que fileInput se trate como HTMLInputElement y llama a click()
+    } else {
+      setErrorSystem('No se encontró el input de archivo.'); // Opcional: maneja el caso de error
+    }
+  };
+
   return (
     <>
-      <div className="h-[calc(100vh-73px)]">
-        {/* Campo para seleccionar la imagen */}
-        <div className='flex flex-col items-center justify-center w-full'>
-          <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
-            <div>
-              <label htmlFor='drop-file' className='flex flex-col items-center justify-center my-2 w-40 h-40 sm:w-48 sm:h-48 ring-4 ring-offset-gray-50 dark:ring-offset-gray-900 ring-offset-4 hover:ring-blue-500 rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'>
-                {selectedFileUrl ? (
-                  <Image
-                    width={160}
-                    height={160}
-                    src={selectedFileUrl}
-                    alt='Profile Picture'
-                    className='rounded-full object-cover w-40 h-40 sm:w-48 sm:h-48'
-                  />
-                ) : (
-                  <Image
-                    width={160}
-                    height={160}
-                    priority
-                    src='/perfiles/astronauta.jpg'
-                    alt='Profile Picture'
-                    className='rounded-full object-cover w-40 h-40 sm:w-48 sm:h-48'
-                  />
-                )}
+      <div className="h-[calc(100vh-73px)] max-w-screen-2xl mx-auto">
+        <div className="container mx-auto p-2">
+          <h1 className='text-neutral-950 dark:text-gray-200 text-2xl font-bold'>Subida de imagenes</h1>
+          <p className='text-neutral-800 dark:text-gray-300 text-sm'>Sube una imagen para almacenarla en la base de datos</p>
+          <Divider className='bg-neutral-400 dark:bg-gray-500' />
+          <div className=''>
+            <div className='grid grid-cols-2 items-center'>
+              <label htmlFor='upload-file' className='text-neutral-800 dark:text-gray-300 text-sm'>
+                Archivo
+              </label>
+              <Button color='primary' variant='flat' radius='none' className='font-normal w-full' onClick={handleClick} startContent={<FolderIcon />}>
+                Seleccionar imagen
                 <input
-                  id='drop-file'
-                  name="drop-file"
+                  id='upload-file'
+                  name="upload-file"
                   type='file'
                   accept='image/*'
                   className='hidden'
                   onChange={handleFileChange}
                 />
-              </label>
-              <input
-                type='text'
-                className='hidden'
-                value={selectedFileUrl}
-                {...register('image', {
-                  required: {
-                    value: true,
-                    message: 'Es necesario seleccionar una imagen',
-                  },
-                })}
-              />
+              </Button>
+              {/* <input type='text' className='text-neutral-800 dark:text-gray-300 text-sm' value={selectedFileUrl} readOnly /> */}
             </div>
-            {/* Mensaje de error */}
-            {errors.image && (
-              <Alert message={errors.image.message} />
-            )}
-            {/* Botón para enviar el formulario */}
-            <Button type='submit' color='primary' variant='flat' className='font-normal w-full'>
-              Subir imagen
-            </Button>
-          </form>
+            <div className='grid grid-cols-2'>
+              <label className='text-neutral-800 dark:text-gray-300 text-sm'>Carpeta</label>
+              <input type='text' className='text-neutral-800 dark:text-gray-300 text-sm' value={selectedFileUrl} readOnly />
+            </div>
+            <div className='grid grid-cols-2'>
+              <label className='text-neutral-800 dark:text-gray-300 text-sm'>Ancho</label>
+              <input type='text' className='text-neutral-800 dark:text-gray-300 text-sm' value={selectedFileUrl} readOnly />
+            </div>
+            <div className='grid grid-cols-2'>
+              <label className='text-neutral-800 dark:text-gray-300 text-sm'>Altura</label>
+              <input type='text' className='text-neutral-800 dark:text-gray-300 text-sm' value={selectedFileUrl} readOnly />
+            </div>
+          </div>
+
+          {/* Campo para seleccionar la imagen */}
+          <div className=''>
+            <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
+              <div>
+                <label htmlFor='drop-file' className='flex flex-col items-center justify-center my-2 w-40 h-40 sm:w-48 sm:h-48 ring-4 ring-offset-gray-50 dark:ring-offset-gray-900 ring-offset-4 hover:ring-blue-500 rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'>
+                  {selectedFileUrl ? (
+                    <Image
+                      width={160}
+                      height={160}
+                      src={selectedFileUrl}
+                      alt='Profile Picture'
+                      className='rounded-full object-cover w-40 h-40 sm:w-48 sm:h-48'
+                    />
+                  ) : (
+                    <Image
+                      width={160}
+                      height={160}
+                      priority
+                      src='/perfiles/astronauta.jpg'
+                      alt='Profile Picture'
+                      className='rounded-full object-cover w-40 h-40 sm:w-48 sm:h-48'
+                    />
+                  )}
+                  <input
+                    id='drop-file'
+                    name="drop-file"
+                    type='file'
+                    accept='image/*'
+                    className='hidden'
+                    onChange={handleFileChange}
+                  />
+                </label>
+                <input
+                  type='text'
+                  className='hidden'
+                  value={selectedFileUrl}
+                  {...register('image', {
+                    required: {
+                      value: true,
+                      message: 'Es necesario seleccionar una imagen',
+                    },
+                  })}
+                />
+              </div>
+              {/* Mensaje de error */}
+              {errors.image && (
+                <Alert message={errors.image.message} />
+              )}
+              {/* Botón para enviar el formulario */}
+              <Button type='submit' color='primary' variant='flat' className='font-normal w-full'>
+                Subir imagen
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
     </>
