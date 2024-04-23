@@ -9,13 +9,13 @@ export default function Inicio() {
         <Layout key={1}>
             <div className='h-[calc(100vh-73px)] w-full'>
                 <div className='h-[calc(100vh-73px)] max-w-screen-2xl mx-auto bg-cover bg-no-repeat bg-center bg-black bg-opacity-45 bg-blend-darken flex justify-end items-start p-5 flex-col' style={{ backgroundImage: `url(${images[0].url})` }}>
-                    <h2 className="dark:text-white text-4xl sm:text-5xl font-bold">
+                    <h2 className="text-white text-4xl sm:text-5xl font-bold">
                         RoomFinder.
-                        <span className="ml-2 dark:text-gray-200 font-light">
+                        <span className="ml-2 text-gray-200 font-light">
                             Tu puerta a un hogar perfecto.
                         </span>
                     </h2>
-                    <p className="dark:text-gray-300">Encuentra tu espacio ideal con Roomfinder.</p>
+                    <p className="text-gray-300">Encuentra tu espacio ideal con Roomfinder.</p>
                 </div>
                 <section className="container mx-auto my-10 p-2 sm:p-0">
                     <div className="mb-5">
