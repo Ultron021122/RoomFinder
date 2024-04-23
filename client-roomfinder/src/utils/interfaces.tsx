@@ -279,3 +279,21 @@ export interface Roles {
      */
     value: string;
 }
+/**
+ * Interface to manage the folders data
+ * @interface
+ */
+export interface Folder {
+    /**
+     * Folder name
+     * @example
+     * name: 'Folder name'
+     */
+    name: string;
+    /**
+     * Folder path
+     * @example
+     * path: 'Folder path'
+     */
+    path: string;
+}

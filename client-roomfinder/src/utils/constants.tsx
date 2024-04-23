@@ -1,4 +1,5 @@
-import { UniversityData, Roles, MapCoordenada } from '@/utils/interfaces';
+import { UniversityData, Roles, MapCoordenada, Folder } from '@/utils/interfaces';
+import { height } from '@mui/system';
 
 // Iconos
 // ...
@@ -38,6 +39,9 @@ export const messages = {
     profilImage: {
         required: "Imagen de perfil es requerida"
     },
+    image: {
+        required: "Imagen es requerida"
+    },
     code_student: {
         required: "Código de estudiante es requerido",
         min: "No es un código de estudiante válido",
@@ -66,7 +70,18 @@ export const messages = {
     state: {
         required: "El campo Estado es requerido",
     },
-
+    folder: {
+        required: "El campo Carpeta es requerido",
+    },
+    width: {
+        required: "El campo Ancho es requerido",
+        min: "El ancho debe ser mayor a 0",
+        max: "El ancho debe ser menor a 1800"
+    },
+    height: {
+        min: "El ancho debe ser mayor a 0",
+        max: "El ancho debe ser menor a 1800"
+    },
 }
 
 export const images = [
@@ -95,6 +110,25 @@ export const roles: Roles[] = [
     {
         name: "Arrendador",
         value: "lessor",
+    },
+]
+
+export const folders: Folder[] = [
+    {
+        name: "Estudiante",
+        path: "students",
+    },
+    {
+        name: "Arrendador",
+        path: "lessors",
+    },
+    {
+        name: "Propiedades",
+        path: "properties",
+    },
+    {
+        name: "Recursos",
+        path: "resources",
     },
 ]
 
