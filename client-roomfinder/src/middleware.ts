@@ -4,6 +4,6 @@ export const config = {
     matcher: [
         "/arrendadores",
         "/dashboard/:path*",
-        // "/admin"
+        "/admin",
     ]
 };
