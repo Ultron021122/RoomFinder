@@ -13,7 +13,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 // Utilidades
 import { Alert } from '@/utils/alert';
-import { FolderIcon } from '@/utils/icons';
+import { FolderIcon, UploadIcon } from '@/utils/icons';
 import { messages, folders } from '@/utils/constants';
 
 type Imagen = {
@@ -23,11 +23,24 @@ type Imagen = {
   height?: number;
 };
 
+type ResponseData = {
+  asset_id: string;
+  created_at: string;
+  folder: string;
+  format: string;
+  width: number;
+  height: number;
+  public_id: string;
+  resource_type: string;
+  secure_url: string;
+};
+
 export default function ImageUploader() {
   const { control, register, handleSubmit, formState: { errors }, setValue, reset } = useForm<Imagen>({ mode: "onChange" });
   const [selectedFileUrl, setSelectedFileUrl] = useState<string>(''); // Estado para almacenar la URL de la imagen seleccionada
   const [isLoading, setIsLoading] = useState<boolean>(false); // Estado para almacenar el estado de carga [true: cargando, false: no cargando
   const [errorSystem, setErrorSystem] = useState<string | null>(null); // Estado para almacenar el mensaje de error del sistema
+  const [responseData, setResponseData] = useState<ResponseData | null>(null); // Estado para almacenar la respuesta del servidor
   const [darkMode, setDarkMode] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -80,6 +93,7 @@ export default function ImageUploader() {
     try {
       const response = await axios.post("/api/resources", uploadData);
       setIsLoading(false);
+      console.log(response.data)
       if (response.status === 201) {
         toast.success(response.data.message, {
           position: "bottom-right",
@@ -91,6 +105,18 @@ export default function ImageUploader() {
           progress: undefined,
           theme: "colored",
           transition: Slide,
+        });
+        const auxiliar = response.data.data;
+        setResponseData({
+          asset_id: auxiliar.asset_id,
+          created_at: auxiliar.created_at,
+          folder: auxiliar.folder,
+          format: auxiliar.format,
+          width: auxiliar.width,
+          height: auxiliar.height,
+          public_id: auxiliar.public_id,
+          resource_type: auxiliar.resource_type,
+          secure_url: auxiliar.secure_url,
         });
         setSelectedFileUrl('');
         reset();
@@ -113,7 +139,7 @@ export default function ImageUploader() {
     if (fileInput) { // Verifica si fileInput no es null
       (fileInput as HTMLInputElement).click(); // Asegura que fileInput se trate como HTMLInputElement y llama a click()
     } else {
-      setErrorSystem('No se encontró el input de archivo.'); // Opcional: maneja el caso de error
+      setErrorSystem('Ocurrión un error'); // Opcional: maneja el caso de error
     }
   };
 
@@ -147,226 +173,229 @@ export default function ImageUploader() {
 
             {/* Campo para seleccionar la imagen */}
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className='flex flex-col sm:flex-row my-2 gap-2'>
-                <div className='space-y-2 w-full sm:w-1/2'>
-                  {/* Carpeta */}
-                  <div className='grid grid-cols-3 items-center gap-x-2'>
-                    <label htmlFor='folder' className='text-neutral-800 dark:text-gray-300 text-sm'>
-                      Carpeta
-                    </label>
-                    <FormControl
-                      className="w-full mb-2 col-span-2"
-                      variant="standard"
-                      id="folder"
-                      sx={{
-                        '.MuiInput-underline:after': {
-                          borderBottomColor: darkMode === true ? '#3b82f6' : '#2563eb',
-                        },
-                        '.MuiInput-underline:before': {
-                          borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
-                          borderBottomWidth: '2px',
-                        },
-                        '.MuiInput-underline:hover:not(.Mui-disabled):before': {
-                          borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
-                        },
-                      }}
-                    >
-                      <InputLabel
-                        id="folder-label"
-                        className="peer-focus:font-medium text-sm peer-focus:text-sm"
+              <div className='flex flex-col sm:flex-row my-5 gap-2 sm:gap-5'>
+                <div className='w-full sm:w-3/4'>
+                  <div className='space-y-2'>
+                    {/* Carpeta */}
+                    <div className='grid grid-cols-3 items-center gap-x-2'>
+                      <label htmlFor='folder' className='text-neutral-800 dark:text-gray-300 text-sm'>
+                        Carpeta
+                      </label>
+                      <FormControl
+                        className="w-full mb-2 col-span-2"
+                        variant="standard"
+                        id="folder"
                         sx={{
-                          color: darkMode === true ? '#9ca3af' : '#6b7280',
-                          fontSize: '0.875rem',
-                          lineHeight: '1.25rem',
+                          '.MuiInput-underline:after': {
+                            borderBottomColor: darkMode === true ? '#3b82f6' : '#2563eb',
+                          },
+                          '.MuiInput-underline:before': {
+                            borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                            borderBottomWidth: '2px',
+                          },
+                          '.MuiInput-underline:hover:not(.Mui-disabled):before': {
+                            borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                          },
                         }}
                       >
-                        Selecciona una carpeta
-                      </InputLabel>
-                      <Controller
-                        name="folder"
-                        control={control}
-                        defaultValue=""
-                        rules={{
-                          required: {
-                            value: true,
-                            message: messages.folder.required
-                          }
-                        }}
-                        render={({ field }) => (
-                          <Select
-                            labelId="folder-label"
-                            id="folder"
-                            label="Tipo de usuario"
-                            className="text-sm"
-                            sx={{
-                              fontFamily: '__Inter_aaf875',
-                              fontSize: '0.875rem',
-                              lineHeight: '1.25rem',
-                              fontStyle: 'normal',
-                              color: darkMode ? "white" : "#111827",
-                              '.MuiSvgIcon-root ': {
-                                fill: darkMode ? "white !important" : "#111827 !important",
-                              }
-                            }}
-                            MenuProps={{
-                              PaperProps: {
-                                sx: {
-                                  backgroundColor: darkMode ? "#374151" : "#f3f4f6",
-                                  color: darkMode ? "#fff" : "#111827",
-                                  maxHeight: '200px',
-                                },
-                              },
-                            }}
-                            {...field}
-                          >
-                            {
-                              folders.map((carpeta, index) => (
-                                <MenuItem
-                                  value={carpeta.path}
-                                  key={index}
-                                  sx={{
-                                    fontSize: '0.875rem',
-                                    lineHeight: '1.25rem',
-                                    '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
-                                    '&.Mui-selected:hover': {
-                                      backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                      color: darkMode ? '#3b82f6' : '#fff',
-                                    }, // Style when selected and hovered
-                                    '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
-                                  }}
-                                >
-                                  {carpeta.name}
-                                </MenuItem>
-                              ))
-                            }
-                          </Select>
-                        )}
-                      />
-                    </FormControl>
-                    <div className='col-span-2'>
-                      {errors?.folder && (
-                        <Alert message={errors?.folder.message} />
-                      )}
-                    </div>
-                  </div>
-                  {/* Ancho */}
-                  <div className='grid grid-cols-3 items-center gap-x-2'>
-                    <label htmlFor='width' className='text-neutral-800 dark:text-gray-300 text-sm'>
-                      Ancho
-                    </label>
-                    <div className="relative z-0 w-full my-1 col-span-2">
-                      <div className="grid">
-                        <input
-                          {...register("width", {
+                        <InputLabel
+                          id="folder-label"
+                          className="peer-focus:font-medium text-sm peer-focus:text-sm"
+                          sx={{
+                            color: darkMode === true ? '#9ca3af' : '#6b7280',
+                            fontSize: '0.875rem',
+                            lineHeight: '1.25rem',
+                          }}
+                        >
+                          Selecciona una carpeta
+                        </InputLabel>
+                        <Controller
+                          name="folder"
+                          control={control}
+                          defaultValue=""
+                          rules={{
                             required: {
                               value: true,
-                              message: messages.width.required
-                            },
+                              message: messages.folder.required
+                            }
+                          }}
+                          render={({ field }) => (
+                            <Select
+                              labelId="folder-label"
+                              id="folder"
+                              label="Tipo de usuario"
+                              className="text-sm"
+                              sx={{
+                                fontFamily: '__Inter_aaf875',
+                                fontSize: '0.875rem',
+                                lineHeight: '1.25rem',
+                                fontStyle: 'normal',
+                                color: darkMode ? "white" : "#111827",
+                                '.MuiSvgIcon-root ': {
+                                  fill: darkMode ? "white !important" : "#111827 !important",
+                                }
+                              }}
+                              MenuProps={{
+                                PaperProps: {
+                                  sx: {
+                                    backgroundColor: darkMode ? "#374151" : "#f3f4f6",
+                                    color: darkMode ? "#fff" : "#111827",
+                                    maxHeight: '200px',
+                                  },
+                                },
+                              }}
+                              {...field}
+                            >
+                              {
+                                folders.map((carpeta, index) => (
+                                  <MenuItem
+                                    value={carpeta.path}
+                                    key={index}
+                                    sx={{
+                                      fontSize: '0.875rem',
+                                      lineHeight: '1.25rem',
+                                      '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                      '&.Mui-selected:hover': {
+                                        backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                        color: darkMode ? '#3b82f6' : '#fff',
+                                      }, // Style when selected and hovered
+                                      '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                    }}
+                                  >
+                                    {carpeta.name}
+                                  </MenuItem>
+                                ))
+                              }
+                            </Select>
+                          )}
+                        />
+                      </FormControl>
+                      <div className='col-span-2'>
+                        {errors?.folder && (
+                          <Alert message={errors?.folder.message} />
+                        )}
+                      </div>
+                    </div>
+                    {/* Ancho */}
+                    <div className='grid grid-cols-3 items-center gap-x-2'>
+                      <label htmlFor='width' className='text-neutral-800 dark:text-gray-300 text-sm'>
+                        Ancho
+                      </label>
+                      <div className="relative z-0 w-full my-1 col-span-2">
+                        <div className="grid">
+                          <input
+                            {...register("width", {
+                              required: {
+                                value: true,
+                                message: messages.width.required
+                              },
+                              min: {
+                                value: 1,
+                                message: messages.width.min
+                              },
+                              max: {
+                                value: 1800,
+                                message: messages.width.max
+                              },
+                              valueAsNumber: true,
+                            })}
+                            type="number"
+                            name="width"
+                            id="width"
+                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            placeholder=""
+                            autoComplete="off"
+                          />
+                          <label htmlFor="width" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                            Selecciona el ancho de la imagen
+                          </label>
+                        </div>
+                      </div>
+                      <div className='col-span-2'>
+                        {errors?.width && (
+                          <Alert message={errors?.width.message} />
+                        )}
+                      </div>
+                    </div>
+                    {/* Altura */}
+                    <div className='grid grid-cols-3 items-center gap-x-2'>
+                      <label htmlFor='height' className='text-neutral-800 dark:text-gray-300 text-sm'>
+                        Altura
+                      </label>
+                      <div className="relative z-0 w-full my-1 col-span-2">
+                        <input
+                          {...register("height", {
                             min: {
                               value: 1,
-                              message: messages.width.min
+                              message: messages.height.min
                             },
                             max: {
                               value: 1800,
-                              message: messages.width.max
+                              message: messages.height.max
                             },
                             valueAsNumber: true,
                           })}
                           type="number"
-                          name="width"
-                          id="width"
+                          name="height"
+                          id="height"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                           placeholder=""
                           autoComplete="off"
                         />
-                        <label htmlFor="width" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                          Selecciona el ancho de la imagen
+                        <label htmlFor="height" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                          Selecciona la altura de la imagen
                         </label>
                       </div>
+                      <div className='col-span-2'>
+                        {errors?.height && (
+                          <Alert message={errors?.height.message} />
+                        )}
+                      </div>
                     </div>
-                    <div className='col-span-2'>
-                      {errors?.width && (
-                        <Alert message={errors?.width.message} />
-                      )}
-                    </div>
-                  </div>
-                  {/* Altura */}
-                  <div className='grid grid-cols-3 items-center gap-x-2'>
-                    <label htmlFor='height' className='text-neutral-800 dark:text-gray-300 text-sm'>
-                      Altura
-                    </label>
-                    <div className="relative z-0 w-full my-1 col-span-2">
-                      <input
-                        {...register("height", {
-                          min: {
-                            value: 1,
-                            message: messages.height.min
-                          },
-                          max: {
-                            value: 1800,
-                            message: messages.height.max
-                          },
-                          valueAsNumber: true,
-                        })}
-                        type="number"
-                        name="height"
-                        id="height"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=""
-                        autoComplete="off"
-                      />
-                      <label htmlFor="height" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                        Selecciona la altura de la imagen
+                    {/* Archivo */}
+                    <div className='grid grid-cols-3 items-center gap-x-2'>
+                      <label htmlFor='upload-file' className='text-neutral-800 dark:text-gray-300 text-sm'>
+                        Archivo
                       </label>
-                    </div>
-                    <div className='col-span-2'>
-                      {errors?.height && (
-                        <Alert message={errors?.height.message} />
-                      )}
-                    </div>
-                  </div>
-                  {/* Archivo */}
-                  <div className='grid grid-cols-3 items-center gap-x-2'>
-                    <label htmlFor='upload-file' className='text-neutral-800 dark:text-gray-300 text-sm'>
-                      Archivo
-                    </label>
-                    <Button color='primary' variant='flat' radius='sm' className='font-normal col-span-2 w-full' onClick={handleClick} startContent={<FolderIcon />}>
-                      Seleccionar imagen
+                      <Button color='primary' variant='flat' radius='sm' className='font-normal col-span-2 w-full' onClick={handleClick} startContent={<FolderIcon />}>
+                        Seleccionar imagen
+                        <input
+                          id='upload-file'
+                          name="upload-file"
+                          type='file'
+                          accept='image/*'
+                          className='hidden'
+                          onChange={handleFileChange}
+                        />
+                      </Button>
                       <input
-                        id='upload-file'
-                        name="upload-file"
-                        type='file'
-                        accept='image/*'
+                        type='text'
                         className='hidden'
-                        onChange={handleFileChange}
+                        value={selectedFileUrl}
+                        {...register('image', {
+                          required: {
+                            value: true,
+                            message: messages.image.required,
+                          },
+                        })}
                       />
-                    </Button>
-                    <input
-                      type='text'
-                      className='hidden'
-                      value={selectedFileUrl}
-                      {...register('image', {
-                        required: {
-                          value: true,
-                          message: messages.image.required,
-                        },
-                      })}
-                    />
-                    <div className='col-span-2'>
-                      {errors?.image && (
-                        <Alert message={errors?.image.message} />
-                      )}
+                      <div className='col-span-2'>
+                        {errors?.image && (
+                          <Alert message={errors?.image.message} />
+                        )}
+                      </div>
                     </div>
                   </div>
                   {/* Botón para enviar el formulario */}
-                  <Button type='submit' color='primary' variant='flat' className='font-normal w-full'>
+                  <Button type='submit' color='success' variant='flat' radius='sm' className='font-normal w-full mt-3' startContent={<UploadIcon />}>
                     Subir imagen
                   </Button>
                 </div>
-                <div className='w-full sm:w-1/2 flex justify-center'>
+                <div className='w-full sm:w-1/4 flex justify-center'>
                   <Image
                     width={160}
                     height={160}
+                    priority
                     src={selectedFileUrl ? selectedFileUrl : '/perfiles/astronauta.jpg'}
                     alt='Profile Picture'
                     className='w-auto h-auto max-h-96'
@@ -374,6 +403,15 @@ export default function ImageUploader() {
                 </div>
               </div>
             </form>
+
+            {/* Resultado */}
+            {
+              responseData && (
+                <p>
+                  ${responseData.secure_url}
+                </p>
+              )
+            }
           </div>
         </div>
       </PerfectScrollbar>
