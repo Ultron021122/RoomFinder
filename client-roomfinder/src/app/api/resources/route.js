@@ -2,21 +2,28 @@ import { NextResponse } from 'next/server';
 import { deleteImage, uploadImage } from '../cloudinary';
 
 export async function POST(request) {
-    const { image } = await request.json();
+    const { image, folder, width, height } = await request.json();
     try {
+        let transformationOptions = [
+            { width: width, crop: "scale" },
+            { quality: "auto" },
+            { fetch_format: "auto" }
+        ];
+
+        if (height) {
+            transformationOptions[0].height = height;
+        }
+
         const imageUrl = await uploadImage(
             image,
-            'resources',
+            folder,
             {
-                transformation: [
-                    { width: 1800, crop: "scale" },
-                    { quality: "auto" },
-                    { fetch_format: "auto" }
-                ]
+                transformation: transformationOptions
             }
         );
+
         return NextResponse.json(
-            { message: "Image uploaded successfully" },
+            { message: "Image uploaded successfully", data: imageUrl},
             { status: 201 }
         );
 
