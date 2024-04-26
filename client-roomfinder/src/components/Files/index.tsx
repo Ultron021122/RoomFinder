@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { Controller, useForm } from "react-hook-form";
-import { Button, Divider } from '@nextui-org/react';
+import { Button, Divider, Snippet } from '@nextui-org/react';
 // Estilos de algunos componentes
 import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -407,9 +407,51 @@ export default function ImageUploader() {
             {/* Resultado */}
             {
               responseData && (
-                <p>
-                  ${responseData.secure_url}
-                </p>
+                <div className='dark:bg-gray-950 dark:text-white rounded-md p-2 space-y-1 text-sm'>
+                  <h3 className='text-lg font-bold'>Resultado</h3>
+                  <div className='flex items-center gap-3'>
+                    <p>ID Asset</p>
+                    <Snippet
+                      hideSymbol
+                      size='sm'
+                      variant='flat'
+                      color='primary'
+                      classNames={{
+                        base: 'dark:text-white text-neutral-800 font-normal text-sm',
+                      }}
+                    >
+                      {responseData.asset_id}
+                    </Snippet>
+                  </div>
+                  <div className='flex items-center gap-3'>
+                    <p>Folder</p>
+                    <Snippet
+                      hideSymbol
+                      size='sm'
+                      variant='flat'
+                      color='primary'
+                      classNames={{
+                        base: 'dark:text-white text-neutral-800 font-normal text-sm',
+                      }}
+                    >
+                      {responseData.folder}
+                    </Snippet>
+                  </div>
+                  <div className='flex items-center gap-3'>
+                    <p>URL segura</p>
+                    <Snippet
+                      hideSymbol
+                      size='sm'
+                      variant='flat'
+                      color='primary'
+                      classNames={{
+                        base: 'dark:text-white text-neutral-800 font-normal text-sm',
+                      }}
+                    >
+                      {responseData.secure_url}
+                    </Snippet>
+                  </div>
+                </div>
               )
             }
           </div>
