@@ -1,4 +1,4 @@
-import UploadImage from '@/components/Files';
+import UploadImage from '@/components/Files'
 import {Metadata} from 'next';
 
 export const metadata: Metadata = {
