@@ -35,7 +35,7 @@
 }
 
 .cluster-icon {
-    background-color: var(--secondary);
+    background-color: var(--primary);
     height: 2em;
     width: 2em;
     color: var(--white);
