@@ -167,9 +167,9 @@ export default function ImageUploader() {
       <PerfectScrollbar>
         <div className="h-[calc(100vh-73px)] max-w-screen-2xl mx-auto">
           <div className="container mx-auto p-2">
-            <h1 className='text-neutral-950 dark:text-gray-200 text-2xl font-bold'>Subida de imagenes</h1>
-            <p className='text-neutral-800 dark:text-gray-300 text-sm'>Sube una imagen para almacenarla en la base de datos</p>
-            <Divider className='bg-neutral-400 dark:bg-gray-500' />
+            <h1 className='text-neutral-950 dark:text-gray-200 text-3xl font-bold'>Subida de imagenes</h1>
+            <span className='text-neutral-800 dark:text-gray-300 text-small'>Sube una imagen para almacenarla en la base de datos</span>
+            <Divider className='bg-neutral-400 dark:bg-gray-500 my-2' />
 
             {/* Campo para seleccionar la imagen */}
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -408,7 +408,7 @@ export default function ImageUploader() {
             {
               responseData && (
                 <div className='dark:bg-gray-950 dark:text-white rounded-md p-2 space-y-1 text-sm'>
-                  <h3 className='text-lg font-bold'>Resultado</h3>
+                  <h3 className='text-lg font-bold text-center'>Información de la imagen:</h3>
                   <div className='flex items-center gap-3'>
                     <p>ID Asset</p>
                     <Snippet
