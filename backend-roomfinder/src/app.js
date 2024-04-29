@@ -4,6 +4,8 @@ import swaggerUI from "swagger-ui-express"
 import { options } from "./swaggerOptions.js"
 import { corsMiddleware } from './middlewares/cors.js'
 import morgan from "morgan"
+import { errorHandler } from './middlewares/errors.js'
+import { rateLimit } from 'express-rate-limit'
 // Importar las rutas
 import { createUsersRouter } from './routes/users.js'
 import { createPropertiesRouter } from './routes/properties.js'
@@ -29,11 +31,23 @@ app.use(morgan("dev"))
 app.use(json())
 app.disable('x-powered-by')
 
-app.use('/users', createUsersRouter({ userModel: UsersModel }))
-app.use('/properties', createPropertiesRouter({ propertieModel: PropertiesModel }))
-app.use('/lessors', createLessorsRouter({ lessorModel: LessorsModel }))
-app.use('/students', createStudentsRouter({ studentModel: StudentsModel }))
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 100, // limit each IP to 100 requests per windowMs
+});
 
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(swagger))
+// apply to all requests
+app.use('/api/', apiLimiter);
+
+app.use('/api/users', createUsersRouter({ userModel: UsersModel }))
+app.use('/api/properties', createPropertiesRouter({ propertieModel: PropertiesModel }))
+app.use('/api/lessors', createLessorsRouter({ lessorModel: LessorsModel }))
+app.use('/api/students', createStudentsRouter({ studentModel: StudentsModel }))
+
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swagger)) // Documentation of the API
+app.use(errorHandler) // Middleware for error handling
+app.use((req, res) => {
+    res.status(404).json({ message: 'Not found' });
+});
 
 export default app

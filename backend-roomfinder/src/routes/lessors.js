@@ -15,7 +15,7 @@ export const createLessorsRouter = ({ lessorModel }) => {
 
     /**
      * @swagger
-     * /lessors:
+     * /api/lessors:
      *  get:
      *      summary: Get all lessors.
      *      tags: [Lessors]

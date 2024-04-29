@@ -6,23 +6,28 @@ export class StudentController {
   }) {
     this.studentModel = studentModel;
   }
-  getAll = async (req, res) => {
-    const student = await this.studentModel.getAll();
-    res.json(student);
+  getAll = async (req, res, next) => {
+    try {
+      const student = await this.studentModel.getAll();
+      return res.json(student);
+    } catch (err) {
+      next(err); // Pass the error to the error handler
+    }
   };
-  getById = async (req, res) => {
+  getById = async (req, res, next) => {
     const {
       id
     } = req.params;
-    const student = await this.studentModel.getById({
+    await this.studentModel.getById({
       id
-    });
-    if (student) return res.json(student);
-    res.status(404).json({
-      message: 'Student not found'
-    });
+    }).then(student => {
+      if (student) return res.json(student);
+      return res.status(404).json({
+        message: 'Student not found'
+      });
+    }).catch(next); // Pass the error to the error handler
   };
-  create = async (req, res) => {
+  create = async (req, res, next) => {
     const result = validateStudent(req.body);
     if (result.error) {
       return res.status(400).json({
@@ -33,31 +38,33 @@ export class StudentController {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(result.data.password, salt);
     result.data.password = hashedPassword;
-    const newStudent = await this.studentModel.create({
+    await this.studentModel.create({
       input: result.data
-    });
-    if (newStudent === false) return res.status(409).json({
-      message: 'Email already exists'
-    });
-    res.status(201).json(newStudent);
+    }).then(newStudent => {
+      if (newStudent === false) return res.status(409).json({
+        message: 'Email already exists'
+      });
+      return res.status(201).json(newStudent);
+    }).catch(next); // Catch the error
   };
-  delete = async (req, res) => {
+  delete = async (req, res, next) => {
     const {
       id
     } = req.params;
-    const result = await this.studentModel.delete({
+    await this.studentModel.delete({
       id
-    });
-    if (result == false) {
-      return res.status(400).json({
-        message: 'Student not found.'
+    }).then(result => {
+      if (result == false) {
+        return res.status(400).json({
+          message: 'Student not found.'
+        });
+      }
+      return res.json({
+        message: 'Student deleted'
       });
-    }
-    return res.json({
-      message: 'Student deleted'
-    });
+    }).catch(next);
   };
-  updateStudent = async (req, res) => {
+  updateStudent = async (req, res, next) => {
     const result = validatePartialStudent(req.body);
     if (!result.success) {
       return res.status(400).json({
@@ -72,16 +79,17 @@ export class StudentController {
     const {
       id
     } = req.params;
-    const updateStudent = await this.studentModel.update({
+    await this.studentModel.update({
       id,
       input: result.data
-    });
-    if (updateStudent === false) return res.status(409).json({
-      message: 'Email already exists'
-    });
-    if (!updateStudent) return res.status(404).json({
-      message: 'Student not found'
-    });
-    return res.json(updateStudent);
+    }).then(updateStudent => {
+      if (updateStudent === false) return res.status(409).json({
+        message: 'Email already exists'
+      });
+      if (!updateStudent) return res.status(404).json({
+        message: 'Student not found'
+      });
+      return res.json(updateStudent);
+    }).catch(next);
   };
 }
