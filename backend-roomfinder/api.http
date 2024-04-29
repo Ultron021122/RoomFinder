@@ -1,23 +1,24 @@
+// Necesitamos modificar las rutas de pruebas
 ### Recuperar todos los usuarios
-GET http://localhost:1234/users
+GET http://localhost:1234/api/users
 
 ### Recuperar un usuario
-GET http://localhost:1234/users/type/student
+GET http://localhost:1234/api/users/type/student
 
 ### Recuperar un usuario
-GET http://localhost:1234/users/11
+GET http://localhost:1234/api/users/11
 
 ### Recuperar todas las propiedades
-GET http://localhost:1234/properties
+GET http://localhost:1234/api/properties
 
 ### Recuperar todos los arrendadores
-GET http://localhost:1234/lessors
+GET http://localhost:1234/api/lessors
 
 ### Recuperar el arrendador
-GET http://localhost:1234/lessors/19
+GET http://localhost:1234/api/lessors/19
 
 ### Iniciar sesión - Usuario erroneo
-POST http://localhost:1234/users/login
+POST http://localhost:1234/api/users/login
 Content-Type: application/json
 
 {
@@ -26,7 +27,7 @@ Content-Type: application/json
 }
 
 ### Iniciar sesión - Usuario correcto
-POST http://localhost:1234/users/login
+POST http://localhost:1234/api/users/login
 Content-Type: application/json
 
 {
@@ -35,10 +36,11 @@ Content-Type: application/json
 }
 
 ### Crear un usuario
-POST http://localhost:1234/users
+POST http://localhost:1234/api/users
 Content-Type: application/json
 
 {
+    "id": 1,
     "type_user": "student",
     "name": "Sherlyn",
     "last_name": "García",
@@ -50,7 +52,7 @@ Content-Type: application/json
 }
 
 ### Crear un estudiante
-POST http://localhost:1234/students
+POST http://localhost:1234/api/students
 Content-Type: application/json
 
 {
@@ -66,7 +68,7 @@ Content-Type: application/json
 }
 
 ### Crear un arrendador
-POST http://localhost:1234/lessors
+POST http://localhost:1234/api/lessors
 Content-Type: application/json
 
 {
@@ -86,7 +88,7 @@ Content-Type: application/json
 }
 
 ### Crear un inmueble
-POST http://localhost:1234/properties
+POST http://localhost:1234/api/properties
 Content-Type: application/json
 
 {
@@ -106,16 +108,16 @@ Content-Type: application/json
 }
 
 ### Eliminar un usuario
-DELETE http://localhost:1234/users/9
+DELETE http://localhost:1234/api/users/9
 
 ### Eliminar un estudiante
-DELETE http://localhost:1234/students/11
+DELETE http://localhost:1234/api/students/11
 
 ### Eliminar un arrendador
-DELETE http://localhost:1234/lessors/22
+DELETE http://localhost:1234/api/lessors/22
 
 ### Actualizar una parte del usuario
-PATCH http://localhost:1234/users/8
+PATCH http://localhost:1234/api/users/8
 Content-Type: application/json
 
 {
@@ -124,7 +126,7 @@ Content-Type: application/json
 }
 
 ### Actualizar una parte del lessor
-PATCH  http://localhost:1234/lessors/3
+PATCH  http://localhost:1234/api/lessors/3
 Content-Type: application/json
 
 {
@@ -132,7 +134,7 @@ Content-Type: application/json
 }
 
 ### Crear un usuario student
-POST http://localhost:1234/students
+POST http://localhost:1234/api/students
 Content-Type: application/json
 
 {
