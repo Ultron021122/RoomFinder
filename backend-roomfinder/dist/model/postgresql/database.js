@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import pkg from "pg";
 import { config } from './config.js';
+import { errorsMap } from './errors.js';
 const {
   Pool
 } = pkg;
@@ -11,9 +12,18 @@ export class Database {
       const result = await client.query(sql, params);
       return result.rows;
     } catch (error) {
-      throw new Error(error.message);
+      const {
+        message,
+        status
+      } = errorsMap[error.code] || {
+        message: 'Internal server error',
+        status: 500
+      };
+      let customError = new Error(message);
+      customError.status = status;
+      throw customError;
     } finally {
-      client.end();
+      await client.end();
     }
   }
 }
