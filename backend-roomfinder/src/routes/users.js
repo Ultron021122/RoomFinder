@@ -15,7 +15,7 @@ export const createUsersRouter = ({ userModel }) => {
 
     /**
      * @swagger
-     * /users:
+     * /api/users:
      *  get:
      *      summary: Get all users.
      *      tags: [Users]
@@ -64,7 +64,7 @@ export const createUsersRouter = ({ userModel }) => {
     usersRouter.get('/', userController.getAll)
     /**
      * @swagger
-     * /users/{id}:
+     * /api/users/{id}:
      *  get:
      *      summary: Get a user.
      *      tags: [Users]
@@ -141,7 +141,7 @@ export const createUsersRouter = ({ userModel }) => {
     ])
     /**
      * @swagger
-     * /users/type/{type_user}:
+     * /api/users/type/{type_user}:
      *  get:
      *      summary: Get a lessor
      *      tags: [Users]
@@ -149,7 +149,7 @@ export const createUsersRouter = ({ userModel }) => {
     usersRouter.get('/type/:type_user', userController.getByUser)
     /**
      * @swagger
-     * /users/login:
+     * /api/users/login:
      *  post:
      *      summary: Login
      *      tags: [Users]
@@ -157,7 +157,7 @@ export const createUsersRouter = ({ userModel }) => {
     usersRouter.post('/login', userController.login)
     /**
      * @swagger
-     * /users:
+     * /api/users:
      *  post:
      *      summary: Post a user
      *      tags: [Users]
@@ -165,7 +165,7 @@ export const createUsersRouter = ({ userModel }) => {
     usersRouter.post('/', userController.create)
     /**
      * @swagger
-     * /users/{id}:
+     * /api/users/{id}:
      *  delete:
      *      summary: Delete a user
      *      tags: [Users]
@@ -185,7 +185,7 @@ export const createUsersRouter = ({ userModel }) => {
     ])
     /**
      * @swagger
-     * /users/{id}:
+     * /api/users/{id}:
      *  patch:
      *      summary: Update a user
      *      tags: [Users]
