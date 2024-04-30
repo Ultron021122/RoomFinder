@@ -1,6 +1,13 @@
-import { validateStudent, validatePartialStudent } from '../schemas/student.js';
-import bcrypt from 'bcrypt';
-export class StudentController {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.StudentController = void 0;
+var _student = require("../schemas/student.js");
+var _bcrypt = _interopRequireDefault(require("bcrypt"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+class StudentController {
   constructor({
     studentModel
   }) {
@@ -28,15 +35,15 @@ export class StudentController {
     }).catch(next); // Pass the error to the error handler
   };
   create = async (req, res, next) => {
-    const result = validateStudent(req.body);
+    const result = (0, _student.validateStudent)(req.body);
     if (result.error) {
       return res.status(400).json({
         error: JSON.parse(result.error.message)
       });
     }
     // Encrypt password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(result.data.password, salt);
+    const salt = await _bcrypt.default.genSalt(10);
+    const hashedPassword = await _bcrypt.default.hash(result.data.password, salt);
     result.data.password = hashedPassword;
     await this.studentModel.create({
       input: result.data
@@ -65,15 +72,15 @@ export class StudentController {
     }).catch(next);
   };
   updateStudent = async (req, res, next) => {
-    const result = validatePartialStudent(req.body);
+    const result = (0, _student.validatePartialStudent)(req.body);
     if (!result.success) {
       return res.status(400).json({
         error: JSON.parse(result.error.message)
       });
     }
     if (result.data.password) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(result.data.password, salt);
+      const salt = await _bcrypt.default.genSalt(10);
+      const hashedPassword = await _bcrypt.default.hash(result.data.password, salt);
       result.data.password = hashedPassword;
     }
     const {
@@ -93,3 +100,4 @@ export class StudentController {
     }).catch(next);
   };
 }
+exports.StudentController = StudentController;

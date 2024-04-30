@@ -1,11 +1,17 @@
-import { Router } from "express";
-import { param, validationResult } from 'express-validator';
-import { PropertyController } from "../controller/properties.js";
-export const createPropertiesRouter = ({
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createPropertiesRouter = void 0;
+var _express = require("express");
+var _expressValidator = require("express-validator");
+var _properties = require("../controller/properties.js");
+const createPropertiesRouter = ({
   propertieModel
 }) => {
-  const propertiesRouter = Router();
-  const propertyController = new PropertyController({
+  const propertiesRouter = (0, _express.Router)();
+  const propertyController = new _properties.PropertyController({
     propertieModel
   });
 
@@ -17,8 +23,8 @@ export const createPropertiesRouter = ({
    */
 
   propertiesRouter.get('/', propertyController.getAll);
-  propertiesRouter.get('/:id', [param('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
-    const errors = validationResult(req);
+  propertiesRouter.get('/:id', [(0, _expressValidator.param)('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
+    const errors = (0, _expressValidator.validationResult)(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()
@@ -27,8 +33,8 @@ export const createPropertiesRouter = ({
     next();
   }, propertyController.getById]);
   propertiesRouter.post('/', propertyController.create);
-  propertiesRouter.delete('/:id', [param('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
-    const errors = validationResult(req);
+  propertiesRouter.delete('/:id', [(0, _expressValidator.param)('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
+    const errors = (0, _expressValidator.validationResult)(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()
@@ -36,8 +42,8 @@ export const createPropertiesRouter = ({
     }
     next();
   }, propertyController.delete]);
-  propertiesRouter.patch('/:id', [param('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
-    const errors = validationResult(req);
+  propertiesRouter.patch('/:id', [(0, _expressValidator.param)('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
+    const errors = (0, _expressValidator.validationResult)(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()
@@ -47,3 +53,4 @@ export const createPropertiesRouter = ({
   }, propertyController.updateProperty]);
   return propertiesRouter;
 };
+exports.createPropertiesRouter = createPropertiesRouter;

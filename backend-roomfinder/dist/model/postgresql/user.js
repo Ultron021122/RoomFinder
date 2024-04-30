@@ -1,6 +1,13 @@
-import { Database } from "./database.js";
-import bcrypt from 'bcrypt';
-export class UsersModel extends Database {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UsersModel = void 0;
+var _database = require("./database.js");
+var _bcrypt = _interopRequireDefault(require("bcrypt"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+class UsersModel extends _database.Database {
   constructor({
     id,
     type_user,
@@ -59,7 +66,7 @@ export class UsersModel extends Database {
         email
       });
       if (!user) return false;
-      const validPassword = await bcrypt.compare(password, user.password);
+      const validPassword = await _bcrypt.default.compare(password, user.password);
       if (!validPassword) return false;
       return user;
     } catch (error) {
@@ -188,3 +195,4 @@ export class UsersModel extends Database {
     }
   }
 }
+exports.UsersModel = UsersModel;

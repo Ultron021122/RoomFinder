@@ -1,5 +1,11 @@
-import { validateProperty, validatePartialProperty } from '../schemas/property.js';
-export class PropertyController {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.PropertyController = void 0;
+var _property = require("../schemas/property.js");
+class PropertyController {
   constructor({
     propertieModel
   }) {
@@ -24,7 +30,7 @@ export class PropertyController {
     }).catch(next);
   };
   create = async (req, res, next) => {
-    const result = validateProperty(req.body);
+    const result = (0, _property.validateProperty)(req.body);
     if (result.error) {
       return res.status(400).json({
         error: JSON.parse(result.error.message)
@@ -55,7 +61,7 @@ export class PropertyController {
     }).catch(next);
   };
   updateProperty = async (req, res, next) => {
-    const result = validatePartialProperty(req.body);
+    const result = (0, _property.validatePartialProperty)(req.body);
     if (!result.success) {
       return res.status(400).json({
         error: JSON.parse(result.error.message)
@@ -78,3 +84,4 @@ export class PropertyController {
     }).catch(next);
   };
 }
+exports.PropertyController = PropertyController;
