@@ -1,7 +1,15 @@
-import { validateUser, validatePartialUser } from '../schemas/user.js';
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserController = void 0;
+var _user = require("../schemas/user.js");
+var _bcrypt = _interopRequireDefault(require("bcrypt"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 // import { EmailService } from '../server/emailService.js'
-import bcrypt from 'bcrypt';
-export class UserController {
+
+class UserController {
   constructor({
     userModel
   }) {
@@ -45,7 +53,7 @@ export class UserController {
     }).catch(next); // Pass the error to the error handler
   };
   login = async (req, res, next) => {
-    const result = validatePartialUser(req.body);
+    const result = (0, _user.validatePartialUser)(req.body);
     if (result.error) {
       return res.status(400).json({
         error: JSON.parse(result.error.message)
@@ -61,15 +69,15 @@ export class UserController {
     }).catch(next); // Pass the error to the error handler
   };
   create = async (req, res, next) => {
-    const result = validateUser(req.body);
+    const result = (0, _user.validateUser)(req.body);
     if (result.error) {
       return res.status(400).json({
         error: JSON.parse(result.error.message)
       });
     }
     // Encrypt password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(result.data.password, salt);
+    const salt = await _bcrypt.default.genSalt(10);
+    const hashedPassword = await _bcrypt.default.hash(result.data.password, salt);
     result.data.password = hashedPassword;
     await this.userModel.create({
       input: result.data
@@ -117,15 +125,15 @@ export class UserController {
     }).catch(next); // Pass the error to the error handler
   };
   updateUser = async (req, res, next) => {
-    const result = validatePartialUser(req.body);
+    const result = (0, _user.validatePartialUser)(req.body);
     if (!result.success) {
       return res.status(400).json({
         error: JSON.parse(result.error.message)
       });
     }
     if (result.data.password) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(result.data.password, salt);
+      const salt = await _bcrypt.default.genSalt(10);
+      const hashedPassword = await _bcrypt.default.hash(result.data.password, salt);
       result.data.password = hashedPassword;
     }
     const {
@@ -145,3 +153,4 @@ export class UserController {
     }).catch(next); // Pass the error to the error handler
   };
 }
+exports.UserController = UserController;

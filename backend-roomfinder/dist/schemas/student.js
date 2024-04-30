@@ -1,27 +1,35 @@
-import z from 'zod';
-const studentSchema = z.object({
-  type_user: z.enum(["student", "lessor"]),
-  name: z.string({
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.validatePartialStudent = validatePartialStudent;
+exports.validateStudent = validateStudent;
+var _zod = _interopRequireDefault(require("zod"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+const studentSchema = _zod.default.object({
+  type_user: _zod.default.enum(["student", "lessor"]),
+  name: _zod.default.string({
     required_error: 'User name is required.'
   }),
-  last_name: z.string({
+  last_name: _zod.default.string({
     required_error: 'User last name is required.'
   }),
-  email: z.string().email(),
-  password: z.string().min(8, {
+  email: _zod.default.string().email(),
+  password: _zod.default.string().min(8, {
     message: 'Must be 8 or more characters long'
   }),
-  birthday: z.coerce.date().max(new Date(), {
+  birthday: _zod.default.coerce.date().max(new Date(), {
     message: "Too young!"
   }),
-  status: z.enum(["active", "inactive"]),
-  image: z.string().url(),
-  code_student: z.number().positive(),
-  university: z.string()
+  status: _zod.default.enum(["active", "inactive"]),
+  image: _zod.default.string().url(),
+  code_student: _zod.default.number().positive(),
+  university: _zod.default.string()
 });
-export function validateStudent(input) {
+function validateStudent(input) {
   return studentSchema.safeParse(input);
 }
-export function validatePartialStudent(input) {
+function validatePartialStudent(input) {
   return studentSchema.partial().safeParse(input);
 }

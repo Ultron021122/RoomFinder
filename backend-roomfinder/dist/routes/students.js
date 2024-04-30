@@ -1,11 +1,17 @@
-import { Router } from "express";
-import { param, validationResult } from 'express-validator';
-import { StudentController } from '../controller/students.js';
-export const createStudentsRouter = ({
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createStudentsRouter = void 0;
+var _express = require("express");
+var _expressValidator = require("express-validator");
+var _students = require("../controller/students.js");
+const createStudentsRouter = ({
   studentModel
 }) => {
-  const studentsRouter = Router();
-  const studentController = new StudentController({
+  const studentsRouter = (0, _express.Router)();
+  const studentController = new _students.StudentController({
     studentModel
   });
 
@@ -17,8 +23,8 @@ export const createStudentsRouter = ({
    */
 
   studentsRouter.get('/', studentController.getAll);
-  studentsRouter.get('/:id', [param('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
-    const errors = validationResult(req);
+  studentsRouter.get('/:id', [(0, _expressValidator.param)('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
+    const errors = (0, _expressValidator.validationResult)(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()
@@ -27,8 +33,8 @@ export const createStudentsRouter = ({
     next();
   }, studentController.getById]);
   studentsRouter.post('/', studentController.create);
-  studentsRouter.delete('/:id', [param('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
-    const errors = validationResult(req);
+  studentsRouter.delete('/:id', [(0, _expressValidator.param)('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
+    const errors = (0, _expressValidator.validationResult)(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()
@@ -36,8 +42,8 @@ export const createStudentsRouter = ({
     }
     next();
   }, studentController.delete]);
-  studentsRouter.patch('/:id', [param('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
-    const errors = validationResult(req);
+  studentsRouter.patch('/:id', [(0, _expressValidator.param)('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
+    const errors = (0, _expressValidator.validationResult)(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()
@@ -47,3 +53,4 @@ export const createStudentsRouter = ({
   }, studentController.updateStudent]);
   return studentsRouter;
 };
+exports.createStudentsRouter = createStudentsRouter;

@@ -1,11 +1,17 @@
-import { Router } from "express";
-import { param, validationResult } from 'express-validator';
-import { UserController } from '../controller/users.js';
-export const createUsersRouter = ({
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createUsersRouter = void 0;
+var _express = require("express");
+var _expressValidator = require("express-validator");
+var _users = require("../controller/users.js");
+const createUsersRouter = ({
   userModel
 }) => {
-  const usersRouter = Router();
-  const userController = new UserController({
+  const usersRouter = (0, _express.Router)();
+  const userController = new _users.UserController({
     userModel
   });
 
@@ -131,9 +137,9 @@ export const createUsersRouter = ({
    */
   usersRouter.get('/:id', [
   // Validation
-  param('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
+  (0, _expressValidator.param)('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
     // Check for errors
-    const errors = validationResult(req);
+    const errors = (0, _expressValidator.validationResult)(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()
@@ -174,9 +180,9 @@ export const createUsersRouter = ({
    */
   usersRouter.delete('/:id', [
   // Validation
-  param('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
+  (0, _expressValidator.param)('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
     // Check for errors
-    const errors = validationResult(req);
+    const errors = (0, _expressValidator.validationResult)(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()
@@ -226,9 +232,9 @@ export const createUsersRouter = ({
    */
   usersRouter.patch('/:id', [
   // Validation
-  param('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
+  (0, _expressValidator.param)('id').isInt().withMessage('id must be an integer'), (req, res, next) => {
     // Check for errors
-    const errors = validationResult(req);
+    const errors = (0, _expressValidator.validationResult)(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()
@@ -238,3 +244,4 @@ export const createUsersRouter = ({
   }, userController.updateUser]);
   return usersRouter;
 };
+exports.createUsersRouter = createUsersRouter;

@@ -1,4 +1,10 @@
-export const config = {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.config = void 0;
+const config = exports.config = {
   host: process.env.DB_HOST ?? 'localhost',
   user: process.env.DB_USER ?? 'user',
   port: process.env.DB_PORT ?? 3306,

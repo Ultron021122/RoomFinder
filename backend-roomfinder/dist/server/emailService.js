@@ -1,11 +1,18 @@
-import { Resend } from 'resend';
-import { v4 as uuidv4 } from 'uuid';
-const resend = new Resend('re_123456789');
-export function generateUniqueToken() {
-  const token = uuidv4();
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EmailService = void 0;
+exports.generateUniqueToken = generateUniqueToken;
+var _resend = require("resend");
+var _uuid = require("uuid");
+const resend = new _resend.Resend('re_123456789');
+function generateUniqueToken() {
+  const token = (0, _uuid.v4)();
   return token;
 }
-export class EmailService {
+class EmailService {
   static async generarTokenVerification() {
     const token = generateUniqueToken();
     return token;
@@ -31,3 +38,4 @@ export class EmailService {
     }
   }
 }
+exports.EmailService = EmailService;

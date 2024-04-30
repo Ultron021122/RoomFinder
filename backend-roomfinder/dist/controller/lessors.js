@@ -1,6 +1,13 @@
-import { validateLessor, validatePartialLessor } from "../schemas/lessor.js";
-import bcrypt from 'bcrypt';
-export class LessorController {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LessorController = void 0;
+var _lessor = require("../schemas/lessor.js");
+var _bcrypt = _interopRequireDefault(require("bcrypt"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+class LessorController {
   constructor({
     lessorModel
   }) {
@@ -28,7 +35,7 @@ export class LessorController {
     }).catch(next);
   };
   create = async (req, res, next) => {
-    const result = validateLessor(req.body);
+    const result = (0, _lessor.validateLessor)(req.body);
     if (result.error) {
       console.log(result.error);
       return res.status(400).json({
@@ -36,8 +43,8 @@ export class LessorController {
       });
     }
     // Encrypt password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(result.data.password, salt);
+    const salt = await _bcrypt.default.genSalt(10);
+    const hashedPassword = await _bcrypt.default.hash(result.data.password, salt);
     result.data.password = hashedPassword;
     await this.lessorModel.create({
       input: result.data
@@ -64,15 +71,15 @@ export class LessorController {
     }).catch(next);
   };
   updateLessor = async (req, res, next) => {
-    const result = validatePartialLessor(req.body);
+    const result = (0, _lessor.validatePartialLessor)(req.body);
     if (!result.success) {
       return res.status(400).json({
         error: JSON.parse(result.error.message)
       });
     }
     if (result.data.password) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(result.data.password, salt);
+      const salt = await _bcrypt.default.genSalt(10);
+      const hashedPassword = await _bcrypt.default.hash(result.data.password, salt);
       result.data.password = hashedPassword;
     }
     const {
@@ -92,3 +99,4 @@ export class LessorController {
     }).catch(next);
   };
 }
+exports.LessorController = LessorController;
