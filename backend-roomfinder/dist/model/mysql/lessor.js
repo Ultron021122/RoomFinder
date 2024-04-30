@@ -1,5 +1,11 @@
-import { UsersModel } from './user.js';
-export class LessorsModel extends UsersModel {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LessorsModel = void 0;
+var _user = require("./user.js");
+class LessorsModel extends _user.UsersModel {
   constructor({
     id,
     type_user,
@@ -64,7 +70,7 @@ export class LessorsModel extends UsersModel {
         municipality,
         state
       } = input;
-      const result = await UsersModel.create({
+      const result = await _user.UsersModel.create({
         input
       });
       const id = result.id;
@@ -95,7 +101,7 @@ export class LessorsModel extends UsersModel {
     id
   }) {
     try {
-      const lessor = await UsersModel.delete({
+      const lessor = await _user.UsersModel.delete({
         id
       });
       return lessor;
@@ -123,7 +129,7 @@ export class LessorsModel extends UsersModel {
         municipality,
         state
       } = input;
-      const user = await UsersModel.update({
+      const user = await _user.UsersModel.update({
         id,
         input
       });
@@ -153,3 +159,4 @@ export class LessorsModel extends UsersModel {
     }
   }
 }
+exports.LessorsModel = LessorsModel;

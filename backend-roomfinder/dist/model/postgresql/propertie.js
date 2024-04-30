@@ -1,6 +1,12 @@
-import { Database } from "./database.js";
-import { LessorsModel } from './lessor.js';
-export class PropertiesModel extends Database {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.PropertiesModel = void 0;
+var _database = require("./database.js");
+var _lessor = require("./lessor.js");
+class PropertiesModel extends _database.Database {
   constructor({
     id,
     lessor_id,
@@ -70,7 +76,7 @@ export class PropertiesModel extends Database {
         availability,
         price
       } = input;
-      const validateLessor = await LessorsModel.getById({
+      const validateLessor = await _lessor.LessorsModel.getById({
         id: lessor_id
       });
       if (validateLessor === null) return false;
@@ -164,3 +170,4 @@ export class PropertiesModel extends Database {
     }
   }
 }
+exports.PropertiesModel = PropertiesModel;
