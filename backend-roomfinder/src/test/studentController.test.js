@@ -12,7 +12,7 @@ describe('Student Controller Integration Tests', () => {
 
     describe('GET /api/students/:id', () => {
         it('should return a student by id', async () => {
-            const id = 1; // Asegúrate de tener este ID en tu base de datos de prueba
+            const id = 1;
             const response = await request(app).get(`/api/students/${id}`);
             expect(response.statusCode).toBe(200);
         });
