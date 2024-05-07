@@ -16,19 +16,21 @@ const io = new SocketServer(server, {
 });
 
 // Middlewares
-// app.use(cors());
+app.use(cors());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 
 io.on("connection", (socket) => {
   console.log(socket.id);
-  socket.on("message", (body) => {
+  socket.on("message", (body, createdAt) => {
     socket.broadcast.emit("message", {
       body,
       from: socket.id.slice(8),
+      createdAt,
     });
   });
 });
 
-server.listen(PORT);
-console.log(`server on port ${PORT}`);
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
