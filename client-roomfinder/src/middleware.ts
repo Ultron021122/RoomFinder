@@ -6,5 +6,6 @@ export const config = {
         "/dashboard/:path*",
         "/admin",
         '/message',
+        '/prueba',
     ]
 };

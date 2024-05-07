@@ -37,7 +37,7 @@ export default function MessageComponent() {
   };
 
   return (
-    <div className="h-screen bg-zinc-800 text-white flex items-center justify-center">
+    <div className="h-screen bg-zinc-800 text-white">
       <form onSubmit={handleSubmit} className="bg-zinc-900 p-10">
         <h1 className="text-2xl font-bold my-2">Chat Next</h1>
         <input
