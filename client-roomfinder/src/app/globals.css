@@ -78,3 +78,48 @@ input[type="number"] {
 .custom-scrollbar .ps__rail-y:hover > .ps__thumb-y {
     background-color: #2b6cb0; /* Este es el color 'blue-700' de Tailwind */
 }
+
+/**
+    * Author: @ultron021122
+    * Date: 2024-05-08
+    * Description: Estilos para los mensajes dentro del chat de conversaciones
+**/
+.message {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .messageTop{
+      display: flex;
+  }
+  
+  .messageImg {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  
+  .messageText{
+      padding: 10px;
+      border-radius: 20px;
+      background-color: #1877f2;
+      color: white;
+      max-width: 300px;
+  }
+  
+  .messageBottom{
+      font-size: 12px;
+      margin-top: 10px;
+  }
+  
+  .message.own{
+      align-items: flex-end;
+  }
+  
+  .message.own .messageText{
+      background-color: rgb(245, 241, 241);
+      color: black;
+  }
