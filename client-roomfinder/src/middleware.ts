@@ -5,6 +5,6 @@ export const config = {
         "/arrendadores",
         "/dashboard/:path*",
         "/admin",
-        '/user/message',
+        '/user/:path*',
     ]
 };
