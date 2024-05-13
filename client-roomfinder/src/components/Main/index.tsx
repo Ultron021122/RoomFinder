@@ -24,15 +24,15 @@ export default function Inicio() {
                         </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
                             <div className="bg-gray-100 dark:bg-gray-800 p-5 rounded-lg">
-                                <h4 className="dark:text-white text-lg font-bold">Casa en la playa</h4>
+                                <h4 className="dark:text-white text-lg font-semibold">Casa en la playa</h4>
                                 <p className="dark:text-gray-300">Hermosa casa en la playa con vista al mar.</p>
                             </div>
                             <div className="bg-gray-100 dark:bg-gray-800 p-5 rounded-lg">
-                                <h4 className="dark:text-white text-lg font-bold">Casa en la montaña</h4>
+                                <h4 className="dark:text-white text-lg font-semibold">Casa en la montaña</h4>
                                 <p className="dark:text-gray-300">Casa en la montaña con vista a la ciudad.</p>
                             </div>
                             <div className="bg-gray-100 dark:bg-gray-800 p-5 rounded-lg">
-                                <h4 className="dark:text-white text-lg font-bold">Casa en la ciudad</h4>
+                                <h4 className="dark:text-white text-lg font-semibold">Casa en la ciudad</h4>
                                 <p className="dark:text-gray-300">Casa en la ciudad con vista al parque.</p>
                             </div>
                         </div>
