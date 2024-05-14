@@ -18,8 +18,9 @@ export class UserController {
 
     getByUser = async (req, res, next) => {
         try {
-            const { type_user } = req.params
-            const users = await this.userModel.getByUser({ type_user })
+            const { roleid } = req.params
+            console.log(roleid)
+            const users = await this.userModel.getByUser({ roleid })
             if (users) return res.json(users)
             return res.status(404).json({ message: 'User type not found' })
         } catch (err) {

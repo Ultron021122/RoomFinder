@@ -141,12 +141,12 @@ export const createUsersRouter = ({ userModel }) => {
     ])
     /**
      * @swagger
-     * /api/users/type/{type_user}:
+     * /api/users/type/{roleid}:
      *  get:
      *      summary: Get a lessor
      *      tags: [Users]
      */
-    usersRouter.get('/type/:type_user', userController.getByUser)
+    usersRouter.get('/type/:roleid', userController.getByUser)
     /**
      * @swagger
      * /api/users/login:
