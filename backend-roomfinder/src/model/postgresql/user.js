@@ -3,38 +3,40 @@ import bcrypt from 'bcrypt'
 
 export class UsersModel extends Database {
 
-    constructor({ id, type_user, name, last_name, email, password, birthday, status, image, created_date }) {
+    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, created_at }) {
         super();
-        this.id = id;
-        this.type_user = type_user;
-        this.name = name;
-        this.last_name = last_name;
-        this.email = email;
-        this.password = password;
-        this.birthday = birthday;
-        this.status = status;
-        this.image = image;
-        this.created_date = created_date;
+        this.usuarioid = usuarioid;
+        this.vchname = vchname;
+        this.vchpaternalsurname = vchpaternalsurname;
+        this.vchmaternalsurname = vchmaternalsurname;
+        this.vchemail = vchemail;
+        this.vchpassword = vchpassword;
+        this.dtbirthdate = dtbirthdate;
+        this.bnstatus = bnstatus;
+        this.vchimage = vchimage;
+        this.roleid = roleid;
+        this.created_at = created_at;
     }
 
     static async getAll() {
         const users = await this.query(
-            "SELECT * FROM users;"
+            `SELECT * FROM "Usuario"."Usuario";`
         );
         return users.map((user) => new UsersModel(user));
     }
 
-    static async getByUser({ type_user }) {
+    static async getByUser({ roleid }) {
+        console.log(roleid)
         const users = await this.query(
-            "SELECT * FROM users WHERE type_user = $1;",
-            [type_user]
+            `SELECT * FROM "Usuario"."Usuario" WHERE roleid = $1;`,
+            [roleid]
         );
         return users.map((user) => new UsersModel(user));
     }
 
     static async getById({ id }) {
         const user = await this.query(
-            'SELECT * FROM users WHERE id = $1;',
+            `SELECT * FROM "Usuario"."Usuario" WHERE usuarioid = $1;`,
             [id]
         );
         return user[0] ? new UsersModel(user[0]) : null;
@@ -42,7 +44,7 @@ export class UsersModel extends Database {
 
     static async getByEmail({ email }) {
         const user = await this.query(
-            'SELECT * FROM users WHERE email = $1;',
+            `SELECT * FROM "Usuario"."Usuario" WHERE vchemail = $1;`,
             [email]
         );
         return user[0] ? new UsersModel(user[0]) : null;
@@ -54,7 +56,7 @@ export class UsersModel extends Database {
             const user = await this.getByEmail({ email });
             if (!user) return false;
 
-            const validPassword = await bcrypt.compare(password, user.password)
+            const validPassword = await bcrypt.compare(password, user.vchpassword)
             if (!validPassword) return false;
 
             return user;
@@ -65,13 +67,13 @@ export class UsersModel extends Database {
 
     static async create({ input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status, image } = input
-            const validate = await this.getByEmail({ email });
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid } = input
+            const validate = await this.getByEmail({ vchemail });
             if (validate) return false;
 
             const result = await this.query(
-                'INSERT INTO users (type_user, name, last_name, email, password, birthday, status, image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;',
-                [type_user, name, last_name, email, password, birthday, status, image]
+                'INSERT INTO users (vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;',
+                [vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid,]
             )
 
             const id = result[0].id;
@@ -106,7 +108,7 @@ export class UsersModel extends Database {
 
             // Eliminar usuario
             await this.query(
-                'DELETE FROM users WHERE id = $1;',
+                `DELETE FROM "Usuario"."Usuario" WHERE usuarioid = $1;`,
                 [id]
             );
             return true;
@@ -117,21 +119,22 @@ export class UsersModel extends Database {
 
     static async update({ id, input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status, image } = input
-            const validate = email ? await this.getByEmail({ email }) : null;
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid } = input
+            const validate = vchemail ? await this.getByEmail({ vchemail }) : null;
             if (validate) return false;
             const user = await this.getById({ id })
             if (!user) return null;
 
             const updateColumns = Object.entries({
-                type_user,
-                name,
-                last_name,
-                email,
-                password,
-                birthday,
-                status,
-                image
+                vchname, 
+                vchpaternalsurname,
+                vchmaternalsurname, 
+                vchemail, 
+                vchpassword, 
+                dtbirthdate, 
+                bnstatus, 
+                vchimage, 
+                roleid
             })
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
@@ -140,20 +143,21 @@ export class UsersModel extends Database {
                 .join(', ');
 
             const updateValues = Object.values({
-                type_user,
-                name,
-                last_name,
-                email,
-                password,
-                birthday,
-                status,
-                image
+                vchname, 
+                vchpaternalsurname,
+                vchmaternalsurname, 
+                vchemail, 
+                vchpassword, 
+                dtbirthdate, 
+                bnstatus, 
+                vchimage, 
+                roleid
             })
                 .filter(value => value !== undefined);
 
             if (updateValues.length !== 0) {
                 await this.query(
-                    `UPDATE users SET ${updateColumns} WHERE id = $${updateValues.length + 1};`,
+                    `UPDATE "Usuario"."Usuario" SET ${updateColumns} WHERE usuarioid = $${updateValues.length + 1};`,
                     [...updateValues, id]
                 );
             }
