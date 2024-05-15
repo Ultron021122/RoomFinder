@@ -2,22 +2,22 @@ import { UsersModel } from './user.js'
 
 export class StudentsModel extends UsersModel {
 
-    constructor({ id, type_user, name, last_name, email, password, birthday, status, image, created_date, code_student, university }) {
-        super({ id, type_user, name, last_name, email, password, birthday, status, image, created_date });
-        this.code_student = code_student;
-        this.university = university;
+    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, created_at, intcodestudent, vchuniversity }) {
+        super({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, created_at });
+        this.intcodestudent = intcodestudent;
+        this.vchuniversity = vchuniversity;
     }
 
     static async getAll() {
         const students = await this.query(
-            "SELECT * FROM users LEFT JOIN students ON users.id = students.user_id WHERE users.type_user = 'student';"
+            `SELECT * FROM "Usuario"."Usuario" user LEFT JOIN "Usuario"."Estudiantes" student ON user.usuarioid = student.usuarioid WHERE user.roleid = 1;`
         )
         return students.map((student) => new StudentsModel(student));
     }
 
     static async getById({ id }) {
         const student = await this.query(
-            "SELECT * FROM users LEFT JOIN students ON users.id = students.user_id WHERE users.type_user = 'student' AND users.id = $1;",
+            `SELECT * FROM "Usuario"."Usuario" user LEFT JOIN "Usuario"."Estudiantes" student ON user.usuarioid = student.usuarioid WHERE user.roleid = 1 AND user.usuarioid = $1;`,
             [id]
         );
         return student[0] ? new StudentsModel(student[0]) : null;
@@ -25,18 +25,18 @@ export class StudentsModel extends UsersModel {
 
     static async create({ input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status, image, code_student, university } = input
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, intcodestudent, vchuniversity } = input
             const result = await UsersModel.create({ input })
             if (result === false) return false;
-            const id = result.id
-            const created_date = result.created_date
+            const usuarioid = result.usuarioid
+            const created_at = result.created_at
 
             const student = await this.query(
-                'INSERT INTO students (code_student, user_id, university) VALUES($1, $2, $3);',
-                [code_student, id, university]
+                `INSERT INTO "Usuario"."Estudiantes" (intcodestudent, usuarioid, vchuniversity) VALUES($1, $2, $3);`,
+                [intcodestudent, usuarioid, vchuniversity]
             )
 
-            return new StudentsModel({ id, type_user, name, last_name, email, password, birthday, status, image, created_date, code_student, university })
+            return new StudentsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, created_at, intcodestudent, vchuniversity })
         } catch (error) {
             throw new Error(`Error creating student: ${error.message}`);
         }
@@ -53,14 +53,14 @@ export class StudentsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status, image, code_student, university } = input
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, intcodestudent, vchuniversity } = input
             const user = await UsersModel.update({ id, input })
             if (user === false) return false;
             if (!user) return null;
 
             const updateColumns = Object.entries({
-                code_student,
-                university
+                intcodestudent,
+                vchuniversity
             })
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
@@ -69,14 +69,14 @@ export class StudentsModel extends UsersModel {
                 .join(', ');
 
             const updateValues = Object.values({
-                code_student,
-                university
+                intcodestudent,
+                vchuniversity
             })
                 .filter(value => value != undefined);
 
             if (updateValues.length !== 0) {
                 await this.query(
-                    `UPDATE students SET ${updateColumns} WHERE user_id = $${updateValues.length + 1};`,
+                    `UPDATE "Usuario"."Estudiantes" SET ${updateColumns} WHERE usuarioid = $${updateValues.length + 1};`,
                     [...updateValues, id]
                 );
             }

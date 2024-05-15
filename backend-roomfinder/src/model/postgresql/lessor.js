@@ -2,26 +2,26 @@ import { UsersModel } from './user.js'
 
 export class LessorsModel extends UsersModel {
 
-    constructor({ id, type_user, name, last_name, email, password, birthday, status, image, created_date, phone, street, zip, suburb, municipality, state }) {
-        super({ id, type_user, name, last_name, email, password, birthday, status, image, created_date });
-        this.phone = phone;
-        this.street = street;
-        this.zip = zip;
-        this.suburb = suburb;
-        this.municipality = municipality;
-        this.state = state;
+    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, created_at, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate }) {
+        super({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, created_at });
+        this.vchphone = vchphone;
+        this.vchstreet = vchstreet;
+        this.intzip = intzip;
+        this.vchsuburb = vchsuburb;
+        this.vchmunicipality = vchmunicipality;
+        this.vchstate = vchstate;
     }
 
     static async getAll() {
         const lessors = await this.query(
-            "SELECT * FROM users LEFT JOIN lessors ON users.id = lessors.user_id WHERE users.type_user = 'lessor';"
+            `SELECT * FROM "Usuario"."Usuario" user LEFT JOIN "Usuario"."Arrendadores" lessor ON user.usuarioid = lessor.usuarioid WHERE user.roleid = 2;`
         )
         return lessors.map((lessor) => new LessorsModel(lessor));
     }
 
     static async getById({ id }) {
         const lessor = await this.query(
-            "SELECT * FROM users LEFT JOIN lessors ON users.id = lessors.user_id WHERE users.type_user = 'lessor' AND users.id = $1;",
+            `SELECT * FROM "Usuario"."Usuario" user LEFT JOIN "Usuario"."Arrendadores" lessor ON user.usuarioid = lessor.usuarioid WHERE user.roleid = 2 AND user.usuarioid = $1;`,
             [id]
         );
         return lessor[0] ? new LessorsModel(lessor[0]) : null;
