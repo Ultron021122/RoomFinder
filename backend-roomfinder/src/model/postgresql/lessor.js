@@ -29,18 +29,18 @@ export class LessorsModel extends UsersModel {
 
     static async create({ input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status, image, phone, street, zip, suburb, municipality, state } = input
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
             const result = await UsersModel.create({ input })
             if (result === false) return false;
-            const id = result.id
-            const created_date = result.created_date
+            const usuarioid = result.usuarioid
+            const created_at = result.created_at
 
             const lessor = await this.query(
-                'INSERT INTO lessors (user_id, phone, street, zip, suburb, municipality, state) VALUES ($1, $2, $3, $4, $5, $6, $7);',
-                [id, phone, street, zip, suburb, municipality, state]
+                `INSERT INTO "Usuario"."Arrendadores" (usuarioid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate) VALUES ($1, $2, $3, $4, $5, $6, $7);`,
+                [usuarioid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate]
             )
 
-            return new LessorsModel({ id, type_user, name, last_name, email, password, birthday, status, image, created_date, phone, street, zip, suburb, municipality, state })
+            return new LessorsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, created_at, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate })
         } catch (error) {
             throw new Error(`Error creating lessor: ${error.message}`)
         }
@@ -57,18 +57,18 @@ export class LessorsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { type_user, name, last_name, email, password, birthday, status, image, phone, street, zip, suburb, municipality, state } = input
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
             const user = await UsersModel.update({ id, input })
             if (user === false) return false;
             if (!user) return null;
 
             const updateColumns = Object.entries({
-                phone,
-                street,
-                zip,
-                suburb,
-                municipality,
-                state
+                vchphone,
+                vchstreet,
+                intzip,
+                vchsuburb,
+                vchmunicipality,
+                vchstate
             })
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
@@ -77,18 +77,18 @@ export class LessorsModel extends UsersModel {
                 .join(', ');
 
             const updateValues = Object.values({
-                phone,
-                street,
-                zip,
-                suburb,
-                municipality,
-                state
+                vchphone,
+                vchstreet,
+                intzip,
+                vchsuburb,
+                vchmunicipality,
+                vchstate
             })
                 .filter(value => value != undefined);
 
             if (updateValues.length !== 0) {
                 await this.query(
-                    `UPDATE lessors SET ${updateColumns} WHERE user_id = $${updateValues.length + 1};`,
+                    `UPDATE "Usuario"."Arrendadores" SET ${updateColumns} WHERE usuarioid = $${updateValues.length + 1};`,
                     [...updateValues, id]
                 );
             }
