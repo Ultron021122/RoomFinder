@@ -3,3 +3,5 @@ node_modules
 nota.txt
 /dist
 api.http
+.gitignore
+.env

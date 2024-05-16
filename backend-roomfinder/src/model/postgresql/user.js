@@ -72,7 +72,7 @@ export class UsersModel extends Database {
             if (validate) return false;
 
             const result = await this.query(
-                'INSERT INTO users (vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;',
+                'INSERT INTO users (vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;',
                 [vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid,]
             )
 

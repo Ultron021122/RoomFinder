@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
 import morgan from "morgan";
+import 'dotenv/config';
 import { Server as SocketServer } from "socket.io";
 
 import { PORT } from "./config.js";
@@ -11,7 +12,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new SocketServer(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL,
   },
 });
 
