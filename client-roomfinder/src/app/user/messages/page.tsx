@@ -9,7 +9,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 TimeAgo.addDefaultLocale(en)
 
-const socket = io("http://localhost:1234");
+const socket = io(process.env.SOCKET_URL as string);
 
 interface Message {
   body: string;

@@ -17,7 +17,7 @@ const studentSchema = z.object({
     dtbirthdate: z.coerce.date().max(new Date(), {
         message: "Too young!"
     }),
-    bnstatus: z.enum(["active", "inactive"]),
+    bnstatus: z.boolean(),
     vchimage: z.string().url(),
     roleid: z.number(),
     intcodestudent: z.number().positive(),

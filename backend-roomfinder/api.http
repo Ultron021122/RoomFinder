@@ -17,13 +17,13 @@ GET http://localhost:1234/api/lessors
 ### Recuperar el arrendador
 GET http://localhost:1234/api/lessors/19
 
-### Iniciar sesión - Usuario erroneo
+### Iniciar sesión - Usuario correcto
 POST http://localhost:1234/api/users/login
 Content-Type: application/json
 
 {
-    "email": "sherlyn.garcia@gmail.com",
-    "password": "876543216"
+    "vchemail": "sherlyn@gmail.com",
+    "vchpassword": "12345678"
 }
 
 ### Iniciar sesión - Usuario correcto
@@ -40,15 +40,15 @@ POST http://localhost:1234/api/users
 Content-Type: application/json
 
 {
-    "id": 1,
-    "type_user": "student",
-    "name": "Sherlyn",
-    "last_name": "García",
-    "email": "marvelsml25@gmail.com",
-    "password": "12345678",
-    "birthday": "2002-11-13T00:00:00.000Z",
-    "status": "inactive",
-    "image": "https://res.cloudinary.com/dal8aivch/image/upload/v1712875535/students/v1smuum8jpcgvk1qppkw.png"
+    "vchname": "Sherlyn",
+    "vchpaternalsurname": "García",
+    "vchmaternalsurname": "Romo",
+    "vchemail": "sherlyn@gmail.com",
+    "vchpassword": "12345678",
+    "dtbirthdate": "2002-11-13",
+    "bnstatus": true,
+    "vchimage": "https://res.cloudinary.com/dal8aivch/image/upload/v1712875535/students/v1smuum8jpcgvk1qppkw.png",
+    "roleid": 1
 }
 
 ### Crear un estudiante

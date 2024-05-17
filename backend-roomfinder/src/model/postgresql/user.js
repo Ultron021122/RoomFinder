@@ -52,14 +52,29 @@ export class UsersModel extends Database {
 
     static async login({ input }) {
         try {
-            const { email, password } = input
-            const user = await this.getByEmail({ email });
+            const { vchemail, vchpassword } = input
+            const user = await this.getByEmail({ email: vchemail });
             if (!user) return false;
 
-            const validPassword = await bcrypt.compare(password, user.vchpassword)
+            const validPassword = await bcrypt.compare(vchpassword, user.vchpassword)
             if (!validPassword) return false;
 
-            return user;
+            const session = await this.session({ id: user.usuarioid })
+
+            return ({ user, session });
+        } catch (error) {
+            throw new Error(`Error: ${error.message}`);
+        }
+    }
+
+    static async session({ id }) {
+        try {
+            const session = await this.query(
+                `INSERT INTO "Usuario"."Sessions" (usuarioid) VALUES ($1) RETURNING sessionid;`,
+                [id]
+            )
+            const sessionid = session[0].sessionid;
+            return sessionid;
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
@@ -68,15 +83,15 @@ export class UsersModel extends Database {
     static async create({ input }) {
         try {
             const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid } = input
-            const validate = await this.getByEmail({ vchemail });
+            console.log(input)
+            const validate = await this.getByEmail({ email: vchemail });
             if (validate) return false;
 
             const result = await this.query(
-                'INSERT INTO users (vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;',
-                [vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid,]
+                `INSERT INTO "Usuario"."Usuario" (vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING usuarioid;`,
+                [vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid]
             )
-
-            const id = result[0].id;
+            const id = result[0].usuarioid;
             const newUser = await this.getById({ id })
 
             return newUser;

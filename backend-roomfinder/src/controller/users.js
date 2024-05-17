@@ -58,8 +58,8 @@ export class UserController {
         }
         // Encrypt password
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(result.data.password, salt);
-        result.data.password = hashedPassword;
+        const hashedPassword = await bcrypt.hash(result.data.vchpassword, salt);
+        result.data.vchpassword = hashedPassword;
 
         await this.userModel.create({ input: result.data })
             .then(newUser => {
