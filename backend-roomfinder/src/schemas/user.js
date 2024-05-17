@@ -1,22 +1,25 @@
 import z from 'zod'
 
 const userSchema = z.object({
-    type_user: z.enum(["student", "lessor"]),
-    name: z.string({
+    vchname: z.string({
         required_error: 'User name is required.'
     }),
-    last_name: z.string({
-        required_error: 'User last name is required.'
+    vchpaternalsurname: z.string({
+        required_error: 'User paternal surname is required.'
     }),
-    email: z.string().email(),
-    password: z.string().min(8, {
+    vchmaternalsurname: z.string({
+        required_error: 'User maternal surname is required.'
+    }),
+    vchemail: z.string().email(),
+    vchpassword: z.string().min(8, {
         message: 'Must be 8 or more characters long'
     }),
-    birthday: z.coerce.date().max(new Date(), {
+    dtbirthdate: z.coerce.date().max(new Date(), {
         message: "Too young!"
     }),
-    status: z.enum(["active", "inactive"]),
-    image: z.string().url(),
+    bnstatus: z.boolean(),
+    vchimage: z.string().url(),
+    roleid: z.number()
 })
 
 export function validateUser(input) {

@@ -16,7 +16,6 @@ export class EmailService {
 
     static async sendEmailVerificate(email, token) {
         try {
-
             const { data, error } = await resend.emails.send({
                 from: `RoomFinder <onboarding@${process.env.RESEND_DOMAIN}>`,
                 to: [`${email}`],
