@@ -51,6 +51,16 @@ export class UserController {
             .catch(next); // Pass the error to the error handler
     }
 
+    logout = async (req, res, next) => {
+        const { sessionid } = req.params
+        await this.userModel.logout({ sessionid })
+            .then(logout => {
+                if (logout) return res.json({ message: 'User logged out' })
+                return res.status(404).json({ message: 'Session not found' })
+            })
+            .catch(next); // Pass the error to the error handler
+    }
+
     create = async (req, res, next) => {
         const result = validateUser(req.body)
         if (result.error) {

@@ -14,14 +14,14 @@ export class LessorsModel extends UsersModel {
 
     static async getAll() {
         const lessors = await this.query(
-            `SELECT * FROM "Usuario"."Usuario" user LEFT JOIN "Usuario"."Arrendadores" lessor ON user.usuarioid = lessor.usuarioid WHERE user.roleid = 2;`
+            `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Arrendadores" lessor ON us.usuarioid = lessor.usuarioid WHERE us.roleid = 2;`
         )
         return lessors.map((lessor) => new LessorsModel(lessor));
     }
 
     static async getById({ id }) {
         const lessor = await this.query(
-            `SELECT * FROM "Usuario"."Usuario" user LEFT JOIN "Usuario"."Arrendadores" lessor ON user.usuarioid = lessor.usuarioid WHERE user.roleid = 2 AND user.usuarioid = $1;`,
+            `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Arrendadores" lessor ON us.usuarioid = lessor.usuarioid WHERE us.roleid = 2 AND us.usuarioid = $1;`,
             [id]
         );
         return lessor[0] ? new LessorsModel(lessor[0]) : null;

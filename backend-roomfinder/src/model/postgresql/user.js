@@ -53,6 +53,7 @@ export class UsersModel extends Database {
     static async login({ input }) {
         try {
             const { vchemail, vchpassword } = input
+            console.log(vchemail, vchpassword)
             const user = await this.getByEmail({ email: vchemail });
             if (!user) return false;
 
@@ -61,7 +62,7 @@ export class UsersModel extends Database {
 
             const session = await this.session({ id: user.usuarioid })
 
-            return ({ user, session });
+            return { ...user, sessionid: session };
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
@@ -80,10 +81,21 @@ export class UsersModel extends Database {
         }
     }
 
+    static async logout({ sessionid }) {
+        try {
+            const session = await this.query(
+                `UPDATE "Usuario"."Sessions" SET tmlastactivity = NOW() WHERE sessionid = $1;`,
+                [sessionid]
+            )
+            return true;
+        } catch (error) {
+            throw new Error(`Error: ${error.message}`);
+        }
+    }
+
     static async create({ input }) {
         try {
             const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid } = input
-            console.log(input)
             const validate = await this.getByEmail({ email: vchemail });
             if (validate) return false;
 
@@ -135,20 +147,20 @@ export class UsersModel extends Database {
     static async update({ id, input }) {
         try {
             const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid } = input
-            const validate = vchemail ? await this.getByEmail({ vchemail }) : null;
+            const validate = vchemail ? await this.getByEmail({ email: vchemail }) : null;
             if (validate) return false;
             const user = await this.getById({ id })
             if (!user) return null;
 
             const updateColumns = Object.entries({
-                vchname, 
+                vchname,
                 vchpaternalsurname,
-                vchmaternalsurname, 
-                vchemail, 
-                vchpassword, 
-                dtbirthdate, 
-                bnstatus, 
-                vchimage, 
+                vchmaternalsurname,
+                vchemail,
+                vchpassword,
+                dtbirthdate,
+                bnstatus,
+                vchimage,
                 roleid
             })
                 .filter(([key, value]) => value !== undefined)
@@ -158,14 +170,14 @@ export class UsersModel extends Database {
                 .join(', ');
 
             const updateValues = Object.values({
-                vchname, 
+                vchname,
                 vchpaternalsurname,
-                vchmaternalsurname, 
-                vchemail, 
-                vchpassword, 
-                dtbirthdate, 
-                bnstatus, 
-                vchimage, 
+                vchmaternalsurname,
+                vchemail,
+                vchpassword,
+                dtbirthdate,
+                bnstatus,
+                vchimage,
                 roleid
             })
                 .filter(value => value !== undefined);

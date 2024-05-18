@@ -10,14 +10,14 @@ export class StudentsModel extends UsersModel {
 
     static async getAll() {
         const students = await this.query(
-            `SELECT * FROM "Usuario"."Usuario" user LEFT JOIN "Usuario"."Estudiantes" student ON user.usuarioid = student.usuarioid WHERE user.roleid = 1;`
+            `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Estudiantes" student ON us.usuarioid = student.usuarioid WHERE us.roleid = 1;`
         )
         return students.map((student) => new StudentsModel(student));
     }
 
     static async getById({ id }) {
         const student = await this.query(
-            `SELECT * FROM "Usuario"."Usuario" user LEFT JOIN "Usuario"."Estudiantes" student ON user.usuarioid = student.usuarioid WHERE user.roleid = 1 AND user.usuarioid = $1;`,
+            `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Estudiantes" student ON us.usuarioid = student.usuarioid WHERE us.roleid = 1 AND us.usuarioid = $1;`,
             [id]
         );
         return student[0] ? new StudentsModel(student[0]) : null;

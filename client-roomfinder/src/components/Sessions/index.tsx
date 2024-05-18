@@ -30,14 +30,14 @@ function Login() {
         setErrorSystem(null);
 
         const data: UserInfo = {
-            email: userInfo.email,
-            password: userInfo.password
+            vchemail: userInfo.vchemail,
+            vchpassword: userInfo.vchpassword
         };
 
         try {
             const response = await signIn("credentials", {
-                email: data.email,
-                password: data.password,
+                vchemail: data.vchemail,
+                vchpassword: data.vchpassword,
                 redirect: false
             });
             if (response?.error) setErrorSystem(response.error as string);
@@ -85,7 +85,7 @@ function Login() {
     }, [errorSystem]);
     // Enfocar el input email al cargar la página
     useEffect(() => {
-        const input = document.getElementById('email') as HTMLInputElement;
+        const input = document.getElementById('vchemail') as HTMLInputElement;
         input.focus();
     }, []);
 
@@ -108,53 +108,53 @@ function Login() {
                                         <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
                                             <div className="relative z-0 w-full mb-5 group">
                                                 <input
-                                                    {...register("email", {
+                                                    {...register("vchemail", {
                                                         required: {
                                                             value: true,
-                                                            message: messages.email.required
+                                                            message: messages.vchemail.required
                                                         },
                                                         pattern: {
-                                                            value: patterns.email,
-                                                            message: messages.email.pattern
+                                                            value: patterns.vchemail,
+                                                            message: messages.vchemail.pattern
                                                         }
                                                     })}
                                                     type="email"
-                                                    name="email"
-                                                    id="email"
+                                                    name="vchemail"
+                                                    id="vchemail"
                                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                     placeholder=""
                                                     autoComplete="off"
                                                 />
-                                                <label htmlFor="email" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Correo electrónico</label>
-                                                {errors?.email && (
-                                                    <Alert message={errors?.email.message} />
+                                                <label htmlFor="vchemail" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Correo electrónico</label>
+                                                {errors?.vchemail && (
+                                                    <Alert message={errors?.vchemail.message} />
                                                 )}
                                             </div>
                                             <div className="relative z-0 w-full mb-5 group">
                                                 <input
-                                                    {...register("password", {
+                                                    {...register("vchpassword", {
                                                         required: {
                                                             value: true,
-                                                            message: messages.password.required
+                                                            message: messages.vchpassword.required
                                                         },
                                                         minLength: {
                                                             value: 8,
-                                                            message: messages.password.min
+                                                            message: messages.vchpassword.min
                                                         },
                                                         maxLength: {
                                                             value: 16,
-                                                            message: messages.password.max
+                                                            message: messages.vchpassword.max
                                                         }
                                                     })}
                                                     type="password"
-                                                    name="password"
-                                                    id="password"
+                                                    name="vchpassword"
+                                                    id="vchpassword"
                                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                     placeholder=""
                                                 />
-                                                <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Contraseña</label>
-                                                {errors?.password && (
-                                                    <Alert message={errors?.password.message} />
+                                                <label htmlFor="vchpassword" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Contraseña</label>
+                                                {errors?.vchpassword && (
+                                                    <Alert message={errors?.vchpassword.message} />
                                                 )}
                                             </div>
                                             <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
