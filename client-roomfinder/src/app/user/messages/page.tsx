@@ -5,11 +5,31 @@ import io from "socket.io-client";
 import TimeAgo from 'javascript-time-ago'
 // English.
 import en from 'javascript-time-ago/locale/en'
+import es from 'javascript-time-ago/locale/es'
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-TimeAgo.addDefaultLocale(en)
+TimeAgo.addDefaultLocale(es)
 
-const socket = io(process.env.SOCKET_URL as string);
+const getUsername = async () => {
+  const username= localStorage.getItem("Username");
+  if (username) {
+    console.log(`User existed ${username}`)
+    return username
+  }
+
+  const res = await fetch('https://random-data-api.com/api/users/random_user')
+  const { username: randomUsername } = await res.json()
+
+  localStorage.setItem("Username", randomUsername)
+  return randomUsername
+}
+
+const socket = io("http://localhost:3001");
+
+socket.auth = {
+  username: getUsername(),
+  serverOffset: 0
+}
 
 interface Message {
   body: string;
@@ -21,7 +41,7 @@ export default function MessageComponent() {
   const [conversations, setConversations] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   // Create formatter (English).
-  const timeAgo = new TimeAgo('en-US')
+  const timeAgo = new TimeAgo('es-MX')
 
   const receiveMessage = (message: Message) => {
     const NewMessage: Message = {
@@ -46,7 +66,6 @@ export default function MessageComponent() {
       from: "You",
       createdAt: new Date(),
     };
-    console.log(newMessage)
     setConversations(state => [...state, newMessage]);
     setMessage("");
     socket.emit("message", newMessage.body, newMessage.createdAt);
@@ -61,6 +80,7 @@ export default function MessageComponent() {
               <div className="message" key={index}>
                 <div className="messageTop">
                   <p className="messageText">{message.body}</p>
+                  <p className="messageName">{message.from}</p>
                 </div>
                 <div className="messageBottom">{timeAgo.format(message.createdAt)}</div>
               </div>

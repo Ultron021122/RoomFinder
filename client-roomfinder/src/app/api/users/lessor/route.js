@@ -18,11 +18,11 @@ export async function GET() {
 }
 
 export async function POST(req, res) {
-    const { type_user, name, last_name, email, password, confirm_password, status, birthday, image, phone, street, zip, suburb, municipality, state } = await req.json();
+    const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, confirm_password, bnstatus, dtbirthdate, vchimage, roleid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = await req.json();
     let imageUrl;
     try {
         imageUrl = await uploadImage(
-            image,
+            vchimage,
             'lessors',
             {
                 transformation: [
@@ -41,20 +41,21 @@ export async function POST(req, res) {
 
     try {
         const response = await axios.post(`${process.env.REST_URL}/lessors/`, {
-            type_user,
-            name,
-            last_name,
-            email,
-            password,
-            birthday,
-            status,
-            image: imageUrl.secure_url,
-            phone,
-            street,
-            zip,
-            suburb,
-            municipality,
-            state
+            vchname,
+            vchpaternalsurname,
+            vchmaternalsurname,
+            vchemail,
+            vchpassword,
+            dtbirthdate,
+            bnstatus,
+            vchimage: imageUrl.secure_url,
+            roleid,
+            vchphone,
+            vchstreet,
+            intzip,
+            vchsuburb,
+            vchmunicipality,
+            vchstate
         });
 
         const statusMessageMap = {
