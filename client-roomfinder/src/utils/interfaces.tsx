@@ -8,13 +8,13 @@ export interface UserInfo {
      * @example
      * email: 'example@gmail.com'
      */
-    email: string;
+    vchemail: string;
     /**
      * User password
      * @example
      * password: '****'
      */
-    password: string;
+    vchpassword: string;
 }
 
 /**
@@ -25,39 +25,39 @@ export interface User {
     /**
      * User id
      * @example
-     * id: 1
+     * usuarioid: 1
      */
-    id: number | null;
-    /**
-     * User type
-     * @example
-     * type_user: 'student' | 'lessor'
-     */
-    type_user: string;
+    usuarioid: number | null;
     /**
      * User name
      * @example
-     * name: 'Sebastian'
+     * vchname: 'Sebastian'
      */
-    name: string;
+    vchname: string;
     /**
      * User last name
      * @example
-     * last_name: 'Martinez'
+     * vchpaternalsurname: 'Martinez'
      */
-    last_name: string;
+    vchpaternalsurname: string;
+    /**
+     * User last name
+     * @example
+     * vchmaternalsurname: 'Lopez'
+    */
+    vchmaternalsurname: string;
     /**
      * User email
      * @example
-     * email: 'example@gmail.com'
+     * vchemail: 'example@gmail.com'
      */
-    email: string;
+    vchemail: string;
     /**
      * User password
      * @example
-     * password: '****'
+     * vchpassword: '****'
      */
-    password: string;
+    vchpassword: string;
     /**
      * User confirm password
      * @example
@@ -67,21 +67,27 @@ export interface User {
     /**
      * User status
      * @example
-     * status: 'active' | 'inactive'
+     * bnstatus: true | false
      */
-    status: string;
+    bnstatus: boolean;
     /**
      * User birthday
      * @example
-     * birthday: '1999-11-22'
+     * dtbirthdate: '1999-11-22'
      */
-    birthday: string;
+    dtbirthdate: string;
     /**
      * User image
      * @example
-     * image: 'https://example.com/image.jpg'
+     * vchimage: 'https://example.com/image.jpg'
      */
-    image: string;
+    vchimage: string;
+    /**
+     * User type
+     * @example
+     * roleid: 1
+    */
+    roleid: number;
 }
 
 /**
@@ -93,51 +99,51 @@ export interface StudentInfo extends User {
     /**
      * Student code
      * @example
-     * code_student: 123456
+     * intcodestudent: 123456
      */
-    code_student: number;
+    intcodestudent: number;
     /**
      * Student university
      * @example
-     * university: 'Centro Universitario'
+     * vchuniversity: 'Centro Universitario'
      */
-    university: string;
+    vchuniversity: string;
     /**
      * Student phone
      * @example
-     * phone: '1234567890'
+     * vchphone: '1234567890'
      */
-    phone?: string;
+    vchphone?: string;
     /**
      * Student street
      * @example
-     * street: 'Calle 123'
+     * vchstreet: 'Calle 123'
      */
-    street?: string;
+    vchstreet?: string;
     /**
      * Student zip
      * @example
-     * zip: 12345
+     * intzip: 12345
      */
-    zip?: number;
+    intzip?: number;
     /**
      * Student suburb
      * @example
-     * suburb: 'Colonia'
+     * vchsuburb: 'Colonia'
      */
-    suburb?: string;
+    vchsuburb?: string;
     /**
      * Student municipality
      * @example
-     * municipality: 'Municipio'
+     * vchmunicipality: 'Municipio'
      */
-    municipality?: string;
+    vchmunicipality?: string;
     /**
      * Student state
      * @example
-     * state: 'active' | 'inactive'
+     * state: 'Jalisco'
      */
-    state?: string;
+    vchstate?: string;
 }
 
 /**
@@ -149,47 +155,47 @@ export interface LessorInfo extends User {
     /**
      * Code student - Not required
      */
-    code_student?: number;
+    intcodestudent?: number;
     /**
      * University - Not required
      */
-    university?: string;
+    vchuniversity?: string;
     /**
      * Phone
      * @example
-     * phone: '1234567890'
+     * vchphone: '1234567890'
      */
-    phone: string;
+    vchphone: string;
     /**
      * Street
      * @example
-     * street: 'Calle 123'
+     * vchstreet: 'Calle 123'
      */
-    street: string;
+    vchstreet: string;
     /**
      * Zip
      * @example
-     * zip: 12345
+     * intzip: 12345
      */
-    zip: number;
+    intzip: number;
     /**
      * Suburb
      * @example
-     * suburb: 'Colonia'
+     * vchsuburb: 'Colonia'
      */
-    suburb: string;
+    vchsuburb: string;
     /**
      * Municipality
      * @example
-     * municipality: 'Municipio'
+     * vchmunicipality: 'Municipio'
      */
-    municipality: string;
+    vchmunicipality: string;
     /**
      * State
      * @example
-     * state: 'active' | 'inactive'
+     * vchstate: 'Jalisco'
      */
-    state: string;
+    vchstate: string;
 }
 
 /**
@@ -267,17 +273,23 @@ export interface UniversityData {
  */
 export interface Roles {
     /**
+     * Role id
+     * @example
+     * roleid: 1
+     */
+    roleid: number;
+    /**
      * Role name
      * @example
-     * name: 'Role name'
+     * vchname: 'Role name'
      */
-    name: string;
+    vchname: string;
     /**
-     * Role value
+     * Role description
      * @example
-     * value: 'Role value'
+     * vchdescription: 'Role description'
      */
-    value: string;
+    vchdescription: string;
 }
 /**
  * Interface to manage the folders data
