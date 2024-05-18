@@ -375,7 +375,7 @@ export default function ImageUploader() {
                         {...register('image', {
                           required: {
                             value: true,
-                            message: messages.image.required,
+                            message: messages.vchimage.required,
                           },
                         })}
                       />

@@ -22,11 +22,11 @@ const DropdownUser = () => {
                             classNames: {
                                 base: "ring-offset-gray-950 mr-1"
                             },
-                            src: `${(user as any)?.image}`
+                            src: `${(user as any)?.vchimage}`
                         }}
                         className="transition-transform"
-                        description={(user as any)?.type_user}
-                        name={user?.name}
+                        description={(user as any)?.roleid}
+                        name={(user as any)?.vchname}
                         classNames={{
                             wrapper: "hidden sm:inline-flex flex-col items-start",
                             name: "dark:text-gray-200",
@@ -61,8 +61,8 @@ const DropdownUser = () => {
                         }}
                     >
                         <DropdownItem isReadOnly key="profile" className="h-14 gap-2" textValue="Pérfil">
-                            <p className="font-semibold text-sm capitalize">{user?.name + " " + (user as any)?.last_name}</p>
-                            <p className="text-small">{user?.email}</p>
+                            <p className="font-semibold text-sm capitalize">{(user as any)?.vchname + " " + (user as any)?.vchpaternalsurname}</p>
+                            <p className="text-small">{(user as any)?.vchemail}</p>
                         </DropdownItem>
                         <DropdownItem key="dashboard" textValue="Panel de administración">
                             <Link href="/dashboard/profile">Dashboard</Link>

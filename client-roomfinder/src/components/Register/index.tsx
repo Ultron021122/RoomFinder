@@ -25,7 +25,7 @@ const Registrar = () => {
     const { status } = useSession();
     const router = useRouter();
 
-    const { control, register, handleSubmit, formState: { errors }, watch, reset, setValue, setError, clearErrors } = useForm<StudentInfo | LessorInfo>({ mode: "onChange", defaultValues: { status: 'active' } });
+    const { control, register, handleSubmit, formState: { errors }, watch, reset, setValue, setError, clearErrors } = useForm<StudentInfo | LessorInfo>({ mode: "onChange", defaultValues: { bnstatus: true } });
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
 
@@ -33,16 +33,16 @@ const Registrar = () => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const validatePasswordConfirmation = (value: string) => {
-        const password = watch('password'); // Obtener el valor de la contraseña
+        const password = watch('vchpassword'); // Obtener el valor de la contraseña
         return value === password || messages.confirm_password.validate; // Comparar contraseñas
     }
 
     const handleImageSave = (imageFile: string | null) => {
         if (imageFile) {
-            setValue("image", imageFile);
-            clearErrors("image");
+            setValue("vchimage", imageFile);
+            clearErrors("vchimage");
         } else {
-            setError("image", {
+            setError("vchimage", {
                 type: "required",
                 message: messages.profilImage.required
             });
@@ -68,8 +68,8 @@ const Registrar = () => {
 
     // Registro de usuarios
     const onSubmit = async (userInfo: StudentInfo | LessorInfo) => {
-        if (!userInfo.image) {
-            setError("image", {
+        if (!userInfo.vchimage) {
+            setError("vchimage", {
                 type: "required",
                 message: messages.profilImage.required
             });
@@ -77,7 +77,7 @@ const Registrar = () => {
             setIsLoading(true);
             setErrorSystem(null);
 
-            if (userInfo.type_user === "student") {
+            if (userInfo.roleid === 1) {
                 const data = userInfo as StudentInfo;
                 try {
                     const response = await axios.post("/api/users/student", data);
@@ -143,7 +143,7 @@ const Registrar = () => {
     };
     // Efectos
     useEffect(() => {
-        const input = document.getElementById('name') as HTMLInputElement;
+        const input = document.getElementById('vchname') as HTMLInputElement;
         if (input) {
             input.focus();
         }
@@ -176,33 +176,33 @@ const Registrar = () => {
             <>
                 <div className="relative z-0 w-full mb-2 group">
                     <input
-                        {...register("code_student", {
+                        {...register("intcodestudent", {
                             required: {
                                 value: true,
-                                message: messages.code_student.required
+                                message: messages.intcodestudent.required
                             },
                             min: {
                                 value: 100000000,
-                                message: messages.code_student.min
+                                message: messages.intcodestudent.min
                             },
                             max: {
                                 value: 999999999,
-                                message: messages.code_student.max
+                                message: messages.intcodestudent.max
                             },
                             valueAsNumber: true,
                         })}
                         type="number"
-                        name="code_student"
-                        id="code_student"
+                        name="intcodestudent"
+                        id="intcodestudent"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=""
                         autoComplete="off"
                     />
-                    <label htmlFor="code_student" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                    <label htmlFor="intcodestudent" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                         Codigo de estudiante
                     </label>
-                    {errors?.code_student && (
-                        <Alert message={errors?.code_student.message} />
+                    {errors?.intcodestudent && (
+                        <Alert message={errors?.intcodestudent.message} />
                     )}
                 </div>
                 <div>
@@ -234,19 +234,19 @@ const Registrar = () => {
                             Universidad
                         </InputLabel>
                         <Controller
-                            name="university"
+                            name="vchuniversity"
                             control={control}
                             defaultValue=""
                             rules={{
                                 required: {
                                     value: true,
-                                    message: messages.university.required
+                                    message: messages.vchuniversity.required
                                 }
                             }}
                             render={({ field }) => (
                                 <Select
                                     labelId="university-label"
-                                    id="university"
+                                    id="vchuniversity"
                                     label="Universidad"
                                     className="text-sm"
                                     sx={{
@@ -300,8 +300,8 @@ const Registrar = () => {
                         >
                             Selecciona una universidad
                         </FormHelperText>
-                        {errors?.university && (
-                            <Alert message={errors?.university.message} />
+                        {errors?.vchuniversity && (
+                            <Alert message={errors?.vchuniversity.message} />
                         )}
                     </FormControl>
                 </div>
@@ -316,154 +316,154 @@ const Registrar = () => {
                     <div>
                         <div className="relative z-0 w-full group">
                             <input
-                                {...register("phone", {
+                                {...register("vchphone", {
                                     required: {
                                         value: true,
-                                        message: messages.phone.required
+                                        message: messages.vchphone.required
                                     }
                                 })
                                 }
                                 type="text"
-                                name="phone"
-                                id="phone"
+                                name="vchphone"
+                                id="vchphone"
                                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                 placeholder=""
                                 autoComplete="off"
                             />
-                            <label htmlFor="phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                            <label htmlFor="vchphone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                 Teléfono
                             </label>
-                            {errors?.phone && (
-                                <Alert message={errors?.phone.message} />
+                            {errors?.vchphone && (
+                                <Alert message={errors?.vchphone.message} />
                             )}
                         </div>
                     </div>
                     <div>
                         <div className="relative z-0 w-full group">
                             <input
-                                {...register("zip", {
+                                {...register("intzip", {
                                     required: {
                                         value: true,
-                                        message: messages.zip.required
+                                        message: messages.intzip.required
                                     },
                                     min: {
                                         value: 10000,
-                                        message: messages.zip.min
+                                        message: messages.intzip.min
                                     },
                                     max: {
                                         value: 99999,
-                                        message: messages.zip.max
+                                        message: messages.intzip.max
                                     },
                                     valueAsNumber: true
                                 })
                                 }
                                 type="number"
-                                name="zip"
-                                id="zip"
+                                name="intzip"
+                                id="intzip"
                                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                 placeholder=""
                                 autoComplete="off"
                             />
-                            <label htmlFor="zip" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                            <label htmlFor="intzip" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                 Código Postal
                             </label>
-                            {errors?.zip && (
-                                <Alert message={errors?.zip.message} />
+                            {errors?.intzip && (
+                                <Alert message={errors?.intzip.message} />
                             )}
                         </div>
                     </div>
                 </div>
                 <div className="relative z-0 w-full mb-2 group">
                     <input
-                        {...register("street", {
+                        {...register("vchstreet", {
                             required: {
                                 value: true,
-                                message: messages.street.required
+                                message: messages.vchstreet.required
                             }
                         })
                         }
                         type="text"
-                        name="street"
-                        id="street"
+                        name="vchstreet"
+                        id="vchstreet"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=""
                         autoComplete="off"
                     />
-                    <label htmlFor="street" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                    <label htmlFor="vchstreet" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                         Calle
                     </label>
-                    {errors?.street && (
-                        <Alert message={errors?.street.message} />
+                    {errors?.vchstreet && (
+                        <Alert message={errors?.vchstreet.message} />
                     )}
                 </div>
                 <div className="relative z-0 w-full mb-2 group">
                     <input
-                        {...register("suburb", {
+                        {...register("vchsuburb", {
                             required: {
                                 value: true,
-                                message: messages.suburb.required
+                                message: messages.vchsuburb.required
                             }
                         })
                         }
                         type="text"
-                        name="suburb"
-                        id="suburb"
+                        name="vchsuburb"
+                        id="vchsuburb"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=""
                         autoComplete="off"
                     />
-                    <label htmlFor="suburb" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                    <label htmlFor="vchsuburb" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                         Colonia
                     </label>
-                    {errors?.suburb && (
-                        <Alert message={errors?.suburb.message} />
+                    {errors?.vchsuburb && (
+                        <Alert message={errors?.vchsuburb.message} />
                     )}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
                     <div className="relative z-0 w-full group">
                         <input
-                            {...register("municipality", {
+                            {...register("vchmunicipality", {
                                 required: {
                                     value: true,
-                                    message: messages.municipality.required
+                                    message: messages.vchmunicipality.required
                                 }
                             })
                             }
                             type="text"
-                            name="municipality"
-                            id="municipality"
+                            name="vchmunicipality"
+                            id="vchmunicipality"
                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             placeholder=""
                             autoComplete="off"
                         />
-                        <label htmlFor="municipality" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                        <label htmlFor="vchmunicipality" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                             Municipio
                         </label>
-                        {errors?.municipality && (
-                            <Alert message={errors?.municipality.message} />
+                        {errors?.vchmunicipality && (
+                            <Alert message={errors?.vchmunicipality.message} />
                         )}
                     </div>
                     <div className="relative z-0 w-full mb-2 group">
                         <input
-                            {...register("state", {
+                            {...register("vchstate", {
                                 required: {
                                     value: true,
-                                    message: messages.state.required
+                                    message: messages.vchstate.required
                                 }
                             })
                             }
                             type="text"
-                            name="state"
-                            id="state"
+                            name="vchstate"
+                            id="vchstate"
                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             placeholder=""
                             autoComplete="off"
                         />
-                        <label htmlFor="state" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                        <label htmlFor="vchstate" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                             Estado
                         </label>
-                        {errors?.state && (
-                            <Alert message={errors?.state.message} />
+                        {errors?.vchstate && (
+                            <Alert message={errors?.vchstate.message} />
                         )}
                     </div>
                 </div>
@@ -489,67 +489,106 @@ const Registrar = () => {
                                         </h1>
                                         <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
                                             <ModalImage onImageSave={handleImageSave} />
-                                            {errors?.image && (
-                                                <Alert message={errors?.image.message} />
+                                            {errors?.vchimage && (
+                                                <Alert message={errors?.vchimage.message} />
                                             )}
                                             <h4 className="mt-7 text-center text-lg font-semibold leading-tight tracking-tight text-gray-700 dark:text-gray-200">
                                                 Datos del usuario
                                             </h4>
-                                            {/* Nombre y Apellidos */}
+                                            {/* Nombre(s) */}
+                                            <div className="relative z-0 w-full group">
+                                                <input
+                                                    {...register("vchname", {
+                                                        required: {
+                                                            value: true,
+                                                            message: messages.vchname.required
+                                                        },
+                                                        minLength: {
+                                                            value: 3,
+                                                            message: messages.vchname.min
+                                                        },
+                                                        maxLength: {
+                                                            value: 25,
+                                                            message: messages.vchname.max
+                                                        },
+                                                    })}
+                                                    type="text"
+                                                    name="vchname"
+                                                    id="vchname"
+                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                    placeholder=""
+                                                    autoComplete="off"
+                                                />
+                                                <label htmlFor="vchname" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                    Nombre
+                                                </label>
+                                                {errors?.vchname && (
+                                                    <Alert message={errors?.vchname.message} />
+                                                )}
+                                            </div>
+                                            {/* Apellido paterno y materno */}
                                             <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
                                                 <div>
                                                     <div className="relative z-0 w-full group">
                                                         <input
-                                                            {...register("name", {
+                                                            {...register("vchpaternalsurname", {
                                                                 required: {
                                                                     value: true,
-                                                                    message: messages.name.required
+                                                                    message: messages.vchpaternalsurname.required
                                                                 },
                                                                 minLength: {
                                                                     value: 3,
-                                                                    message: messages.name.min
+                                                                    message: messages.vchpaternalsurname.min
                                                                 },
                                                                 maxLength: {
                                                                     value: 25,
-                                                                    message: messages.name.max
-                                                                },
+                                                                    message: messages.vchpaternalsurname.max
+                                                                }
                                                             })}
                                                             type="text"
-                                                            name="name"
-                                                            id="name"
+                                                            name="vchpaternalsurname"
+                                                            id="vchpaternalsurname"
                                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                             placeholder=""
                                                             autoComplete="off"
                                                         />
-                                                        <label htmlFor="name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                            Nombre
+                                                        <label htmlFor="vchpaternalsurname" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                            Apellido paterno
                                                         </label>
-                                                        {errors?.name && (
-                                                            <Alert message={errors?.name.message} />
+                                                        {errors?.vchpaternalsurname && (
+                                                            <Alert message={errors?.vchpaternalsurname.message} />
                                                         )}
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <div className="relative z-0 w-full group">
                                                         <input
-                                                            {...register("last_name", {
+                                                            {...register("vchmaternalsurname", {
                                                                 required: {
                                                                     value: true,
-                                                                    message: messages.last_name.required
-                                                                }
+                                                                    message: messages.vchmaternalsurname.required
+                                                                },
+                                                                minLength: {
+                                                                    value: 3,
+                                                                    message: messages.vchmaternalsurname.min
+                                                                },
+                                                                maxLength: {
+                                                                    value: 25,
+                                                                    message: messages.vchmaternalsurname.max
+                                                                },
                                                             })}
                                                             type="text"
-                                                            name="last_name"
-                                                            id="last_name"
+                                                            name="vchmaternalsurname"
+                                                            id="vchmaternalsurname"
                                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                             placeholder=""
                                                             autoComplete="off"
                                                         />
-                                                        <label htmlFor="last_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                            Apellidos
+                                                        <label htmlFor="vchmaternalsurname" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                            Apellido materno
                                                         </label>
-                                                        {errors?.last_name && (
-                                                            <Alert message={errors?.last_name.message} />
+                                                        {errors?.vchmaternalsurname && (
+                                                            <Alert message={errors?.vchmaternalsurname.message} />
                                                         )}
                                                     </div>
                                                 </div>
@@ -557,26 +596,26 @@ const Registrar = () => {
                                             {/* Correo Electrónico */}
                                             <div className="relative z-0 w-full mb-2 group">
                                                 <input
-                                                    {...register("email", {
+                                                    {...register("vchemail", {
                                                         required: {
                                                             value: true,
-                                                            message: messages.email.required
+                                                            message: messages.vchemail.required
                                                         },
                                                         pattern: {
-                                                            value: patterns.email,
-                                                            message: messages.email.pattern
+                                                            value: patterns.vchemail,
+                                                            message: messages.vchemail.pattern
                                                         }
                                                     })}
                                                     type="email"
-                                                    name="email"
-                                                    id="email"
+                                                    name="vchemail"
+                                                    id="vchemail"
                                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                     placeholder=""
                                                     autoComplete="off"
                                                 />
-                                                <label htmlFor="email" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Correo electrónico</label>
-                                                {errors?.email && (
-                                                    <Alert message={errors?.email.message} />
+                                                <label htmlFor="vchemail" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Correo electrónico</label>
+                                                {errors?.vchemail && (
+                                                    <Alert message={errors?.vchemail.message} />
                                                 )}
                                             </div>
                                             {/* Seguridad */}
@@ -585,31 +624,31 @@ const Registrar = () => {
                                                 <div>
                                                     <div className="relative z-0 w-full group">
                                                         <input
-                                                            {...register("password", {
+                                                            {...register("vchpassword", {
                                                                 required: {
                                                                     value: true,
-                                                                    message: messages.password.required
+                                                                    message: messages.vchpassword.required
                                                                 },
                                                                 minLength: {
                                                                     value: 8,
-                                                                    message: messages.password.min
+                                                                    message: messages.vchpassword.min
                                                                 },
                                                                 maxLength: {
                                                                     value: 16,
-                                                                    message: messages.password.max
+                                                                    message: messages.vchpassword.max
                                                                 }
                                                             })}
                                                             type="password"
-                                                            name="password"
-                                                            id="password"
+                                                            name="vchpassword"
+                                                            id="vchpassword"
                                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                             placeholder=""
                                                         />
-                                                        <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                        <label htmlFor="vchpassword" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                             Contraseña
                                                         </label>
-                                                        {errors?.password && (
-                                                            <Alert message={errors?.password.message} />
+                                                        {errors?.vchpassword && (
+                                                            <Alert message={errors?.vchpassword.message} />
                                                         )}
                                                     </div>
                                                 </div>
@@ -676,19 +715,19 @@ const Registrar = () => {
                                                         Tipo de usuario
                                                     </InputLabel>
                                                     <Controller
-                                                        name="type_user"
+                                                        name="roleid"
                                                         control={control}
-                                                        defaultValue=""
+                                                        defaultValue={1}
                                                         rules={{
                                                             required: {
                                                                 value: true,
-                                                                message: messages.type_user.required
+                                                                message: messages.roleid.required
                                                             }
                                                         }}
                                                         render={({ field }) => (
                                                             <Select
                                                                 labelId="type-user-label"
-                                                                id="type_user"
+                                                                id="roleid"
                                                                 label="Tipo de usuario"
                                                                 className="text-sm"
                                                                 sx={{
@@ -715,7 +754,7 @@ const Registrar = () => {
                                                                 {
                                                                     roles.map((rol, index) => (
                                                                         <MenuItem
-                                                                            value={rol.value}
+                                                                            value={rol.roleid}
                                                                             key={index}
                                                                             sx={{
                                                                                 fontSize: '0.875rem',
@@ -728,7 +767,7 @@ const Registrar = () => {
                                                                                 '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
                                                                             }}
                                                                         >
-                                                                            {rol.name}
+                                                                            {rol.vchname}
                                                                         </MenuItem>
                                                                     ))
                                                                 }
@@ -742,44 +781,44 @@ const Registrar = () => {
                                                     >
                                                         Selecciona un tipo de usuario
                                                     </FormHelperText>
-                                                    {errors?.type_user && (
-                                                        <Alert message={errors?.type_user.message} />
+                                                    {errors?.roleid && (
+                                                        <Alert message={errors?.roleid.message} />
                                                     )}
                                                 </FormControl>
                                             </div>
                                             {/* Fecha de nacimiento */}
                                             <div className="relative z-0 w-full mb-2 group">
                                                 <input
-                                                    {...register("birthday", {
+                                                    {...register("dtbirthdate", {
                                                         required: {
                                                             value: true,
-                                                            message: messages.birthday.required
+                                                            message: messages.dtbirthdate.required
                                                         },
                                                         valueAsDate: true,
                                                         validate: (value) => {
                                                             const fechaNacimiento = new Date(value);
                                                             const fechaActual = new Date();
                                                             const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
-                                                            return edad >= 18 || messages.birthday.age;
+                                                            return edad >= 18 || messages.dtbirthdate.age;
                                                         },
                                                     })}
                                                     type="date"
-                                                    name="birthday"
-                                                    id="birthday"
+                                                    name="dtbirthdate"
+                                                    id="dtbirthdate"
                                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                     placeholder="Enter your date"
                                                     max="2007-01-01"
                                                     min="1900-01-01"
                                                 />
-                                                <label htmlFor="birthday" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                <label htmlFor="dtbirthdate" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                     Fecha de nacimiento
                                                 </label>
-                                                {errors?.birthday && (
-                                                    <Alert message={errors?.birthday?.message} />
+                                                {errors?.dtbirthdate && (
+                                                    <Alert message={errors?.dtbirthdate?.message} />
                                                 )}
                                             </div>
-                                            {watch("type_user") === "student" && renderStudent()}
-                                            {watch("type_user") === "lessor" && renderLessor()}
+                                            {watch("roleid") === 1 && renderStudent()}
+                                            {watch("roleid") === 2 && renderLessor()}
                                             <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
                                                 Registrar
                                             </Button>

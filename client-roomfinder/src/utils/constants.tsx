@@ -6,22 +6,29 @@ import { height } from '@mui/system';
 
 // Constants - Messages or data
 export const messages = {
-    type_user: {
+    roleid: {
         required: "Selecciona un tipo de usuario"
     },
-    name: {
+    vchname: {
         required: "Debes introducir un nombre",
         min: "Debe ser mayor a 3 caracteres",
         max: "Debe ser menor a 25 caracteres"
     },
-    last_name: {
-        required: "Debes introducir los apellidos correctamente"
+    vchpaternalsurname: {
+        required: "Debes introducir el apellido paterno",
+        min: "Debe ser mayor a 3 caracteres",
+        max: "Debe ser menor a 25 caracteres"
     },
-    email: {
+    vchmaternalsurname: {
+        required: "Debes introducir el apellido materno",
+        min: "Debe ser mayor a 3 caracteres",
+        max: "Debe ser menor a 25 caracteres"
+    },
+    vchemail: {
         required: "Correo electrónico es requerido",
         pattern: "Debes introducir una dirección correcta",
     },
-    password: {
+    vchpassword: {
         required: "Contraseña requerida",
         min: "Debe ser mayor a 8 caracteres",
         max: "Debe ser menor a 16 caracteres"
@@ -32,42 +39,42 @@ export const messages = {
         max: "Debe ser menor a 16 caracteres",
         validate: "Las contraseñas no coinciden"
     },
-    birthday: {
+    dtbirthdate: {
         required: "Fecha de nacimiento es requerida",
         age: "Debes ser mayor de edad"
     },
     profilImage: {
         required: "Imagen de perfil es requerida"
     },
-    image: {
+    vchimage: {
         required: "Imagen es requerida"
     },
-    code_student: {
+    intcodestudent: {
         required: "Código de estudiante es requerido",
         min: "No es un código de estudiante válido",
         max: "No es un código de estudiante válido"
     },
-    university: {
+    vchuniversity: {
         required: "Universad es requerida"
     },
-    phone: {
+    vchphone: {
         required: "Teléfono es requerido",
     },
-    zip: {
+    intzip: {
         required: "Código postal es requerido",
         min: "No es un código postal válido",
         max: "No es un código postal válido"
     },
-    street: {
+    vchstreet: {
         required: "El campo Calle es requerido",
     },
-    suburb: {
+    vchsuburb: {
         required: "El campo Colonia es requerido",
     },
-    municipality: {
+    vchmunicipality: {
         required: "El campo Municipio es requerido",
     },
-    state: {
+    vchstate: {
         required: "El campo Estado es requerido",
     },
     folder: {
@@ -96,20 +103,22 @@ export const images = [
 ];
 
 export const patterns = {
-    email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,16}$/,
+    vchemail: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+    vchpassword: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,16}$/,
     code_student: /^[0-9]{8}$/,
     uuidv4: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/,
 };
 
 export const roles: Roles[] = [
     {
-        name: "Estudiante",
-        value: "student",
+        roleid: 1,
+        vchname: "Estudiante",
+        vchdescription: "Usuario tipo estudiante",
     },
     {
-        name: "Arrendador",
-        value: "lessor",
+        roleid: 2,
+        vchname: "Arrendador",
+        vchdescription: "Usuario tipo Arrendador",
     },
 ]
 

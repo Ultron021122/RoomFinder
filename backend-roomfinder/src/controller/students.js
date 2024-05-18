@@ -26,14 +26,15 @@ export class StudentController {
     }
 
     create = async (req, res, next) => {
+        console.log(req.body)
         const result = validateStudent(req.body)
         if (result.error) {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
         // Encrypt password
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(result.data.password, salt);
-        result.data.password = hashedPassword;
+        const hashedPassword = await bcrypt.hash(result.data.vchpassword, salt);
+        result.data.vchpassword = hashedPassword;
 
         await this.studentModel.create({ input: result.data })
             .then(newStudent => {
@@ -61,10 +62,10 @@ export class StudentController {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
 
-        if (result.data.password) {
+        if (result.data.vchpassword) {
             const salt = await bcrypt.genSalt(10)
-            const hashedPassword = await bcrypt.hash(result.data.password, salt)
-            result.data.password = hashedPassword
+            const hashedPassword = await bcrypt.hash(result.data.vchpassword, salt)
+            result.data.vchpassword = hashedPassword
         }
         const { id } = req.params
         await this.studentModel.update({ id, input: result.data })
