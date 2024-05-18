@@ -157,6 +157,26 @@ export const createUsersRouter = ({ userModel }) => {
     usersRouter.post('/login', userController.login)
     /**
      * @swagger
+     * /api/users/logout:
+     *  post:
+     *      summary: Logout
+     *      tags: [Users]
+     */
+    usersRouter.post('/logout/:sessionid', [
+        // Validation
+        param('sessionid').isInt().withMessage('sessionid must be an integer'),
+        (req, res, next) => {
+            // Check for errors
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        userController.logout
+    ])
+    /**
+     * @swagger
      * /api/users:
      *  post:
      *      summary: Post a user
