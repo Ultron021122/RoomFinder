@@ -14,6 +14,7 @@ const io = new SocketServer(server, {
   cors: {
     origin: process.env.CLIENT_URL,
   },
+  connectionStateRecovery: {}
 });
 
 // Middlewares
@@ -22,7 +23,7 @@ app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 
 io.on("connection", (socket) => {
-  console.log(socket.id);
+  console.log('An user has connected! ' + socket.id);
   socket.on("message", (body, createdAt) => {
     socket.broadcast.emit("message", {
       body,
@@ -30,6 +31,37 @@ io.on("connection", (socket) => {
       createdAt,
     });
   });
+
+  socket.on('chat message', async (msg, created_at) => {
+    let result
+    const username = socket.handshake.auth.username ?? 'Anonymous'
+    console.log('username: ', username)
+    try {
+      // Save the message to the database
+    } catch (error) {
+      console.error('Error saving message: ', error)
+      result = { status: 'error', message: 'Error saving message' }
+      return result
+    }
+
+    io.emit('chat message', msg, result.lastInsertRowid.toString(), username)
+  })
+
+  socket.on("disconnect", () => {
+    console.log('An user has disconnected! ' + socket.id);
+  });
+
+  if (!socket.recovered) {
+    try {
+      // const results = await getChatHistory()
+      // results.rows.forEach(row => {
+      //   socket.emit('chat message', row.message, row.id.toString(), row.username)
+      // })
+    } catch (error) {
+      console.error('Error getting chat history: ', error)
+    }
+  }
+
 });
 
 server.listen(PORT, () => {
