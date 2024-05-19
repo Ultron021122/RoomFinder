@@ -11,12 +11,16 @@ import { createUsersRouter } from './routes/users.js'
 import { createPropertiesRouter } from './routes/properties.js'
 import { createLessorsRouter } from './routes/lessors.js'
 import { createStudentsRouter } from './routes/students.js'
+import { createMessagesRouter } from './routes/messages.js'
+import { createChatsRouter } from './routes/chats.js'
 // Importar el modelo de la base de datos
 // PostgreSQL
 import { UsersModel } from './model/postgresql/user.js'
 import { PropertiesModel } from './model/postgresql/propertie.js'
 import { LessorsModel } from './model/postgresql/lessor.js'
 import { StudentsModel } from './model/postgresql/student.js'
+import { MessagesModel } from './model/postgresql/messages.js'
+import { ChatsModel } from './model/postgresql/chats.js'
 //MySQL 
 // import { UsersModel } from './model/mysql/user.js'
 // import { PropertiesModel } from './model/mysql/propertie.js'
@@ -46,6 +50,8 @@ app.use('/api/users', createUsersRouter({ userModel: UsersModel }))
 app.use('/api/properties', createPropertiesRouter({ propertieModel: PropertiesModel }))
 app.use('/api/lessors', createLessorsRouter({ lessorModel: LessorsModel }))
 app.use('/api/students', createStudentsRouter({ studentModel: StudentsModel }))
+app.use('/api/messages', createMessagesRouter({ messageModel: MessagesModel }))
+app.use('/api/chats', createChatsRouter({ chatsModel: ChatsModel }))
 
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swagger)) // Documentation of the API
 app.use(errorHandler) // Middleware for error handling
