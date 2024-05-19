@@ -24,27 +24,31 @@ app.use(express.urlencoded({ extended: false }));
 
 io.on("connection", (socket) => {
   console.log('An user has connected! ' + socket.id);
-  socket.on("message", (body, createdAt) => {
-    socket.broadcast.emit("message", {
-      body,
-      from: socket.id.slice(8),
-      createdAt,
-    });
-  });
+  // socket.on("message", (body, createdAt) => {
+  //   socket.broadcast.emit("message", {
+  //     body,
+  //     from: socket.id.slice(8),
+  //     createdAt,
+  //   });
+  // });
 
-  socket.on('chat message', async (msg, created_at) => {
+  socket.on('message', async (body, created_at) => {
     let result
     const username = socket.handshake.auth.username ?? 'Anonymous'
     console.log('username: ', username)
-    try {
-      // Save the message to the database
-    } catch (error) {
-      console.error('Error saving message: ', error)
-      result = { status: 'error', message: 'Error saving message' }
-      return result
-    }
-
-    io.emit('chat message', msg, result.lastInsertRowid.toString(), username)
+    // try {
+    //   // Save the message to the database
+    // } catch (error) {
+    //   console.error('Error saving message: ', error)
+    //   result = { status: 'error', message: 'Error saving message' }
+    //   return result
+    // }
+    io.emit('message', {
+      body: body,
+      from: username,
+      createdAt: created_at
+    }, 1, username);
+    // io.emit('chat message', msg, result.lastInsertRowid.toString(), username)
   })
 
   socket.on("disconnect", () => {
