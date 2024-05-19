@@ -146,7 +146,19 @@ export const createUsersRouter = ({ userModel }) => {
      *      summary: Get a lessor
      *      tags: [Users]
      */
-    usersRouter.get('/type/:roleid', userController.getByUser)
+    usersRouter.get('/type/:roleid', [
+        // Validation
+        param('roleid').isInt().withMessage('roleid must be an integer'),
+        (req, res, next) => {
+            // Check for errors
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        userController.getByUser
+    ])
     /**
      * @swagger
      * /api/users/login:
@@ -187,7 +199,7 @@ export const createUsersRouter = ({ userModel }) => {
      * @swagger
      * /api/users/{id}:
      *  delete:
-     *      summary: Delete a user
+     *      summary: Delete a user by id.
      *      tags: [Users]
      */
     usersRouter.delete('/:id', [

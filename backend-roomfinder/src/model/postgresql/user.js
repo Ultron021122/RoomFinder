@@ -100,13 +100,11 @@ export class UsersModel extends Database {
             if (validate) return false;
 
             const result = await this.query(
-                `INSERT INTO "Usuario"."Usuario" (vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING usuarioid;`,
+                `INSERT INTO "Usuario"."Usuario" (vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`,
                 [vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid]
-            )
-            const id = result[0].usuarioid;
-            const newUser = await this.getById({ id })
+            );
 
-            return newUser;
+            return new UsersModel(result[0]);
         } catch (error) {
             throw new Error(`Error creating user: ${error.message}`)
         }
