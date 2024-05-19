@@ -34,6 +34,8 @@ io.on("connection", (socket) => {
 
   socket.on('message', async (body, created_at) => {
     let result
+    console.log(socket.handshake.auth)
+    const usuarioid = socket.handshake.auth.usuarioid ?? 1
     const username = socket.handshake.auth.username ?? 'Anonymous'
     console.log('username: ', username)
     // try {
@@ -46,6 +48,7 @@ io.on("connection", (socket) => {
     io.emit('message', {
       body: body,
       from: username,
+      usuarioid: usuarioid,
       createdAt: created_at
     }, 1, username);
     // io.emit('chat message', msg, result.lastInsertRowid.toString(), username)
