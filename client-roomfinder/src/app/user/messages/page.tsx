@@ -27,7 +27,7 @@ const getUsername = async () => {
 const socket = io("http://localhost:3001");
 
 socket.auth = {
-  username: getUsername(),
+  username: async () => await getUsername(),
   serverOffset: 0
 }
 
@@ -43,10 +43,11 @@ export default function MessageComponent() {
   // Create formatter (English).
   const timeAgo = new TimeAgo('es-MX')
 
-  const receiveMessage = (message: Message) => {
+  const receiveMessage = (message: Message, serverOffset: number, username: string) => {
+    console.log(serverOffset, username)
     const NewMessage: Message = {
       body: message.body,
-      from: "Server",
+      from: message.from,
       createdAt: new Date(message.createdAt),
     }
     setConversations((prevMessages) => [...prevMessages, NewMessage]);
@@ -66,7 +67,7 @@ export default function MessageComponent() {
       from: "You",
       createdAt: new Date(),
     };
-    setConversations(state => [...state, newMessage]);
+    // setConversations(state => [...state, newMessage]);
     setMessage("");
     socket.emit("message", newMessage.body, newMessage.createdAt);
   };
@@ -74,7 +75,7 @@ export default function MessageComponent() {
   return (
     <>
       <section className="h-screen bg-zinc-800 text-white">
-        <div className="h-72">
+        <div className="h-96">
           <PerfectScrollbar>
             {conversations.map((message, index) => (
               <div className="message" key={index}>
