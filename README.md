@@ -52,6 +52,4 @@ Elegir un modelo o Ingeniería de Software. (SCRUM, Método cascada , Método es
   </li>
 </ul>
 
-**¡Gracias a todos los colaboradores que han hecho posible este proyecto!**
-
 [![Contribuidores](https://contrib.rocks/image?repo=Ultron021122/RoomFinder)](https://github.com/Ultron021122/RoomFinder/graphs/contributors)
