@@ -473,7 +473,7 @@ const Registrar = () => {
 
     return (
         <>
-            <section className="bg-zinc-200 dark:bg-gray-900">
+            <section className="bg-gray-50 dark:bg-gray-900">
                 <PerfectScrollbar>
                     {isLoading ?
                         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[calc(100vh-73px)] lg:py-0">
