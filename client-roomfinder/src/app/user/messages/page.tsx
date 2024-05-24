@@ -112,7 +112,7 @@ export default function MessageComponent() {
             </>
           ))}
           <div
-            ref={(el) => el && el.scrollIntoView({ behavior: "smooth" })}
+            ref={(el) => el?.scrollIntoView({ behavior: "smooth" })}
           ></div>
           {/* </PerfectScrollbar> */}
         </div>
