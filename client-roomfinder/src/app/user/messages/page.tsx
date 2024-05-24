@@ -11,7 +11,9 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useSession } from "next-auth/react";
 TimeAgo.addDefaultLocale(es)
 
-const socket = io("http://localhost:3001");
+const socket = io("http://localhost:3001", {
+  autoConnect: false, // disable auto-connect to set auth 
+});
 
 interface Message {
   body: string;
@@ -28,41 +30,38 @@ export default function MessageComponent() {
   // Create formatter (English).
   const timeAgo = new TimeAgo('es-MX')
 
-  socket.auth = {
-    usuarioid: (user as any)?.usuarioid,
-    username: (user as any)?.vchname,
-    serverOffset: 0
-  }
-
-  const receiveMessage = (message: Message, serverOffset: number, username: string) => {
-    console.log(serverOffset, username)
-    const NewMessage: Message = {
-      body: message.body,
-      from: message.from,
-      usuarioid: message.usuarioid,
-      createdAt: new Date(message.createdAt),
-    }
-    setConversations((prevMessages) => [...prevMessages, NewMessage]);
-  }
-
   useEffect(() => {
-    socket.on("message", receiveMessage)
-    return () => {
-      socket.off("message", receiveMessage);
-    };
-  }, []);
+    if (user) {
+      socket.auth = {
+        usuarioid: (user as any)?.usuarioid,
+        username: (user as any)?.vchname,
+        serverOffset: 0
+      }
+      socket.connect(); // Connect manually after setting auth
+      
+      socket.on("message", (message: Message) => {
+        setConversations((prevMessages) => [...prevMessages, message]);
+      });
+
+      // Clean up the socket connection when the component unmounts
+      return () => {
+        socket.off("message");
+        socket.disconnect();
+      };
+    }
+  }, [user]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const newMessage = {
       body: message,
-      from: "You",
+      from: (user as any)?.vchname,
       usuarioid: (user as any)?.usuarioid,
       createdAt: new Date(),
     };
     // setConversations(state => [...state, newMessage]);
     setMessage("");
-    socket.emit("message", newMessage.body, newMessage.createdAt);
+    socket.emit("message", newMessage.body, newMessage.createdAt, (user as any)?.chatid);
   };
 
   return (
