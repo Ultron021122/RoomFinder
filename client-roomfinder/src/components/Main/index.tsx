@@ -8,7 +8,7 @@ export default function Inicio() {
     return (
         <Layout key={1}>
             <div className='h-[calc(100vh-73px)] w-full'>
-                <div className='h-[calc(100vh-73px)] max-w-screen-2xl mx-auto bg-cover bg-no-repeat bg-center bg-black bg-opacity-45 bg-blend-darken flex justify-end items-start p-5 flex-col' style={{ backgroundImage: `url(${images[0].url})` }}>
+                <div className='h-[calc(100vh-73px)] max-w-screen-2xl mx-auto bg-cover bg-no-repeat bg-center dark:bg-black bg-opacity-45 bg-blend-darken flex justify-end items-start p-5 flex-col' style={{ backgroundImage: `url(${images[0].url})` }}>
                     <h2 className="text-white text-4xl sm:text-5xl font-bold">
                         RoomFinder.
                         <span className="ml-2 text-gray-200 font-light">
