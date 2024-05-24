@@ -24,33 +24,40 @@ app.use(express.urlencoded({ extended: false }));
 
 io.on("connection", (socket) => {
   console.log('An user has connected! ' + socket.id);
-  // socket.on("message", (body, createdAt) => {
-  //   socket.broadcast.emit("message", {
-  //     body,
-  //     from: socket.id.slice(8),
-  //     createdAt,
-  //   });
-  // });
+
+  const userID = socket.handshake.auth.userID;
+  if (userID)
 
   socket.on('message', async (body, created_at) => {
     let result
     console.log(socket.handshake.auth)
     const usuarioid = socket.handshake.auth.usuarioid ?? 1
     const username = socket.handshake.auth.username ?? 'Anonymous'
+    const chatid = socket.handshake.auth.chatid ?? 1
     console.log('username: ', username)
-    // try {
-    //   // Save the message to the database
-    // } catch (error) {
-    //   console.error('Error saving message: ', error)
-    //   result = { status: 'error', message: 'Error saving message' }
-    //   return result
-    // }
+    try {
+      // Save the message to the database
+      result = await fetch('http://localhost:1234/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ chatid, vchcontenido: body, created_at, usuarioid })
+      })
+    } catch (error) {
+      console.error('Error saving message: ', error)
+      result = { status: 'error', message: 'Error saving message' }
+      return result
+    }
     io.emit('message', {
       body: body,
       from: username,
       usuarioid: usuarioid,
       createdAt: created_at
-    }, 1, username);
+    },
+      result.messageid,
+      username
+    );
     // io.emit('chat message', msg, result.lastInsertRowid.toString(), username)
   })
 
