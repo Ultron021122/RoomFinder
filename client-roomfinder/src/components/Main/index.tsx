@@ -3,17 +3,18 @@ import Layout from "@/components/layout";
 import Footer from '@/components/Footer';
 import { images } from "@/utils/constants";
 import MasonryImageList from "@/components/Imagelist";
+import { Image } from "@nextui-org/react";
 
 export default function Inicio() {
     return (
         <Layout key={1}>
             <div className='h-[calc(100vh-73px)] w-full'>
-                <div className='h-[calc(100vh-73px)] max-w-screen-2xl mx-auto bg-cover bg-no-repeat bg-center dark:bg-black bg-opacity-45 bg-blend-darken flex justify-end items-start p-5 flex-col' style={{ backgroundImage: `url(${images[0].url})` }}>
-                    <h2 className="text-white text-4xl sm:text-5xl font-bold">
-                        RoomFinder.
-                        <span className="ml-2 text-gray-200 font-light">
+                <div className='h-[calc(100vh-73px)] max-w-screen-2xl mx-auto bg-cover bg-no-repeat bg-center bg-black bg-opacity-30 dark:bg-opacity-45 bg-blend-darken flex justify-end items-start p-5 flex-col' style={{ backgroundImage: `url(${images[0].url})` }}>
+                    <h2 className="text-white text-4xl sm:text-6xl font-bold">
+                        Roomfinder
+                        {/* <span className="ml-2 text-gray-200 font-light">
                             Tu puerta a un hogar perfecto.
-                        </span>
+                        </span> */}
                     </h2>
                     <p className="text-gray-300">Encuentra tu espacio ideal con Roomfinder.</p>
                 </div>
@@ -36,6 +37,9 @@ export default function Inicio() {
                                 <p className="dark:text-gray-300">Casa en la ciudad con vista al parque.</p>
                             </div>
                         </div>
+                    </div>
+                    <div className="bg-white text-blue-500">
+                        <Image src="/logo1.svg" alt="Propiedades destacadas" className="h-10" />
                     </div>
                     <MasonryImageList />
                 </section>
