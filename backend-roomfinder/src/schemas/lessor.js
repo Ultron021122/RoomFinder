@@ -18,6 +18,7 @@ const lessorSchema = z.object({
         message: "Too young!"
     }),
     bnstatus: z.boolean(),
+    bnverified: z.boolean(),
     vchimage: z.string().url(),
     roleid: z.number(),
     vchphone: z.string().superRefine((val, ctx) => {

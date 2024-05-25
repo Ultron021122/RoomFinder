@@ -46,7 +46,8 @@ Content-Type: application/json
     "vchemail": "marvelsml25@gmail.com",
     "vchpassword": "12345678",
     "dtbirthdate": "2002-11-13",
-    "bnstatus": true,
+    "bnstatus": false,
+    "bnverified": false,
     "vchimage": "https://res.cloudinary.com/dal8aivch/image/upload/v1712875535/students/v1smuum8jpcgvk1qppkw.png",
     "roleid": 1
 }
