@@ -6,7 +6,7 @@ const transporter = nodemailer.createTransport({
     secure: true,
     auth: {
         user: 'admin@roomfinder.website',
-        pass: 'Chente2305102*',
+        pass: '12345678',
     }
 });
 
