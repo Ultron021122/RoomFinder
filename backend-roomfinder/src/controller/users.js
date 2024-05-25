@@ -1,5 +1,5 @@
 import { validateUser, validatePartialUser } from '../schemas/user.js'
-// import { EmailService } from '../server/emailService.js'
+import { EmailService } from '../server/email.js'
 import bcrypt from 'bcrypt'
 
 export class UserController {
@@ -19,7 +19,7 @@ export class UserController {
     getByUser = async (req, res, next) => {
         try {
             const { roleid } = req.params
-            
+
             const users = await this.userModel.getByUser({ roleid })
             if (users) return res.json(users)
             return res.status(404).json({ message: 'User type not found' })
@@ -70,15 +70,17 @@ export class UserController {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(result.data.vchpassword, salt);
         result.data.vchpassword = hashedPassword;
-
-        await this.userModel.create({ input: result.data })
-            .then(newUser => {
-                if (newUser === false) return res.status(409).json({ message: 'User already exists' })
-                // const token = await EmailService.generarTokenVerification();
-                // await EmailService.sendEmailVerificate(newUser.email, token);
-                return res.status(201).json(newUser)
-            })
-            .catch(next); // Pass the error to the error handler
+        
+        // Create user and send verification email
+        try {
+            const newUser = await this.userModel.create({ input: result.data });
+            if (newUser === false) return res.status(409).json({ message: 'User already exists' });
+            const token = await EmailService.generarTokenVerification();
+            await EmailService.sendEmailVerificate(newUser.vchname, newUser.vchemail, token);
+            return res.status(201).json(newUser);
+        } catch (err) {
+            next(err);
+        }
     }
 
     verifyEmail = async (req, res, next) => {
