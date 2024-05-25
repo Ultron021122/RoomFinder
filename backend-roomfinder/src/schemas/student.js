@@ -18,6 +18,7 @@ const studentSchema = z.object({
         message: "Too young!"
     }),
     bnstatus: z.boolean(),
+    bnverified: z.boolean(),
     vchimage: z.string().url(),
     roleid: z.number(),
     intcodestudent: z.number().positive(),

@@ -2,32 +2,35 @@ import 'dotenv/config'
 import nodemailer from 'nodemailer';
 import { v4 as uuidv4 } from 'uuid';
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.hostinger.com',
-    port: 465,
-    secure: true,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    }
-});
-
-async function generateUniqueToken() {
-    const token = uuidv4();
-    return token;
-}
-
 export class EmailService {
-    static async generarTokenVerification() {
-        const token = await generateUniqueToken();
+
+    constructor() {
+        this.transporter = nodemailer.createTransport({
+            host: 'smtp.hostinger.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            }
+        });
+    }
+
+    async generateUniqueToken() {
+        const token = uuidv4();
         return token;
     }
 
-    static async sendEmailVerificate(vchname, vchemail, token) {
+    async generarTokenVerification() {
+        const token = await this.generateUniqueToken(); // Generate a unique token
+        return token;
+    }
+
+    async sendEmailVerificate(vchname, vchemail, token) {
         try {
             const email = vchemail;
-            const info = await transporter.sendMail({
-                from: `"Sebastián Martínez López 👻" <${process.env.EMAIL_USER}>`,
+            const info = {
+                from: `"RoomFinder" <${process.env.EMAIL_USER}>`,
                 to: [`${email}`],
                 subject: 'Verificación de correo',
                 html: `
@@ -58,7 +61,7 @@ export class EmailService {
                                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                             }
                             .header {
-                                background-color: #007bff;
+                                background-color: #3b82f6;
                                 padding: 20px;
                                 border-radius: 8px 8px 0 0;
                                 text-align: center;
@@ -121,9 +124,10 @@ export class EmailService {
                     </body>
                     </html>
                 `,
-            });
-            console.log('Message sent: %s', info.messageId);
-            return info.messageId;
+            };
+            const result = await this.transporter.sendMail(info);
+            console.log('Message sent: %s', result.messageId);
+            return result.messageId;
         } catch (error) {
             throw new Error(`Error sending mail: ${error.message}`);
         }

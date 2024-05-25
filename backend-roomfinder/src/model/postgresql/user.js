@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 
 export class UsersModel extends Database {
 
-    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, created_at }) {
+    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at }) {
         super();
         this.usuarioid = usuarioid;
         this.vchname = vchname;
@@ -13,6 +13,7 @@ export class UsersModel extends Database {
         this.vchpassword = vchpassword;
         this.dtbirthdate = dtbirthdate;
         this.bnstatus = bnstatus;
+        this.bnverified = bnverified;
         this.vchimage = vchimage;
         this.roleid = roleid;
         this.created_at = created_at;
@@ -53,10 +54,10 @@ export class UsersModel extends Database {
     static async login({ input }) {
         try {
             const { vchemail, vchpassword } = input
-            console.log(vchemail, vchpassword)
+            
             const user = await this.getByEmail({ email: vchemail });
             if (!user) return false;
-
+            if (!user.bnverified) return false; // Check if user is verified
             const validPassword = await bcrypt.compare(vchpassword, user.vchpassword)
             if (!validPassword) return false;
 
@@ -144,7 +145,7 @@ export class UsersModel extends Database {
 
     static async update({ id, input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid } = input
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid } = input
             const validate = vchemail ? await this.getByEmail({ email: vchemail }) : null;
             if (validate) return false;
             const user = await this.getById({ id })
@@ -158,6 +159,7 @@ export class UsersModel extends Database {
                 vchpassword,
                 dtbirthdate,
                 bnstatus,
+                bnverified,
                 vchimage,
                 roleid
             })
@@ -175,6 +177,7 @@ export class UsersModel extends Database {
                 vchpassword,
                 dtbirthdate,
                 bnstatus,
+                bnverified,
                 vchimage,
                 roleid
             })

@@ -4,7 +4,8 @@ import bcrypt from 'bcrypt'
 
 export class UserController {
     constructor({ userModel }) {
-        this.userModel = userModel
+        this.userModel = userModel;
+        this.EmailService = new EmailService();
     }
 
     getAll = async (req, res, next) => {
@@ -75,8 +76,8 @@ export class UserController {
         try {
             const newUser = await this.userModel.create({ input: result.data });
             if (newUser === false) return res.status(409).json({ message: 'User already exists' });
-            const token = await EmailService.generarTokenVerification();
-            await EmailService.sendEmailVerificate(newUser.vchname, newUser.vchemail, token);
+            const token = await this.EmailService.generarTokenVerification();
+            await this.EmailService.sendEmailVerificate(newUser.vchname, newUser.vchemail, token);
             return res.status(201).json(newUser);
         } catch (err) {
             next(err);
