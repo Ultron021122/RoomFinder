@@ -2,8 +2,8 @@ import { UsersModel } from './user.js'
 
 export class StudentsModel extends UsersModel {
 
-    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, created_at, intcodestudent, vchuniversity }) {
-        super({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, created_at });
+    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at, intcodestudent, vchuniversity }) {
+        super({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at });
         this.intcodestudent = intcodestudent;
         this.vchuniversity = vchuniversity;
     }
@@ -25,7 +25,7 @@ export class StudentsModel extends UsersModel {
 
     static async create({ input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, intcodestudent, vchuniversity } = input
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, intcodestudent, vchuniversity } = input
             const result = await UsersModel.create({ input })
             if (result === false) return false;
             const usuarioid = result.usuarioid
@@ -36,7 +36,7 @@ export class StudentsModel extends UsersModel {
                 [intcodestudent, usuarioid, vchuniversity]
             )
 
-            return new StudentsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, created_at, intcodestudent, vchuniversity })
+            return new StudentsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at, intcodestudent, vchuniversity })
         } catch (error) {
             throw new Error(`Error creating student: ${error.message}`);
         }
@@ -53,7 +53,7 @@ export class StudentsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid, intcodestudent, vchuniversity } = input
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, intcodestudent, vchuniversity } = input
             const user = await UsersModel.update({ id, input })
             if (user === false) return false;
             if (!user) return null;
