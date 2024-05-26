@@ -1,4 +1,4 @@
-import { Database } from "./database";
+import { Database } from "./database.js";
 
 export class VerifiedModel extends Database {
     
@@ -42,6 +42,14 @@ export class VerifiedModel extends Database {
         return verify[0] ? new VerifiedModel(verify[0]) : null;
     }
 
+    static async verify({ usuarioid, vchtoken }) {
+        const verify = await this.query(
+            `SELECT * FROM "Usuario"."Verificacion" WHERE usuarioid = $1 AND vchtoken = $2 AND expires_at > NOW();`,
+            [usuarioid, vchtoken]
+        );
+        return verify[0] ? new VerifiedModel(verify[0]) : null;
+    }
+
     static async save({ verify }) {
         const { usuarioid, vchtoken } = verify;
         const verifySaved = await this.query(
@@ -62,7 +70,7 @@ export class VerifiedModel extends Database {
 
     static async delete({ id }) {
         const verify = await this.query(
-            `DELETE FROM "Usuario"."Verificacion" WHERE usuarioid = $1 RETURNING *;`,
+            `DELETE FROM "Usuario"."Verificacion" WHERE verificacionid = $1 RETURNING *;`,
             [id]
         );
         return verify[0] ? new VerifiedModel(verify[0]) : null;

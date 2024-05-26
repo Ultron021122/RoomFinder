@@ -1,4 +1,7 @@
 // Necesitamos modificar las rutas de pruebas
+### Verificar email
+GET http://localhost:1234/api/users/verify/6/77895ecd-f039-42f2-8ada-0f2cb185369a
+
 ### Recuperar todos los usuarios
 GET http://localhost:1234/api/users
 
@@ -22,9 +25,12 @@ POST http://localhost:1234/api/users/login
 Content-Type: application/json
 
 {
-    "vchemail": "sherlyn@gmail.com",
+    "vchemail": "marvelsml25@gmail.com",
     "vchpassword": "12345678"
 }
+
+### Eliminar sesión - Usuario correcto
+GET http://localhost:1234/api/users/logout/5
 
 ### Iniciar sesión - Usuario correcto
 POST http://localhost:1234/api/users/login
