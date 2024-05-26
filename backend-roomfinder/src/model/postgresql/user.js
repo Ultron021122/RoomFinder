@@ -1,5 +1,6 @@
 import { Database } from "./database.js"
 import { VerifiedModel } from "./verified.js";
+import { RecoveryPassModel } from "./recoverypass.js";
 import bcrypt from 'bcrypt'
 
 export class UsersModel extends Database {
@@ -52,50 +53,6 @@ export class UsersModel extends Database {
         return user[0] ? new UsersModel(user[0]) : null;
     }
 
-    static async login({ input }) {
-        try {
-            const { vchemail, vchpassword } = input
-
-            const user = await this.getByEmail({ email: vchemail });
-            if (!user) return false;
-            if (!user.bnverified) return false; // Check if user is verified
-            const validPassword = await bcrypt.compare(vchpassword, user.vchpassword)
-            if (!validPassword) return false;
-
-            const session = await this.session({ id: user.usuarioid })
-
-            return { ...user, sessionid: session };
-        } catch (error) {
-            throw new Error(`Error: ${error.message}`);
-        }
-    }
-
-    static async session({ id }) {
-        try {
-            const session = await this.query(
-                `INSERT INTO "Usuario"."Sessions" (usuarioid) VALUES ($1) RETURNING sessionid;`,
-                [id]
-            )
-            const sessionid = session[0].sessionid;
-            return sessionid;
-        } catch (error) {
-            throw new Error(`Error: ${error.message}`);
-        }
-    }
-
-    static async logout({ sessionid }) {
-        try {
-            const session = await this.query(
-                `UPDATE "Usuario"."Sessions" SET tmlastactivity = NOW() WHERE sessionid = $1 AND tmlastactivity IS NULL RETURNING *;`,
-                [sessionid]
-            )
-
-            return session[0] ? true : false;
-        } catch (error) {
-            throw new Error(`Error: ${error.message}`);
-        }
-    }
-
     static async create({ input }) {
         try {
             const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid } = input
@@ -110,39 +67,6 @@ export class UsersModel extends Database {
             return new UsersModel(result[0]);
         } catch (error) {
             throw new Error(`Error creating user: ${error.message}`)
-        }
-    }
-
-    static async saveToken({ verify }) {
-        try {
-            const { usuarioid, vchtoken } = verify;
-            const verifySaved = await VerifiedModel.save({ verify: { usuarioid, vchtoken } });
-            return verifySaved;
-        } catch (error) {
-            throw new Error(`Error checking email: ${error.message}`)
-        }
-    }
-
-    static async resaveToken({ verify }) {
-        try {
-            const { usuarioid, vchtoken } = verify;
-            const verifyUpdated = await VerifiedModel.update({ verify: { usuarioid, vchtoken } });
-            return verifyUpdated;
-        } catch (error) {
-            throw new Error(`Error resaving token: ${error.message}`)
-        }
-    }
-
-    static async verifyToken({ verify }) {
-        try {
-            const { usuarioid, vchtoken } = verify;
-            const verificar = await VerifiedModel.verify({ usuarioid, vchtoken });
-            if (!verificar) return null;
-            // Delete token from database
-            await VerifiedModel.delete({ id: verificar.verificacionid });
-            return verificar;
-        } catch (error) {
-            throw new Error(`Error verifying token: ${error.message}`)
         }
     }
 
@@ -212,6 +136,96 @@ export class UsersModel extends Database {
             return await this.getById({ id });
         } catch (error) {
             throw new Error(`Error updating user: ${error.message}`);
+        }
+    }
+
+    static async login({ input }) {
+        try {
+            const { vchemail, vchpassword } = input
+
+            const user = await this.getByEmail({ email: vchemail });
+            if (!user) return false;
+            if (!user.bnverified) return false; // Check if user is verified
+            const validPassword = await bcrypt.compare(vchpassword, user.vchpassword)
+            if (!validPassword) return false;
+
+            const session = await this.session({ id: user.usuarioid })
+
+            return { ...user, sessionid: session };
+        } catch (error) {
+            throw new Error(`Error: ${error.message}`);
+        }
+    }
+
+    static async session({ id }) {
+        try {
+            const session = await this.query(
+                `INSERT INTO "Usuario"."Sessions" (usuarioid) VALUES ($1) RETURNING sessionid;`,
+                [id]
+            )
+            const sessionid = session[0].sessionid;
+            return sessionid;
+        } catch (error) {
+            throw new Error(`Error: ${error.message}`);
+        }
+    }
+
+    static async logout({ sessionid }) {
+        try {
+            const session = await this.query(
+                `UPDATE "Usuario"."Sessions" SET tmlastactivity = NOW() WHERE sessionid = $1 AND tmlastactivity IS NULL RETURNING *;`,
+                [sessionid]
+            )
+
+            return session[0] ? true : false;
+        } catch (error) {
+            throw new Error(`Error: ${error.message}`);
+        }
+    }
+
+    static async saveToken({ verify }) {
+        try {
+            const { usuarioid, vchtoken } = verify;
+            const verifySaved = await VerifiedModel.save({ verify: { usuarioid, vchtoken } });
+            return verifySaved;
+        } catch (error) {
+            throw new Error(`Error checking email: ${error.message}`)
+        }
+    }
+
+    static async resaveToken({ verify }) {
+        try {
+            const { usuarioid, vchtoken } = verify;
+            const verifyUpdated = await VerifiedModel.update({ verify: { usuarioid, vchtoken } });
+            return verifyUpdated;
+        } catch (error) {
+            throw new Error(`Error resaving token: ${error.message}`)
+        }
+    }
+
+    static async verifyToken({ verify }) {
+        try {
+            const { usuarioid, vchtoken } = verify;
+            const user = await this.getById({ id: usuarioid }); // Validate user
+            if (!user) return false;
+
+            const verificar = await VerifiedModel.verify({ usuarioid, vchtoken }); // Validate token
+            if (!verificar) return null;
+
+            await VerifiedModel.delete({ id: verificar.verificacionid }); // Delete token from database
+            return verificar;
+        } catch (error) {
+            throw new Error(`Error verifying token: ${error.message}`)
+        }
+    }
+
+    static async recoveryPassword({ recover }) {
+        try {
+            const { usuarioid, vchtoken } = recover;
+            const result = await RecoveryPassModel.create({ input: { usuarioid, vchtoken } });
+            return result;
+        } catch (error) {
+            throw new Error(`Error recovering password: ${error.message}`)
         }
     }
 }

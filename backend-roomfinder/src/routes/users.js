@@ -193,6 +193,7 @@ export const createUsersRouter = ({ userModel }) => {
         },
         userController.logout
     ])
+    usersRouter.post('/forgot', userController.recoveryPassword)
     /**
      * @swagger
      * /api/users/login:
