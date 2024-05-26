@@ -2,6 +2,14 @@
 ### Verificar email
 GET http://localhost:1234/api/users/verify/6/77895ecd-f039-42f2-8ada-0f2cb185369a
 
+### Enviar correo para recuperar cuenta
+POST http://localhost:1234/api/users/forgot
+Content-Type: application/json
+
+{
+    "vchemail": "marvelsml25@gmail.com"
+}
+
 ### Recuperar todos los usuarios
 GET http://localhost:1234/api/users
 
