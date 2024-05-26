@@ -1,4 +1,5 @@
 import { Database } from "./database.js"
+import { VerifiedModel } from "./verified.js";
 import bcrypt from 'bcrypt'
 
 export class UsersModel extends Database {
@@ -54,7 +55,7 @@ export class UsersModel extends Database {
     static async login({ input }) {
         try {
             const { vchemail, vchpassword } = input
-            
+
             const user = await this.getByEmail({ email: vchemail });
             if (!user) return false;
             if (!user.bnverified) return false; // Check if user is verified
@@ -85,10 +86,11 @@ export class UsersModel extends Database {
     static async logout({ sessionid }) {
         try {
             const session = await this.query(
-                `UPDATE "Usuario"."Sessions" SET tmlastactivity = NOW() WHERE sessionid = $1;`,
+                `UPDATE "Usuario"."Sessions" SET tmlastactivity = NOW() WHERE sessionid = $1 AND tmlastactivity IS NULL RETURNING *;`,
                 [sessionid]
             )
-            return true;
+
+            return session[0] ? true : false;
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
@@ -111,19 +113,36 @@ export class UsersModel extends Database {
         }
     }
 
-    static async verifyEmail({ token }) {
+    static async saveToken({ verify }) {
         try {
-            const validate = { token };
+            const { usuarioid, vchtoken } = verify;
+            const verifySaved = await VerifiedModel.save({ verify: { usuarioid, vchtoken } });
+            return verifySaved;
         } catch (error) {
             throw new Error(`Error checking email: ${error.message}`)
         }
     }
 
-    static async updateVerified({ id }) {
+    static async resaveToken({ verify }) {
         try {
-            const validate = { id };
+            const { usuarioid, vchtoken } = verify;
+            const verifyUpdated = await VerifiedModel.update({ verify: { usuarioid, vchtoken } });
+            return verifyUpdated;
         } catch (error) {
-            throw new Error(`Error updating user: ${error.message}`)
+            throw new Error(`Error resaving token: ${error.message}`)
+        }
+    }
+
+    static async verifyToken({ verify }) {
+        try {
+            const { usuarioid, vchtoken } = verify;
+            const verificar = await VerifiedModel.verify({ usuarioid, vchtoken });
+            if (!verificar) return null;
+            // Delete token from database
+            await VerifiedModel.delete({ id: verificar.verificacionid });
+            return verificar;
+        } catch (error) {
+            throw new Error(`Error verifying token: ${error.message}`)
         }
     }
 

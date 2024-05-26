@@ -71,13 +71,17 @@ export class UserController {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(result.data.vchpassword, salt);
         result.data.vchpassword = hashedPassword;
-        
+
         // Create user and send verification email
         try {
             const newUser = await this.userModel.create({ input: result.data });
             if (newUser === false) return res.status(409).json({ message: 'User already exists' });
+
             const token = await this.EmailService.generarTokenVerification();
+            // Save token in database and send email
+            await this.userModel.saveToken({ verify: { usuarioid: newUser.usuarioid, vchtoken: token } })
             await this.EmailService.sendEmailVerificate(newUser.vchname, newUser.vchemail, token);
+
             return res.status(201).json(newUser);
         } catch (err) {
             next(err);
@@ -85,14 +89,14 @@ export class UserController {
     }
 
     verifyEmail = async (req, res, next) => {
-        const { token } = req.params;
-        const verifiedUser = await this.userModel.verifyEmail({ token });
-
+        const { id, token } = req.params;
+        console.log(id, token)
+        const verifiedUser = await this.userModel.verifyToken({ verify: { usuarioid: id, vchtoken: token } });
         if (!verifiedUser) {
             return res.status(400).json({ message: 'Invalid verification token' });
         }
 
-        await this.userModel.updateVerified({ id: verifiedUser.id });
+        await this.userModel.update({ id, input: { bnverified: true } });
         return res.status(200).json({ message: 'Email verified successfully' });
     }
 
