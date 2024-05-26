@@ -38,29 +38,38 @@ export class RecoveryPassModel extends Database {
             `SELECT * FROM "Usuario"."RecuperacionCuenta" WHERE usuarioid = $1;`,
             [id]
         );
-        return recovery.map((recovery) => new RecoveryPassModel(recovery));
+        return recovery[0] ? new RecoveryPassModel(recovery[0]) : null;
     }
 
-    static async create({ usuarioid, vchtoken, created_at }) {
+    static async create({ input }) {
         try {
+            const { usuarioid, vchtoken } = input;
+
+            const validate = await this.getByUser({ id: usuarioid });
+            if (validate) {
+                await this.delete({ id: validate.recuperacionid });
+            }
             const recovery = await this.query(
-                `INSERT INTO "Usuario"."RecuperacionCuenta" (usuarioid, vchtoken, created_at, expires_at) VALUES ($1, $2, $3, NOW() + INTERVAL '24 HOURS') RETURNING *;`,
-                [usuarioid, vchtoken, created_at]
+                `INSERT INTO "Usuario"."RecuperacionCuenta" (usuarioid, vchtoken, expires_at) VALUES ($1, $2, NOW() + INTERVAL '24 HOURS') RETURNING *;`,
+                [usuarioid, vchtoken]
             );
+
             return recovery[0] ? new RecoveryPassModel(recovery[0]) : null;
-        } catch(error) {
+        } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
     }
 
-    static async update({ id, vchtoken, expires_at }) {
+    static async update({ id, input }) {
         try {
+            const { vchtoken, expires_at } = input;
+
             const recovery = await this.query(
                 `UPDATE "Usuario"."RecuperacionCuenta" SET vchtoken = $1, expires_at = $2 WHERE recuperacionid = $3 RETURNING *;`,
                 [vchtoken, expires_at, id]
             );
             return recovery[0] ? new RecoveryPassModel(recovery[0]) : null;
-        } catch(error) {
+        } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
     }
@@ -72,7 +81,7 @@ export class RecoveryPassModel extends Database {
                 [id]
             );
             return recovery[0] ? new RecoveryPassModel(recovery[0]) : null;
-        } catch(error) {
+        } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
     }
