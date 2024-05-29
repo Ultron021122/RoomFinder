@@ -7,7 +7,7 @@ const SidebarContext = createContext({ expanded: false });
 export default function Sidebar({ children }: { children: any }) {
   const [expanded, setExpanded] = useState(true);
   return (
-    <aside className="h-[calc(100vh-73px)]">
+    <aside className="h-screen">
       <nav className="h-full flex-col max-w-max bg-white dark:bg-gray-950 border-r dark:border-gray-900 shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center text-gray-800 dark:text-gray-100">
           <div
