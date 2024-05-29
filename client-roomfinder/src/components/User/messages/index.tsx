@@ -71,7 +71,7 @@ export default function MessageComponent() {
 
   return (
     <>
-      <section className="h-[calc(100vh-73px)] flex flex-col bg-white">
+      <section className="h-screen flex flex-col bg-white">
         <div className="flex-grow overflow-y-auto">
           {/* <PerfectScrollbar> */}
           {conversations.map((message, index) => (
