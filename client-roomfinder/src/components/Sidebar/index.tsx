@@ -45,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onUniversityChange }) => {
 
     return (
         <>
-            <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-56 md:w-60 lg:w-64 min-h-screen pt-[65px] transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-950 dark:border-gray-950" aria-label="Sidebar">
+            <aside id="logo-sidebar" className="fixed top-0 left-0 z-0 w-56 md:w-60 lg:w-64 min-h-screen pt-[65px] transition-transform -translate-x-full bg-white border-r border-gray-300 sm:translate-x-0 dark:bg-gray-950 dark:border-gray-800" aria-label="Sidebar">
                 <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-950">
                     <h5 className="flex items-center py-2 mt-3 mb-1 text-gray-900 rounded-lg dark:text-white group">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-950 dark:text-white">

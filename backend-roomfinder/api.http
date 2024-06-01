@@ -2,6 +2,9 @@
 ### Verificar email
 GET http://localhost:1234/api/users/verify/6/77895ecd-f039-42f2-8ada-0f2cb185369a
 
+### Verificar email
+GET http://localhost:1234/api/users/verify/7/a54a617e-49d5-4a19-8470-a41a1e01ff30
+
 ### Enviar correo para recuperar cuenta
 POST http://localhost:1234/api/users/forgot
 Content-Type: application/json
@@ -54,10 +57,10 @@ POST http://localhost:1234/api/users
 Content-Type: application/json
 
 {
-    "vchname": "Sherlyn",
-    "vchpaternalsurname": "García",
-    "vchmaternalsurname": "Romo",
-    "vchemail": "marvelsml25@gmail.com",
+    "vchname": "Sebastián",
+    "vchpaternalsurname": "Martínez",
+    "vchmaternalsurname": "López",
+    "vchemail": "smldeveloper02@gmail.com",
     "vchpassword": "12345678",
     "dtbirthdate": "2002-11-13",
     "bnstatus": false,
