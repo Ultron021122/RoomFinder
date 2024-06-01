@@ -5,7 +5,7 @@ const messageSchema = z.object({
     vchcontenido: z.string({
         required_error: 'Message content is required.'
     }),
-    created_at: z.date(),
+    created_at: z.string(),
     usuarioid: z.number()
 })
 
