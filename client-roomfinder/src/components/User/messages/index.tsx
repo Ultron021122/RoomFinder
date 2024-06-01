@@ -40,6 +40,7 @@ export default function MessageComponent() {
       socket.connect(); // Connect manually after setting auth
 
       socket.on("message", (message: Message) => {
+        message.createdAt = new Date(message.createdAt);
         setConversations((prevMessages) => [...prevMessages, message]);
       });
 
@@ -59,7 +60,7 @@ export default function MessageComponent() {
       usuarioid: (user as any)?.usuarioid,
       createdAt: new Date(),
     };
-    setConversations((state) => [...state, newMessage]);
+    // setConversations((state) => [...state, newMessage]);
     setMessage("");
     socket.emit(
       "message",
