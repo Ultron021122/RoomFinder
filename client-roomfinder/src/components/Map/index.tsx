@@ -65,7 +65,7 @@ export default function Map({ position, zoom, name }: MapData) {
 
     return (
         <div>
-            <MapContainer center={position} zoom={zoom} className="map-width">
+            <MapContainer center={position} zoom={zoom} className="map-width" zoomControl={false}>
                 <SetMapRef />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

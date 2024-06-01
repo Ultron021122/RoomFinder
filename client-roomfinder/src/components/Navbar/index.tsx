@@ -3,7 +3,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "./navbar";
 
-const excludedRoutes = ['/user/messages', '/signup', '/other-route-without-navbar'];
+const excludedRoutes = ['/user/messages', '/signup', '/propiedades'];
 
 function Navigate() {
     const [isOpen, setIsOpen] = useState(false);

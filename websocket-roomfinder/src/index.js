@@ -12,7 +12,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new SocketServer(server, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: [process.env.CLIENT_URL]
   },
   connectionStateRecovery: {},
 });
@@ -25,7 +25,8 @@ app.use(express.urlencoded({ extended: false }));
 io.on("connection", (socket) => {
   console.log("An user has connected! " + socket.id);
 
-  const userID = socket.handshake.auth.userID;
+  const userID = socket.handshake.auth.usuarioid
+  console.log("userID: ", userID);
   if (userID)
     socket.on("message", async (body, created_at) => {
       let result;
@@ -44,10 +45,11 @@ io.on("connection", (socket) => {
           body: JSON.stringify({
             chatid,
             vchcontenido: body,
-            created_at,
+            created_at: new Date(created_at),
             usuarioid,
           }),
         });
+        console.log("result: ", result);
       } catch (error) {
         console.error("Error saving message: ", error);
         result = { status: "error", message: "Error saving message" };
