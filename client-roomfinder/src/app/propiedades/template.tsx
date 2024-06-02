@@ -1,6 +1,5 @@
 "use client";
 import FloatingBox from "@/components/Map/Square";
-import Sidebar from "@/components/Sidebar";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
