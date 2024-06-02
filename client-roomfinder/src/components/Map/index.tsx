@@ -10,6 +10,7 @@ import { universities, properties } from "@/utils/constants";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
+import { Image, Button } from '@nextui-org/react';
 
 // Icons personalizados
 const customIcon = new Icon({
@@ -88,7 +89,22 @@ export default function Map({ position, zoom, name }: MapData) {
                                 key={index}
                                 ref={markerRefs.current[universidad.name]}
                             >
-                                <Popup>{universidad.popUp}</Popup>
+                                <Popup>
+                                    <div className="max-w-xs">
+                                        <h3 className='text-sm text-center mb-2'>{universidad.name}</h3>
+                                        <Image src={universidad.imageUrl} alt={'Imagen ' + universidad.name} className="w-full h-auto mb-2 rounded" />
+                                        <p className="text-xs text-center text-gray-700 mb-2">{universidad.description}</p>
+                                        <a
+                                            href={universidad.website}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ color: 'white', textDecoration: 'none' }}
+                                            className="block text-center text-white no-underline text-current bg-blue-500 hover:bg-blue-700 transition-colors duration-300 py-2 rounded-lg"
+                                        >
+                                            Visitar Website
+                                        </a>
+                                    </div>
+                                </Popup>
                             </Marker>
                         );
                     })}
