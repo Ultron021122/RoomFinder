@@ -265,6 +265,24 @@ export interface UniversityData {
      * popUp: 'Popup message'
      */
     popUp: string;
+    /**
+     * University description
+     * @example
+     * description: 'University description'
+     */
+    description: string;
+    /**
+     * University image url
+     * @example
+     * imageUrl: 'https://example.com/image.jpg'
+     */
+    imageUrl: string;
+    /**
+     * University website
+     * @example
+     * website: 'https://example.com'
+     */
+    website: string;
 }
 
 /**
