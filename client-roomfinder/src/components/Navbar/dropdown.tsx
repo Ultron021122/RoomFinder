@@ -3,10 +3,26 @@ import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger,
 import Link from 'next/link';
 import { PlusIcon } from "./icon";
 import { useSession, signOut } from "next-auth/react";
+import { rolesMapping } from "@/utils/constants";
+
+interface DropdownUserProps {
+    vchname: string;
+    vchpaternalsurname: string;
+    vchmaternalsurname: string;
+    vchemail: string;
+    vchimage: string;
+    usuarioid: number;
+    sessionid: number;
+    dtbirthdate: string;
+    bnverified: boolean;
+    bnstatus: boolean;
+    roleid: number;
+}
 
 const DropdownUser = () => {
     const { data: session } = useSession();
-    const user = session?.user;
+    const user = session?.user as DropdownUserProps;
+    const roleName = rolesMapping[user.roleid] || 'Desconocido';
 
     return (
         <>
@@ -22,11 +38,11 @@ const DropdownUser = () => {
                             classNames: {
                                 base: "ring-offset-gray-950 mr-1"
                             },
-                            src: `${(user as any)?.vchimage}`
+                            src: `${user.vchimage}`
                         }}
                         className="transition-transform"
-                        description={(user as any)?.roleid}
-                        name={(user as any)?.vchname}
+                        description={roleName}
+                        name={user.vchname}
                         classNames={{
                             wrapper: "hidden sm:inline-flex flex-col items-start",
                             name: "dark:text-gray-200",
@@ -61,8 +77,8 @@ const DropdownUser = () => {
                         }}
                     >
                         <DropdownItem isReadOnly key="profile" className="h-14 gap-2" textValue="Pérfil">
-                            <p className="font-semibold text-sm capitalize">{(user as any)?.vchname + " " + (user as any)?.vchpaternalsurname}</p>
-                            <p className="text-small">{(user as any)?.vchemail}</p>
+                            <p className="font-semibold text-sm capitalize">{user.vchname + " " + user.vchpaternalsurname}</p>
+                            <p className="text-small">{user.vchemail}</p>
                         </DropdownItem>
                         <DropdownItem key="dashboard" textValue="Panel de administración">
                             <Link href="/dashboard/profile">Dashboard</Link>
