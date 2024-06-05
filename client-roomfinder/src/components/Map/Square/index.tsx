@@ -44,7 +44,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange }
     }
 
     return (
-        <div className="absolute top-8 left-4 bg-white dark:bg-gray-950 w-60 md:w-72 lg:w-96 rounded-lg shadow-lg shadow-gray-400 dark:shadow-gray-500 p-4 z-10">
+        <div className="absolute top-8 left-4 bg-white dark:bg-gray-950 w-72 lg:w-96 rounded-lg shadow-lg shadow-gray-400 dark:shadow-gray-500 p-4 z-10">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white">Búsqueda de inmueble</h3>
                 <button
