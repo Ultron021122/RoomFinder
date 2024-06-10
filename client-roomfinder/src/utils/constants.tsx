@@ -110,8 +110,7 @@ export const patterns = {
     uuidv4: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/,
 };
 
-// Constants - Data
-export const roles: Roles[] = [
+export const role: Roles[] = [
     {
         roleid: 1,
         vchname: "Estudiante",
@@ -128,9 +127,22 @@ export const roles: Roles[] = [
         vchdescription: "Usuario tipo Administrador",
     }
 ]
+// Constants - Data
+export const roles: Roles[] = [
+    {
+        roleid: 1,
+        vchname: "Estudiante",
+        vchdescription: "Usuario tipo estudiante",
+    },
+    {
+        roleid: 2,
+        vchname: "Arrendador",
+        vchdescription: "Usuario tipo Arrendador",
+    }
+]
 // Mapeo de roles
-export const rolesMapping: Record<number, string> = roles.reduce((acc, role) => {
-    acc[role.roleid] = role.vchname;
+export const rolesMapping: Record<number, string> = role.reduce((acc, rol) => {
+    acc[rol.roleid] = rol.vchname;
     return acc;
 }, {} as Record<number, string>);
 
