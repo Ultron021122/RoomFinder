@@ -1,6 +1,4 @@
 import { UniversityData, Roles, MapCoordenada, Folder } from '@/utils/interfaces';
-import { height } from '@mui/system';
-import { image } from '@nextui-org/react';
 
 // Iconos
 // ...
@@ -326,6 +324,6 @@ export const propertiesHome = [
         id: 3,
         title: "Casa en la montaña",
         description: "Casa en la montaña con vista a la ciudad.",
-        imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1717565599/resources/nyvhhgc2gg9rtjtrnaba.jpg",
+        imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1717565639/resources/osuacongqcobj2hdx8oc.jpg",
     }
 ]
