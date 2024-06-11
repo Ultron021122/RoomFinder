@@ -18,7 +18,7 @@ export default function Inicio() {
                 </div>
                 <section className="container mx-auto my-10 p-2 sm:p-0">
                     <div className="mb-5">
-                        <h3 className="dark:text-gray-300 text-3xl text-center font-semibold mb-10">
+                        <h3 className="dark:text-gray-300 text-xl sm:text-3xl text-center font-semibold mb-10">
                             Propiedades destacadas
                         </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
@@ -33,7 +33,7 @@ export default function Inicio() {
                     {/* <div className="bg-white text-blue-500">
                         <Image src="/logo1.svg" alt="Propiedades destacadas" className="h-10" />
                     </div> */}
-                    <h3 className="dark:text-gray-300 text-3xl font-semibold mt-10 mb-5">
+                    <h3 className="dark:text-gray-300 text-xl sm:text-3xl font-semibold mt-10 mb-5">
                         Galeria de Imagenes
                     </h3>
                     <MasonryImageList />
