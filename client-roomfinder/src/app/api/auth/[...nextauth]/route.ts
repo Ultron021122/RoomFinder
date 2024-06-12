@@ -12,12 +12,10 @@ const handler = NextAuth({
             },
             async authorize(credentials) {
                 try {
-                    console.log(process.env.INTERNAL_REQUEST_SECRET);
                     const userFound = await fetch(`${process.env.REST_URL}/users/login`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
-                            "x-internal-request": process.env.INTERNAL_REQUEST_SECRET || "secret",
                         },
                         body: JSON.stringify(credentials),
                     })
