@@ -48,6 +48,7 @@ export async function POST(req, res) {
             vchpassword,
             dtbirthdate,
             bnstatus,
+            bnverified: false,
             vchimage: imageUrl.secure_url,
             roleid,
             intcodestudent,

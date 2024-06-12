@@ -1,9 +1,12 @@
+import { UsersModel } from "../model/postgresql/user.js";
 import { validateLessor, validatePartialLessor } from "../schemas/lessor.js"
+import { EmailService } from '../server/email.js'
 import bcrypt from 'bcrypt'
 
 export class LessorController {
     constructor({ lessorModel }) {
         this.lessorModel = lessorModel
+        this.EmailService = new EmailService();
     }
 
     getAll = async (req, res, next) => {
@@ -36,12 +39,19 @@ export class LessorController {
         const hashedPassword = await bcrypt.hash(result.data.vchpassword, salt);
         result.data.vchpassword = hashedPassword;
 
-        await this.lessorModel.create({ input: result.data })
-            .then(newLessor => {
-                if (newLessor === false) return res.status(409).json({ message: 'Email already exists' })
-                return res.status(201).json(newLessor)
-            })
-            .catch(next);
+        try {
+            const newLessor = await this.lessorModel.create({ input: result.data });
+            if (newLessor === false) return res.status(409).json({ message: 'Email already exists' });
+            
+            const token = await this.EmailService.generarTokenVerification();
+            // Save token in database and send email
+            await UsersModel.saveToken({ verify: { usuarioid: newLessor.usuarioid, vchtoken: token } })
+            await this.EmailService.sendEmailVerificate(newLessor.vchname, newLessor.vchemail, token);
+
+            return res.status(201).json(newLessor);
+        } catch(err) {
+            next(err)
+        }
     }
 
     delete = async (req, res, next) => {
