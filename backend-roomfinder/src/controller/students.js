@@ -1,9 +1,12 @@
+import { UsersModel } from '../model/postgresql/user.js';
 import { validateStudent, validatePartialStudent } from '../schemas/student.js'
+import { EmailService } from '../server/email.js'
 import bcrypt from 'bcrypt'
 
 export class StudentController {
     constructor({ studentModel }) {
         this.studentModel = studentModel
+        this.EmailService = new EmailService();
     }
 
     getAll = async (req, res, next) => {
@@ -26,7 +29,6 @@ export class StudentController {
     }
 
     create = async (req, res, next) => {
-        console.log(req.body)
         const result = validateStudent(req.body)
         if (result.error) {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
@@ -36,12 +38,19 @@ export class StudentController {
         const hashedPassword = await bcrypt.hash(result.data.vchpassword, salt);
         result.data.vchpassword = hashedPassword;
 
-        await this.studentModel.create({ input: result.data })
-            .then(newStudent => {
-                if (newStudent === false) return res.status(409).json({ message: 'Email already exists' })
-                return res.status(201).json(newStudent)
-            })
-            .catch(next); // Catch the error
+        try {
+            const newStudent = await this.studentModel.create({ input: result.data });
+            if (newStudent === false) return res.status(409).json({ message: 'Email already exists' });
+
+            const token = await this.EmailService.generarTokenVerification();
+            // Save token in database and send email
+            await UsersModel.saveToken({ verify: { usuarioid: newStudent.usuarioid, vchtoken: token } })
+            await this.EmailService.sendEmailVerificate(newStudent.vchname, newStudent.vchemail, token);
+
+            return res.status(201).json(newStudent)
+        } catch (err) {
+            next(err);
+        }
     }
 
     delete = async (req, res, next) => {
