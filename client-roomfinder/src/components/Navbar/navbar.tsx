@@ -17,7 +17,7 @@ function Navbar({
 
     return (
         <>
-            <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-950 dark:border-gray-900 sticky top-0 z-50 min-h-[73px]">
+            <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-900 sticky top-0 z-50 min-h-[73px]">
                 <div className="max-w-screen-2xl mx-auto p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center h-[40px]">
@@ -30,7 +30,7 @@ function Navbar({
                             {session ? (
                                 <DropdownUser />
                             ) : (
-                                <Button as={LinkUI} href="/register" size="sm" color="primary" variant="bordered" className="font-normal">
+                                <Button as={LinkUI} href="/users/signup" size="sm" color="primary" variant="bordered" className="font-normal">
                                     Registrar
                                 </Button>
                             )
@@ -70,10 +70,10 @@ function Navbar({
                                 <DropdownUser />
                             ) : (
                                 <div className="hidden md:flex items-center space-x-2">
-                                    <Button as={LinkUI} href="/register" size='sm' color="primary" variant="bordered" className="font-normal">
+                                    <Button as={LinkUI} href="/users/signup" size='sm' color="primary" variant="bordered" className="font-normal">
                                         Registrar
                                     </Button>
-                                    <Button as={LinkUI} href="/login" size='sm' color="primary" variant="solid" className="font-normal">
+                                    <Button as={LinkUI} href="/users/login" size='sm' color="primary" variant="solid" className="font-normal">
                                         Iniciar sesión
                                     </Button>
                                 </div>
