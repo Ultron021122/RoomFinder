@@ -482,7 +482,7 @@ const Registrar = () => {
                         :
                         <div className="h-[calc(100vh-73px)] ">
                             <div className="flex flex-col items-center px-6 py-8 mx-auto lg:py-0">
-                                <div className="w-full my-5 bg-white rounded-lg shadow dark:border sm:max-w-lg xl:p-0 dark:bg-gray-900 dark:border-gray-800">
+                                <div className="w-full my-5 bg-white rounded-lg shadow dark:border sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                             Registrar Usuario
@@ -823,7 +823,7 @@ const Registrar = () => {
                                                 Registrar
                                             </Button>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                ¿Ya tienes una cuenta? <Link href='/login' className="text-sky-600 hover:underline dark:text-sky-500">Ingresar</Link>
+                                                ¿Ya tienes una cuenta? <Link href='/users/login' className="text-sky-600 hover:underline dark:text-sky-500">Ingresar</Link>
                                             </p>
                                         </form>
                                     </div>
