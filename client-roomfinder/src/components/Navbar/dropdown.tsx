@@ -36,7 +36,7 @@ const DropdownUser = () => {
                             isBordered: true,
                             color: "primary",
                             classNames: {
-                                base: "ring-offset-gray-950 mr-1"
+                                base: "ring-offset-gray-900 mr-1"
                             },
                             src: `${user.vchimage}`
                         }}

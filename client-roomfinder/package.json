@@ -20,7 +20,7 @@
     "@nextui-org/react": "^2.2.10",
     "@types/react-leaflet": "^3.0.0",
     "@vercel/speed-insights": "^1.0.10",
-    "axios": "^1.6.8",
+    "axios": "^1.7.2",
     "cloudinary": "^2.1.0",
     "framer-motion": "^11.0.24",
     "javascript-time-ago": "^2.5.10",
