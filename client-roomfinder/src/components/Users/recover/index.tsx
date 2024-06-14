@@ -56,7 +56,7 @@ function Recover() {
         const data: RecoverUser = {
             vchemail: recoverUser.vchemail
         };
-        
+
         try {
             const response = await axios.post('/api/users/recover', data);
             setIsLoading(false);
@@ -113,11 +113,16 @@ function Recover() {
                             </div>
                             :
                             <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[calc(100vh-73px)] lg:py-0">
-                                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-900 dark:border-gray-800">
+                                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                                            Recuperar cuenta
-                                        </h1>
+                                        <div>
+                                            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                                                Recuperar cuenta
+                                            </h1>
+                                            <p className="mt-2 font-light text-small text-gray-500 dark:text-gray-400">
+                                                Te enviaremos instrucciones para restablecer tu contraseña.
+                                            </p>
+                                        </div>
                                         <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
                                             <div className="relative z-0 w-full mb-5 group">
                                                 <input
