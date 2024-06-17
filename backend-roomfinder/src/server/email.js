@@ -224,7 +224,7 @@ export class EmailService {
                         </div>
                         <div class="content">
                             <p>Hola ${vchname},<br>Oprime el siguiente botón para poder recuperar tu cuenta:</p>
-                            <a href="${token}" class="button" style="display: inline-block; padding: 15px 25px; font-size: 16px; color: #ffffff; background-color: #3b82f6; border-radius: 5px; text-decoration: none; font-weight: 500; margin-top: 20px;">Recuperar cuenta</a>
+                            <a href="${URL_FRONTEND + '/users/recoverAccount?token=' + token}" class="button" style="display: inline-block; padding: 15px 25px; font-size: 16px; color: #ffffff; background-color: #3b82f6; border-radius: 5px; text-decoration: none; font-weight: 500; margin-top: 20px;">Recuperar cuenta</a>
                             <p>Si no solicitaste este correo, por favor ignóralo.</p>
                         </div>
                         <div class="footer">
