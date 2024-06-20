@@ -6,6 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 
 interface CardOwnerProps {
     id: number;
@@ -41,7 +42,7 @@ export const CardOwner = ({ id, title, description, image }: CardOwnerProps) => 
         <Card
             sx={{
                 maxWidth: '100%', // Hacer que la tarjeta sea responsiva
-                backgroundColor: darkMode ? '#111827' : '#fff',
+                backgroundColor: darkMode ? '#1f2937' : '#fff',
                 color: darkMode ? '#fff' : '#111827'
             }}
         >
@@ -61,22 +62,24 @@ export const CardOwner = ({ id, title, description, image }: CardOwnerProps) => 
                         {description}
                     </Typography>
                 </CardContent>
-            </CardActionArea>
-            <CardActions
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center'
-                }}
-            >
-                <Button
-                    color="primary"
-                    variant='outlined'
-                    href={`/owner/${id}`}
-                    sx={{ width: '100%' }}
+                <CardActions
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'left',
+                        marginBottom: '.5rem'
+                    }}
                 >
-                    Ver más
-                </Button>
-            </CardActions>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        href={`/owner/${id}`}
+                        startIcon={<InfoIcon />}
+                        sx={{ textTransform: 'none', fontSize: '1rem', margin: '0 .5rem' }}
+                    >
+                        Más información
+                    </Button>
+                </CardActions>
+            </CardActionArea>
         </Card>
     );
 }

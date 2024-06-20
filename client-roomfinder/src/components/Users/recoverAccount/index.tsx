@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { patterns } from '@/utils/constants';
+import Form from './form';
 
 export const RecoverComponent = ({ token }: { token: string }) => {
     const router = useRouter();
@@ -13,8 +14,9 @@ export const RecoverComponent = ({ token }: { token: string }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`/api/users/verifyToken?token=${token}`);
+                const response = await fetch(`/api/users/recover/${token}`);
                 const data = await response.json();
+                console.log('respuesta: ', data);
                 setMessage(data.message);
                 setIsLoading(false);
             } catch (error) {
@@ -31,12 +33,9 @@ export const RecoverComponent = ({ token }: { token: string }) => {
     if (isLoading) return <p>Cargando...</p>;
 
     return (
-        <section className="bg-gray-50 dark:bg-gray-900">
-            <div className='h-[calc(100vh-73px)] text-white'>
-                <h1>Verifying...</h1>
-                <p>Token: {token}</p>
-            </div>
-        </section>
+        <>
+            <Form token={token} />
+        </>
     );
 };
 
