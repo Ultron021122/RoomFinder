@@ -106,13 +106,13 @@ function Recover() {
         <>
             <section className="bg-gray-50 dark:bg-gray-900">
                 <PerfectScrollbar>
-                    <div className="h-[calc(100vh-73px)]">
+                    <div className="h-[100vh]">
                         {isLoading ?
-                            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[calc(100vh-73px)] lg:py-0">
+                            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
                                 <Spinner />
                             </div>
                             :
-                            <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[calc(100vh-73px)] lg:py-0">
+                            <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
                                 <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                         <div>
@@ -152,7 +152,7 @@ function Recover() {
                                                 Enviar correo
                                             </Button>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                ¿No tienes una cuenta? <Link href='/register' className="text-sky-600 hover:underline dark:text-sky-500">Crear una cuenta</Link>
+                                                ¿No tienes una cuenta? <Link href='/users/signup' className="text-sky-600 hover:underline dark:text-sky-500">Crear una cuenta</Link>
                                             </p>
                                         </form>
                                     </div>
