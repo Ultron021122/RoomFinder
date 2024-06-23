@@ -1,40 +1,103 @@
 'use client';
 
+import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { patterns } from '@/utils/constants';
-import Form from './form';
+import { toast, Bounce, Slide } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import Form from '@/components/Users/recoverAccount/form';
+import { Spinner } from "@nextui-org/react";
 
 export const RecoverComponent = ({ token }: { token: string }) => {
     const router = useRouter();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [errorSystem, setErrorSystem] = useState<string | null>(null);
     const [message, setMessage] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsLoading(true);
+
             try {
-                const response = await fetch(`/api/users/recover/${token}`);
-                const data = await response.json();
-                console.log('respuesta: ', data);
-                setMessage(data.message);
+                const response = await axios.get(`/api/users/recover/${token}`);
                 setIsLoading(false);
-            } catch (error) {
-                console.error(error);
-                router.push('/404');
+
+                if (response.status === 200) {
+                    toast.success(response.data.message.message, {
+                        position: "bottom-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Slide,
+                    });
+                    //router.push('/users/login');
+                } else {
+                    setErrorSystem(response.data.message.message);
+                }
+            } catch (Error: string | any) {
+                setErrorSystem(Error.response.data.message);
+                toast.error(Error.response.data.message, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
+            } finally {
+                setIsLoading(false);
             }
         };
 
-        if (patterns.uuidv4.test(token)) fetchData();
-        else router.push('/404');
-
+        if (patterns.uuidv4.test(token)) {
+            fetchData();
+        }
+        else {
+            setIsLoading(false);
+            setErrorSystem('Token inválido');
+            router.push('/404');
+        }
     }, [token, router]);
 
-    if (isLoading) return <p>Cargando...</p>;
+    // Errores
+    useEffect(() => {
+        if (errorSystem) {
+            toast.error(errorSystem, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        }
+    }, [errorSystem]);
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                <Spinner />
+            </div>
+        );
+    }
 
     return (
         <>
-            <Form token={token} />
+            <div className="flex flex-col min-h-[100vh] justify-center items-center mx-auto">
+                <Form token={token} />
+            </div>
         </>
     );
 };
