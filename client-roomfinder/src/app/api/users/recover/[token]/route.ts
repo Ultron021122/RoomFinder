@@ -1,8 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import axios from 'axios';
 
-export async function GET({ params }: { params: { token: string } }) {
-    const token = params.token;
+export async function GET(req: NextRequest) {
+    // Obtener la ruta actual
+    const pathname = req.nextUrl.pathname;
+    const token = pathname.split('/').pop();
     try {
         const response = await axios.get(`${process.env.REST_URL}/recovery/token/${token}`);
         return NextResponse.json(
