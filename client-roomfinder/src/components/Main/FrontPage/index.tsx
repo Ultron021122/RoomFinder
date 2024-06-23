@@ -1,8 +1,10 @@
+import { images } from '@/utils/constants';
+
 export default function FrontPage() {
     return (
         <>
-            <section className="bg-white dark:bg-gray-900 min-h-[100vh]">
-                <div className="pb-8 px-4 mx-auto max-w-screen-xl text-center lg:pb-16 lg:px-12 pt-[85px]">
+            <section className="flex flex-col justify-center items-center min-h-[100vh] bg-cover bg-no-repeat bg-center bg-black bg-opacity-30 dark:bg-opacity-45 bg-blend-darken" style={{ backgroundImage: `url(${images[0].url})` }} >
+                <div className="px-4 mx-auto max-w-screen-xl text-center lg:px-12">
                     <a href="#" className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700" role="alert">
                         <span className="text-xs bg-primary-600 rounded-full text-white px-4 py-1.5 mr-3">Nuevo</span> <span className="text-sm font-medium">¡Nuevas habitaciones disponibles! Descúbrelo</span>
                         <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
@@ -21,7 +23,7 @@ export default function FrontPage() {
                     </div>
                     <div className="px-4 mx-auto text-center md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl">
                         <span className="font-semibold text-gray-400 uppercase">Hecho con</span>
-                        <div className="flex flex-wrap justify-center items-center mt-8 text-gray-500 sm:justify-between">
+                        <div className="flex flex-wrap justify-center items-center mt-8 sm:justify-between text-blue-600 bg-gray-800 bg-opacity-50">
                             <a href="#" className="mr-5 mb-5 lg:mb-0 hover:text-gray-800 dark:hover:text-gray-400">
                                 <svg className="h-8" viewBox="0 0 132 29" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M39.4555 5.17846C38.9976 3.47767 37.6566 2.13667 35.9558 1.67876C32.8486 0.828369 20.4198 0.828369 20.4198 0.828369C20.4198 0.828369 7.99099 0.828369 4.88379 1.64606C3.21571 2.10396 1.842 3.47767 1.38409 5.17846C0.566406 8.28567 0.566406 14.729 0.566406 14.729C0.566406 14.729 0.566406 21.2051 1.38409 24.2796C1.842 25.9804 3.183 27.3214 4.88379 27.7793C8.0237 28.6297 20.4198 28.6297 20.4198 28.6297C20.4198 28.6297 32.8486 28.6297 35.9558 27.812C37.6566 27.3541 38.9976 26.0131 39.4555 24.3123C40.2732 21.2051 40.2732 14.7618 40.2732 14.7618C40.2732 14.7618 40.3059 8.28567 39.4555 5.17846Z" fill="currentColor" />

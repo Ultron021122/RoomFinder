@@ -89,7 +89,7 @@ const Registrar = () => {
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
-                            draggable: true,
+                            draggable: false,
                             progress: undefined,
                             theme: "colored",
                             transition: Slide,
@@ -99,11 +99,7 @@ const Registrar = () => {
                         setErrorSystem(response.data.message);
                     }
                 } catch (Error: any) {
-                    if (Error.response?.status == 400) {
-                        setErrorSystem(Error.response?.data.message);
-                    } else {
-                        setErrorSystem(Error.response?.data.message);
-                    }
+                    setErrorSystem(Error.response?.data.message);
                 } finally {
                     setIsLoading(false);
                 }
