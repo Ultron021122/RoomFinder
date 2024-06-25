@@ -42,7 +42,7 @@ export const RecoverComponent = ({ token }: { token: string }) => {
                 }
             } catch (Error: string | any) {
                 setErrorSystem(Error.response.data.message);
-                toast.error(Error.response.data.message, {
+                toast.error(errorSystem || 'Ocurrio un error', {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -53,6 +53,7 @@ export const RecoverComponent = ({ token }: { token: string }) => {
                     theme: "colored",
                     transition: Bounce,
                 });
+                //router.push('/users/login')
             } finally {
                 setIsLoading(false);
             }
@@ -64,7 +65,7 @@ export const RecoverComponent = ({ token }: { token: string }) => {
         else {
             setIsLoading(false);
             setErrorSystem('Token inválido');
-            router.push('/404');
+            router.push('/not-found');
         }
     }, [token, router]);
 
