@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     const pathname = req.nextUrl.pathname;
     const token = pathname.split('/').pop();
+    console.log('token:', token);
     const { vchpassword, vchconfirm_password } = await req.json();
 
     try {
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
         const statusMessageMap: Record<number, { message: string }> = {
             409: { message: 'El correo ya está registrado' },
             400: { message: error.message },
-            0: { message: 'Error al crear el estudiante' },
+            0: { message: 'Connection error' },
         };
 
         const message = statusMessageMap[error.response?.status] || statusMessageMap[0];

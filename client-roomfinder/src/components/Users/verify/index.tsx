@@ -6,14 +6,14 @@ import { useEffect, useState } from 'react';
 import { patterns } from '@/utils/constants';
 import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import Form from '@/components/Users/recoverAccount/form';
 import { Spinner } from "@nextui-org/react";
 
-export const RecoverComponent = ({ token }: { token: string }) => {
+export const VerifyComponent = ({ token }: { token: string }) => {
     const router = useRouter();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
+    const [message, setMessage] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -74,21 +74,16 @@ export const RecoverComponent = ({ token }: { token: string }) => {
         }
     }, [errorSystem]);
 
-    if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
-                <Spinner />
-            </div>
-        );
-    }
 
     return (
-        <>
-            <div className="flex flex-col min-h-[100vh] justify-center items-center mx-auto">
-                <Form token={token} />
-            </div>
-        </>
+        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+            {isLoading ?
+                <Spinner />
+                :
+                <h3> Cuenta Verificada</h3>
+            }
+        </div>
     );
 };
 
-export default RecoverComponent;
+export default VerifyComponent;
