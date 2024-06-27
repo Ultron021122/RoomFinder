@@ -57,7 +57,7 @@ export class UserController {
             const token = await this.EmailService.generarTokenVerification();
             // Save token in database and send email
             await this.userModel.saveToken({ verify: { usuarioid: newUser.usuarioid, vchtoken: token } })
-            await this.EmailService.sendEmailVerificate(newUser.vchname, newUser.vchemail, token);
+            await this.EmailService.sendEmailVerificate( newUser.usuarioid, newUser.vchname, newUser.vchemail, token);
 
             return res.status(201).json(newUser);
         } catch (err) {
