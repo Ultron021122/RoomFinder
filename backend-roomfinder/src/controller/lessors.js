@@ -46,7 +46,7 @@ export class LessorController {
             const token = await this.EmailService.generarTokenVerification();
             // Save token in database and send email
             await UsersModel.saveToken({ verify: { usuarioid: newLessor.usuarioid, vchtoken: token } })
-            await this.EmailService.sendEmailVerificate(newLessor.vchname, newLessor.vchemail, token);
+            await this.EmailService.sendEmailVerificate(newLessor.usuarioid, newLessor.vchname, newLessor.vchemail, token);
 
             return res.status(201).json(newLessor);
         } catch(err) {

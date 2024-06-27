@@ -26,7 +26,7 @@ export class EmailService {
         return token;
     }
 
-    async sendEmailVerificate(vchname, vchemail, token) {
+    async sendEmailVerificate(usuarioid, vchname, vchemail, token) {
         try {
             const email = vchemail;
             const info = {
@@ -45,7 +45,7 @@ export class EmailService {
                         <title>Verificación de correo</title>
                         <style>
                             body {
-                                font-family: "DM Sans", sans-serif;
+                                font-family: 'DM Sans', sans-serif;
                                 background-color: #f4f4f7;
                                 margin: 0;
                                 padding: 0;
@@ -59,6 +59,7 @@ export class EmailService {
                                 padding: 20px;
                                 border-radius: 8px;
                                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                                color: #333333;
                             }
                             .header {
                                 background-color: #3b82f6;
@@ -70,6 +71,7 @@ export class EmailService {
                             .header h1 {
                                 margin: 0;
                                 font-size: 24px;
+                                font-weight: 700;
                             }
                             .content {
                                 padding: 20px;
@@ -77,17 +79,21 @@ export class EmailService {
                             }
                             .content p {
                                 font-size: 16px;
-                                color: #333333;
+                                line-height: 1.5;
+                                margin: 0 0 20px;
                             }
-                            .content .token {
+                            .button {
                                 display: inline-block;
-                                background-color: #f0f0f0;
-                                padding: 10px 20px;
-                                font-size: 20px;
-                                font-weight: bold;
-                                letter-spacing: 1px;
-                                border-radius: 4px;
-                                margin: 20px 0;
+                                padding: 15px 25px;
+                                font-size: 16px;
+                                color: #ffffff;
+                                background-color: #3b82f6;
+                                border-radius: 5px;
+                                text-decoration: none;
+                                font-weight: 500;
+                            }
+                            .button:hover {
+                                background-color: #335bcb;
                             }
                             .footer {
                                 text-align: center;
@@ -107,12 +113,11 @@ export class EmailService {
                     <body>
                         <div class="email-container">
                             <div class="header">
-                                <h1>Verificación de correo</h1>
+                                <h1>Verificación de cuenta</h1>
                             </div>
                             <div class="content">
-                                <p>Hola ${vchname},</p>
-                                <p>Gracias por registrarte. Por favor, utiliza el siguiente código para verificar tu dirección de correo electrónico:</p>
-                                <div class="token">${token}</div>
+                                <p>Hola ${vchname},<br>Oprime el siguiente botón para poder verificar tu cuenta:</p>
+                                <a href="${process.env.URL_FRONTEND + '/users/verify?ui=' + usuarioid + '&token=' + token}" class="button" style="display: inline-block; padding: 15px 25px; font-size: 16px; color: #ffffff; background-color: #3b82f6; border-radius: 5px; text-decoration: none; font-weight: 500; margin-top: 20px;">Verificar cuenta</a>
                                 <p>Si no solicitaste este correo, por favor ignóralo.</p>
                             </div>
                             <div class="footer">
@@ -224,7 +229,7 @@ export class EmailService {
                         </div>
                         <div class="content">
                             <p>Hola ${vchname},<br>Oprime el siguiente botón para poder recuperar tu cuenta:</p>
-                            <a href="${URL_FRONTEND + '/users/recoverAccount?token=' + token}" class="button" style="display: inline-block; padding: 15px 25px; font-size: 16px; color: #ffffff; background-color: #3b82f6; border-radius: 5px; text-decoration: none; font-weight: 500; margin-top: 20px;">Recuperar cuenta</a>
+                            <a href="${process.env.URL_FRONTEND + '/users/recoverAccount?token=' + token}" class="button" style="display: inline-block; padding: 15px 25px; font-size: 16px; color: #ffffff; background-color: #3b82f6; border-radius: 5px; text-decoration: none; font-weight: 500; margin-top: 20px;">Recuperar cuenta</a>
                             <p>Si no solicitaste este correo, por favor ignóralo.</p>
                         </div>
                         <div class="footer">
