@@ -4,7 +4,8 @@ import axios from 'axios';
 export async function GET(req: NextRequest) {
     // Obtener la ruta actual
     const pathname = req.nextUrl.pathname;
-    const token = pathname.split('/').pop();
+    const getValues = pathname.split('/');
+    const token = getValues.pop();
     try {
         const response = await axios.get(`${process.env.REST_URL}/recovery/token/${token}`);
         return NextResponse.json(
@@ -29,7 +30,6 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     const pathname = req.nextUrl.pathname;
     const token = pathname.split('/').pop();
-    console.log('token:', token);
     const { vchpassword, vchconfirm_password } = await req.json();
 
     try {

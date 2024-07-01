@@ -12,7 +12,7 @@ export default function Profile() {
     return (
         <>
             <PerfectScrollbar>
-                <div className="h-[calc(100vh-73px)] max-w-screen-2xl mx-auto">
+                <div className="h-[100vh] max-w-screen-2xl mx-auto">
                     <div className="container mx-auto p-2">
                         <h1 className="font-bold text-3xl dark:text-gray-200 p-2">Perfil de Usuario</h1>
                         <Divider className='bg-neutral-400 dark:bg-gray-500 my-2' />

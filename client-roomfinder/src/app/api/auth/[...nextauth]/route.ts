@@ -20,13 +20,15 @@ const handler = NextAuth({
                         body: JSON.stringify(credentials),
                     })
 
-                    if (userFound.status === 400) {
+                    if (userFound.status === 401) {
+                        throw new Error("Credenciales incorrectas. Por favor, inténtelo de nuevo.");
+                    } if (userFound.status === 400) {
                         const error = await userFound.json();
                         throw new Error(error?.message);
                     };
-                    if (userFound.status === 401) {
-                        throw new Error("Credenciales incorrectas. Por favor, inténtelo de nuevo.");
-                    }
+                    if(userFound.ok === false) {
+                        throw new Error("Internal Server Error");
+                    } 
                     return userFound.json();
                 } catch (error) {
                     if (error instanceof Error) {
