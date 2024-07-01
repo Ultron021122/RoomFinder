@@ -1,5 +1,3 @@
-import { patterns } from '@/utils/constants';
-import router from 'next/router';
 import { Metadata } from 'next';
 import VerifyComponent from '@/components/Users/verify';
 
@@ -8,12 +6,12 @@ export const metadata: Metadata = {
 };
 
 export default function VerifyPage({ searchParams }: { searchParams: { [token: string]: string } }) {
-    const { token } = searchParams;
+    const { ui, token } = searchParams;
+    const usuarioidValue = ui ? ui : '';
     const tokenValue = token ? token : '';
-
     return (
         <>
-            <VerifyComponent token={tokenValue} />
+            <VerifyComponent usuarioid={parseInt(usuarioidValue, 10)} token={tokenValue} />
         </>
     )
 }

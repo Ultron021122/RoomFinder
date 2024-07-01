@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function NotFound() {
+const NotFound = () => {
     return (
         <section className="bg-white dark:bg-gray-900 h-[100vh]">
             <div className="flex flex-col items-center justify-center px-6 py-8 h-[100vh] lg:py-0 mx-auto max-w-screen-xl">
@@ -14,3 +14,5 @@ export default function NotFound() {
         </section>
     );
 }
+
+export default NotFound;
