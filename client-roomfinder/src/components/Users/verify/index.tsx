@@ -8,7 +8,7 @@ import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Spinner } from "@nextui-org/react";
 
-export const VerifyComponent = ({ token }: { token: string }) => {
+export const VerifyComponent = ({ usuarioid, token }: { usuarioid: number, token: string }) => {
     const router = useRouter();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -20,7 +20,7 @@ export const VerifyComponent = ({ token }: { token: string }) => {
             setIsLoading(true);
 
             try {
-                const response = await axios.get(`/api/users/recover/${token}`);
+                const response = await axios.get(`/api/users/verify/${usuarioid}/${token}`);
                 setIsLoading(false);
 
                 if (response.status === 200) {
@@ -35,25 +35,30 @@ export const VerifyComponent = ({ token }: { token: string }) => {
                         theme: "colored",
                         transition: Slide,
                     });
-                    //router.push('/users/login');
+                    router.push('/users/login');
                 } else {
                     setErrorSystem(response.data.message.message);
                 }
             } catch (Error: string | any) {
-                setErrorSystem(Error.response.data.message.message);
+                if (Error.response.data.message.message) {
+                    setErrorSystem(Error.response.data.message.message);
+                } else {
+                    setErrorSystem('Error inesperado');
+                }
                 //router.push('/users/login')
             } finally {
                 setIsLoading(false);
             }
         };
 
-        if (patterns.uuidv4.test(token)) {
+        if (patterns.uuidv4.test(token) && usuarioid > 0) {
+            console.log(`usuarioid: ${usuarioid} token: ${token}`);
             fetchData();
         }
         else {
             setIsLoading(false);
-            setErrorSystem('Token inválido');
-            router.push('/not-found');
+            setErrorSystem('Verificación no válida');
+            router.push('/');
         }
     }, [token, router]);
 
