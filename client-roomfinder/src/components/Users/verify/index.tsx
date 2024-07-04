@@ -13,6 +13,7 @@ export const VerifyComponent = ({ usuarioid, token }: { usuarioid: number, token
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
+    const [flag, setFlag] = useState<boolean>(false);
     const [message, setMessage] = useState<string>('');
 
     useEffect(() => {
@@ -45,22 +46,23 @@ export const VerifyComponent = ({ usuarioid, token }: { usuarioid: number, token
                 } else {
                     setErrorSystem('Error inesperado');
                 }
-                //router.push('/users/login')
+                router.push('/users/login')
             } finally {
                 setIsLoading(false);
             }
         };
 
-        if (patterns.uuidv4.test(token) && usuarioid > 0) {
+        if (patterns.uuidv4.test(token) && usuarioid > 0 && !flag) {
             console.log(`usuarioid: ${usuarioid} token: ${token}`);
+            setFlag(true);
             fetchData();
         }
-        else {
+        else if (!flag){
             setIsLoading(false);
             setErrorSystem('Verificación no válida');
             router.push('/');
         }
-    }, [token, router]);
+    }, [token, usuarioid, flag, router]);
 
     // Errores
     useEffect(() => {
