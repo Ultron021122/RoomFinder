@@ -16,7 +16,7 @@ export default function Messages() {
     <>
       <section className="flex">
         <div className="">
-          <Sidebar>
+          <Sidebar expanded={true} >
             <SidebarItem
               icon={<LayoutDashboard size={20} />}
               text="Dashboard"
