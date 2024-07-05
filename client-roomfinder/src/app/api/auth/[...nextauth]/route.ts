@@ -26,9 +26,9 @@ const handler = NextAuth({
                         const error = await userFound.json();
                         throw new Error(error?.message);
                     };
-                    if(userFound.ok === false) {
+                    if (userFound.ok === false) {
                         throw new Error("Internal Server Error");
-                    } 
+                    }
                     return userFound.json();
                 } catch (error) {
                     if (error instanceof Error) {
@@ -56,6 +56,11 @@ const handler = NextAuth({
         async session({ session, token }) {
             session.user = token.user as any;
             return session;
+        },
+    },
+    events: {
+        signOut: async (message) => {
+            console.log("signOut", message);
         },
     },
 });

@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 // Estilos de algunos componentes
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import ShowData from "./data";
+import ShowData from "./showdata";
 
 export default function Profile() {
     const { data: session } = useSession();
@@ -31,8 +31,8 @@ export default function Profile() {
     return (
         <>
             <PerfectScrollbar>
-                <div className="h-[100vh] max-w-screen-2xl mx-auto">
-                    <div className="container mx-auto p-2 pt-[78px]">
+                <div className="h-full max-w-screen-2xl mx-auto">
+                    <div className="container mx-auto p-2">
                         <h1 className="font-bold text-3xl dark:text-gray-200 p-2">Perfil de Usuario</h1>
                         <Divider className='bg-neutral-400 dark:bg-gray-500' />
                         <ShowData userData={userData} />
