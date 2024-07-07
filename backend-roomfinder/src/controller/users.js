@@ -1,3 +1,4 @@
+import { validatePartialSession } from '../schemas/session.js';
 import { validateUser, validatePartialUser } from '../schemas/user.js'
 import { EmailService } from '../server/email.js'
 import bcrypt from 'bcrypt'
@@ -111,8 +112,12 @@ export class UserController {
     }
 
     logout = async (req, res, next) => {
-        const { sessionid } = req.params
-        await this.userModel.logout({ sessionid })
+        const result = validatePartialSession(req.body)
+        if (result.error) {
+            return res.status(400).json({ error: JSON.parse(result.error.message) })
+        }
+        console.log('Logout sessionid', result.data)
+        await this.userModel.logout({ sessionid: result.data.sessionid })
             .then(logout => {
                 if (logout) return res.json({ message: 'User logged out' })
                 return res.status(404).json({ message: 'Session not found' })
