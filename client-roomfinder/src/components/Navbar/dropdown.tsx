@@ -22,7 +22,7 @@ interface DropdownUserProps {
 const DropdownUser = () => {
     const { data: session } = useSession();
     const user = session?.user as DropdownUserProps;
-    const roleName = rolesMapping[user.roleid] || 'Desconocido';
+    const roleName = rolesMapping[user?.roleid] || 'Desconocido';
 
     return (
         <>
