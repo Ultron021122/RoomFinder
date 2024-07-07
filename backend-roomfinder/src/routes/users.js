@@ -159,6 +159,13 @@ export const createUsersRouter = ({ userModel }) => {
         },
         userController.getByUser
     ])
+    /**
+     * @swagger
+     * /api/users/verify/{id}/{token}:
+     *  get:
+     *      summary: Verify user althoug email
+     *      tags: [Users]
+     */
     usersRouter.get('/verify/:id/:token', [
         // Validation
         param('id').isInt().withMessage('id must be an integer'),
@@ -180,19 +187,14 @@ export const createUsersRouter = ({ userModel }) => {
      *      summary: Logout
      *      tags: [Users]
      */
-    usersRouter.get('/logout/:sessionid', [
-        // Validation
-        param('sessionid').isInt().withMessage('sessionid must be an integer'),
-        (req, res, next) => {
-            // Check for errors
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() })
-            }
-            next()
-        },
-        userController.logout
-    ])
+    usersRouter.post('/logout', userController.logout)
+    /**
+     * @swagger
+     * /api/users/forgot:
+     *  post:
+     *      summary: Forgot password
+     *      tags: [Users]
+     */
     usersRouter.post('/forgot', userController.recoveryPassword)
     /**
      * @swagger
