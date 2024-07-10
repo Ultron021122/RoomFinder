@@ -22,7 +22,7 @@ export const RecoverComponent = ({ token }: { token: string }) => {
             try {
                 const response = await axios.get(`/api/users/recover/${token}`);
                 setIsLoading(false);
-
+                console.log('Response:', response.status);
                 if (response.status === 200) {
                     toast.success(response.data.message.message, {
                         position: "bottom-center",
@@ -40,7 +40,7 @@ export const RecoverComponent = ({ token }: { token: string }) => {
                     setErrorSystem(response.data.message.message);
                 }
             } catch (Error: string | any) {
-                setErrorSystem(Error.response.data.message.message);
+                setErrorSystem(Error.response?.data?.message.message);
                 //router.push('/users/login')
             } finally {
                 setIsLoading(false);

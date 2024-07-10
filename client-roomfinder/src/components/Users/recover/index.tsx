@@ -60,7 +60,7 @@ function Recover() {
         try {
             const response = await axios.post('/api/users/recover', data);
             setIsLoading(false);
-            if (response.status === 201) {
+            if (response.status === 200) {
                 toast.success('Email enviado!!!', {
                     position: "bottom-right",
                     autoClose: 5000,
@@ -74,12 +74,13 @@ function Recover() {
                 });
                 reset();
             } else if (response.status === 404) {
-                console.log(response);
+                //console.log(response);
                 setErrorSystem(response.data.message);
             } else {
                 setErrorSystem(response.data.message);
             }
         } catch (Error: any) {
+            console.log('erro?')
             if (Error.response?.status == 400) {
                 setErrorSystem(Error.response?.data.message);
             } else {

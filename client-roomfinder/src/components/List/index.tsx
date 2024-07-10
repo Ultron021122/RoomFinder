@@ -40,12 +40,12 @@ export default function ListItems() {
     return (
         <>
             <PerfectScrollbar className='custom-scrollbar'>
-                <div className='container mx-auto px-4 h-[calc(100vh-113px)]'>
-                    <h1 className="dark:text-white text-3xl font-bold my-10 text-center">
+                <div className='container mx-auto px-4 h-[100vh]'>
+                    <h1 className="dark:text-white text-3xl font-bold py-10 text-center">
                         Arrendadores
                     </h1>
                     {isLoading ?
-                        <div className='flex flex-col items-center justify-center h-[calc(100vh-189px)]'>
+                        <div className='flex flex-col items-center justify-center h-[calc(100vh-40px)]'>
                             <Spinner />
                         </div>
                         :
