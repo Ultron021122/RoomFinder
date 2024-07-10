@@ -3,7 +3,6 @@ import Layout from "@/components/layout";
 import Footer from '@/components/Footer';
 import { images, propertiesHome } from "@/utils/constants";
 import MasonryImageList from "@/components/Imagelist";
-import { Image } from "@nextui-org/react";
 import { CardOwner } from "./Card";
 import Banner from "./Banner";
 import FrontPage from "./FrontPage";

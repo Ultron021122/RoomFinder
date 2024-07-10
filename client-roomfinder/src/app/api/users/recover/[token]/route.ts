@@ -34,12 +34,13 @@ export async function POST(req: NextRequest) {
 
     try {
         const findUser = await axios.get(`${process.env.REST_URL}/recovery/token/${token}`);
-        const usuarioid = findUser
-        const response = await axios.post(`${process.env.REST_URL}/users/${usuarioid}`, {
+        const usuarioid = findUser.data.usuarioid;
+        console.log('Usuario:',usuarioid)
+        const response = await axios.patch(`${process.env.REST_URL}/users/${usuarioid}`, {
             vchpassword
         });
         return NextResponse.json(
-            { data: response.data },
+            { data: response.data, message: 'Contraseña actualizada'},
             { status: 200 }
         );
 
