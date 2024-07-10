@@ -56,12 +56,13 @@ export default function Form({ token }: { token: string }) {
             vchpassword: updatePassword.vchpassword,
             vchconfirmPassword: updatePassword.vchconfirmPassword
         };
-
+        console.log(data)
         try {
             const response = await axios.post(`/api/users/recover/${token}`, data);
             setIsLoading(false);
             if (response.status === 200) {
-                toast.success(response.data.message.message, {
+                console.log(response)
+                toast.success(response.data.message, {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
