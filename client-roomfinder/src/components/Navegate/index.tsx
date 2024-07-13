@@ -2,9 +2,10 @@
 import { Image, Link } from "@nextui-org/react";
 import { usePathname } from 'next/navigation'
 import { useSession } from "next-auth/react";
-import { ChevronFirst, ChevronLast, MoreVertical, Home } from "lucide-react";
+import { ChevronFirst, ChevronLast, MoreVertical, Home, LogOut } from "lucide-react";
 import React, { createContext, useContext, useState } from "react";
 import { rolesMapping } from "@/utils/constants";
+import { shortName } from "@/utils/functions";
 
 interface SidebarUserProps {
   vchname: string;
@@ -34,13 +35,14 @@ export default function Sidebar({ children, expanded }: { children: React.ReactN
           <div
             className={`overflow-hidden transition-all flex items-center ${expanded ? "h-10" : "w-0"}`}
           >
-            <Home size={20} />
-            <span className="ml-2 text-lg font-medium">RoomFinder</span>
+            {/*<Home size={20} />*/}
+            <span className="text-lg font-medium">Regresar atras </span>
           </div>
           <button
             className="p-1.5 rounded-lg bg-gray-50 dark:bg-gray-950 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            {expanded ? <ChevronFirst /> : <ChevronLast />}
+            <LogOut size={20} />
+            {/*expanded ? <ChevronFirst /> : <ChevronLast />*/}
           </button>
         </div>
         <SidebarContext.Provider value={{ expanded }}>
@@ -61,7 +63,13 @@ export default function Sidebar({ children, expanded }: { children: React.ReactN
           >
             <div className="leading-4">
               <h4 className="font-semibold dark:text-gray-300">
-                {user?.vchname + " " + user?.vchpaternalsurname}
+                {
+                  shortName({
+                    vchname: user?.vchname,
+                    vchpaternalsurname: user?.vchpaternalsurname,
+                    vchmaternalsurname: user?.vchmaternalsurname
+                  })
+                }
               </h4>
               <span className="text-xs text-gray-600 dark:text-gray-400">
                 {user?.vchemail}
@@ -101,8 +109,8 @@ export function SidebarItem({
             transition-colors group
             z-50
             ${pathname === url
-          ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 dark:from-indigo-700 dark:to-indigo-800"
-          : "hover:bg-indigo-50 dark:hover:bg-indigo-900"
+          ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 dark:from-blue-700 dark:to-blue-800"
+          : "hover:bg-indigo-50 dark:hover:bg-blue-900"
         }
         `}
     >
@@ -110,7 +118,7 @@ export function SidebarItem({
         href="/"
         className={`
             ${pathname === url
-            ? "text-indigo-800 dark:text-indigo-100"
+            ? "text-blue-800 dark:text-indigo-100"
             : "text-gray-600 dark:text-gray-400"
           }
         `}
@@ -128,7 +136,7 @@ export function SidebarItem({
       {alert && (
         <div
           className={`
-                    absolute right-2 w-2 h-2 rounded bg-indigo-400 dark:bg-blue-400
+                    absolute right-2 w-2 h-2 rounded bg-blue-400 dark:bg-indigo-400
                     ${expanded ? "" : "top-2"}
                     `}
         />
@@ -137,7 +145,7 @@ export function SidebarItem({
         <div
           className={`
                     absolute left-full rounded-md px-2 py-1 ml-6
-                    bg-indigo-100 text-indigo-800 text-sm
+                    bg-indigo-100 text-blue-800 text-sm
                     invisible opacity-20 -translate-x-3 transition-all
                     group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
                     `}
