@@ -1,4 +1,5 @@
 import { Image } from "@nextui-org/react";
+import { getFullName } from "@/utils/functions"
 
 interface UserProps {
     userData: {
@@ -12,14 +13,20 @@ interface UserProps {
     };
 }
 
-
 export const ShowData = ({ userData }: UserProps) => {
     return (
         <div className="container mx-auto p-2">
             <div className="flex flex-col lg:flex-row items-center justify-center w-full my-5">
                 <Image src={userData.vchimage} alt="Imagen de prueba" className="w-auto h-auto max-h-96 rounded-full" />
                 <div className="grid grid-cols-1 gap-2 p-4 leading-normal items-center mx-auto">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-3 dark:text-white">{userData.vchname + ' ' + userData.vchpaternalsurname}</h2>
+                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-3 dark:text-white">
+                        {
+                            getFullName({
+                                vchname: userData.vchname,
+                                vchpaternalsurname: userData.vchpaternalsurname,
+                                vchmaternalsurname: userData.vchmaternalsurname
+                            })}
+                    </h2>
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                         <ul className="max-w-md space-y-0.5 list-none list-inside">
                             <li className="font-semibold dark:text-gray-100">Tipo de usuario: <span className='font-normal dark:text-gray-400'>{userData.vchemail}</span></li>

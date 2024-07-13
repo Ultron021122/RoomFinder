@@ -31,7 +31,7 @@ export default function Profile() {
     return (
         <>
             <PerfectScrollbar>
-                <div className="h-full max-w-screen-2xl mx-auto">
+                <div className="h-full max-w-screen-2xl mx-auto bg-zinc-200 dark:bg-gray-900">
                     <div className="container mx-auto p-2">
                         <h1 className="font-bold text-3xl dark:text-gray-200 p-2">Perfil de Usuario</h1>
                         <Divider className='bg-neutral-400 dark:bg-gray-500' />

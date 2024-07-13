@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { PlusIcon } from "./icon";
 import { useSession, signOut } from "next-auth/react";
 import { rolesMapping } from "@/utils/constants";
+import { shortName } from "@/utils/functions";
 
 interface DropdownUserProps {
     vchname: string;
@@ -77,7 +78,15 @@ const DropdownUser = () => {
                         }}
                     >
                         <DropdownItem isReadOnly key="profile" className="h-14 gap-2" textValue="Pérfil">
-                            <p className="font-semibold text-sm capitalize">{user.vchname + " " + user.vchpaternalsurname}</p>
+                            <p className="font-semibold text-sm capitalize">
+                                {
+                                    shortName({
+                                        vchname: user.vchname,
+                                        vchpaternalsurname: user.vchpaternalsurname,
+                                        vchmaternalsurname: user.vchmaternalsurname
+                                    })
+                                }
+                            </p>
                             <p className="text-small">{user.vchemail}</p>
                         </DropdownItem>
                         <DropdownItem key="dashboard" textValue="Panel de administración">
