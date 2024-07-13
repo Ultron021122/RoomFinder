@@ -7,7 +7,8 @@ interface fullName {
 export const getFullName = ({ vchname = '', vchpaternalsurname = '', vchmaternalsurname = '' }: fullName) => {
     // Validar que los campos no estén vacíos
     if (!vchname.trim() || !vchpaternalsurname.trim() || !vchmaternalsurname.trim()) {
-        throw new Error("Todos los campos deben ser proporcionados y no pueden estar vacíos.");
+        //throw new Error("Todos los campos deben ser proporcionados y no pueden estar vacíos.");
+        return 'Ocurrio un error';
     }
     return `${vchname} ${vchpaternalsurname} ${vchmaternalsurname}`;
 }
