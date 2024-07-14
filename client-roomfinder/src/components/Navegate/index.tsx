@@ -32,18 +32,20 @@ export default function Sidebar({ children, expanded }: { children: React.ReactN
     <aside>
       <nav className="h-full flex-col max-w-max bg-white dark:bg-gray-950 border-r dark:border-gray-900 shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center text-gray-800 dark:text-gray-100">
+          {/*
           <div
             className={`overflow-hidden transition-all flex items-center ${expanded ? "h-10" : "w-0"}`}
           >
-            {/*<Home size={20} />*/}
+             //<Home size={20} />
             <span className="text-lg font-medium">Regresar atras </span>
           </div>
           <button
             className="p-1.5 rounded-lg bg-gray-50 dark:bg-gray-950 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <LogOut size={20} />
-            {/*expanded ? <ChevronFirst /> : <ChevronLast />*/}
+            {/*expanded ? <ChevronFirst /> : <ChevronLast />
           </button>
+          */}
         </div>
         <SidebarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">{children}</ul>
