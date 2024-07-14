@@ -17,7 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
         <PerfectScrollbar>
             <div className="flex flex-col h-[100vh]">
-                <AppBar component="nav" position="static" className="bg-gray-300 text-neutral-950 dark:bg-blue-600 dark:text-gray-100">
+                <AppBar component="nav" position="static" className="bg-gray-300 text-neutral-950 dark:bg-primary dark:text-gray-100">
                     <Toolbar variant="dense">
                         <IconButton
                             edge="start"
@@ -55,7 +55,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <SidebarItem icon={<BarChart3 size={20} />} text="Statistics" url="/dashboard/statistics" alert />
                         <SidebarItem icon={<UserCircle size={20} />} text="Perfil" url="/dashboard/profile" />
                         <SidebarItem icon={<Boxes size={20} />} text="Inventory" url="/dashboard/inventory" />
-                        <SidebarItem icon={<Package size={20} />} text="Orders" url="/dashboard/orders" />
+                        <SidebarItem icon={<Package size={20} />} text="Historial" url="/dashboard/orders" />
                         <SidebarItem icon={<Receipt size={20} />} text="Billings" url="/dashboard/billings" />
                         <hr className="my-3 border-gray-300 dark:border-gray-800" />
                         <SidebarItem icon={<Settings size={20} />} text="Settings" url="/dashboard/settings" />
