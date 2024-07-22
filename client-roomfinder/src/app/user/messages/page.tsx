@@ -15,8 +15,9 @@ export default function Messages() {
   return (
     <>
       <section className="flex">
+        {/*
         <div className="">
-          <Sidebar expanded={true} >
+          <Sidebar expanded={true} onResize={toggleSidebar}>
             <SidebarItem
               icon={<LayoutDashboard size={20} />}
               text="Dashboard"
@@ -33,6 +34,7 @@ export default function Messages() {
             <SidebarItem icon={<LifeBuoy size={20} />} text="Help" url="/dashboard/home" alert />
           </Sidebar>
         </div>
+        */}
         <div className="w-full">
           <MessageComponent />
         </div>

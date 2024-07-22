@@ -3,7 +3,7 @@ import { Image, Link } from "@nextui-org/react";
 import { usePathname } from 'next/navigation'
 import { useSession } from "next-auth/react";
 import { ChevronFirst, ChevronLast, MoreVertical, Home, LogOut } from "lucide-react";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { rolesMapping } from "@/utils/constants";
 import { shortName } from "@/utils/functions";
 
@@ -21,12 +21,27 @@ interface SidebarUserProps {
   roleid: number;
 }
 
+interface SidebarProps {
+  children: React.ReactNode;
+  expanded: boolean;
+  onResize: () => void;
+}
+
 const SidebarContext = createContext({ expanded: false });
-export default function Sidebar({ children, expanded }: { children: React.ReactNode, expanded: boolean }) {
+export default function Sidebar({ children, expanded, onResize }: SidebarProps) {
   //const [expanded, setExpanded] = useState(true);
   const { data: session } = useSession();
   const user = session?.user as SidebarUserProps;
   const roleName = rolesMapping[user?.roleid] || 'Desconocido';
+
+  useEffect(() => {
+    function handleResize(){
+      onResize();
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [onResize]);
 
   return (
     <aside>
@@ -48,7 +63,7 @@ export default function Sidebar({ children, expanded }: { children: React.ReactN
           */}
         </div>
         <SidebarContext.Provider value={{ expanded }}>
-          <ul className="flex-1 px-3">{children}</ul>
+          <ul className="flex-1 px-3 z-30">{children}</ul>
         </SidebarContext.Provider>
         <div className="border-t border-gray-300 dark:border-gray-800 flex p-3">
           <Image
