@@ -5,14 +5,38 @@ import { Box, Button, AppBar, IconButton, Toolbar, Typography, CssBaseline } fro
 import { BarChart3, Boxes, ChevronFirst, ChevronLast, Home, LayoutDashboard, LifeBuoy, MenuIcon, Package, Receipt, Settings, Turtle, UserCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [expanded, setExpanded] = useState(true);
+    const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
     const { data: session } = useSession();
     const pathname = usePathname();
+
+    // Update the window width state
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        // Clean up the event listener
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', handleResize);
+
+            // Clean up the event listener
+            return () => window.removeEventListener('resize', handleResize);
+        }
+    }, []);
+
+    const toggleSidebar = useCallback(() => {
+        if (typeof window !== 'undefined') {
+            setExpanded(window.innerWidth > 640);
+        }
+    }, []);
 
     return (
         <PerfectScrollbar>
@@ -44,8 +68,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         </div>
                     </Toolbar>
                 </AppBar>
-                <div className="flex flex-1">
-                    <Sidebar expanded={expanded}>
+                <div
+                    className="flex flex-1"
+                >
+                    <Sidebar expanded={expanded} onResize={toggleSidebar}>
                         <SidebarItem
                             icon={<LayoutDashboard size={20} />}
                             text="Dashboard"
@@ -61,7 +87,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <SidebarItem icon={<Settings size={20} />} text="Settings" url="/dashboard/settings" />
                         <SidebarItem icon={<LifeBuoy size={20} />} text="Help" url="/dashboard/help" alert />
                     </Sidebar>
-                    <main className="flex-1 p-4">{children}</main>
+                    {/* Render the component main only if the display is major than 640px */
+                        windowWidth > 640 || !expanded ? (
+                            <main className="flex-1 p-4">
+                                {children}
+                            </main>
+                        ) : (
+                            <div className="opacity-50 dark:bg-black w-full h-full">
+
+                            </div>
+                        )
+                    }
                 </div>
             </div>
         </PerfectScrollbar>

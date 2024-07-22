@@ -1,14 +1,30 @@
 'use client';
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { Image } from "@nextui-org/react";
+//import { Image } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { getFullName } from "@/utils/functions"
+import { rolesMapping } from "@/utils/constants";
+import Image from "next/image";
+
+interface UserProfile {
+    vchname: string;
+    vchpaternalsurname: string;
+    vchmaternalsurname: string;
+    vchemail: string;
+    vchimage: string;
+    usuarioid: number;
+    sessionid: number;
+    dtbirthdate: string;
+    bnverified: boolean;
+    bnstatus: boolean;
+    roleid: number;
+}
 
 const Profile = () => {
     const { data: session } = useSession();
-    const user = session?.user;
-    // Estructura de datos predeterminada
+    const user = session?.user as UserProfile;
+    // Data Structure
     const defaultUserData = {
         vchname: '',
         vchpaternalsurname: '',
@@ -25,27 +41,25 @@ const Profile = () => {
         ...(user ?? {}),
     };
 
+    const roleName = rolesMapping[user?.roleid] || 'Desconocido';
+
     return (
-        //<PerfectScrollbar>
         <div className="h-full max-w-screen-2xl mx-auto bg-zinc-200 dark:bg-gray-900">
             <div className="mx-auto">
                 <Breadcrumb pageName="Profile" />
 
-                <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-gray-700 dark:bg-gray-900">
-                    <div className="relative z-20 h-35 md:h-65">
+                <div className="mx-auto overflow-hidden rounded-sm border border-stroke bg-white shadow-md dark:border-gray-950 dark:bg-gray-950">
+                    <div className="relative z-20 h-32 md:h-64">
                         <Image
-                            src={"/images/cover/cover-01.png"}
+                            src={"/images/cover/cover-02.jpg"}
                             alt="profile cover"
-                            className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
-                            style={{
-                                width: "auto",
-                                height: "auto",
-                            }}
+                            className="h-full w-full max-h-64 rounded-tl-xsm rounded-tr-xsm object-cover object-center"
+                            layout="fill"
                         />
-                        <div className="absolute bottom-1 right-1 z-10 xsm:bottom-4 xsm:right-4">
+                        <div className="absolute bottom-1 right-1 z-10 sm:bottom-4 sm:right-4">
                             <label
                                 htmlFor="cover"
-                                className="flex cursor-pointer items-center justify-center gap-2 rounded bg-primary px-2 py-1 text-sm font-medium text-white hover:bg-opacity-80 xsm:px-4"
+                                className="flex cursor-pointer items-center justify-center gap-2 rounded bg-primary sm:px-2 py-1 text-sm font-medium text-white hover:bg-opacity-80 px-4"
                             >
                                 <input
                                     type="file"
@@ -80,9 +94,9 @@ const Profile = () => {
                             </label>
                         </div>
                     </div>
-                    <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
-                        <div className="relative z-30 mx-auto -mt-24 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
-                            <div className="relative drop-shadow-2">
+                    <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-[44px]">
+                        <div className="relative z-30 mx-auto -mt-24 w-full h-full max-h-32 max-w-32 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-h-44 sm:max-w-44 sm:p-3">
+                            <div className="relative drop-shadow">
                                 <Image
                                     src={userData.vchimage}
                                     width={160}
@@ -96,7 +110,7 @@ const Profile = () => {
                                 />
                                 <label
                                     htmlFor="profile"
-                                    className="absolute ring-4 bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
+                                    className="absolute z-10 ring-4 bottom-0 right-0 flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
                                 >
                                     <svg
                                         className="fill-current"
@@ -137,33 +151,33 @@ const Profile = () => {
                                         vchmaternalsurname: userData.vchmaternalsurname
                                     })}
                             </h3>
-                            <p className="font-medium">Ui/Ux Designer</p>
-                            <div className="mx-auto mb-5.5 mt-4.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
-                                <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
+                            <p className="font-medium text-black dark:text-gray-300">{roleName}</p>
+                            <div className="mx-auto mb-[22px] mt-[18px] grid max-w-96 grid-cols-3 rounded-md border border-gray-300 py-2 shadow-sm dark:border-gray-900 dark:bg-gray-900">
+                                <div className="flex sm:flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-gray-900 flex-row">
                                     <span className="font-semibold text-black dark:text-white">
                                         259
                                     </span>
-                                    <span className="text-sm">Posts</span>
+                                    <span className="text-sm dark:text-blue-500">Posts</span>
                                 </div>
-                                <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
+                                <div className="flex sm:flex-col items-center justify-center gap-1 border-r border-gray-300 px-4 dark:border-gray-900 flex-row">
                                     <span className="font-semibold text-black dark:text-white">
                                         129K
                                     </span>
-                                    <span className="text-sm">Followers</span>
+                                    <span className="text-sm dark:text-blue-500">Followers</span>
                                 </div>
-                                <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
+                                <div className="flex sm:flex-col items-center justify-center gap-1 px-4 flex-row">
                                     <span className="font-semibold text-black dark:text-white">
                                         2K
                                     </span>
-                                    <span className="text-sm">Following</span>
+                                    <span className="text-sm dark:text-blue-500">Following</span>
                                 </div>
                             </div>
 
-                            <div className="mx-auto max-w-180">
+                            <div className="mx-auto max-w-[650px]">
                                 <h4 className="font-semibold text-black dark:text-white">
                                     About Me
                                 </h4>
-                                <p className="mt-4.5">
+                                <p className="mt-[18px] dark:text-gray-300 text-small">
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                                     Pellentesque posuere fermentum urna, eu condimentum mauris
                                     tempus ut. Donec fermentum blandit aliquet. Etiam dictum
@@ -172,14 +186,14 @@ const Profile = () => {
                                 </p>
                             </div>
 
-                            <div className="mt-6.5">
-                                <h4 className="mb-3.5 font-medium text-black dark:text-white">
+                            <div className="mt-[26px]">
+                                <h4 className="mb-[14px] font-medium text-black dark:text-white">
                                     Follow me on
                                 </h4>
-                                <div className="flex items-center justify-center gap-3.5">
+                                <div className="flex items-center justify-center gap-[14px]">
                                     <Link
                                         href="#"
-                                        className="hover:text-primary"
+                                        className="hover:text-primary text-gray-400"
                                         aria-label="social-icon"
                                     >
                                         <svg
@@ -205,7 +219,7 @@ const Profile = () => {
                                     </Link>
                                     <Link
                                         href="#"
-                                        className="hover:text-primary"
+                                        className="hover:text-primary text-gray-400"
                                         aria-label="social-icon"
                                     >
                                         <svg
@@ -236,7 +250,7 @@ const Profile = () => {
                                     </Link>
                                     <Link
                                         href="#"
-                                        className="hover:text-primary"
+                                        className="hover:text-primary text-gray-400"
                                         aria-label="social-icon"
                                     >
                                         <svg
@@ -267,7 +281,7 @@ const Profile = () => {
                                     </Link>
                                     <Link
                                         href="#"
-                                        className="hover:text-primary"
+                                        className="hover:text-primary text-gray-400"
                                         aria-label="social-icon"
                                     >
                                         <svg
@@ -293,7 +307,7 @@ const Profile = () => {
                                     </Link>
                                     <Link
                                         href="#"
-                                        className="hover:text-primary"
+                                        className="hover:text-primary text-gray-400"
                                         aria-label="social-icon"
                                     >
                                         <svg
@@ -329,7 +343,6 @@ const Profile = () => {
                 </div>
             </div>
         </div>
-        //</PerfectScrollbar>
     );
 }
 
