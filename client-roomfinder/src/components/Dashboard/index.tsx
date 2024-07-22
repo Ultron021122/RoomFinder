@@ -11,7 +11,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [expanded, setExpanded] = useState(true);
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
     const { data: session } = useSession();
     const pathname = usePathname();
 
@@ -24,11 +24,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         window.addEventListener('resize', handleResize);
 
         // Clean up the event listener
-        return () => window.removeEventListener('resize', handleResize);
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', handleResize);
+
+            // Clean up the event listener
+            return () => window.removeEventListener('resize', handleResize);
+        }
     }, []);
 
     const toggleSidebar = useCallback(() => {
-        setExpanded(window.innerWidth > 640);
+        if (typeof window !== 'undefined') {
+            setExpanded(window.innerWidth > 640);
+        }
     }, []);
 
     return (
