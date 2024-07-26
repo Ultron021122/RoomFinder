@@ -46,7 +46,7 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
   return (
     <aside>
       <nav className="h-full flex-col max-w-max bg-white dark:bg-gray-950 border-r dark:border-gray-900 shadow-sm">
-        <div className="p-4 pb-2 flex justify-between items-center text-gray-800 dark:text-gray-100">
+        <div className="pb-1 flex justify-between items-center text-gray-800 dark:text-gray-100">{/* p-4 */}
           {/*
           <div
             className={`overflow-hidden transition-all flex items-center ${expanded ? "h-10" : "w-0"}`}
@@ -132,7 +132,7 @@ export function SidebarItem({
         `}
     >
       <Link
-        href="/"
+        href={`${url}`}
         className={`
             ${pathname === url
             ? "text-blue-800 dark:text-indigo-100"
