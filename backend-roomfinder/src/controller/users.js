@@ -81,12 +81,13 @@ export class UserController {
         if (!result.success) {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
-
-        if (result.data.password) {
+        console.log('Update user', result.data)
+        if (result.data.vchpassword) {
             const salt = await bcrypt.genSalt(10)
-            const hashedPassword = await bcrypt.hash(result.data.password, salt)
-            result.data.password = hashedPassword
+            const hashedPassword = await bcrypt.hash(result.data.vchpassword, salt)
+            result.data.vchpassword = hashedPassword
         }
+        console.log('Update user', result.data)
         const { id } = req.params
         await this.userModel.update({ id, input: result.data })
             .then(updateUser => {
