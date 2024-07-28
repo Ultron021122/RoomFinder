@@ -9,6 +9,7 @@ const excludedRoutes = [
     '/propiedades',
     '/dashboard/profile',
     '/dashboard/help',
+    '/dashboard/publish',
     '/admin',
     '/prueba'];
 
