@@ -3,43 +3,50 @@ import { LessorsModel } from './lessor.js'
 
 export class PropertiesModel extends Database {
 
-    constructor({ id, lessor_id, type_house, title, description, domicilie, zip, suburb, municipality, state, lat, lgn, availability, price, created_date }) {
+    constructor({ propertyid, lessorid, intnumberrooms, intnumberbathrooms,
+        intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate,
+        intmincontractduration, intmaxcontractduration, decpropertyrating,
+        bnstudyzone, vchbuildingsecurity, vchtransportationaccess,
+        vchpropertyrules, vchdescription, created_at }) {
         super();
-        this.id = id;
-        this.lessor_id = lessor_id;
-        this.type_house = type_house;
-        this.title = title;
-        this.description = description;
-        this.domicilie = domicilie;
-        this.zip = zip;
-        this.suburb = suburb;
-        this.municipality = municipality;
-        this.state = state;
-        this.lat = lat;
-        this.lgn = lgn;
-        this.availability = availability;
-        this.price = price;
-        this.created_date = created_date;
+        this.propertyid = propertyid;
+        this.lessorid = lessorid;
+        this.intnumberrooms = intnumberrooms;
+        this.intnumberbathrooms = intnumberbathrooms;
+        this.intmaxoccupacy = intmaxoccupacy;
+        this.bnfurnished = bnfurnished;
+        this.vchfurnituretype = vchfurnituretype;
+        this.decrentalcost = decrentalcost;
+        this.dtavailabilitydate = dtavailabilitydate;
+        this.intmincontractduration = intmincontractduration;
+        this.intmaxcontractduration = intmaxcontractduration;
+        this.decpropertyrating = decpropertyrating;
+        this.bnstudyzone = bnstudyzone;
+        this.vchbuildingsecurity = vchbuildingsecurity;
+        this.vchtransportationaccess = vchtransportationaccess;
+        this.vchpropertyrules = vchpropertyrules;
+        this.vchdescription = vchdescription;
+        this.created_at = created_at;
     }
 
     static async getAll() {
         const properties = await this.query(
-            "SELECT * FROM estate;"
+            `SELECT * FROM "Usuario"."Propiedades";`
         );
         return properties.map((property) => new PropertiesModel(property));
     }
 
-    static async getByLessor({ lessor_id }) {
+    static async getByLessor({ lessorid }) {
         const properties = await this.query(
-            'SELECT * FROM estate WHERE lessor_id = $1;',
-            [lessor_id]
+            `SELECT * FROM "Usuario"."Propiedades" WHERE lessorid = $1;`,
+            [lessorid]
         );
         return properties.map((property) => new PropertiesModel(property))
     }
 
     static async getById({ id }) {
         const property = await this.query(
-            "SELECT * FROM estate WHERE id = $1;",
+            `SELECT * FROM "Usuario"."Propiedades" WHERE propertyid = $1;`,
             [id]
         );
         return property[0] ? new PropertiesModel(property[0]) : null;
@@ -47,16 +54,20 @@ export class PropertiesModel extends Database {
 
     static async create({ input }) {
         try {
-            const { lessor_id, type_house, title, description, domicilie, zip, suburb, municipality, state, lat, lgn, availability, price } = input
-            const validateLessor = await LessorsModel.getById({ id: lessor_id })
+            const { lessorid, intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
+                intmaxcontractduration, decpropertyrating, bnstudyzone, vchbuildingsecurity, vchtransportationaccess, vchpropertyrules, vchdescription } = input
+            
+            const validateLessor = await LessorsModel.getById({ id: lessorid })
             if (validateLessor === null) return false;
 
             const result = await this.query(
-                'INSERT INTO estate (lessor_id, type_house, title, description, domicilie, zip, suburb, municipality, state, lat, lgn, availability, price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13 ) RETURNING id;',
-                [lessor_id, type_house, title, description, domicilie, zip, suburb, municipality, state, lat, lgn, availability, price]
+                `INSERT INTO "Usuario"."Propiedades" (lessorid, intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
+                    intmaxcontractduration, decpropertyrating, bnstudyzone, vchbuildingsecurity, vchtransportationaccess, vchpropertyrules, vchdescription) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16 ) RETURNING propertyid;`,
+                [lessorid, intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
+                    intmaxcontractduration, decpropertyrating, bnstudyzone, vchbuildingsecurity, vchtransportationaccess, vchpropertyrules, vchdescription]
             );
 
-            const id = result[0].id;
+            const id = result[0].propertyid;
             const newProperty = await this.getById({ id })
 
             return newProperty;
@@ -72,7 +83,7 @@ export class PropertiesModel extends Database {
 
             // Eliminar propiedad
             await this.query(
-                'DELETE FROM estate WHERE id = $1;',
+                'DELETE FROM "Usuario"."Propiedades" WHERE propertyid = $1;',
                 [id]
             )
             return true;
@@ -83,23 +94,28 @@ export class PropertiesModel extends Database {
 
     static async update({ id, input }) {
         try {
-            const { type_house, title, description, domicilie, zip, suburb, municipality, state, lat, lgn, availability, price } = input
-            const property = await this.getById({ id })
+            const { intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
+                intmaxcontractduration, decpropertyrating, bnstudyzone, vchbuildingsecurity, vchtransportationaccess, vchpropertyrules, vchdescription } = input
+            
+                const property = await this.getById({ id })
             if (property === null) return false;
 
             const updateColumns = Object.entries({
-                type_house,
-                title,
-                description,
-                domicilie,
-                zip,
-                suburb,
-                municipality,
-                state,
-                lat,
-                lgn,
-                availability,
-                price
+                intnumberrooms,
+                intnumberbathrooms,
+                intmaxoccupacy,
+                bnfurnished,
+                vchfurnituretype,
+                decrentalcost,
+                dtavailabilitydate,
+                intmincontractduration,
+                intmaxcontractduration,
+                decpropertyrating,
+                bnstudyzone,
+                vchbuildingsecurity,
+                vchtransportationaccess,
+                vchpropertyrules,
+                vchdescription
             })
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
@@ -108,24 +124,27 @@ export class PropertiesModel extends Database {
                 .join(', ');
 
             const updateValues = Object.value({
-                type_house,
-                title,
-                description,
-                domicilie,
-                zip,
-                suburb,
-                municipality,
-                state,
-                lat,
-                lgn,
-                availability,
-                price
+                intnumberrooms,
+                intnumberbathrooms,
+                intmaxoccupacy,
+                bnfurnished,
+                vchfurnituretype,
+                decrentalcost,
+                dtavailabilitydate,
+                intmincontractduration,
+                intmaxcontractduration,
+                decpropertyrating,
+                bnstudyzone,
+                vchbuildingsecurity,
+                vchtransportationaccess,
+                vchpropertyrules,
+                vchdescription
             })
                 .filter(value => value !== undefined);
 
             if (updateValues.length !== 0) {
                 await this.query(
-                    `UPDATE estate SET ${updateColumns} WHERE id = $${updateValues.length + 1};`,
+                    `UPDATE "Usuario"."Propiedades" SET ${updateColumns} WHERE propertyid = $${updateValues.length + 1};`,
                     [...updateValues, id]
                 );
             }
