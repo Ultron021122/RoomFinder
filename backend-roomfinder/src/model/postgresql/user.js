@@ -3,10 +3,9 @@ import { VerifiedModel } from "./verified.js";
 import { RecoveryPassModel } from "./recoverypass.js";
 import bcrypt from 'bcrypt'
 
-export class UsersModel extends Database {
+export class UsersModel {
 
     constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at }) {
-        super();
         this.usuarioid = usuarioid;
         this.vchname = vchname;
         this.vchpaternalsurname = vchpaternalsurname;
@@ -22,35 +21,58 @@ export class UsersModel extends Database {
     }
 
     static async getAll() {
-        const users = await this.query(
-            `SELECT * FROM "Usuario"."Usuario";`
-        );
-        return users.map((user) => new UsersModel(user));
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const users = await client.query(
+                `SELECT * FROM "Usuario"."Usuario";`
+            );
+            return users.rows.map((user) => new UsersModel(user));
+        } finally {
+            client.release();
+        }
     }
 
     static async getByUser({ roleid }) {
-        console.log(roleid)
-        const users = await this.query(
-            `SELECT * FROM "Usuario"."Usuario" WHERE roleid = $1;`,
-            [roleid]
-        );
-        return users.map((user) => new UsersModel(user));
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const users = await client.query(
+                `SELECT * FROM "Usuario"."Usuario" WHERE roleid = $1;`,
+                [roleid]
+            );
+            return users.rows.map((user) => new UsersModel(user));
+        } finally {
+            client.release();
+        }
     }
 
     static async getById({ id }) {
-        const user = await this.query(
-            `SELECT * FROM "Usuario"."Usuario" WHERE usuarioid = $1;`,
-            [id]
-        );
-        return user[0] ? new UsersModel(user[0]) : null;
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const user = await client.query(
+                `SELECT * FROM "Usuario"."Usuario" WHERE usuarioid = $1;`,
+                [id]
+            );
+            return user.rowCount > 0 ? new UsersModel(user.rows[0]) : null;
+        } finally {
+            client.release();
+        }
     }
 
     static async getByEmail({ email }) {
-        const user = await this.query(
-            `SELECT * FROM "Usuario"."Usuario" WHERE vchemail = $1;`,
-            [email]
-        );
-        return user[0] ? new UsersModel(user[0]) : null;
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const user = await client.query(
+                `SELECT * FROM "Usuario"."Usuario" WHERE vchemail = $1;`,
+                [email]
+            );
+            return user.rowCount > 0 ? new UsersModel(user.rows[0]) : null;
+        } finally {
+            client.release();
+        }
     }
 
     static async create({ input }) {
@@ -59,12 +81,18 @@ export class UsersModel extends Database {
             const validate = await this.getByEmail({ email: vchemail });
             if (validate) return false;
 
-            const result = await this.query(
-                `INSERT INTO "Usuario"."Usuario" (vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`,
-                [vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid]
-            );
+            const db = new Database();
+            const client = await db.pool.connect();
+            try {
+                const result = await client.query(
+                    `INSERT INTO "Usuario"."Usuario" (vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`,
+                    [vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid]
+                );
 
-            return new UsersModel(result[0]);
+                return new UsersModel(result.rows[0]);
+            } finally {
+                client.release();
+            }
         } catch (error) {
             throw new Error(`Error creating user: ${error.message}`)
         }
@@ -75,12 +103,17 @@ export class UsersModel extends Database {
             const validate = await this.getById({ id });
             if (!validate) return false;
 
-            // Eliminar usuario
-            await this.query(
-                `DELETE FROM "Usuario"."Usuario" WHERE usuarioid = $1;`,
-                [id]
-            );
-            return true;
+            const db = new Database();
+            const client = await db.pool.connect();
+            try { // Eliminar usuario
+                await client.query(
+                    `DELETE FROM "Usuario"."Usuario" WHERE usuarioid = $1;`,
+                    [id]
+                );
+                return true;
+            } finally {
+                client.release();
+            }
         } catch (error) {
             throw new Error(`Error deleting user: ${error.message}`);
         }
@@ -127,10 +160,16 @@ export class UsersModel extends Database {
                 .filter(value => value !== undefined);
 
             if (updateValues.length !== 0) {
-                await this.query(
-                    `UPDATE "Usuario"."Usuario" SET ${updateColumns} WHERE usuarioid = $${updateValues.length + 1};`,
-                    [...updateValues, id]
-                );
+                const db = new Database();
+                const client = await db.pool.connect();
+                try {
+                    await client.query(
+                        `UPDATE "Usuario"."Usuario" SET ${updateColumns} WHERE usuarioid = $${updateValues.length + 1};`,
+                        [...updateValues, id]
+                    );
+                } finally {
+                    client.release();
+                }
             }
 
             return await this.getById({ id });
@@ -159,12 +198,18 @@ export class UsersModel extends Database {
 
     static async session({ id }) {
         try {
-            const session = await this.query(
-                `INSERT INTO "Usuario"."Sessions" (usuarioid) VALUES ($1) RETURNING sessionid;`,
-                [id]
-            )
-            const sessionid = session[0].sessionid;
-            return sessionid;
+            const db = new Database();
+            const client = await db.pool.connect();
+            try {
+                const session = await client.query(
+                    `INSERT INTO "Usuario"."Sessions" (usuarioid) VALUES ($1) RETURNING sessionid;`,
+                    [id]
+                )
+                const sessionid = session.rows[0].sessionid;
+                return sessionid;
+            } finally {
+                client.release();
+            }
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
@@ -172,12 +217,18 @@ export class UsersModel extends Database {
 
     static async logout({ sessionid }) {
         try {
-            const session = await this.query(
-                `UPDATE "Usuario"."Sessions" SET tmlastactivity = NOW() WHERE sessionid = $1 AND tmlastactivity IS NULL RETURNING *;`,
-                [sessionid]
-            )
+            const db = new Database();
+            const client = await db.pool.connect();
+            try {
+                const session = await client.query(
+                    `UPDATE "Usuario"."Sessions" SET tmlastactivity = NOW() WHERE sessionid = $1 AND tmlastactivity IS NULL RETURNING *;`,
+                    [sessionid]
+                )
 
-            return session[0] ? true : false;
+                return session.rows[0] ? true : false;
+            } finally {
+                client.release();
+            }
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }

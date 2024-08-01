@@ -1,8 +1,7 @@
 import { Database } from "./database.js";
 
-export class RecoveryPassModel extends Database {
+export class RecoveryPassModel {
     constructor({ recuperacionid, usuarioid, vchtoken, created_at, expires_at }) {
-        super();
         this.recuperacionid = recuperacionid;
         this.usuarioid = usuarioid;
         this.vchtoken = vchtoken;
@@ -11,26 +10,44 @@ export class RecoveryPassModel extends Database {
     }
 
     static async getAll() {
-        const recovery = await this.query(
-            `SELECT * FROM "Usuario"."RecuperacionCuenta";`
-        );
-        return recovery.map((recovery) => new RecoveryPassModel(recovery));
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const recovery = await client.query(
+                `SELECT * FROM "Usuario"."RecuperacionCuenta";`
+            );
+            return recovery.rows.map((recovery) => new RecoveryPassModel(recovery));
+        } finally {
+            client.release();
+        }
     }
 
     static async getById({ id }) {
-        const recovery = await this.query(
-            `SELECT * FROM "Usuario"."RecuperacionCuenta" WHERE recuperacionid = $1;`,
-            [id]
-        );
-        return recovery[0] ? new RecoveryPassModel(recovery[0]) : null;
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const recovery = await client.query(
+                `SELECT * FROM "Usuario"."RecuperacionCuenta" WHERE recuperacionid = $1;`,
+                [id]
+            );
+            return recovery.rowCount > 0 ? new RecoveryPassModel(recovery.rows[0]) : null;
+        } finally {
+            client.release();
+        }
     }
 
     static async getByToken({ token }) {
-        const recovery = await this.query(
-            `SELECT * FROM "Usuario"."RecuperacionCuenta" WHERE vchtoken = $1;`,
-            [token]
-        );
-        return recovery[0] ? new RecoveryPassModel(recovery[0]) : null;
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const recovery = await client.query(
+                `SELECT * FROM "Usuario"."RecuperacionCuenta" WHERE vchtoken = $1;`,
+                [token]
+            );
+            return recovery.rowCount > 0 ? new RecoveryPassModel(recovery.rows[0]) : null;
+        } finally {
+            client.release();
+        }
     }
 
     static async getByUser({ id }) {
