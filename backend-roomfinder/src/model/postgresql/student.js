@@ -1,3 +1,4 @@
+import { Database } from './database.js';
 import { UsersModel } from './user.js'
 
 export class StudentsModel extends UsersModel {
@@ -9,18 +10,30 @@ export class StudentsModel extends UsersModel {
     }
 
     static async getAll() {
-        const students = await this.query(
-            `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Estudiantes" student ON us.usuarioid = student.usuarioid WHERE us.roleid = 1;`
-        )
-        return students.map((student) => new StudentsModel(student));
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const students = await client.query(
+                `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Estudiantes" student ON us.usuarioid = student.usuarioid WHERE us.roleid = 1;`
+            )
+            return students.rows.map((student) => new StudentsModel(student));
+        } finally {
+            client.release();
+        }
     }
 
     static async getById({ id }) {
-        const student = await this.query(
-            `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Estudiantes" student ON us.usuarioid = student.usuarioid WHERE us.roleid = 1 AND us.usuarioid = $1;`,
-            [id]
-        );
-        return student[0] ? new StudentsModel(student[0]) : null;
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const student = await client.query(
+                `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Estudiantes" student ON us.usuarioid = student.usuarioid WHERE us.roleid = 1 AND us.usuarioid = $1;`,
+                [id]
+            );
+            return student.rowCount > 0 ? new StudentsModel(student.rows[0]) : null;
+        } finally {
+            client.release();
+        }
     }
 
     static async create({ input }) {
@@ -30,13 +43,19 @@ export class StudentsModel extends UsersModel {
             if (result === false) return false;
             const usuarioid = result.usuarioid
             const created_at = result.created_at
+            // Connection with database
+            const db = new Database();
+            const client = await db.pool.release();
+            try {
+                await client.query(
+                    `INSERT INTO "Usuario"."Estudiantes" (intcodestudent, usuarioid, vchuniversity) VALUES($1, $2, $3);`,
+                    [intcodestudent, usuarioid, vchuniversity]
+                )
 
-            const student = await this.query(
-                `INSERT INTO "Usuario"."Estudiantes" (intcodestudent, usuarioid, vchuniversity) VALUES($1, $2, $3);`,
-                [intcodestudent, usuarioid, vchuniversity]
-            )
-
-            return new StudentsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at, intcodestudent, vchuniversity })
+                return new StudentsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at, intcodestudent, vchuniversity })
+            } finally {
+                client.release();
+            }
         } catch (error) {
             throw new Error(`Error creating student: ${error.message}`);
         }
@@ -75,10 +94,16 @@ export class StudentsModel extends UsersModel {
                 .filter(value => value != undefined);
 
             if (updateValues.length !== 0) {
-                await this.query(
-                    `UPDATE "Usuario"."Estudiantes" SET ${updateColumns} WHERE usuarioid = $${updateValues.length + 1};`,
-                    [...updateValues, id]
-                );
+                const db = new Database();
+                const client = await db.pool.connect();
+                try {
+                    await client.query(
+                        `UPDATE "Usuario"."Estudiantes" SET ${updateColumns} WHERE usuarioid = $${updateValues.length + 1};`,
+                        [...updateValues, id]
+                    );
+                } finally {
+                    client.release();
+                }
             }
 
             return await this.getById({ id });
