@@ -1,3 +1,4 @@
+import { Database } from './database.js';
 import { UsersModel } from './user.js'
 
 export class LessorsModel extends UsersModel {
@@ -13,18 +14,30 @@ export class LessorsModel extends UsersModel {
     }
 
     static async getAll() {
-        const lessors = await this.query(
-            `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Arrendadores" lessor ON us.usuarioid = lessor.usuarioid WHERE us.roleid = 2;`
-        )
-        return lessors.map((lessor) => new LessorsModel(lessor));
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const lessors = await client.query(
+                `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Arrendadores" lessor ON us.usuarioid = lessor.usuarioid WHERE us.roleid = 2;`
+            )
+            return lessors.rows.map((lessor) => new LessorsModel(lessor));
+        } finally {
+            client.release();
+        }
     }
 
     static async getById({ id }) {
-        const lessor = await this.query(
-            `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Arrendadores" lessor ON us.usuarioid = lessor.usuarioid WHERE us.roleid = 2 AND us.usuarioid = $1;`,
-            [id]
-        );
-        return lessor[0] ? new LessorsModel(lessor[0]) : null;
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const lessor = await client.query(
+                `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Arrendadores" lessor ON us.usuarioid = lessor.usuarioid WHERE us.roleid = 2 AND us.usuarioid = $1;`,
+                [id]
+            );
+            return lessor.rowCount > 0 ? new LessorsModel(lessor.rows[0]) : null;
+        } finally {
+            client.release();
+        }
     }
 
     static async create({ input }) {
@@ -35,12 +48,19 @@ export class LessorsModel extends UsersModel {
             const usuarioid = result.usuarioid
             const created_at = result.created_at
 
-            const lessor = await this.query(
-                `INSERT INTO "Usuario"."Arrendadores" (usuarioid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate) VALUES ($1, $2, $3, $4, $5, $6, $7);`,
-                [usuarioid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate]
-            )
+            // Connection with database
+            const db = new Database();
+            const client = await db.pool.connect();
+            try {
+                await client.query(
+                    `INSERT INTO "Usuario"."Arrendadores" (usuarioid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate) VALUES ($1, $2, $3, $4, $5, $6, $7);`,
+                    [usuarioid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate]
+                )
 
-            return new LessorsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate })
+                return new LessorsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate })
+            } finally {
+                client.release();
+            }
         } catch (error) {
             throw new Error(`Error creating lessor: ${error.message}`)
         }
@@ -87,10 +107,16 @@ export class LessorsModel extends UsersModel {
                 .filter(value => value != undefined);
 
             if (updateValues.length !== 0) {
-                await this.query(
-                    `UPDATE "Usuario"."Arrendadores" SET ${updateColumns} WHERE usuarioid = $${updateValues.length + 1};`,
-                    [...updateValues, id]
-                );
+                const db = new Database();
+                const client = await db.pool.connect();
+                try {
+                    await client.query(
+                        `UPDATE "Usuario"."Arrendadores" SET ${updateColumns} WHERE usuarioid = $${updateValues.length + 1};`,
+                        [...updateValues, id]
+                    );
+                } finally {
+                    client.release();
+                }
             }
 
             return await this.getById({ id });
