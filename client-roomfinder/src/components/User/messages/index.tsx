@@ -9,6 +9,7 @@ import es from "javascript-time-ago/locale/es";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { useSession } from "next-auth/react";
+import { SendIcon } from "lucide-react";
 TimeAgo.addDefaultLocale(es);
 
 const socket = io("http://localhost:3001", {
@@ -72,7 +73,7 @@ export default function MessageComponent() {
 
   return (
     <>
-      <section className="h-screen flex flex-col bg-white">
+      <section className="h-[calc(100vh-150px)] flex flex-col bg-white dark:bg-gray-950">
         <div className="flex-grow overflow-y-auto">
           {/* <PerfectScrollbar> */}
           {conversations.map((message, index) => (
@@ -84,7 +85,7 @@ export default function MessageComponent() {
                       {message.body}
                     </div>
                     <Image
-                      src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+                      src="https://images.unsplash.com/photo-1573455494057-12684d151bf4?q=80&w=600"
                       alt="avatar"
                       className="object-cover h-10 w-10 rounded-full ml-2 border-2 border-white"
                     />
@@ -97,7 +98,7 @@ export default function MessageComponent() {
                 <div className="flex flex-col mt-5 px-3" key={index}>
                   <div className="flex justify-start items-center mb-2">
                     <Image
-                      src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+                      src="https://images.unsplash.com/photo-1722799037558-69a4dc8e08d1?q=80&w=600"
                       className="object-cover h-10 w-10 rounded-full mr-2 border-2 border-white"
                       alt=""
                     />
@@ -117,22 +118,23 @@ export default function MessageComponent() {
         </div>
         <form
           onSubmit={handleSubmit}
-          className="flex justify-between items-center p-4 bg-gray-200"
+          className="flex justify-between items-center p-4 dark:bg-gray-950 border-t border-gray-800"
         >
           <input
             name="message"
             type="text"
             placeholder="Escribe tú mensaje..."
             onChange={(e) => setMessage(e.target.value)}
-            className="flex-grow px-2 py-1 mr-2 bg-white rounded-md focus:outline-none"
+            className="flex-grow px-2 py-1 mr-2 h-12 text-sm bg-white dark:bg-gray-800 rounded-md focus:outline-none"
             value={message}
             autoFocus
+            autoCapitalize="off"
           />
           <button
             type="submit"
             className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
           >
-            Enviar
+            <SendIcon size={24} />
           </button>
         </form>
       </section>
