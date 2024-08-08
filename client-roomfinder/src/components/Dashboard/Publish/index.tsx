@@ -47,7 +47,7 @@ const Publish = () => {
 
                                     <div className="mb-[18px">
                                         <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            Email <span className="text-meta-1">*</span>
+                                            Email <span className="text-red-600">*</span>
                                         </label>
                                         <input
                                             type="email"
