@@ -2,7 +2,7 @@
 
 import Sidebar, { SidebarItem } from "@/components/Navegate";
 import { Box, Button, AppBar, IconButton, Toolbar, Typography, CssBaseline } from "@mui/material";
-import { BarChart3, Boxes, ChevronFirst, ChevronLast, Home, LayoutDashboard, LifeBuoy, MenuIcon, Package, Receipt, Settings, Turtle, UserCircle } from "lucide-react";
+import { BarChart3, Boxes, ChevronFirst, ChevronLast, Home, LayoutDashboard, LifeBuoy, Mail, MenuIcon, Package, Receipt, Settings, Turtle, UserCircle } from "lucide-react";
 import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
@@ -96,7 +96,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         />
                         <SidebarItem icon={<BarChart3 size={20} />} text="Estadisticas" url="/dashboard/statistics" alert />
                         <SidebarItem icon={<UserCircle size={20} />} text="Perfil" url="/dashboard/profile" />
-                        <SidebarItem icon={<Boxes size={20} />} text="Inventario" url="/dashboard/inventory" />
+                        <SidebarItem icon={<Mail size={20} />} text="Mensajes" url="/dashboard/messages" />
                         {// Show option only for lessors
                             roleName === 'Arrendador' && (
                                 <>

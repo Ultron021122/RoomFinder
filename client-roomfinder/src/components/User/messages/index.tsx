@@ -74,7 +74,7 @@ export default function MessageComponent() {
   return (
     <>
       <section className="h-[calc(100vh-150px)] flex flex-col bg-white dark:bg-gray-950">
-        <div className="flex-grow overflow-y-auto">
+        <div className="flex-grow overflow-y-auto custom-scrollbar">
           {/* <PerfectScrollbar> */}
           {conversations.map((message, index) => (
             <>
@@ -125,7 +125,7 @@ export default function MessageComponent() {
             type="text"
             placeholder="Escribe tú mensaje..."
             onChange={(e) => setMessage(e.target.value)}
-            className="flex-grow px-2 py-1 mr-2 h-12 text-sm bg-white dark:bg-gray-800 rounded-md focus:outline-none"
+            className="flex-grow px-2 py-1 mr-2 h-12 text-sm text-neutral-950 dark:text-gray-400 bg-white dark:bg-gray-800 rounded-md focus:outline-none"
             value={message}
             autoFocus
             autoCapitalize="off"
@@ -138,6 +138,15 @@ export default function MessageComponent() {
           </button>
         </form>
       </section>
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .custom-scrollbar {
+          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none; /* Firefox */
+        }
+      `}</style>
     </>
   );
 }
