@@ -40,35 +40,30 @@ export default function MessageComponent() {
       };
       socket.connect(); // Connect manually after setting auth
 
-      socket.on("message", (message: Message) => {
-        message.createdAt = new Date(message.createdAt);
-        setConversations((prevMessages) => [...prevMessages, message]);
+      socket.on("message", (newMessage: Message) => {
+        setConversations((prevConversations) => [...prevConversations, newMessage]);
       });
 
       // Clean up the socket connection when the component unmounts
       return () => {
-        socket.off("message");
+        //socket.off("message");
         socket.disconnect();
       };
     }
   }, [user]);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    const newMessage = {
-      body: message,
-      from: (user as any)?.vchname,
-      usuarioid: (user as any)?.usuarioid,
-      createdAt: new Date(),
-    };
-    // setConversations((state) => [...state, newMessage]);
-    setMessage("");
-    socket.emit(
-      "message",
-      newMessage.body,
-      newMessage.createdAt,
-      (user as any)?.chatid,
-    );
+  const sendMessage = () => {
+    if (message.trim() !== "") {
+      const newMessage: Message = {
+        body: message,
+        from: (user as any)?.vchname,
+        usuarioid: (user as any)?.usuarioid,
+        createdAt: new Date(),
+      };
+      socket.emit("message", newMessage.body, newMessage.createdAt);
+      setConversations((prevConversation) => [...prevConversation, newMessage]);
+      setMessage("");
+    }
   };
 
   return (
@@ -117,7 +112,7 @@ export default function MessageComponent() {
           {/* </PerfectScrollbar> */}
         </div>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={sendMessage}
           className="flex justify-between items-center p-4 dark:bg-gray-950 border-t border-gray-800"
         >
           <input
