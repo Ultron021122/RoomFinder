@@ -1,15 +1,13 @@
 "use client";
-import { Image } from "@nextui-org/react";
+
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { SendIcon } from "lucide-react";
 import io from "socket.io-client";
 import TimeAgo from "javascript-time-ago";
-// English.
-import en from "javascript-time-ago/locale/en";
 import es from "javascript-time-ago/locale/es";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import "react-perfect-scrollbar/dist/css/styles.css";
-import { useSession } from "next-auth/react";
-import { SendIcon } from "lucide-react";
+import { Image } from "@nextui-org/react";
+
 TimeAgo.addDefaultLocale(es);
 
 const socket = io("http://localhost:3001", {
@@ -17,18 +15,27 @@ const socket = io("http://localhost:3001", {
 });
 
 interface Message {
-  body: string;
-  from: string;
+  vchcontenido: string;
   usuarioid: number;
-  createdAt: Date;
+  chatid: number;
+  created_at: Date;
+}
+
+interface Chat {
+  chatid: number;
+  usuario1id: number;
+  usuario2id: number;
+  created_at: Date;
 }
 
 export default function MessageComponent() {
   const [conversations, setConversations] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [selectedChat, setSelectedChat] = useState<number | null>(null);
+
   const { data: session } = useSession();
   const user = session?.user;
-  // Create formatter (English).
   const timeAgo = new TimeAgo("es-MX");
 
   useEffect(() => {
@@ -41,27 +48,64 @@ export default function MessageComponent() {
       socket.connect(); // Connect manually after setting auth
 
       socket.on("message", (newMessage: Message) => {
-        setConversations((prevConversations) => [...prevConversations, newMessage]);
+        if (newMessage.usuarioid === (user as any)?.usuarioid || selectedChat) {
+          setConversations((prevConversations) => [...prevConversations, newMessage]);
+        }
       });
 
-      // Clean up the socket connection when the component unmounts
       return () => {
-        //socket.off("message");
+        socket.off("message"); // Clean up the event listener
         socket.disconnect();
       };
     }
-  }, [user]);
+  }, [user, selectedChat]);
 
-  const sendMessage = () => {
-    if (message.trim() !== "") {
-      const newMessage: Message = {
-        body: message,
-        from: (user as any)?.vchname,
-        usuarioid: (user as any)?.usuarioid,
-        createdAt: new Date(),
+  useEffect(() => {
+    // Fetch chats from the server
+    const fetchChats = async () => {
+      try {
+        const response = await fetch("http://localhost:1234/api/chats");
+        if (!response.ok) throw new Error("Network response was not ok");
+        const data = await response.json();
+        setChats(data);
+      } catch (error) {
+        console.error("Error fetching chats:", error);
+      }
+    };
+
+    fetchChats();
+  }, []);
+
+  useEffect(() => {
+    if (selectedChat) {
+      // Fetch messages for the selected chat
+      const fetchMessages = async () => {
+        try {
+          const response = await fetch(`http://localhost:1234/api/messages/chat/${selectedChat}`);
+          if (!response.ok) throw new Error("Network response was not ok");
+          const data = await response.json();
+          setConversations(data);
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+        }
       };
-      socket.emit("message", newMessage.body, newMessage.createdAt);
-      setConversations((prevConversation) => [...prevConversation, newMessage]);
+
+      fetchMessages();
+    }
+  }, [selectedChat]);
+
+  const sendMessage = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (message.trim() && selectedChat) {
+      console.log("Sending message:", selectedChat);
+      const newMessage: Message = {
+        chatid: selectedChat,
+        vchcontenido: message,
+        usuarioid: (user as any)?.usuarioid,
+        created_at: new Date(),
+      };
+      socket.emit("message", newMessage.chatid,newMessage.vchcontenido, newMessage.created_at);
+      setConversations((prevConversations) => [...prevConversations, newMessage]);
       setMessage("");
     }
   };
@@ -69,69 +113,77 @@ export default function MessageComponent() {
   return (
     <>
       <section className="h-[calc(100vh-150px)] flex flex-col bg-white dark:bg-gray-950">
-        <div className="flex-grow overflow-y-auto custom-scrollbar">
-          {/* <PerfectScrollbar> */}
-          {conversations.map((message, index) => (
-            <>
-              {message.usuarioid === (user as any)?.usuarioid ? (
-                <div className="flex flex-col mt-5 px-3" key={index}>
-                  <div className="flex justify-end items-center mb-2">
-                    <div className="py-3 px-4 bg-blue-400 rounded-lg text-white text-sm shadow-md max-w-[calc(80%-40px)]">
-                      {message.body}
-                    </div>
-                    <Image
-                      src="https://images.unsplash.com/photo-1573455494057-12684d151bf4?q=80&w=600"
-                      alt="avatar"
-                      className="object-cover h-10 w-10 rounded-full ml-2 border-2 border-white"
-                    />
-                  </div>
-                  <div className="text-xs text-gray-500 flex justify-end">
-                    {timeAgo.format(message.createdAt)}
-                  </div>
-                </div>
+        <div className="flex h-full">
+          <div className="w-1/4 border-r border-gray-200 overflow-y-auto custom-scrollbar">
+            <div>
+              {chats.length === 0 ? (
+                <p className="p-4 text-gray-500">No hay chats disponibles.</p>
               ) : (
-                <div className="flex flex-col mt-5 px-3" key={index}>
-                  <div className="flex justify-start items-center mb-2">
-                    <Image
-                      src="https://images.unsplash.com/photo-1722799037558-69a4dc8e08d1?q=80&w=600"
-                      className="object-cover h-10 w-10 rounded-full mr-2 border-2 border-white"
-                      alt=""
-                    />
-                    <div className="py-3 px-4 bg-gray-400 rounded-lg text-white text-sm shadow-md max-w-[calc(80%)]">
-                      {message.body}
-                    </div>
+                chats.map((chat) => (
+                  <div
+                    key={chat.chatid}
+                    className={`p-4 cursor-pointer ${selectedChat === chat.chatid ? "bg-gray-200" : ""}`}
+                    onClick={() => setSelectedChat(chat.chatid)}
+                  >
+                    Chat ID: {chat.chatid}
                   </div>
-                  <div className="text-xs text-gray-500 flex justify-start">
-                    {timeAgo.format(message.createdAt)}
-                  </div>
-                </div>
+                ))
               )}
-            </>
-          ))}
-          <div ref={(el) => el?.scrollIntoView({ behavior: "smooth" })}></div>
-          {/* </PerfectScrollbar> */}
+            </div>
+          </div>
+          <div className="w-3/4 flex flex-col">
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
+              <div>
+                {conversations.length === 0 ? (
+                  <p className="p-4 text-gray-500">No hay mensajes en esta conversación.</p>
+                ) : (
+                  conversations.map((msg, index) => (
+                    <div key={`${msg.usuarioid}-${index}`} className="flex flex-col mt-5 px-3">
+                      {msg.usuarioid === (user as any)?.usuarioid ? (
+                        <div className="flex justify-end items-center mb-2">
+                          <div className="py-3 px-4 bg-blue-400 rounded-lg text-white text-sm shadow-md max-w-[calc(80%-40px)]">
+                            {msg.vchcontenido}
+                          </div>
+                          <Image
+                            src="https://images.unsplash.com/photo-1573455494057-12684d151bf4?q=80&w=600"
+                            alt="avatar"
+                            className="object-cover h-10 w-10 rounded-full ml-2 border-2 border-white"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex justify-start items-center mb-2">
+                          <Image
+                            src="https://images.unsplash.com/photo-1722799037558-69a4dc8e08d1?q=80&w=600"
+                            className="object-cover h-10 w-10 rounded-full mr-2 border-2 border-white"
+                            alt="avatar"
+                          />
+                          <div className="py-3 px-4 bg-gray-400 rounded-lg text-white text-sm shadow-md max-w-[calc(80%)]">
+                            {msg.vchcontenido}
+                          </div>
+                        </div>
+                      )}
+                      <div className={`text-xs text-gray-500 flex ${msg.usuarioid === (user as any)?.usuarioid ? "justify-end" : "justify-start"}`}>
+                        <p></p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+            <form onSubmit={sendMessage} className="flex justify-between items-center p-4 dark:bg-gray-950 border-t border-gray-800">
+              <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your message..."
+                className="flex-1 p-2 border border-gray-300 rounded-lg"
+              />
+              <button type="submit" className="ml-2 p-2 bg-green-500 text-white rounded-lg">
+                <SendIcon />
+              </button>
+            </form>
+          </div>
         </div>
-        <form
-          onSubmit={sendMessage}
-          className="flex justify-between items-center p-4 dark:bg-gray-950 border-t border-gray-800"
-        >
-          <input
-            name="message"
-            type="text"
-            placeholder="Escribe tú mensaje..."
-            onChange={(e) => setMessage(e.target.value)}
-            className="flex-grow px-2 py-1 mr-2 h-12 text-sm text-neutral-950 dark:text-gray-400 bg-white dark:bg-gray-800 rounded-md focus:outline-none"
-            value={message}
-            autoFocus
-            autoCapitalize="off"
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
-          >
-            <SendIcon size={24} />
-          </button>
-        </form>
       </section>
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {

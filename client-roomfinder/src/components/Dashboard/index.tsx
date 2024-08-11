@@ -2,7 +2,7 @@
 
 import Sidebar, { SidebarItem } from "@/components/Navegate";
 import { Box, Button, AppBar, IconButton, Toolbar, Typography, CssBaseline } from "@mui/material";
-import { BarChart3, Boxes, ChevronFirst, ChevronLast, Home, LayoutDashboard, LifeBuoy, Mail, MenuIcon, Package, Receipt, Settings, Turtle, UserCircle } from "lucide-react";
+import { BarChart3, Boxes, ChevronFirst, ChevronLast, GraduationCapIcon, Home, LayoutDashboard, LifeBuoy, Mail, MenuIcon, Package, Receipt, Settings, Turtle, UserCircle } from "lucide-react";
 import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
@@ -72,15 +72,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         */}
                         </IconButton>
                         <div className="flex items-center">
-                            <Home size={20} />
-                            <Typography
-                                variant="h6"
-                                color="inherit"
-                                component="div"
-                                className="ml-2"
-                            >
+                            <GraduationCapIcon size={25} />
+                            <h1 className="ml-1 text-2xl font-semibold">
                                 Roomfinder
-                            </Typography>
+                            </h1>
                         </div>
                     </Toolbar>
                 </AppBar>
@@ -100,7 +95,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         {// Show option only for lessors
                             roleName === 'Arrendador' && (
                                 <>
-                                    <SidebarItem icon={<AddHomeOutlinedIcon style={{fontSize: 20}}/>} text="Publicar" url="/dashboard/publish" />
+                                    <SidebarItem icon={<AddHomeOutlinedIcon style={{ fontSize: 20 }} />} text="Publicar" url="/dashboard/publish" />
                                     <SidebarItem icon={<Package size={20} />} text="Historial" url="/dashboard/orders" />
                                 </>
                             )

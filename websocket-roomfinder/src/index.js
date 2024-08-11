@@ -27,15 +27,15 @@ io.on("connection", (socket) => {
   console.log("A user has connected! " + socket.id);
 
   const userID = socket.handshake.auth.usuarioid;
-  const chatid = socket.handshake.auth.chatid;
+  //const chatid = socket.handshake.auth.chatid;
   console.log("userID: ", userID);
-  console.log("chatid: ", chatid);
+  //console.log("chatid: ", chatid);
 
-  if (userID && chatid) {
+  if (userID) {
     // Join the user to the specific chat room
-    socket.join(chatid);
+    //socket.join(chatid);
 
-    socket.on("message", async (body, created_at) => {
+    socket.on("message", async (chatid, body, created_at) => {
       let result;
       console.log(socket.handshake.auth);
       const usuarioid = socket.handshake.auth.usuarioid;
@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            chatid,
+            chatid: chatid,
             vchcontenido: body,
             created_at: new Date(created_at),
             usuarioid,
@@ -61,10 +61,9 @@ io.on("connection", (socket) => {
 
         // Emit the message to the specific chat room
         io.to(chatid).emit("message", {
-          body: body,
-          from: username,
+          vchcontenido: body,
           usuarioid: usuarioid,
-          createdAt: created_at,
+          created_at: created_at,
         });
       } catch (error) {
         console.error("Error saving message: ", error);
