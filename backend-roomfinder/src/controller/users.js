@@ -58,7 +58,7 @@ export class UserController {
             const token = await this.EmailService.generarTokenVerification();
             // Save token in database and send email
             await this.userModel.saveToken({ verify: { usuarioid: newUser.usuarioid, vchtoken: token } })
-            await this.EmailService.sendEmailVerificate( newUser.usuarioid, newUser.vchname, newUser.vchemail, token);
+            await this.EmailService.sendEmailVerificate(newUser.usuarioid, newUser.vchname, newUser.vchemail, token);
 
             return res.status(201).json(newUser);
         } catch (err) {
@@ -106,8 +106,11 @@ export class UserController {
         }
         await this.userModel.login({ input: result.data })
             .then(login => {
-                if (login) return res.status(200).json(login)
-                return res.status(401).json({ message: 'Invalid credentials' })
+                if (login === 0) return res.status(404).json({ message: 'Usuario no encontrado' }) // User not found
+                else if (login === 1) return res.status(403).json({ message: 'Cuenta no verificada.' }) // User not verified
+                else if (login === 2) return res.status(401).json({ message: 'Credenciales invalidas.' }) // Invalid credentials
+
+                return res.status(200).json(login) // Return session data
             })
             .catch(next); // Pass the error to the error handler
     }
