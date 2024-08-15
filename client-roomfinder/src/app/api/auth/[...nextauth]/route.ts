@@ -30,24 +30,21 @@ const handler = NextAuth({
             },
             async authorize(credentials) {
                 try {
-                    const userFound = await fetch(`${process.env.REST_URL}/users/login`, {
+                    const login = await fetch(`${process.env.REST_URL}/users/login`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify(credentials),
                     })
-
-                    if (userFound.status === 401) {
-                        throw new Error("Credenciales incorrectas. Por favor, inténtelo de nuevo.");
-                    } if (userFound.status === 400) {
-                        const error = await userFound.json();
-                        throw new Error(error?.message);
+                    if (login.status === 401 || login.status === 403 || login.status === 404) {
+                        const error = await login.json();
+                        throw new Error(error.message);
                     };
-                    if (userFound.ok === false) {
+                    if (login.ok === false) {
                         throw new Error("Internal Server Error");
                     }
-                    return userFound.json();
+                    return login.json();
                 } catch (error) {
                     if (error instanceof Error) {
                         throw new Error(error.message);

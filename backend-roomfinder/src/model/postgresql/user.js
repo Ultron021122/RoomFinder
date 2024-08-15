@@ -182,11 +182,16 @@ export class UsersModel {
         try {
             const { vchemail, vchpassword } = input
 
+            // Error Messages
+            // 0 - The user does not exist
+            // 1 - User not verified
+            // 2 - Invalid credentials
+
             const user = await this.getByEmail({ email: vchemail });
-            if (!user) return false;
-            if (!user.bnverified) return false; // Check if user is verified
+            if (!user) return 0;
+            if (!user.bnverified) return 1; // Check if user is verified
             const validPassword = await bcrypt.compare(vchpassword, user.vchpassword)
-            if (!validPassword) return false;
+            if (!validPassword) return 2;
 
             const session = await this.session({ id: user.usuarioid })
 
