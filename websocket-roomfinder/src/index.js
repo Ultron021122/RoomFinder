@@ -26,67 +26,45 @@ app.use(express.urlencoded({ extended: false }));
 io.on("connection", (socket) => {
   console.log("A user has connected! " + socket.id);
 
-  const userID = socket.handshake.auth.usuarioid;
-  //const chatid = socket.handshake.auth.chatid;
-  console.log("userID: ", userID);
-  //console.log("chatid: ", chatid);
+  socket.on('join', (userId) => {
+    socket.join(userId);
+  });
 
-  if (userID) {
-    // Join the user to the specific chat room
-    //socket.join(chatid);
+  socket.on('sendMessage', async (data) => {
+    const { from, to, message } = data;
 
-    socket.on("message", async (chatid, body, created_at) => {
-      let result;
-      console.log(socket.handshake.auth);
-      const usuarioid = socket.handshake.auth.usuarioid;
-      const username = socket.handshake.auth.username;
-      console.log("username: ", username);
-
-      try {
-        // Save the message to the database
-        result = await fetch("http://localhost:1234/api/messages", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            chatid: chatid,
-            vchcontenido: body,
-            created_at: new Date(created_at),
-            usuarioid,
-          }),
-        });
-        const resultData = await result.json();
-        console.log("result: ", resultData);
-
-        // Emit the message to the specific chat room
-        io.to(chatid).emit("message", {
-          vchcontenido: body,
-          usuarioid: usuarioid,
-          created_at: created_at,
-        });
-      } catch (error) {
-        console.error("Error saving message: ", error);
-        result = { status: "error", message: "Error saving message" };
-        return result;
-      }
-    });
-
-    socket.on("disconnect", () => {
-      console.log("A user has disconnected! " + socket.id);
-    });
-
-    if (!socket.recovered) {
-      try {
-        // const results = await getChatHistory(chatid)
-        // results.rows.forEach(row => {
-        //   socket.emit('chat message', row.message, row.id.toString(), row.username)
-        // })
-      } catch (error) {
-        console.error("Error getting chat history: ", error);
-      }
+    try {
+      // Save the message in the database
+      const response = await fetch(`${process.env.API_URL}/messages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ from, to, message }),
+      });
+      // Send the message to the receiver
+      io.to(to).emit('receiveMessage', { from, message });
+    } catch (error) {
+      console.error('Error al guardar el mensaje:',error);
     }
-  }
+  });
+
+  socket.on('getMessages', async (data) => {
+    const { user1, user2 } = data;
+
+    try {
+      const result = await fetch(`${process.env.API_URL}/messages?user1=${user1}&user2=${user2}`);
+      const messages = await result.json();
+      socket.emit('receiveMessages', messages);
+    } catch (error) {
+      console.error('Error al obtener los mensajes:',error);
+    }
+  });
+
+  socket.on("disconnect", () => {
+    console.log("A user has disconnected! " + socket.id);
+  });
+
 });
 
 // Start the server
