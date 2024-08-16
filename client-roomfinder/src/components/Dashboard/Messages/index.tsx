@@ -77,13 +77,13 @@ export default function MessageMainComponent() {
                             <Spinner />
                             :
                             (
-                                users ? (
+                                !users ? (
                                     <div>
                                         <p className="p-4 text-gray-500 dark:text-gray-300">No hay chats disponibles.</p>
                                     </div>
                                 ) : (
                                     <div>
-                                        {users.data.map((user, index) => (
+                                        {users.data.map((user) => (
                                             <div
                                                 key={user.usuarioid}
                                                 onClick={() => handleUserClick(user)}
