@@ -45,7 +45,7 @@ const Publish = () => {
                                         </div>
                                     </div>
 
-                                    <div className="mb-[18px">
+                                    <div className="mb-[18px]">
                                         <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                                             Email <span className="text-red-600">*</span>
                                         </label>

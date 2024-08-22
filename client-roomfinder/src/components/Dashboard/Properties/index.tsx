@@ -1,9 +1,12 @@
 'use client';
 
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import SelectGroupOne from "@/components/SelectGroup/SelectGroupOne";
-import Link from "next/link";
+import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
+import { Controller, useForm } from "react-hook-form";
+import { messages, patterns, roles } from '@/utils/constants';
+import { Alert } from '@/utils/alert';
+import { Property } from '@/utils/interfaces';
 
 interface FormData {
     firstName: string;
@@ -13,27 +16,16 @@ interface FormData {
     city: string;
     state: string;
     zip: string;
+    vchemail: string;
+    typeproperty: number;
 }
 
 const MultiStepForm: React.FC = () => {
-    const [step, setStep] = useState<number>(1);
-    const [formData, setFormData] = useState<FormData>({
-        firstName: '',
-        lastName: '',
-        email: '',
-        address: '',
-        city: '',
-        state: '',
-        zip: ''
-    });
+    const [darkMode, setDarkMode] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
+    const [step, setStep] = useState<number>(1);
+    const { control, register, handleSubmit, formState: { errors }, watch, reset, setValue, setError, clearErrors } = useForm<FormData>({ mode: "onChange" });
 
     const nextStep = () => {
         setStep(step + 1);
@@ -42,11 +34,34 @@ const MultiStepForm: React.FC = () => {
     const prevStep = () => {
         setStep(step - 1);
     };
-
-    const handleSubmit = (e: FormEvent) => {
+    
+    /*const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         console.log(formData);
+    };*/
+
+    const onSubmit = async (data: FormData) => {
+        console.log(data);
     };
+
+    // Dark Mode 
+    useEffect(() => {
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const setDarkModeFromMediaQuery = () => setDarkMode(darkModeMediaQuery.matches);
+
+        setDarkModeFromMediaQuery();
+        darkModeMediaQuery.addEventListener('change', setDarkModeFromMediaQuery);
+
+        setIsLoaded(true);
+
+        return () => {
+            darkModeMediaQuery.removeEventListener('change', setDarkModeFromMediaQuery);
+        };
+    }, []);
+
+    if (!isLoaded) {
+        return null;
+    }
 
     return (
         <div className="h-full max-w-screen-2xl mx-auto bg-zinc-200 dark:bg-gray-900">
@@ -94,64 +109,232 @@ const MultiStepForm: React.FC = () => {
                                     Nueva Propiedad
                                 </h2>
                             </div>
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="p-[26px]">
                                     {step === 1 && (
-                                        <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
-                                            <div className="w-full xl:w-1/2">
-                                                <label htmlFor="first_name" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> First Name </label>
-                                                <input
-                                                    type="text"
-                                                    name="firstName"
-                                                    value={formData.firstName}
-                                                    onChange={handleChange}
-                                                    id="first_name"
-                                                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
-                                                    placeholder="Enter your first name"
-                                                    required
-                                                />
+                                        <div>
+                                            <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
+                                                <div className="w-full xl:w-1/2">
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("firstName", {
+                                                                required: {
+                                                                    value: true,
+                                                                    message: messages.vchemail.required
+                                                                },
+                                                            })}
+                                                            type="email"
+                                                            name="firstName"
+                                                            id="firstName"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label
+                                                            htmlFor="firstName"
+                                                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                        >
+                                                            Nombre de la propiedad
+                                                        </label>
+                                                        {errors?.firstName && (
+                                                            <Alert message={errors?.firstName.message} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="w-full xl:w-1/2">
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("lastName", {
+                                                                required: {
+                                                                    value: true,
+                                                                    message: messages.vchemail.required
+                                                                },
+                                                            })}
+                                                            type="email"
+                                                            name="lastName"
+                                                            id="lastName"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label
+                                                            htmlFor="lastName"
+                                                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                        >
+                                                            Last Name
+                                                        </label>
+                                                        {errors?.lastName && (
+                                                            <Alert message={errors?.lastName.message} />
+                                                        )}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="w-full xl:w-1/2">
-                                                <label htmlFor="last_name" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> First Name </label>
-                                                <input
-                                                    type="text"
-                                                    name="lastName"
-                                                    value={formData.lastName}
-                                                    onChange={handleChange}
-                                                    id="last_name"
-                                                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
-                                                    placeholder="Enter your last name"
-                                                    required
-                                                />
+                                            {/* Tipo de propiedad */}
+                                            <div className='mb-4'>
+                                                <FormControl
+                                                    className="w-full xl:w-1/2 mb-2"
+                                                    variant="standard"
+                                                    sx={{
+                                                        '.MuiInput-underline:after': {
+                                                            borderBottomColor: darkMode === true ? '#3b82f6' : '#2563eb',
+                                                        },
+                                                        '.MuiInput-underline:before': {
+                                                            borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                                            borderBottomWidth: '2px',
+                                                        },
+                                                        '.MuiInput-underline:hover:not(.Mui-disabled):before': {
+                                                            borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                                        },
+                                                    }}
+                                                >
+                                                    <InputLabel
+                                                        id="type-property-label"
+                                                        className="peer-focus:font-medium text-sm peer-focus:text-sm"
+                                                        sx={{
+                                                            color: darkMode === true ? '#9ca3af' : '#6b7280',
+                                                            fontSize: '0.875rem',
+                                                            lineHeight: '1.25rem',
+                                                        }}
+                                                    >
+                                                        Tipo de propiedad
+                                                    </InputLabel>
+                                                    <Controller
+                                                        name="typeproperty"
+                                                        control={control}
+                                                        defaultValue={1}
+                                                        rules={{
+                                                            required: {
+                                                                value: true,
+                                                                message: messages.roleid.required
+                                                            }
+                                                        }}
+                                                        render={({ field }) => (
+                                                            <Select
+                                                                labelId="type-property-label"
+                                                                id="roleid"
+                                                                label="Tipo de propiedad"
+                                                                className="text-sm"
+                                                                sx={{
+                                                                    fontFamily: '__Inter_aaf875',
+                                                                    fontSize: '0.875rem',
+                                                                    lineHeight: '1.25rem',
+                                                                    fontStyle: 'normal',
+                                                                    color: darkMode ? "white" : "#111827",
+                                                                    '.MuiSvgIcon-root ': {
+                                                                        fill: darkMode ? "white !important" : "#111827 !important",
+                                                                    }
+                                                                }}
+                                                                MenuProps={{
+                                                                    PaperProps: {
+                                                                        sx: {
+                                                                            backgroundColor: darkMode ? "#374151" : "#f3f4f6",
+                                                                            color: darkMode ? "#fff" : "#111827",
+                                                                            maxHeight: '200px',
+                                                                        },
+                                                                    },
+                                                                }}
+                                                                {...field}
+                                                            >
+                                                                {
+                                                                    roles.map((rol, index) => (
+                                                                        <MenuItem
+                                                                            value={rol.roleid}
+                                                                            key={index}
+                                                                            sx={{
+                                                                                fontSize: '0.875rem',
+                                                                                lineHeight: '1.25rem',
+                                                                                '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                                                                '&.Mui-selected:hover': {
+                                                                                    backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                                                    color: darkMode ? '#3b82f6' : '#fff',
+                                                                                }, // Style when selected and hovered
+                                                                                '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                                                            }}
+                                                                        >
+                                                                            {rol.vchname}
+                                                                        </MenuItem>
+                                                                    ))
+                                                                }
+                                                            </Select>
+                                                        )}
+                                                    />
+                                                    <FormHelperText
+                                                        sx={{
+                                                            color: darkMode ? '#d1d5db' : '#4b5563',
+                                                        }}
+                                                    >
+                                                        Selecciona un tipo de usuario
+                                                    </FormHelperText>
+                                                    {errors?.typeproperty && (
+                                                        <Alert message={errors?.typeproperty.message} />
+                                                    )}
+                                                </FormControl>
+                                            </div>
+                                            <div>
+                                                <div className="relative z-0 w-full mb-5 group">
+                                                    <input
+                                                        {...register("vchemail", {
+                                                            required: {
+                                                                value: true,
+                                                                message: messages.vchemail.required
+                                                            },
+                                                            pattern: {
+                                                                value: patterns.vchemail,
+                                                                message: messages.vchemail.pattern
+                                                            }
+                                                        })}
+                                                        type="email"
+                                                        name="vchemail"
+                                                        id="vchemail"
+                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                        placeholder=""
+                                                        autoComplete="off"
+                                                    />
+                                                    <label htmlFor="vchemail" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Correo electrónico</label>
+                                                    {errors?.vchemail && (
+                                                        <Alert message={errors?.vchemail.message} />
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     )}
                                     {step === 2 && (
                                         <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
                                             <div className="w-full xl:w-1/2">
-                                                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                                <label htmlFor='email' className="mb-3 block text-sm font-medium text-black dark:text-white">
                                                     Email
                                                 </label>
                                                 <input
+                                                    {...register("email", {
+                                                        required: {
+                                                            value: true,
+                                                            message: messages.vchname.required
+                                                        },
+                                                    })}
                                                     type="email"
                                                     name="email"
-                                                    value={formData.email}
-                                                    onChange={handleChange}
+                                                    id="email"
                                                     placeholder="Enter your email"
                                                     className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-800 dark:bg-gray-800 dark:text-white dark:focus:border-primary"
                                                 />
                                             </div>
                                             <div className="w-full xl:w-1/2">
-                                                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                                <label htmlFor='address' className="mb-3 block text-sm font-medium text-black dark:text-white">
                                                     Address
                                                 </label>
                                                 <input
+                                                    {...register("address", {
+                                                        required: {
+                                                            value: true,
+                                                            message: messages.vchname.required
+                                                        },
+                                                    })}
                                                     type="text"
                                                     name="address"
-                                                    value={formData.address}
-                                                    onChange={handleChange}
+                                                    id='address'
                                                     placeholder="Enter your address"
                                                     className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-800 dark:bg-gray-800 dark:text-white dark:focus:border-primary"
+                                                    autoComplete='off'
                                                 />
                                             </div>
                                         </div>
@@ -159,29 +342,41 @@ const MultiStepForm: React.FC = () => {
                                     {step === 3 && (
                                         <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
                                             <div className="w-full xl:w-1/2">
-                                                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                                <label htmlFor='city' className="mb-3 block text-sm font-medium text-black dark:text-white">
                                                     City
                                                 </label>
                                                 <input
+                                                    {...register("city", {
+                                                        required: {
+                                                            value: true,
+                                                            message: messages.vchname.required
+                                                        },
+                                                    })}
                                                     type="text"
                                                     name="city"
-                                                    value={formData.city}
-                                                    onChange={handleChange}
+                                                    id='city'
                                                     placeholder="Enter your city"
                                                     className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-800 dark:bg-gray-800 dark:text-white dark:focus:border-primary"
+                                                    autoComplete='off'
                                                 />
                                             </div>
                                             <div className="w-full xl:w-1/2">
-                                                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                                <label htmlFor="state" className="mb-3 block text-sm font-medium text-black dark:text-white">
                                                     State
                                                 </label>
                                                 <input
+                                                    {...register("state", {
+                                                        required: {
+                                                            value: true,
+                                                            message: messages.vchname.required
+                                                        },
+                                                    })}
                                                     type="text"
                                                     name="state"
-                                                    value={formData.state}
-                                                    onChange={handleChange}
+                                                    id='state'
                                                     placeholder="Enter your state"
                                                     className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-800 dark:bg-gray-800 dark:text-white dark:focus:border-primary"
+                                                    autoComplete='off'
                                                 />
                                             </div>
                                         </div>
@@ -189,22 +384,28 @@ const MultiStepForm: React.FC = () => {
                                     {step === 4 && (
                                         <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
                                             <div className="w-full xl:w-1/2">
-                                                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                                <label htmlFor='zip' className="mb-3 block text-sm font-medium text-black dark:text-white">
                                                     ZIP Code
                                                 </label>
                                                 <input
+                                                    {...register("zip", {
+                                                        required: {
+                                                            value: true,
+                                                            message: messages.vchname.required
+                                                        },
+                                                    })}
                                                     type="text"
                                                     name="zip"
-                                                    value={formData.zip}
-                                                    onChange={handleChange}
+                                                    id='zip'
                                                     placeholder="Enter your ZIP code"
                                                     className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-800 dark:bg-gray-800 dark:text-white dark:focus:border-primary"
+                                                    autoComplete='off'
                                                 />
                                             </div>
                                         </div>
                                     )}
                                     <div className="flex justify-between mt-4">
-                                        {step > 1 && (
+                                        {step > 1 ? (
                                             <button
                                                 type="button"
                                                 onClick={prevStep}
@@ -212,6 +413,8 @@ const MultiStepForm: React.FC = () => {
                                             >
                                                 Previous
                                             </button>
+                                        ) : (
+                                            <div className="px-4 py-2 invisible">Placeholder</div>
                                         )}
                                         {step < 4 ? (
                                             <button
