@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
         const usuarioid = findUser.data.usuarioid;
         console.log('Usuario:',usuarioid)
         const response = await axios.patch(`${process.env.REST_URL}/users/${usuarioid}`, {
-            vchpassword
+            vchpassword 
         });
         return NextResponse.json(
             { data: response.data, message: 'Contraseña actualizada'},
