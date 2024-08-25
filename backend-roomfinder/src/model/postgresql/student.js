@@ -45,7 +45,7 @@ export class StudentsModel extends UsersModel {
             const created_at = result.created_at
             // Connection with database
             const db = new Database();
-            const client = await db.pool.release();
+            const client = await db.pool.connect();
             try {
                 await client.query(
                     `INSERT INTO "Usuario"."Estudiantes" (intcodestudent, usuarioid, vchuniversity) VALUES($1, $2, $3);`,
