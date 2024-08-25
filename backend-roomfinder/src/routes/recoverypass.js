@@ -72,6 +72,17 @@ export const createRecoveryPassRouter = ({ recoveryPassModel }) => {
         },
         recoveryPassController.delete
     ]);
+    recoveryPassRouter.delete("/user/:usuarioid", [
+        param("usuarioid").isInt().withMessage('usuarioid must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+            next();
+        },
+        recoveryPassController.deleteByUser
+    ]);
 
     return recoveryPassRouter;
 }

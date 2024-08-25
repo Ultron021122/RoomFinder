@@ -10,6 +10,7 @@ export async function GET() {
             { status: 200 }
         );
     } catch (error) {
+        console.error(error);
         return NextResponse.json(
             { message: 'Server error' },
             { status: 503 }
@@ -33,6 +34,7 @@ export async function POST(req, res) {
             }
         );
     } catch (error) {
+        console.error(error);
         return NextResponse.json(
             { messages: "Server error" },
             { status: 503 }
@@ -69,6 +71,7 @@ export async function POST(req, res) {
         );
 
     } catch (error) {
+        console.error(error)
         if (imageUrl && imageUrl.public_id) {
             await deleteImage(imageUrl.public_id);
         }
