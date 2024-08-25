@@ -154,11 +154,10 @@ export class UserController {
                 return res.status(404).json({ message: 'User not found' });
             }
 
-            const token = await this.EmailService.generarTokenVerification();
-            const recovery = await this.userModel.recoveryPassword({ recover: { usuarioid: user.usuarioid, vchtoken: token } })
+            const recovery = await this.userModel.recoveryPassword({ recover: { usuarioid: user.usuarioid } })
             if (!recovery) return res.status(400).json({ message: 'Error generating recovery token' });
 
-            await this.EmailService.sendEmailRecovery(user.vchname, user.vchemail, token);
+            await this.EmailService.sendEmailRecovery(user.vchname, user.vchemail, recovery.vchtoken);
             return res.status(200).json({ message: 'Recovery email sent' });
         } catch (err) {
             next(err);
