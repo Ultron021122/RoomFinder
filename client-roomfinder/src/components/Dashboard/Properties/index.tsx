@@ -6,6 +6,7 @@ import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/
 import { Controller, useForm } from "react-hook-form";
 import { messages, patterns, roles } from '@/utils/constants';
 import { Alert } from '@/utils/alert';
+import { Progress } from "@nextui-org/react";
 import { Property } from '@/utils/interfaces';
 
 interface FormData {
@@ -18,6 +19,53 @@ interface FormData {
     zip: string;
     vchemail: string;
     typeproperty: number;
+}
+
+interface PropertyData {
+    // Property Details
+    propertytypeid: number;
+    vchtitle: string;
+    intnumberrooms: number;
+    intnumberbathrooms: number;
+    intmaxoccupacy: number;
+    bnfurnished: boolean;
+    vchfurnituretype: string;
+    decrentalcost: number;
+    dtavailabilitydate: string;
+    intmincontractduration: number; 
+    intmaxcontractduration: number;
+    decpropertyrating: number;
+    bnstudyzone: boolean;
+    vchbuildingsecurity: string;
+    vchtransportationaccess: string;
+    vchpropertyrules: string;
+    vchdescription: string;
+    // Property Address
+    vchexteriornumber: string;
+    vchinteriornumber: string;
+    vchstreet: string;
+    vchaddrescomplement: string;
+    vchneighborhood: string;
+    vchmunicipality: string;
+    vchstateprovince: string;
+    intzip: number;
+    vchcountry: string;
+    // Property services
+    bnwaterincluded: boolean;
+    bnelectricityincluded: boolean;
+    bninternetincluded: boolean;
+    bngasincluded: boolean;
+    bnheatingincluded: boolean;
+    bnaireconditioningincluded: boolean;
+    bnlaundryincluded: boolean;
+    bnparkingincluded: boolean;
+    bncleaningincluded: boolean;
+    bncabletvincluded: boolean;
+    // Property images
+    // Additional features
+    decarea: number;
+    fldistanceuniversity: number;
+    vchadditionalfeatures: string;
 }
 
 const MultiStepForm: React.FC = () => {
@@ -34,11 +82,6 @@ const MultiStepForm: React.FC = () => {
     const prevStep = () => {
         setStep(step - 1);
     };
-    
-    /*const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-        console.log(formData);
-    };*/
 
     const onSubmit = async (data: FormData) => {
         console.log(data);
@@ -68,39 +111,8 @@ const MultiStepForm: React.FC = () => {
             <div className="mx-auto">
                 <Breadcrumb pageName="Propiedades" />
                 <div className="grid grid-cols-1 gap-9 sm:grid-cols-3">
-                    <div className='sm:col-span-3'>
-                        <ol className="items-center flex w-full max-w-4xl text-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base">
-                            <li className={`after:border-1 flex items-center ${step >= 1 ? 'text-primary-700 dark:text-primary-500' : ''} after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] md:w-full xl:after:mx-10`}>
-                                <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['/'] dark:after:text-gray-500 sm:after:hidden">
-                                    <svg className="me-2 h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                    Principales
-                                </span>
-                            </li>
-                            <li className={`after:border-1 flex items-center ${step >= 2 ? 'text-primary-700 dark:text-primary-500' : ''} after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] md:w-full xl:after:mx-10`}>
-                                <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['/'] dark:after:text-gray-500 sm:after:hidden">
-                                    <svg className="me-2 h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                    Direccion
-                                </span>
-                            </li>
-                            <li className={`after:border-1 flex items-center ${step >= 3 ? 'text-primary-700 dark:text-primary-500' : ''} after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] md:w-full xl:after:mx-10`}>
-                                <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['/'] dark:after:text-gray-500 sm:after:hidden">
-                                    <svg className="me-2 h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                    Servicios
-                                </span>
-                            </li>
-                            <li className={`flex shrink-0 items-center ${step >= 4 ? 'text-primary-700 dark:text-primary-500' : ''}`}>
-                                <svg className="me-2 h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                </svg>
-                                Adicionales
-                            </li>
-                        </ol>
+                    <div className='gap-9 sm:col-span-2'>
+                        <Progress size="sm" aria-label="Loading..." value={(step / 4) * 100} />
                     </div>
                     <div className="flex flex-col gap-9 sm:col-span-2">
                         <div className="rounded-sm border border-gray-300 shadow-default dark:border-gray-800">
@@ -411,7 +423,7 @@ const MultiStepForm: React.FC = () => {
                                                 onClick={prevStep}
                                                 className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
                                             >
-                                                Previous
+                                                Atras
                                             </button>
                                         ) : (
                                             <div className="px-4 py-2 invisible">Placeholder</div>
@@ -422,14 +434,14 @@ const MultiStepForm: React.FC = () => {
                                                 onClick={nextStep}
                                                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                             >
-                                                Next
+                                                Siguiente
                                             </button>
                                         ) : (
                                             <button
                                                 type="submit"
                                                 className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                                             >
-                                                Submit
+                                                Enviar
                                             </button>
                                         )}
                                     </div>

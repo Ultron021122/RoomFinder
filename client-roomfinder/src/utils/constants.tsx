@@ -88,6 +88,21 @@ export const messages = {
         min: "El ancho debe ser mayor a 0",
         max: "El ancho debe ser menor a 1800"
     },
+    vchtitle: {
+        required: "El campo Título es requerido",
+        min: "El título debe ser mayor a 3 caracteres",
+        max: "El título debe ser menor a 25 caracteres"
+    },
+    intnumberrooms: {
+        required: "El campo Número de habitaciones es requerido",
+        min: "El número de habitaciones debe ser mayor a 0",
+        max: "El número de habitaciones debe ser menor a 10"
+    },
+    intnumberbathrooms: {
+        required: "El campo Número de baños es requerido",
+        min: "El número de baños debe ser mayor a 0",
+        max: "El número de baños debe ser menor a 10"
+    },
 }
 
 export const images = [
