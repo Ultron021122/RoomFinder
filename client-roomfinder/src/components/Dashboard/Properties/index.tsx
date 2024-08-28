@@ -31,7 +31,7 @@ interface PropertyData {
     bnfurnished: boolean;
     vchfurnituretype: string;
     decrentalcost: number;
-    dtavailabilitydate: string;
+    dtavailabilitydate: Date;
     intmincontractduration: number; 
     intmaxcontractduration: number;
     decpropertyrating: number;
