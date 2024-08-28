@@ -55,12 +55,12 @@ export const CardOwner = ({ id, title, description, image }: CardOwnerProps) => 
                     sx={{ width: '100%', height: 275, objectFit: 'cover', objectPosition: 'center' }} // Ajustar la imagen al ancho de la tarjeta
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <h5>
                         {title}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: darkMode ? '#d1d5db' : '#111827' }}>
+                    </h5>
+                    <p className="text-base-950 dark:text-gray-300">
                         {description}
-                    </Typography>
+                    </p>
                 </CardContent>
                 <CardActions
                     sx={{
@@ -72,7 +72,7 @@ export const CardOwner = ({ id, title, description, image }: CardOwnerProps) => 
                     <Button
                         color="primary"
                         variant="contained"
-                        href={`/owner/${id}`}
+                        href={`/property/${id}`}
                         startIcon={<InfoIcon />}
                         sx={{ textTransform: 'none', fontSize: '1rem', margin: '0 .5rem' }}
                     >
