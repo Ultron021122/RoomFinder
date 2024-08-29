@@ -55,7 +55,7 @@ export const CardOwner = ({ id, title, description, image }: CardOwnerProps) => 
                     sx={{ width: '100%', height: 275, objectFit: 'cover', objectPosition: 'center' }} // Ajustar la imagen al ancho de la tarjeta
                 />
                 <CardContent>
-                    <h5>
+                    <h5 className="text-lg font-semibold text-slate-900">
                         {title}
                     </h5>
                     <p className="text-base-950 dark:text-gray-300">
