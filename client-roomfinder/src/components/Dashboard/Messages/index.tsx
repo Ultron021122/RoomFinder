@@ -74,7 +74,9 @@ export default function MessageMainComponent() {
                             </div>
                         </div>
                         {isLoading ?
-                            <Spinner />
+                            <div className="flex items-center h-full justify-center">
+                                <Spinner />
+                            </div>
                             :
                             (
                                 !users ? (
@@ -106,14 +108,22 @@ export default function MessageMainComponent() {
                         }
                     </div>
                     {/* Other Box */}
-                    <div className="w-3/4 flex flex-col">
-                        <div className="flex flex-col items-center justify-center h-full overflow-y-auto custom-scrollbar">
-                            <RocketIcon size={64} className="text-gray-500 dark:text-gray-300" />
-                            <div>
-                                <p className="p-4 text-gray-400">Únete a una nueva conversación.</p>
+                    {!selectedUser ? (
+                        <div className="w-3/4 flex flex-col">
+                            <div className="flex flex-col items-center justify-center h-full overflow-y-auto custom-scrollbar">
+                                <RocketIcon size={64} className="text-gray-500 dark:text-gray-300" />
+                                <div>
+                                    <p className="p-4 text-gray-400">Únete a una nueva conversación.</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div>
+                            
+                        </div>
+                    )
+                    }
+
                 </div>
             </section>
             <style jsx>{`
