@@ -7,19 +7,6 @@ import { Controller, useForm } from "react-hook-form";
 import { messages, patterns, roles } from '@/utils/constants';
 import { Alert } from '@/utils/alert';
 import { Progress } from "@nextui-org/react";
-import { Property } from '@/utils/interfaces';
-
-interface FormData {
-    firstName: string;
-    lastName: string;
-    email: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    vchemail: string;
-    typeproperty: number;
-}
 
 interface PropertyData {
     // Property Details
@@ -32,7 +19,7 @@ interface PropertyData {
     vchfurnituretype: string;
     decrentalcost: number;
     dtavailabilitydate: string;
-    intmincontractduration: number; 
+    intmincontractduration: number;
     intmaxcontractduration: number;
     decpropertyrating: number;
     bnstudyzone: boolean;
@@ -73,7 +60,7 @@ const MultiStepForm: React.FC = () => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const [step, setStep] = useState<number>(1);
-    const { control, register, handleSubmit, formState: { errors }, watch, reset, setValue, setError, clearErrors } = useForm<FormData>({ mode: "onChange" });
+    const { control, register, handleSubmit, formState: { errors }, watch, reset, setValue, setError, clearErrors } = useForm<PropertyData>({ mode: "onChange" });
 
     const nextStep = () => {
         setStep(step + 1);
@@ -83,7 +70,7 @@ const MultiStepForm: React.FC = () => {
         setStep(step - 1);
     };
 
-    const onSubmit = async (data: FormData) => {
+    const onSubmit = async (data: PropertyData) => {
         console.log(data);
     };
 
@@ -126,57 +113,176 @@ const MultiStepForm: React.FC = () => {
                                     {step === 1 && (
                                         <div>
                                             <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
+                                                {/* Property Title */}
                                                 <div className="w-full xl:w-1/2">
                                                     <div className="relative z-0 w-full group">
                                                         <input
-                                                            {...register("firstName", {
+                                                            {...register("vchtitle", {
                                                                 required: {
                                                                     value: true,
-                                                                    message: messages.vchemail.required
+                                                                    message: messages.vchtitle.required
                                                                 },
                                                             })}
-                                                            type="email"
-                                                            name="firstName"
-                                                            id="firstName"
+                                                            type="text"
+                                                            name="vchtitle"
+                                                            id="vchtitle"
                                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                             placeholder=""
                                                             autoComplete="off"
                                                         />
                                                         <label
-                                                            htmlFor="firstName"
+                                                            htmlFor="vchtitle"
                                                             className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                                         >
                                                             Nombre de la propiedad
                                                         </label>
-                                                        {errors?.firstName && (
-                                                            <Alert message={errors?.firstName.message} />
+                                                        {errors?.vchtitle && (
+                                                            <Alert message={errors?.vchtitle.message} />
                                                         )}
                                                     </div>
                                                 </div>
+                                                {/* Exterior number */}
                                                 <div className="w-full xl:w-1/2">
                                                     <div className="relative z-0 w-full group">
                                                         <input
-                                                            {...register("lastName", {
+                                                            {...register("vchexteriornumber", {
                                                                 required: {
                                                                     value: true,
-                                                                    message: messages.vchemail.required
+                                                                    message: messages.vchexteriornumber.required
                                                                 },
                                                             })}
-                                                            type="email"
-                                                            name="lastName"
-                                                            id="lastName"
+                                                            type="text"
+                                                            name="vchexteriornumber"
+                                                            id="vchexteriornumber"
                                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                             placeholder=""
                                                             autoComplete="off"
                                                         />
                                                         <label
-                                                            htmlFor="lastName"
+                                                            htmlFor="vchexteriornumber"
                                                             className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                                         >
-                                                            Last Name
+                                                            Número exterior
                                                         </label>
-                                                        {errors?.lastName && (
-                                                            <Alert message={errors?.lastName.message} />
+                                                        {errors?.vchexteriornumber && (
+                                                            <Alert message={errors?.vchexteriornumber.message} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
+                                                {/* Interior number */}
+                                                <div className="w-full xl:w-1/2">
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("vchinteriornumber", {
+                                                                required: {
+                                                                    value: true,
+                                                                    message: messages.vchinteriornumber.required
+                                                                },
+                                                            })}
+                                                            type="text"
+                                                            name="vchinteriornumber"
+                                                            id="vchinteriornumber"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label
+                                                            htmlFor="vchinteriornumber"
+                                                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                        >
+                                                            Número interior
+                                                        </label>
+                                                        {errors?.vchinteriornumber && (
+                                                            <Alert message={errors?.vchinteriornumber.message} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                {/* Street */}
+                                                <div className="w-full xl:w-1/2">
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("vchstreet", {
+                                                                required: {
+                                                                    value: true,
+                                                                    message: messages.vchstreet.required
+                                                                },
+                                                            })}
+                                                            type="text"
+                                                            name="vchstreet"
+                                                            id="vchstreet"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label
+                                                            htmlFor="vchstreet"
+                                                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                        >
+                                                            Nombre de la calle
+                                                        </label>
+                                                        {errors?.vchstreet && (
+                                                            <Alert message={errors?.vchstreet.message} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
+                                                {/* Address Complement */}
+                                                <div className="w-full xl:w-1/2">
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("vchaddrescomplement", {
+                                                                required: {
+                                                                    value: true,
+                                                                    message: messages.vchaddrescomplement.required
+                                                                },
+                                                            })}
+                                                            type="text"
+                                                            name="vchaddrescomplement"
+                                                            id="vchaddrescomplement"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label
+                                                            htmlFor="vchaddrescomplement"
+                                                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                        >
+                                                            Complemento de dirección
+                                                        </label>
+                                                        {errors?.vchaddrescomplement && (
+                                                            <Alert message={errors?.vchaddrescomplement.message} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                {/* Neighborhood */}
+                                                <div className="w-full xl:w-1/2">
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("vchneighborhood", {
+                                                                required: {
+                                                                    value: true,
+                                                                    message: messages.vchsuburb.required
+                                                                },
+                                                            })}
+                                                            type="text"
+                                                            name="vchneighborhood"
+                                                            id="vchneighborhood"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label
+                                                            htmlFor="vchneighborhood"
+                                                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                        >
+                                                            
+                                                        </label>
+                                                        {errors?.vchneighborhood && (
+                                                            <Alert message={errors?.vchneighborhood
+                                                                .message} />
                                                         )}
                                                     </div>
                                                 </div>
