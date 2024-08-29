@@ -103,6 +103,115 @@ export const messages = {
         min: "El número de baños debe ser mayor a 0",
         max: "El número de baños debe ser menor a 10"
     },
+    intmaxoccupacy: {
+        required: "El campo Ocupación máxima es requerido",
+        min: "La ocupación minima debe ser 1",
+        max: "La ocupación máxima debe ser menor a 20"
+    },
+    bnfurnished: {
+        required: "El campo Amueblado es requerido",
+    },
+    vchfurnituretype: {
+        required: "Debes introducir un tipo de mueble",
+    },
+    decrentalcost: {
+        required: "El campo Costo de renta es requerido",
+        min: "El costo de renta debe ser mayor a 0",
+        max: "El costo de renta debe ser menor a 99999999"
+    },
+    dtavailabilitydate: {
+        required: "Debes introducir una fecha de disponibilidad",
+    },
+    intmincontractduration: {  
+        required: "El campo Duración mínima de contrato es requerido",
+        min: "La duración mínima de contrato es de 1 mes",
+        max: "La duración mínima de contrato es de 12 meses"
+    },
+    intmaxcontractduration: {
+        required: "El campo Duración máxima de contrato es requerido",
+        min: "La duración máxima de contrato es de 1 mes",
+        max: "La duración máxima de contrato es de 12 meses"
+    },
+    decpropertyrating: {
+        required: "El campo Calificación es requerido",
+        min: "La calificación debe ser mayor a 0",
+        max: "La calificación debe ser menor a 5"
+    },
+    vchaddrescomplement: {
+        required: "El campo Complemento de dirección es requerido",
+    },
+    bnstudyzone: {
+        required: "El campo Zona de estudio es requerido",
+    },
+    vchbuildingsecurity: {
+        required: "El campo Seguridad del edificio es requerido",
+    },
+    vchtransportationaccess: {
+        required: "El campo Acceso a transporte es requerido",
+    },
+    vchpropertyrules: {
+        required: "El campo Reglas de la propiedad es requerido",
+    },
+    vchdescription: {
+        required: "El campo Descripción es requerido",
+        min: "La descripción debe ser mayor a 3 caracteres",
+        max: "La descripción debe ser menor a 250 caracteres"
+    },
+    vchexteriornumber: {
+        required: "El campo Número exterior es requerido",
+    },
+    vchinteriornumber: {
+        required: "El campo Número interior es requerido",
+    },
+    vchaddresscomplement: {
+        required: "El campo Complemento de dirección es requerido",
+    },
+    vchcountry: {
+        required: "El campo País es requerido",
+    },
+    bnwaterincluded: {
+        required: "El campo Agua incluida es requerido",
+    },
+    bnelectricityincluded: {
+        required: "El campo Luz incluida es requerido",
+    },
+    bninternetincluded: {
+        required: "El campo Internet incluido es requerido",
+    },
+    bngasincluded: {
+        required: "El campo Gas incluido es requerido",
+    },
+    bnheatingincluded: {
+        required: "El campo Calefacción incluida es requerido",
+    },
+    bnaireconditioningincluded: {
+        required: "El campo Aire acondicionado incluido es requerido",
+    },
+    bnlaundryincluded: {
+        required: "El campo Lavandería incluida es requerido",
+    },
+    bnparkingincluded: {
+        required: "El campo Estacionamiento incluido es requerido",
+    },
+    bncleaningincluded: {
+        required: "El campo Limpieza incluida es requerido",
+    },
+    bncabletvincluded: {
+        required: "El campo TV por cable incluida es requerido",
+    },
+    decarea: {
+        required: "El campo Área es requerido",
+        min: "El área debe ser mayor a 0",
+        max: "El área debe ser menor a 999"
+    },
+    fldistanceuniversity: {
+        required: "El campo Distancia a la universidad es requerido",
+        min: "La distancia a la universidad debe ser mayor a 0",
+        max: "La distancia a la universidad debe ser menor a 999"
+    },
+    vchadditionalfeatures: {
+        required: "El campo Características adicionales es requerido",
+    },
 }
 
 export const images = [
