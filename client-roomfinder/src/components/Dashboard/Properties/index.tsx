@@ -15,17 +15,19 @@ interface PropertyData {
     intnumberrooms: number;
     intnumberbathrooms: number;
     intmaxoccupacy: number;
+    /*
     bnfurnished: boolean;
     vchfurnituretype: string;
     decrentalcost: number;
     dtavailabilitydate: Date;
-    intmincontractduration: number; 
+    intmincontractduration: number;
     intmaxcontractduration: number;
     decpropertyrating: number;
     bnstudyzone: boolean;
     vchbuildingsecurity: string;
     vchtransportationaccess: string;
     vchpropertyrules: string;
+    */
     vchdescription: string;
     // Property Address
     vchexteriornumber: string;
@@ -38,6 +40,7 @@ interface PropertyData {
     intzip: number;
     vchcountry: string;
     // Property services
+    /*
     bnwaterincluded: boolean;
     bnelectricityincluded: boolean;
     bninternetincluded: boolean;
@@ -53,6 +56,7 @@ interface PropertyData {
     decarea: number;
     fldistanceuniversity: number;
     vchadditionalfeatures: string;
+    */
 }
 
 const MultiStepForm: React.FC = () => {
@@ -121,6 +125,7 @@ const MultiStepForm: React.FC = () => {
                                                                 required: {
                                                                     value: true,
                                                                     message: messages.vchtitle.required
+
                                                                 },
                                                             })}
                                                             type="text"
@@ -278,17 +283,256 @@ const MultiStepForm: React.FC = () => {
                                                             htmlFor="vchneighborhood"
                                                             className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                                         >
-                                                            
+                                                            Colonia
                                                         </label>
                                                         {errors?.vchneighborhood && (
-                                                            <Alert message={errors?.vchneighborhood
-                                                                .message} />
+                                                            <Alert message={errors?.vchneighborhood.message} />
                                                         )}
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
+                                                {/* Municipality */}
+                                                <div className="w-full xl:w-1/2">
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("vchmunicipality", {
+                                                                required: {
+                                                                    value: true,
+                                                                    message: messages.vchmunicipality.required
+                                                                },
+                                                            })}
+                                                            type="text"
+                                                            name="vchmunicipality"
+                                                            id="vchmunicipality"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label
+                                                            htmlFor="vchmunicipality"
+                                                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                        >
+                                                            Complemento de dirección
+                                                        </label>
+                                                        {errors?.vchmunicipality && (
+                                                            <Alert message={errors?.vchmunicipality.message} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                {/* State / Province */}
+                                                <div className="w-full xl:w-1/2">
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("vchstateprovince", {
+                                                                required: {
+                                                                    value: true,
+                                                                    message: messages.vchstate.required
+                                                                },
+                                                            })}
+                                                            type="text"
+                                                            name="vchstateprovince"
+                                                            id="vchstateprovince"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label
+                                                            htmlFor="vchstateprovince"
+                                                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                        >
+                                                            Estado / Provincia
+                                                        </label>
+                                                        {errors?.vchstateprovince && (
+                                                            <Alert message={errors?.vchstateprovince.message} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
+                                                {/* ZIP */}
+                                                <div className="w-full xl:w-1/2">
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("intzip", {
+                                                                required: {
+                                                                    value: true,
+                                                                    message: messages.intzip.required
+                                                                },
+                                                            })}
+                                                            type="number"
+                                                            name="intzip"
+                                                            id="intzip"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label
+                                                            htmlFor="intzip"
+                                                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                        >
+                                                            Código postal
+                                                        </label>
+                                                        {errors?.intzip && (
+                                                            <Alert message={errors?.intzip.message} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                {/* Country */}
+                                                <div className="w-full xl:w-1/2">
+                                                    <div className="relative z-0 w-full group">
+                                                        <input
+                                                            {...register("vchcountry", {
+                                                                required: {
+                                                                    value: true,
+                                                                    message: messages.vchcountry.required
+                                                                },
+                                                            })}
+                                                            type="text"
+                                                            name="vchcountry"
+                                                            id="vchcountry"
+                                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                            placeholder=""
+                                                            autoComplete="off"
+                                                        />
+                                                        <label
+                                                            htmlFor="vchcountry"
+                                                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                        >
+                                                            Pais
+                                                        </label>
+                                                        {errors?.vchcountry && (
+                                                            <Alert message={errors?.vchcountry.message} />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {step === 2 && (
+                                        <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
+                                            {/* Number of rooms */}
+                                            <div className="w-full xl:w-1/2">
+                                                <div className="relative z-0 w-full group">
+                                                    <input
+                                                        {...register("intnumberrooms", {
+                                                            required: {
+                                                                value: true,
+                                                                message: messages.intnumberrooms.required
+                                                            },
+                                                        })}
+                                                        type="text"
+                                                        name="intnumberrooms"
+                                                        id="intnumberrooms"
+                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                        placeholder=""
+                                                        autoComplete="off"
+                                                    />
+                                                    <label
+                                                        htmlFor="intnumberrooms"
+                                                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                    >
+                                                        Código postal
+                                                    </label>
+                                                    {errors?.intnumberrooms && (
+                                                        <Alert message={errors?.intnumberrooms.message} />
+                                                    )}
+                                                </div>
+                                            </div>
+                                            {/* Number bathrooms */}
+                                            <div className="w-full xl:w-1/2">
+                                                <div className="relative z-0 w-full group">
+                                                    <input
+                                                        {...register("intnumberbathrooms", {
+                                                            required: {
+                                                                value: true,
+                                                                message: messages.intnumberbathrooms.required
+                                                            },
+                                                        })}
+                                                        type="text"
+                                                        name="intnumberbathrooms"
+                                                        id="intnumberbathrooms"
+                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                        placeholder=""
+                                                        autoComplete="off"
+                                                    />
+                                                    <label
+                                                        htmlFor="intnumberbathrooms"
+                                                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                    >
+                                                        Pais
+                                                    </label>
+                                                    {errors?.intnumberbathrooms && (
+                                                        <Alert message={errors?.intnumberbathrooms.message} />
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {step === 3 && (
+                                        <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
+                                            {/* Maxima ocupacidad */}
+                                            <div className="w-full xl:w-1/2">
+                                                <div className="relative z-0 w-full group">
+                                                    <input
+                                                        {...register("intmaxoccupacy", {
+                                                            required: {
+                                                                value: true,
+                                                                message: messages.intmaxoccupacy.required
+                                                            },
+                                                        })}
+                                                        type="number"
+                                                        name="intmaxoccupacy"
+                                                        id="intmaxoccupacy"
+                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                        placeholder=""
+                                                        autoComplete="off"
+                                                    />
+                                                    <label
+                                                        htmlFor="intmaxoccupacy"
+                                                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                    >
+                                                        Maxima ocupacidad
+                                                    </label>
+                                                    {errors?.intmaxoccupacy && (
+                                                        <Alert message={errors?.intmaxoccupacy.message} />
+                                                    )}
+                                                </div>
+                                            </div>
+                                            {/* Number bathrooms */}
+                                            <div className="w-full xl:w-1/2">
+                                                <div className="relative z-0 w-full group">
+                                                    <input
+                                                        {...register("intnumberbathrooms", {
+                                                            required: {
+                                                                value: true,
+                                                                message: messages.intnumberbathrooms.required
+                                                            },
+                                                        })}
+                                                        type="number"
+                                                        name="intnumberbathrooms"
+                                                        id="intnumberbathrooms"
+                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                        placeholder=""
+                                                        autoComplete="off"
+                                                    />
+                                                    <label
+                                                        htmlFor="intnumberbathrooms"
+                                                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                    >
+                                                        Numero de baños
+                                                    </label>
+                                                    {errors?.intnumberbathrooms && (
+                                                        <Alert message={errors?.intnumberbathrooms.message} />
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {step === 4 && (
+                                        <>
                                             {/* Tipo de propiedad */}
-                                            <div className='mb-4'>
+                                            < div className='mb-4'>
                                                 <FormControl
                                                     className="w-full xl:w-1/2 mb-2"
                                                     variant="standard"
@@ -317,7 +561,7 @@ const MultiStepForm: React.FC = () => {
                                                         Tipo de propiedad
                                                     </InputLabel>
                                                     <Controller
-                                                        name="typeproperty"
+                                                        name="propertytypeid"
                                                         control={control}
                                                         defaultValue={1}
                                                         rules={{
@@ -383,144 +627,12 @@ const MultiStepForm: React.FC = () => {
                                                     >
                                                         Selecciona un tipo de usuario
                                                     </FormHelperText>
-                                                    {errors?.typeproperty && (
-                                                        <Alert message={errors?.typeproperty.message} />
+                                                    {errors?.propertytypeid && (
+                                                        <Alert message={errors?.propertytypeid.message} />
                                                     )}
                                                 </FormControl>
                                             </div>
-                                            <div>
-                                                <div className="relative z-0 w-full mb-5 group">
-                                                    <input
-                                                        {...register("vchemail", {
-                                                            required: {
-                                                                value: true,
-                                                                message: messages.vchemail.required
-                                                            },
-                                                            pattern: {
-                                                                value: patterns.vchemail,
-                                                                message: messages.vchemail.pattern
-                                                            }
-                                                        })}
-                                                        type="email"
-                                                        name="vchemail"
-                                                        id="vchemail"
-                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                        placeholder=""
-                                                        autoComplete="off"
-                                                    />
-                                                    <label htmlFor="vchemail" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Correo electrónico</label>
-                                                    {errors?.vchemail && (
-                                                        <Alert message={errors?.vchemail.message} />
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                    {step === 2 && (
-                                        <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
-                                            <div className="w-full xl:w-1/2">
-                                                <label htmlFor='email' className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                                    Email
-                                                </label>
-                                                <input
-                                                    {...register("email", {
-                                                        required: {
-                                                            value: true,
-                                                            message: messages.vchname.required
-                                                        },
-                                                    })}
-                                                    type="email"
-                                                    name="email"
-                                                    id="email"
-                                                    placeholder="Enter your email"
-                                                    className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-800 dark:bg-gray-800 dark:text-white dark:focus:border-primary"
-                                                />
-                                            </div>
-                                            <div className="w-full xl:w-1/2">
-                                                <label htmlFor='address' className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                                    Address
-                                                </label>
-                                                <input
-                                                    {...register("address", {
-                                                        required: {
-                                                            value: true,
-                                                            message: messages.vchname.required
-                                                        },
-                                                    })}
-                                                    type="text"
-                                                    name="address"
-                                                    id='address'
-                                                    placeholder="Enter your address"
-                                                    className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-800 dark:bg-gray-800 dark:text-white dark:focus:border-primary"
-                                                    autoComplete='off'
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
-                                    {step === 3 && (
-                                        <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
-                                            <div className="w-full xl:w-1/2">
-                                                <label htmlFor='city' className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                                    City
-                                                </label>
-                                                <input
-                                                    {...register("city", {
-                                                        required: {
-                                                            value: true,
-                                                            message: messages.vchname.required
-                                                        },
-                                                    })}
-                                                    type="text"
-                                                    name="city"
-                                                    id='city'
-                                                    placeholder="Enter your city"
-                                                    className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-800 dark:bg-gray-800 dark:text-white dark:focus:border-primary"
-                                                    autoComplete='off'
-                                                />
-                                            </div>
-                                            <div className="w-full xl:w-1/2">
-                                                <label htmlFor="state" className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                                    State
-                                                </label>
-                                                <input
-                                                    {...register("state", {
-                                                        required: {
-                                                            value: true,
-                                                            message: messages.vchname.required
-                                                        },
-                                                    })}
-                                                    type="text"
-                                                    name="state"
-                                                    id='state'
-                                                    placeholder="Enter your state"
-                                                    className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-800 dark:bg-gray-800 dark:text-white dark:focus:border-primary"
-                                                    autoComplete='off'
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
-                                    {step === 4 && (
-                                        <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
-                                            <div className="w-full xl:w-1/2">
-                                                <label htmlFor='zip' className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                                    ZIP Code
-                                                </label>
-                                                <input
-                                                    {...register("zip", {
-                                                        required: {
-                                                            value: true,
-                                                            message: messages.vchname.required
-                                                        },
-                                                    })}
-                                                    type="text"
-                                                    name="zip"
-                                                    id='zip'
-                                                    placeholder="Enter your ZIP code"
-                                                    className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-800 dark:bg-gray-800 dark:text-white dark:focus:border-primary"
-                                                    autoComplete='off'
-                                                />
-                                            </div>
-                                        </div>
+                                        </>
                                     )}
                                     <div className="flex justify-between mt-4">
                                         {step > 1 ? (
@@ -556,8 +668,8 @@ const MultiStepForm: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
