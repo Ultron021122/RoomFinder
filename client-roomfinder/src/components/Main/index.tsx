@@ -41,7 +41,7 @@ export default function Inicio() {
                     {/* <div className="bg-white text-blue-500">
                         <Image src="/logo1.svg" alt="Propiedades destacadas" className="h-10" />
                     </div> */}
-                    <h3 className="dark:text-gray-300 text-3xl md:text-4xl xl:text-5xl font-bold mt-10 mb-5">
+                    <h3 className="dark:text-gray-100 text-3xl md:text-4xl xl:text-5xl tracking-tight font-bold leading-none  mt-10 mb-5">
                         Galeria de Imagenes
                     </h3>
                     <MasonryImageList />
