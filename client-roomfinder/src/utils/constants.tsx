@@ -137,6 +137,9 @@ export const messages = {
         min: "La calificación debe ser mayor a 0",
         max: "La calificación debe ser menor a 5"
     },
+    vchaddrescomplement: {
+        required: "El campo Complemento de dirección es requerido",
+    },
     bnstudyzone: {
         required: "El campo Zona de estudio es requerido",
     },
