@@ -22,7 +22,7 @@ export const Banner = () => {
                         </a>
                     </div>
                     <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
-                        <Image src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" alt="mockup" width={500} height={500} />
+                        <Image src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1470&auto=format" alt="mockup" width={500} height={500} />
                     </div>
                 </div>
             </section>
