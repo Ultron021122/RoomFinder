@@ -436,18 +436,21 @@ export const propertiesHome = [
         id: 1,
         title: "Casa en renta",
         description: "Hermosa casa en la playa con vista al mar.",
+        value: 4,
         imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg",
     },
     {
         id: 2,
         title: "Departamento en renta",
         description: "Departamento en el centro de la ciudad.",
+        value: 3.5,
         imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg",
     },
     {
         id: 3,
         title: "Casa en la montaña",
         description: "Casa en la montaña con vista a la ciudad.",
+        value: 5,
         imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1717565639/resources/osuacongqcobj2hdx8oc.jpg",
     }
 ]
