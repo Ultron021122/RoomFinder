@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import { useSession } from "next-auth/react";
 import { Button, Link as LinkUI } from "@nextui-org/react";
 import DropdownUser from "./dropdown";
+import { GraduationCapIcon } from "lucide-react";
 
 function Navbar({
     isOpen,
@@ -20,8 +21,8 @@ function Navbar({
             <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-900 absolute top-0 z-50 min-h-[73px]">
                 <div className="max-w-screen-2xl mx-auto p-4 sm:py-4">
                     <div className="flex items-center justify-between">
-                        <Link href="/" className="flex items-center h-[40px]">
-                            <Image className="w-8 h-8 mr-2" width={32} height={32} src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" priority={true} alt="logo" />
+                        <Link href="/" className="flex items-center justify-center h-[40px]">
+                            <GraduationCapIcon size={32} className="mr-2 text-neutral-900 dark:text-white" />
                             <h1 className="dark:text-gray-100 dark:hover:text-white text-2xl font-semibold">
                                 RoomFinder
                             </h1>

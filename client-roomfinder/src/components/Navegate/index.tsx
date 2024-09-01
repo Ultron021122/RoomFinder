@@ -48,18 +48,18 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
       <nav className="h-full flex-col max-w-max bg-white dark:bg-gray-950 border-r dark:border-gray-900 shadow-sm">
         <div className="pb-3 flex justify-between items-center text-gray-800 dark:text-gray-100">{/* p-4 */}
           {/*
-          <div
-            className={`overflow-hidden transition-all flex items-center ${expanded ? "h-10" : "w-0"}`}
-          >
-             //<Home size={20} />
-            <span className="text-lg font-medium">Regresar atras </span>
-          </div>
-          <button
-            className="p-1.5 rounded-lg bg-gray-50 dark:bg-gray-950 hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <LogOut size={20} />
-            {/*expanded ? <ChevronFirst /> : <ChevronLast />
-          </button>
+            <div
+              className={`overflow-hidden transition-all flex items-center ${expanded ? "h-10" : "w-0"}`}
+            >
+              //<Home size={20} />
+              <span className="text-lg font-medium">Regresar atras </span>
+            </div>
+            <button
+              className="p-1.5 rounded-lg bg-gray-50 dark:bg-gray-950 hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              <LogOut size={20} />
+              {/*expanded ? <ChevronFirst /> : <ChevronLast />
+            </button>
           */}
         </div>
         <SidebarContext.Provider value={{ expanded }}>
@@ -70,7 +70,7 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
             //src="https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=SM"
             src={user?.vchimage}
             alt={user?.vchname}
-            className="w-10 h-10 rounded-md"
+            className="w-10 h-10 rounded-full object-cover border-2 border-gray-300"
           />
           <div
             className={`
