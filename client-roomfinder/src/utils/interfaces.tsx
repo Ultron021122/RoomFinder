@@ -327,3 +327,39 @@ export interface Folder {
      */
     path: string;
 }
+
+/* new interfaces added */
+
+export interface UserProfile {
+    vchname: string;
+    vchpaternalsurname: string;
+    vchmaternalsurname: string;
+    vchemail: string;
+    vchimage: string;
+    usuarioid: number;
+    sessionid: number;
+    dtbirthdate: string;
+    bnverified: boolean;
+    bnstatus: boolean;
+    roleid: number;
+}
+
+export interface SidebarUserProps {
+    vchname: string;
+    vchpaternalsurname: string;
+    vchmaternalsurname: string;
+    vchemail: string;
+    vchimage: string;
+    usuarioid: number;
+    sessionid: number;
+    dtbirthdate: string;
+    bnverified: boolean;
+    bnstatus: boolean;
+    roleid: number;
+  }
+  
+export interface SidebarProps {
+    children: React.ReactNode;
+    expanded: boolean;
+    onResize: () => void;
+  }

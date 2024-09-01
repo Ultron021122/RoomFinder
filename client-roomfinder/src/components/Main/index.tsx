@@ -1,4 +1,3 @@
-'use client';
 import Layout from "@/components/layout";
 import Footer from '@/components/Footer';
 import { images, propertiesHome } from "@/utils/constants";
@@ -12,13 +11,6 @@ export default function Inicio() {
         <Layout key={1}>
             <div className='h-[100vh] w-full'>
                 <FrontPage />
-                {/*
-                <div className='h-[calc(100vh)] max-w-screen-2xl mx-auto bg-cover bg-no-repeat bg-center bg-black bg-opacity-30 dark:bg-opacity-45 bg-blend-darken flex justify-center items-center p-5 flex-col' style={{ backgroundImage: `url(${images[0].url})` }}>
-                    <h2 className="text-white text-4xl sm:text-6xl font-bold">
-                        Roomfinder
-                    </h2>
-                    <p className="text-gray-300">Encuentra tu espacio ideal con Roomfinder.</p>
-                </div>*/}
                 <section className="container mx-auto my-10 p-2 sm:p-0">
                     <div className="mb-5">
                         <div className="text-center mb-20">
@@ -38,9 +30,6 @@ export default function Inicio() {
                         </div>
                     </div>
                     <Banner />
-                    {/* <div className="bg-white text-blue-500">
-                        <Image src="/logo1.svg" alt="Propiedades destacadas" className="h-10" />
-                    </div> */}
                     <h3 className="dark:text-gray-300 text-3xl md:text-4xl xl:text-5xl font-bold mt-10 mb-5">
                         Galeria de Imagenes
                     </h3>
