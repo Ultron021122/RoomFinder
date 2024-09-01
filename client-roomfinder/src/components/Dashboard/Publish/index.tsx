@@ -8,8 +8,6 @@ const Publish = () => {
     return (
         <div className="h-full max-w-screen-2xl mx-auto bg-zinc-200 dark:bg-gray-900">
             <div className="mx-auto">
-                <Breadcrumb pageName="Publicar" />
-
                 <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
                     <div className="flex flex-col gap-9">
                         {/* <!-- Contact Form --> */}

@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // importante aqui!
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
@@ -24,10 +24,10 @@ interface RecoverUser {
 }
 
 function Recover() {
-    const { status } = useSession();
-    const router = useRouter();
+    const { status } = useSession(); // determinar si el usuario tiene una sesión iniciada { cargando, autenticado y no autenticado}
+    const router = useRouter(); // redirecciona las pantallas
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<RecoverUser>({ mode: "onChange" });
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<RecoverUser>({ mode: "onChange" }); // control sobre el formulario
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
 
