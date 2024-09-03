@@ -7,7 +7,13 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { rolesMapping } from "@/utils/constants";
 import { shortName } from "@/utils/functions";
 import Link from 'next/link';
-import { SidebarProps, SidebarUserProps } from "@/utils/interfaces";
+import { SidebarUserProps } from "@/utils/interfaces";
+
+interface SidebarProps {
+    children: React.ReactNode;
+    expanded: boolean;
+    onResize: () => void;
+}
 
 const SidebarContext = createContext({ expanded: false });
 export default function Sidebar({ children, expanded, onResize }: SidebarProps) {
