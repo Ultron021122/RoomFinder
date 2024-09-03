@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-export default function Element({icon, content}:{icon:string, content:string}){
-    return(
+export default function ImageElement({ icon, content }: { icon: string, content: string }) {
+    return (
         <div className="
             flex flex-col 
             justify-center 

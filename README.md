@@ -44,6 +44,9 @@ Elegir un modelo o Ingeniería de Software. (SCRUM, Método cascada , Método es
   <li>
     Sebastián Martínez López
   </li>
+  <li>
+    Abraham Salas Dimas
+  </li>
 </ul>
 
 [![Contribuidores](https://contrib.rocks/image?repo=Ultron021122/RoomFinder)](https://github.com/Ultron021122/RoomFinder/graphs/contributors)

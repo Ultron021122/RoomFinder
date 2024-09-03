@@ -327,23 +327,6 @@ export interface Folder {
      */
     path: string;
 }
-/**
- * Interface to manage Sidebar user props
- * @interface
- */
-export interface SidebarUserProps {
-    vchname: string;
-    vchpaternalsurname: string;
-    vchmaternalsurname: string;
-    vchemail: string;
-    vchimage: string;
-    usuarioid: number;
-    sessionid: number;
-    dtbirthdate: string;
-    bnverified: boolean;
-    bnstatus: boolean;
-    roleid: number;
-}
 /** 
  * Interface to manage the properties data
  * @interface
@@ -463,6 +446,23 @@ export interface Property {
      * vchpropertyrules: 'Property rules'
      */
     vchpropertyrules: string;
+}
+/**
+ * Interface to manage Sidebar user props
+ * @interface
+ */
+export interface SidebarUserProps {
+    vchname: string;
+    vchpaternalsurname: string;
+    vchmaternalsurname: string;
+    vchemail: string;
+    vchimage: string;
+    usuarioid: number;
+    sessionid: number;
+    dtbirthdate: string;
+    bnverified: boolean;
+    bnstatus: boolean;
+    roleid: number;
 }
 /** 
  * Interface to manage user profile data (session)
