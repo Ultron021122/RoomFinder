@@ -1,7 +1,12 @@
 import Image from "next/image";
 import ImageElement from "@/components/GeneralComponents/ImageElement";
 
-export default function Home(){
+let Content = {
+    Title: "¡Bienvenido a RoomFinder, estudiante!"
+}
+
+
+export default function AppHome(){
     return(
         <>
             <header className="relative h-96 bg-gray-500">
@@ -12,9 +17,9 @@ export default function Home(){
                     objectFit='cover'
                 />
                 <div className="flex flex-col justify-center items-center place-items-center absolute inset-0 bg-black bg-opacity-50">
-                    <h1 className="font-semibold text-4xl mb-4 text-white">¡Bienvenido a RoomFinder!</h1>
+                    <h1 className="font-semibold text-4xl mb-4 text-white">{Content.Title}</h1>
                     <p className="font-medium text-white text-center w-[95%]">
-                        Estamos encantados de que te unas a nuestra comunidad. RoomFinder es una plataforma diseñada específicamente para conectar a arrendadores como tú con estudiantes universitarios que buscan un lugar seguro, cómodo y adecuado para vivir mientras continúan sus estudios.
+                        Estamos encantados de que te unas a nuestra comunidad. RoomFinder es una plataforma diseñada específicamente para conectar estudiantes universitarios como tú que buscan un lugar seguro, cómodo y adecuado para vivir mientras continúan sus estudios, con arrendadores seguros y confiables.
                     </p>
                 </div>
             </header>
@@ -26,25 +31,25 @@ export default function Home(){
                     <li>
                         <ImageElement
                             icon={'/icon/operation.png'}
-                            content={'Publicar y Gestionar tus inmuebles'}
+                            content={'Buscar y gestionar inmuebles'}
                         />
                     </li>
                     <li>
                         <ImageElement 
                             icon={'/icon/networking.png'}
-                            content={'Conectar con Inquilinos Potenciales'}
+                            content={'Conectar con Arrendadores Potenciales'}
                         />
                     </li>
                     <li>
                         <ImageElement
                             icon={'/icon/optimize.png'}
-                            content={'Optimizar tus Rentas'}
+                            content={'Ahorrar en rentas'}
                         />
                     </li>
                     <li>
                         <ImageElement 
                             icon={'/icon/service.png'}
-                            content={'Asegurar tus Inmuebles'}
+                            content={'Vivir seguro'}
                         />
                     </li>
                 </ul>                

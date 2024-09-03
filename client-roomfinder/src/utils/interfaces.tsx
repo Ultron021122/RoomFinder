@@ -327,25 +327,6 @@ export interface Folder {
      */
     path: string;
 }
-<<<<<<< HEAD
-/**
- * Interface to manage Sidebar user props
- * @interface
- */
-export interface SidebarUserProps {
-    vchname: string;
-    vchpaternalsurname: string;
-    vchmaternalsurname: string;
-    vchemail: string;
-    vchimage: string;
-    usuarioid: number;
-    sessionid: number;
-    dtbirthdate: string;
-    bnverified: boolean;
-    bnstatus: boolean;
-    roleid: number;
-}
-=======
 /** 
  * Interface to manage the properties data
  * @interface
@@ -538,4 +519,3 @@ export interface UserProfile {
      */
     roleid: number;
 }
->>>>>>> c6bd5476e412ae984a5e40f16f6e4cf238317121

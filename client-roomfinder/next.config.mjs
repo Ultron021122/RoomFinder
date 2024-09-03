@@ -4,20 +4,29 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname:'res.cloudinary.com',
+                hostname: 'res.cloudinary.com',
                 port: '',
             },
             {
                 protocol: 'https',
-                hostname:'images.unsplash.com',
+                hostname: 'images.unsplash.com',
                 port: '',
             },
             {
                 protocol: 'http',
-                hostname:'localhost',
+                hostname: 'localhost',
                 port: '',
             }
         ],
+    },
+    async redirects() {
+        return [
+            {
+                source: '/dashboard',
+                destination: '/dashboard/home',
+                permanent: true, // Set to true for a 301 redirect, or false for a 302 redirect
+            },
+        ];
     },
 };
 
