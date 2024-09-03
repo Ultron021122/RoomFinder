@@ -50,7 +50,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         setExpanded(windowWidth > 640);
     }, [windowWidth]);
 
-    const roleName = rolesMapping[user?.roleid] || 'Desconocido';
+    const roleName = rolesMapping[user?.roleid] || 'Estudiante';
 
     return (
         <PerfectScrollbar>
@@ -78,7 +78,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     className="flex flex-1"
                 >
                     <Sidebar expanded={expanded} onResize={toggleSidebar}>
-                        <SidebarItem icon={<LayoutDashboard size={20} />} text="Principal" url="/dashboard/home"/>
+                        <SidebarItem icon={<LayoutDashboard size={20} />} text="Inicio" url="/dashboard/home"/>
                         <SidebarItem icon={<Home size={20} />} text="Inmuebles" url="/dashboard/inmuebles"/>
                         <SidebarItem icon={<Mail size={20} />} text="Mensajes" url="/dashboard/messages" />
                         <SidebarItem icon={<UserCircle size={20} />} text="Perfil" url="/dashboard/profile" />
@@ -89,10 +89,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 </>
                             )
                         }
-                        <SidebarItem icon={<LogOut size={20} />} text="Cerrar sesión" url="" /> {/* pendiente de implementar */}
                         <hr className="my-3 border-gray-300 dark:border-gray-800" /> {/* se  pueden eliminar estas opciones del sideBar */}
-                        <SidebarItem icon={<Settings size={20} />} text="Configuraciones" url="/dashboard/settings" />
+                        <SidebarItem icon={<Settings size={20} />} text="Ajustes" url="/dashboard/settings" />
                         <SidebarItem icon={<LifeBuoy size={20} />} text="Ayuda" url="/dashboard/help" alert />
+                        <SidebarItem icon={<LogOut size={20} />} text="Cerrar sesión" url="" /> {/* pendiente de implementar */}
                     </Sidebar>
                     <main className={`flex-1 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
                         <section className={`${windowWidth <= 640 && expanded && 'hidden'}`}>

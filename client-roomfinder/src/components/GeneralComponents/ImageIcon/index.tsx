@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function Icon({src, cantidad}: {src:string, cantidad:number}){
+export default function Imageicon({src, cantidad}: {src:string, cantidad:number}){
     return(
         <div className="flex gap-2 items-center">
             <Image

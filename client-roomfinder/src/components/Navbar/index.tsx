@@ -7,6 +7,7 @@ const excludedRoutes = [
     '/user/messages',
     '/signup',
     '/propiedades',
+    '/dashboard',
     '/dashboard/profile',
     '/dashboard/help',
     '/dashboard/publish',

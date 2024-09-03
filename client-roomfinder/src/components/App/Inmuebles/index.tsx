@@ -1,7 +1,7 @@
 import Image from "next/image";
 import CardElement from "@/components/GeneralComponents/CardElement";
 
-export default function Inmuebles (){
+export default function AppInmuebles (){
 
     /* Obtener inmuebles del arrendador */
 
@@ -65,7 +65,7 @@ export default function Inmuebles (){
                     objectFit="cover"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <h1 className="font-semibold text-white text-4xl">Mis Inmuebles en Renta</h1>
+                    <h1 className="font-semibold text-white text-4xl">Inmuebles Disponibles en Renta</h1>
                 </div>
             </section>
             {/* momentaneo */}
