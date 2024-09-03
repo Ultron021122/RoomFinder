@@ -327,6 +327,7 @@ export interface Folder {
      */
     path: string;
 }
+<<<<<<< HEAD
 
 /* new interfaces added */
 
@@ -363,3 +364,197 @@ export interface SidebarProps {
     expanded: boolean;
     onResize: () => void;
   }
+=======
+/** 
+ * Interface to manage the properties data
+ * @interface
+ */
+export interface Property {
+    /**
+     * Property id
+     * @example
+     * propertyid: 1
+     */
+    propertyid: number | null;
+    /**
+     * Property Type id
+     * @example
+     * propertytypeid: 1
+     */
+    propertytypeid: number;
+    /**
+     * Lessor id
+     * @example
+     * lessorid: 1
+     */
+    lessorid: number;
+    /**
+     * Property title
+     * @example
+     * vchtitle: 'Property title'
+     */
+    vchtitle: string;
+    /**
+     * Property description
+     * @example
+     * vchdescription: 'Property description'
+     */
+    vchdescription: string;
+    /**
+     * Number of rooms
+     * @example
+     * intnumberrooms: 1
+     */
+    intnumberrooms: number;
+    /**
+     * Number of bathrooms
+     * @example
+     * intnumberbathrooms: 1
+     */
+    intnumberbathrooms: number;
+    /**
+     * Maximum occupancy
+     * @example
+     * intmaxoccupancy: 1
+     */
+    intmaxoccupancy: number;
+    /**
+     * Furnished
+     * @example
+     * bnfurnished: true | false
+     */
+    bnfurnished: boolean;
+    /**
+     * Furniture type
+     * @example
+     * vchfurnituretype: 'Furniture type'
+     */
+    vchfurnituretype: string;
+    /**
+     * Rental cost
+     * @example
+     * decrentalcost: 1000
+     */
+    decrentalcost: number;
+    /**
+     * Availability date
+     * @example
+     * dtavailabilitydate: '2021-11-22'
+     */
+    dtavailabilitydate: string;
+    /**
+     * Minimum contract duration
+     * @example
+     * intmincontractduration: 1
+     */
+    intmincontractduration: number;
+    /**
+     * Maximum contract duration
+     * @example
+     * intmaxcontractduration: 12
+     */
+    intmaxcontractduration: number;
+    /**
+     * Property rating
+     * @example
+     * decpropertyrating: 4.5
+     */
+    decpropertyrating: number;
+    /**
+     * Study zone
+     * @example
+     * bnstudyzone: true | false
+     */
+    bnstudyzone: boolean;
+    /**
+     * Building security
+     * @example
+     * vchbuildingsecurity: 'Building security'
+     */
+    vchbuildingsecurity: string;
+    /**
+     * Transportation access
+     * @example
+     * vchtransportationaccess: 'Transportation access'
+     */
+    vchtransportationaccess: string;
+    /**
+     * Property rules
+     * @example
+     * vchpropertyrules: 'Property rules'
+     */
+    vchpropertyrules: string;
+}
+/** 
+ * Interface to manage user profile data (session)
+ * @interface
+ */
+export interface UserProfile {
+    /**
+     * User name
+     * @example
+     * vchname: 'Sebastian'
+     */
+    vchname: string;
+    /**
+     * User last name
+     * @example
+     * vchpaternalsurname: 'Martinez'
+     */
+    vchpaternalsurname: string;
+    /**
+     * User last name
+     * @example
+     * vchmaternalsurname: 'Lopez'
+     */
+    vchmaternalsurname: string;
+    /**
+     * User email
+     * @example
+     * vchemail: 'example@gmail.com'
+     */
+    vchemail: string;
+    /**
+     * User image
+     * @example
+     * vchimage: 'https://example.com/image.jpg'
+     */
+    vchimage: string;
+    /**
+     * User id
+     * @example
+     * usuarioid: 1
+     */
+    usuarioid: number;
+    /**
+     * User session id
+     * @example
+     * sessionid: 1
+     */
+    sessionid: number;
+    /**
+     * User birthdate
+     * @example
+     * dtbirthdate: '1999-11-22'
+     */
+    dtbirthdate: string;
+    /**
+     * User verified
+     * @example
+     * bnverified: true | false
+     */
+    bnverified: boolean;
+    /**
+     * User status
+     * @example
+     * bnstatus: true | false
+     */
+    bnstatus: boolean;
+    /**
+     * User role id
+     * @example
+     * roleid: 1
+     */
+    roleid: number;
+}
+>>>>>>> c6bd5476e412ae984a5e40f16f6e4cf238317121

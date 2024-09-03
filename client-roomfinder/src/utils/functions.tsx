@@ -1,3 +1,5 @@
+import { Spinner } from "@nextui-org/react";
+
 interface fullName {
     vchname: string;
     vchpaternalsurname: string;
@@ -8,7 +10,7 @@ export const getFullName = ({ vchname = '', vchpaternalsurname = '', vchmaternal
     // Validar que los campos no estén vacíos
     if (!vchname.trim() || !vchpaternalsurname.trim() || !vchmaternalsurname.trim()) {
         //throw new Error("Todos los campos deben ser proporcionados y no pueden estar vacíos.");
-        return 'Ocurrio un error';
+        return <Spinner />;
     }
     return `${vchname} ${vchpaternalsurname} ${vchmaternalsurname}`;
 }
@@ -17,7 +19,7 @@ export const shortName = ({ vchname = '', vchpaternalsurname = '', vchmaternalsu
     // Validar que los campos no estén vacíos
     if (!vchname.trim() || !vchpaternalsurname.trim() || !vchmaternalsurname.trim()) {
         //throw new Error("Todos los campos deben ser proporcionados y no pueden estar vacíos.");
-        return 'Ocurrio un error';
+        return <Spinner />;
     }
     let length = vchname.length + vchpaternalsurname.length + vchmaternalsurname.length;
     if (length > 20) {

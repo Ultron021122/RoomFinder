@@ -277,8 +277,8 @@ export class UsersModel {
 
     static async recoveryPassword({ recover }) {
         try {
-            const { usuarioid, vchtoken } = recover;
-            const result = await RecoveryPassModel.create({ input: { usuarioid, vchtoken } });
+            const { usuarioid } = recover;
+            const result = await RecoveryPassModel.create({ input: { usuarioid } });
             return result;
         } catch (error) {
             throw new Error(`Error recovering password: ${error.message}`)

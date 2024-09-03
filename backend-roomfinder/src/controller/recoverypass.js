@@ -81,4 +81,13 @@ export class RecoveryPassController {
             .catch(next);
     }
 
+    deleteByUser = async (req, res, next) => {
+        const { usuarioid } = req.params;
+        await this.recoveryPassModel.deleteByUser({ usuarioid })
+            .then(recovery => {
+                if (recovery) return res.json({ message: 'Recovery deleted' });
+                return res.status(400).json({ message: 'Recovery not deleted' });
+            })
+            .catch(next);
+    }
 }
