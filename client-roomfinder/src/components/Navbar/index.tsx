@@ -14,7 +14,10 @@ const excludedRoutes = [
     '/dashboard/properties',
     '/dashboard/chats',
     '/admin',
-    '/prueba'];
+    '/prueba',
+    '/dashboard/inmuebles',
+    '/dashboard/home'
+];
 
 function Navigate() {
     const [isOpen, setIsOpen] = useState(false);
