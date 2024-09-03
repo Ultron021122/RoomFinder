@@ -328,23 +328,10 @@ export interface Folder {
     path: string;
 }
 <<<<<<< HEAD
-
-/* new interfaces added */
-
-export interface UserProfile {
-    vchname: string;
-    vchpaternalsurname: string;
-    vchmaternalsurname: string;
-    vchemail: string;
-    vchimage: string;
-    usuarioid: number;
-    sessionid: number;
-    dtbirthdate: string;
-    bnverified: boolean;
-    bnstatus: boolean;
-    roleid: number;
-}
-
+/**
+ * Interface to manage Sidebar user props
+ * @interface
+ */
 export interface SidebarUserProps {
     vchname: string;
     vchpaternalsurname: string;
@@ -357,7 +344,7 @@ export interface SidebarUserProps {
     bnverified: boolean;
     bnstatus: boolean;
     roleid: number;
-  }
+}
   
 export interface SidebarProps {
     children: React.ReactNode;
