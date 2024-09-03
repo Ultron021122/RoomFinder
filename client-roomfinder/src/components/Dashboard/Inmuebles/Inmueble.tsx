@@ -57,7 +57,7 @@ function Galeria({imagenes}: {imagenes:any[]}){
     const next = () => setActual((actual) => (actual === imagenes.length - 1 ? 0 : actual + 1))
 
     const indicadores = imagenes.map((imagen, index) => 
-        <div className={clsx(
+        <div key={index} className={clsx(
             "bg-white w-[8px] h-[8px] rounded-full transition-all",
             {
                 "w-[12px] h-[12px] bg-opacity-80" : actual === index,
