@@ -1,4 +1,5 @@
 import { Database } from "./database.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export class RecoveryPassModel {
     constructor({ recuperacionid, usuarioid, vchtoken, created_at, expires_at }) {
@@ -64,27 +65,51 @@ export class RecoveryPassModel {
         }
     }
 
-    static async create({ input }) {
+    // Función para generar un código único
+    static async generateUniqueCode() {
+        return uuidv4().toUpperCase().slice(0, 8); // Ajusta la longitud según sea necesario
+    }
+
+    // Función para insertar un código único y manejar duplicados
+    static async insertUniqueCode(usuarioid, code) {
         try {
-            const { usuarioid, vchtoken } = input;
             const db = new Database();
             const client = await db.pool.connect();
 
-            const validate = await this.getByUser({ id: usuarioid });
-            if (validate) {
-                await this.delete({ id: validate.recuperacionid });
-            }
-
             try {
-                const recovery = await client.query(
-                    `INSERT INTO "Usuario"."RecuperacionCuenta" (usuarioid, vchtoken, expires_at) VALUES ($1, $2, NOW() + INTERVAL '24 HOURS') RETURNING *;`,
-                    [usuarioid, vchtoken]
+                const result = await client.query(
+                    `INSERT INTO "Usuario"."RecuperacionCuenta" (usuarioid, vchtoken, expires_at) VALUES ($1, $2, NOW() + INTERVAL '15 MINUTES') RETURNING *;`,
+                    [usuarioid, code]
                 );
-
-                return recovery.rowCount > 0 ? new RecoveryPassModel(recovery.rows[0]) : null;
+                return result.rowCount > 0 ? new RecoveryPassModel(result.rows[0]) : null;
             } finally {
                 client.release();
             }
+        } catch (error) {
+            console.error(error);
+            if (error.code === '23505') { // Código de error de duplicado
+                return null;
+            }
+            throw error;
+        }
+    }
+
+
+    static async create({ input }) {
+        try {
+            const { usuarioid } = input;
+            const existing = await this.getByUser({ id: usuarioid });
+            if (existing) await this.deleteByUser({ usuarioid: existing.usuarioid });
+            
+            let code;
+            let result;
+            do {
+                code = await this.generateUniqueCode();
+                result = await this.insertUniqueCode(usuarioid, code);
+            } while (!result);
+
+            return result;
+
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
@@ -117,6 +142,24 @@ export class RecoveryPassModel {
                 const recovery = await client.query(
                     `DELETE FROM "Usuario"."RecuperacionCuenta" WHERE recuperacionid = $1 RETURNING *;`,
                     [id]
+                );
+                return recovery.rowCount > 0 ? new RecoveryPassModel(recovery.rows[0]) : null;
+            } finally {
+                client.release();
+            }
+        } catch (error) {
+            throw new Error(`Error: ${error.message}`);
+        }
+    }
+
+    static async deleteByUser({ usuarioid }) {
+        try {
+            const db = new Database();
+            const client = await db.pool.connect();
+            try {
+                const recovery = await client.query(
+                    `DELETE FROM "Usuario"."RecuperacionCuenta" WHERE usuarioid = $1 RETURNING *;`,
+                    [usuarioid]
                 );
                 return recovery.rowCount > 0 ? new RecoveryPassModel(recovery.rows[0]) : null;
             } finally {

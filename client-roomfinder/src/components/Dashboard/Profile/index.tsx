@@ -6,20 +6,7 @@ import { useSession } from "next-auth/react";
 import { getFullName } from "@/utils/functions"
 import { rolesMapping } from "@/utils/constants";
 import Image from "next/image";
-
-interface UserProfile {
-    vchname: string;
-    vchpaternalsurname: string;
-    vchmaternalsurname: string;
-    vchemail: string;
-    vchimage: string;
-    usuarioid: number;
-    sessionid: number;
-    dtbirthdate: string;
-    bnverified: boolean;
-    bnstatus: boolean;
-    roleid: number;
-}
+import { UserProfile } from "@/utils/interfaces";
 
 const Profile = () => {
     const { data: session } = useSession();
@@ -90,7 +77,7 @@ const Profile = () => {
                                         />
                                     </svg>
                                 </span>
-                                <span>Edit</span>
+                                <span>Editar</span>
                             </label>
                         </div>
                     </div>

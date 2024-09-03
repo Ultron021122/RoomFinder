@@ -3,12 +3,13 @@ import { LessorsModel } from './lessor.js'
 
 export class PropertiesModel extends Database {
 
-    constructor({ propertyid, lessorid, intnumberrooms, intnumberbathrooms,
+    constructor({ vchtitle, propertyid, lessorid, intnumberrooms, intnumberbathrooms,
         intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate,
         intmincontractduration, intmaxcontractduration, decpropertyrating,
         bnstudyzone, vchbuildingsecurity, vchtransportationaccess,
         vchpropertyrules, vchdescription, created_at }) {
         super();
+        this.vchtitle = vchtitle;
         this.propertyid = propertyid;
         this.lessorid = lessorid;
         this.intnumberrooms = intnumberrooms;
@@ -54,16 +55,16 @@ export class PropertiesModel extends Database {
 
     static async create({ input }) {
         try {
-            const { lessorid, intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
+            const { vchtitle, lessorid, intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
                 intmaxcontractduration, decpropertyrating, bnstudyzone, vchbuildingsecurity, vchtransportationaccess, vchpropertyrules, vchdescription } = input
             
             const validateLessor = await LessorsModel.getById({ id: lessorid })
             if (validateLessor === null) return false;
 
             const result = await this.query(
-                `INSERT INTO "Usuario"."Propiedades" (lessorid, intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
-                    intmaxcontractduration, decpropertyrating, bnstudyzone, vchbuildingsecurity, vchtransportationaccess, vchpropertyrules, vchdescription) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16 ) RETURNING propertyid;`,
-                [lessorid, intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
+                `INSERT INTO "Usuario"."Propiedades" (vchtitle, lessorid, intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
+                    intmaxcontractduration, decpropertyrating, bnstudyzone, vchbuildingsecurity, vchtransportationaccess, vchpropertyrules, vchdescription) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17 ) RETURNING propertyid;`,
+                [vchtitle, lessorid, intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
                     intmaxcontractduration, decpropertyrating, bnstudyzone, vchbuildingsecurity, vchtransportationaccess, vchpropertyrules, vchdescription]
             );
 
@@ -94,13 +95,14 @@ export class PropertiesModel extends Database {
 
     static async update({ id, input }) {
         try {
-            const { intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
+            const { vchtitle, intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
                 intmaxcontractduration, decpropertyrating, bnstudyzone, vchbuildingsecurity, vchtransportationaccess, vchpropertyrules, vchdescription } = input
             
                 const property = await this.getById({ id })
             if (property === null) return false;
 
             const updateColumns = Object.entries({
+                vchtitle,
                 intnumberrooms,
                 intnumberbathrooms,
                 intmaxoccupacy,
@@ -124,6 +126,7 @@ export class PropertiesModel extends Database {
                 .join(', ');
 
             const updateValues = Object.value({
+                vchtitle,
                 intnumberrooms,
                 intnumberbathrooms,
                 intmaxoccupacy,
