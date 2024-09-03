@@ -11,13 +11,6 @@ export default function Inicio() {
         <Layout key={1}>
             <div className='h-[100vh] w-full'>
                 <FrontPage />
-<<<<<<< HEAD
-                <section className="container mx-auto my-10 p-2 sm:p-0">
-                    <div className="mb-5">
-                        <div className="text-center mb-20">
-                            <h3 className="dark:text-gray-100 text-3xl md:text-4xl xl:text-5xl tracking-tight font-bold leading-none mt-10">
-                                Propiedades destacadas
-=======
                 {/*
                 <div className='h-[calc(100vh)] max-w-screen-2xl mx-auto bg-cover bg-no-repeat bg-center bg-black bg-opacity-30 dark:bg-opacity-45 bg-blend-darken flex justify-center items-center p-5 flex-col' style={{ backgroundImage: `url(${images[0].url})` }}>
                     <h2 className="text-white text-4xl sm:text-6xl font-bold">
@@ -31,7 +24,6 @@ export default function Inicio() {
                             <h3
                                 className="mb-5 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white"
                             >Propiedades destacadas
->>>>>>> c6bd5476e412ae984a5e40f16f6e4cf238317121
                             </h3>
                             <p className="mt-2 mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
                                 Algunas de las propiedades más destacadas de Roomfinder.
@@ -53,14 +45,10 @@ export default function Inicio() {
                         </div>
                     </div>
                     <Banner />
-<<<<<<< HEAD
-                    <h3 className="dark:text-gray-300 text-3xl md:text-4xl xl:text-5xl font-bold mt-10 mb-5">
-=======
                     {/* <div className="bg-white text-blue-500">
                         <Image src="/logo1.svg" alt="Propiedades destacadas" className="h-10" />
                     </div> */}
                     <h3 className="dark:text-gray-100 text-3xl md:text-4xl xl:text-5xl tracking-tight font-bold leading-none  my-10">
->>>>>>> c6bd5476e412ae984a5e40f16f6e4cf238317121
                         Galeria de Imagenes
                     </h3>
                     <MasonryImageList />
