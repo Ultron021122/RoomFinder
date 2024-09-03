@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   applicationName: 'RoomFinder',
 };
 
-const mainClass = `bg-zinc-200 dark:bg-gray-900 ${inter.className}`; // Add the inter font to the main class
+const mainClass = `bg-white dark:bg-gray-900 ${inter.className}`; // Add the inter font to the main class
 
 export default function RootLayout({
   children,
@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body className={mainClass}>
         <Providers>
           <ToastContainer limit={3} />

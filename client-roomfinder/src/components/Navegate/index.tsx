@@ -1,30 +1,18 @@
 "use client";
-import { Image, Link } from "@nextui-org/react";
+import { Image } from "@nextui-org/react";
 import { usePathname } from 'next/navigation'
 import { useSession } from "next-auth/react";
-import { ChevronFirst, ChevronLast, MoreVertical, Home, LogOut } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { rolesMapping } from "@/utils/constants";
 import { shortName } from "@/utils/functions";
-
-interface SidebarUserProps {
-  vchname: string;
-  vchpaternalsurname: string;
-  vchmaternalsurname: string;
-  vchemail: string;
-  vchimage: string;
-  usuarioid: number;
-  sessionid: number;
-  dtbirthdate: string;
-  bnverified: boolean;
-  bnstatus: boolean;
-  roleid: number;
-}
+import Link from 'next/link';
+import { SidebarUserProps } from "@/utils/interfaces";
 
 interface SidebarProps {
-  children: React.ReactNode;
-  expanded: boolean;
-  onResize: () => void;
+    children: React.ReactNode;
+    expanded: boolean;
+    onResize: () => void;
 }
 
 const SidebarContext = createContext({ expanded: false });
@@ -138,6 +126,7 @@ export function SidebarItem({
             ? "text-blue-800 dark:text-indigo-100"
             : "text-gray-600 dark:text-gray-400"
           }
+          flex
         `}
       >
         {icon}

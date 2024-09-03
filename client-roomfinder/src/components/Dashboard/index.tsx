@@ -1,8 +1,7 @@
 'use client';
 
 import Sidebar, { SidebarItem } from "@/components/Navegate";
-import { Box, Button, AppBar, IconButton, Toolbar, Typography, CssBaseline } from "@mui/material";
-import { BarChart3, Boxes, ChevronFirst, ChevronLast, GraduationCapIcon, Home, LayoutDashboard, LifeBuoy, Mail, MenuIcon, Package, Receipt, Settings, Turtle, UserCircle } from "lucide-react";
+import { AppBar, IconButton, Toolbar } from "@mui/material";
 import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
@@ -11,28 +10,27 @@ import { rolesMapping } from "@/utils/constants";
 // Alerts and notifications
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-
-interface UserProfile {
-    vchname: string;
-    vchpaternalsurname: string;
-    vchmaternalsurname: string;
-    vchemail: string;
-    vchimage: string;
-    usuarioid: number;
-    sessionid: number;
-    dtbirthdate: string;
-    bnverified: boolean;
-    bnstatus: boolean;
-    roleid: number;
-}
+import { UserProfile } from "@/utils/interfaces";
+/* Iconos */
+import { 
+    GraduationCapIcon,
+    Home,
+    LayoutDashboard,
+    LifeBuoy,
+    Mail,
+    MenuIcon,
+    Settings,
+    UserCircle,
+    LogOut
+} from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [expanded, setExpanded] = useState(true);
     const [windowWidth, setWindowWidth] = useState(0);
-    const { data: session } = useSession();
+    const { data: session } = useSession(); // para poder determinar qué tipo de usuario esá logueado
     const user = session?.user as UserProfile;
-    const pathname = usePathname();
-
+    const pathname = usePathname(); // obtener el path
+    
     // Update the window width state
     useEffect(() => {
         const handleResize = () => {
@@ -57,7 +55,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
         <PerfectScrollbar>
             <div className="flex flex-col h-[100vh]">
-                <AppBar component="nav" position="static" className="bg-white text-neutral-950 dark:bg-primary dark:text-gray-100">
+                <AppBar component="nav" position="static" className="dark:bg-primary dark:text-gray-100">
                     <Toolbar variant="dense">
                         <IconButton
                             edge="start"
@@ -67,13 +65,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             onClick={() => setExpanded((expanded) => !expanded)}
                         >
                             <MenuIcon />
-                            {/*
-                        {!expanded ? <ChevronFirst /> : <ChevronLast />
-                        */}
                         </IconButton>
                         <div className="flex items-center">
-                            <GraduationCapIcon size={25} />
-                            <h1 className="ml-1 text-2xl font-semibold">
+                            <GraduationCapIcon size={25} color={'#FFFFFF'}/>
+                            <h1 className="ml-1 text-2xl font-semibold text-white">
                                 Roomfinder
                             </h1>
                         </div>
@@ -83,29 +78,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     className="flex flex-1"
                 >
                     <Sidebar expanded={expanded} onResize={toggleSidebar}>
-                        <SidebarItem
-                            icon={<LayoutDashboard size={20} />}
-                            text="Panel"
-                            url="/dashboard/home"
-                            alert
-                        />
-                        <SidebarItem icon={<BarChart3 size={20} />} text="Estadisticas" url="/dashboard/statistics" alert />
-                        <SidebarItem icon={<UserCircle size={20} />} text="Perfil" url="/dashboard/profile" />
+                        <SidebarItem icon={<LayoutDashboard size={20} />} text="Principal" url="/dashboard/home"/>
+                        <SidebarItem icon={<Home size={20} />} text="Inmuebles" url="/dashboard/inmuebles"/>
                         <SidebarItem icon={<Mail size={20} />} text="Mensajes" url="/dashboard/messages" />
-                        {// Show option only for lessors
+                        <SidebarItem icon={<UserCircle size={20} />} text="Perfil" url="/dashboard/profile" />
+                        {// optiones para arrendadores
                             roleName === 'Arrendador' && (
                                 <>
                                     <SidebarItem icon={<AddHomeOutlinedIcon style={{ fontSize: 20 }} />} text="Publicar" url="/dashboard/publish" />
-                                    <SidebarItem icon={<Package size={20} />} text="Historial" url="/dashboard/orders" />
                                 </>
                             )
                         }
-                        <SidebarItem icon={<Receipt size={20} />} text="Pagos" url="/dashboard/billings" />
-                        <hr className="my-3 border-gray-300 dark:border-gray-800" />
+                        <SidebarItem icon={<LogOut size={20} />} text="Cerrar sesión" url="" /> {/* pendiente de implementar */}
+                        <hr className="my-3 border-gray-300 dark:border-gray-800" /> {/* se  pueden eliminar estas opciones del sideBar */}
                         <SidebarItem icon={<Settings size={20} />} text="Configuraciones" url="/dashboard/settings" />
                         <SidebarItem icon={<LifeBuoy size={20} />} text="Ayuda" url="/dashboard/help" alert />
                     </Sidebar>
-                    <main className={`flex-1 p-4 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
+                    <main className={`flex-1 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
                         <section className={`${windowWidth <= 640 && expanded && 'hidden'}`}>
                             {children}
                         </section>
