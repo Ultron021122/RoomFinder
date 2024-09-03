@@ -345,12 +345,6 @@ export interface SidebarUserProps {
     bnstatus: boolean;
     roleid: number;
 }
-  
-export interface SidebarProps {
-    children: React.ReactNode;
-    expanded: boolean;
-    onResize: () => void;
-  }
 =======
 /** 
  * Interface to manage the properties data
