@@ -13,6 +13,7 @@ const excludedRoutes = [
     '/dashboard/publish',
     '/dashboard/messages',
     '/dashboard/properties',
+    '/dashboard/settings',
     '/dashboard/chats',
     '/admin',
     '/prueba',

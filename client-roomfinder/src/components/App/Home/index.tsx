@@ -19,7 +19,9 @@ export default function AppHome(){
                 <div className="flex flex-col justify-center items-center place-items-center absolute inset-0 bg-black bg-opacity-50">
                     <h1 className="font-semibold text-4xl mb-4 text-white">{Content.Title}</h1>
                     <p className="font-medium text-white text-center w-[95%]">
-                        Estamos encantados de que te unas a nuestra comunidad. RoomFinder es una plataforma diseñada específicamente para conectar estudiantes universitarios como tú que buscan un lugar seguro, cómodo y adecuado para vivir mientras continúan sus estudios, con arrendadores seguros y confiables.
+                        Estamos encantados de que te unas a nuestra comunidad. 
+                        <br/><br/>
+                        RoomFinder es una plataforma diseñada específicamente para conectar estudiantes universitarios como tú que buscan un lugar seguro, cómodo y adecuado para vivir mientras continúan sus estudios, con arrendadores seguros y confiables.
                     </p>
                 </div>
             </header>
@@ -30,20 +32,20 @@ export default function AppHome(){
                 <ul className="flex justify-evenly w-[95%] mx-auto">
                     <li>
                         <ImageElement
-                            icon={'/icon/operation.png'}
-                            content={'Buscar y gestionar inmuebles'}
+                            icon={'/icon/home/accomodation.png'}
+                            content={'Buscar y filtrar propiedades en renta'}
                         />
                     </li>
                     <li>
                         <ImageElement 
-                            icon={'/icon/networking.png'}
-                            content={'Conectar con Arrendadores Potenciales'}
+                            icon={'/icon/home/schedule.png'}
+                            content={'Agendar visitas a hogares potenciales'}
                         />
                     </li>
                     <li>
                         <ImageElement
-                            icon={'/icon/optimize.png'}
-                            content={'Ahorrar en rentas'}
+                            icon={'/icon/home/apply_sign.png'}
+                            content={'Aplicar y rentar en línea'}
                         />
                     </li>
                     <li>

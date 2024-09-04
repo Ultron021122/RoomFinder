@@ -83,7 +83,7 @@ const Profile = () => {
                         <div className="relative z-30 mx-auto -mt-24 w-full h-full max-h-32 max-w-32 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-h-44 sm:max-w-44 sm:p-3">
                             <div className="relative drop-shadow">
                                 <Image
-                                    src={userData.vchimage}
+                                    src={userData.vchimage ? userData.vchimage : ""}
                                     width={160}
                                     height={160}
                                     style={{
