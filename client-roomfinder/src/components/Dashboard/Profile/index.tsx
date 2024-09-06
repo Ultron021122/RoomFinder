@@ -33,6 +33,7 @@ const Profile = () => {
     return (
         <div className="h-full max-w-screen-2xl mx-auto bg-zinc-200 dark:bg-gray-900">
             <div className="mx-auto">
+            <Breadcrumb pageName="Profile" />
                 <div className="mx-auto overflow-hidden rounded-sm border border-stroke bg-white shadow-md dark:border-gray-950 dark:bg-gray-950">
                     <div className="relative z-20 h-32 md:h-64">
                         <Image
