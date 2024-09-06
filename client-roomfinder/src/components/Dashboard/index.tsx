@@ -1,7 +1,7 @@
 'use client';
 
 import Sidebar, { SidebarItem } from "@/components/Navegate";
-import { AppBar, IconButton, Toolbar } from "@mui/material";
+import { Box, Button, AppBar, IconButton, Toolbar, Typography, CssBaseline } from "@mui/material";
 import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
@@ -10,27 +10,18 @@ import { rolesMapping } from "@/utils/constants";
 // Alerts and notifications
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { UserProfile } from "@/utils/interfaces";
 /* Iconos */
-import { 
-    GraduationCapIcon,
-    Home,
-    LayoutDashboard,
-    LifeBuoy,
-    Mail,
-    MenuIcon,
-    Settings,
-    UserCircle,
-    LogOut
-} from "lucide-react";
+import { GraduationCapIcon, Home, LayoutDashboard, LifeBuoy, Mail, MenuIcon, Settings, UserCircle, LogOut } from "lucide-react";
+import { UserProfile } from "@/utils/interfaces";
+
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [expanded, setExpanded] = useState(true);
     const [windowWidth, setWindowWidth] = useState(0);
-    const { data: session } = useSession(); // para poder determinar qué tipo de usuario esá logueado
+    const { data: session } = useSession();
     const user = session?.user as UserProfile;
-    const pathname = usePathname(); // obtener el path
-    
+    const pathname = usePathname();
+
     // Update the window width state
     useEffect(() => {
         const handleResize = () => {
@@ -50,12 +41,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         setExpanded(windowWidth > 640);
     }, [windowWidth]);
 
-    const roleName = rolesMapping[user?.roleid] || 'Estudiante';
+    const roleName = rolesMapping[user?.roleid] || 'Desconocido';
 
     return (
         <PerfectScrollbar>
             <div className="flex flex-col h-[100vh]">
-                <AppBar component="nav" position="static" className="dark:bg-primary dark:text-gray-100">
+                <AppBar component="nav" position="static" className="bg-white text-neutral-950 dark:bg-primary dark:text-gray-100">
                     <Toolbar variant="dense">
                         <IconButton
                             edge="start"
@@ -65,10 +56,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             onClick={() => setExpanded((expanded) => !expanded)}
                         >
                             <MenuIcon />
+                            {/*
+                        {!expanded ? <ChevronFirst /> : <ChevronLast />
+                        */}
                         </IconButton>
                         <div className="flex items-center">
-                            <GraduationCapIcon size={25} color={'#FFFFFF'}/>
-                            <h1 className="ml-1 text-2xl font-semibold text-white">
+                            <GraduationCapIcon size={25} />
+                            <h1 className="ml-1 text-2xl font-semibold">
                                 Roomfinder
                             </h1>
                         </div>
@@ -78,8 +72,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     className="flex flex-1"
                 >
                     <Sidebar expanded={expanded} onResize={toggleSidebar}>
-                        <SidebarItem icon={<LayoutDashboard size={20} />} text="Inicio" url="/dashboard/home"/>
-                        <SidebarItem icon={<Home size={20} />} text="Inmuebles" url="/dashboard/inmuebles"/>
+                        <SidebarItem icon={<LayoutDashboard size={20} />} text="Inicio" url="/dashboard/home" />
+                        <SidebarItem icon={<Home size={20} />} text="Inmuebles" url="/dashboard/inmuebles" />
                         <SidebarItem icon={<Mail size={20} />} text="Mensajes" url="/dashboard/messages" />
                         <SidebarItem icon={<UserCircle size={20} />} text="Perfil" url="/dashboard/profile" />
                         {// optiones para arrendadores
@@ -94,7 +88,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <SidebarItem icon={<LifeBuoy size={20} />} text="Ayuda" url="/dashboard/help" alert />
                         <SidebarItem icon={<LogOut size={20} />} text="Cerrar sesión" url="" /> {/* pendiente de implementar */}
                     </Sidebar>
-                    <main className={`flex-1 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
+                    <main className={`flex-1 p-4 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
                         <section className={`${windowWidth <= 640 && expanded && 'hidden'}`}>
                             {children}
                         </section>
