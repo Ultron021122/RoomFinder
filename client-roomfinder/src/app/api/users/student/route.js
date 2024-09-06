@@ -25,7 +25,7 @@ export async function POST(req, res) {
     try {
         imageUrl = await uploadImage(
             vchimage,
-            'students',
+            'students', // noombre de la carpeta en la que se va a almacenar los archivos
             {
                 transformation: [
                     { width: 600, height: 600, crop: "fill" },

@@ -1,233 +1,250 @@
 'use client';
 
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import SelectGroupOne from "@/components/SelectGroup/SelectGroupOne";
-import Link from "next/link";
+import ImageElement from "@/components/GeneralComponents/ImageElement";
+import Image from "next/image";
+import React, { useState } from "react";
+import { Progress } from "@nextui-org/react";
+import { useForm } from "react-hook-form";
 
-const Publish = () => {
-    return (
-        <div className="h-full max-w-screen-2xl mx-auto bg-zinc-200 dark:bg-gray-900">
-            <div className="mx-auto">
-                <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
-                    <div className="flex flex-col gap-9">
-                        {/* <!-- Contact Form --> */}
-                        <div className="rounded-sm border border-gray-300 bg-white shadow-default dark:border-gray-900 dark:bg-gray-950">
-                            <div className="border-b border-gray-300 px-[26px] py-4 dark:border-gray-900">
-                                <h3 className="font-medium text-black dark:text-white">
-                                    Nueva Propiedad
-                                </h3>
-                            </div>
-                            <form action="#">
-                                <div className="p-[26px]">
-                                    <div className="mb-[18px] flex flex-col gap-6 xl:flex-row">
-                                        <div className="w-full xl:w-1/2">
-                                            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                                First name
-                                            </label>
-                                            <input
-                                                type="text"
-                                                placeholder="Enter your first name"
-                                                className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
-                                            />
-                                        </div>
-
-                                        <div className="w-full xl:w-1/2">
-                                            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                                Last name
-                                            </label>
-                                            <input
-                                                type="text"
-                                                placeholder="Enter your last name"
-                                                className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="mb-[18px]">
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            Email <span className="text-red-600">*</span>
-                                        </label>
-                                        <input
-                                            type="email"
-                                            placeholder="Enter your email address"
-                                            className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
-                                        />
-                                    </div>
-
-                                    <div className="mb-[18px]">
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            Subject
-                                        </label>
-                                        <input
-                                            type="text"
-                                            placeholder="Select subject"
-                                            className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
-                                        />
-                                    </div>
-
-                                    <SelectGroupOne />
-
-                                    <div className="mb-6">
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            Message
-                                        </label>
-                                        <textarea
-                                            rows={6}
-                                            placeholder="Type your message"
-                                            className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
-                                        ></textarea>
-                                    </div>
-
-                                    <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray-50 hover:bg-opacity-90">
-                                        Send Message
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-9">
-                        {/* <!-- Sign In Form --> */}
-                        <div className="rounded-sm border border-gray-300 bg-white shadow-default dark:border-gray-900 dark:bg-gray-950">
-                            <div className="border-b border-gray-300 px-[26px] py-4 dark:border-gray-900">
-                                <h3 className="font-medium text-black dark:text-white">
-                                    Sign In Form
-                                </h3>
-                            </div>
-                            <form action="#">
-                                <div className="p-[26px]">
-                                    <div className="mb-[18px]">
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            Email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            placeholder="Enter your email address"
-                                            className="w-full rounded border-[1.5px] border-stroke bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            Password
-                                        </label>
-                                        <input
-                                            type="password"
-                                            placeholder="Enter password"
-                                            className="w-full rounded border-[1.5px] border-stroke bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
-                                        />
-                                    </div>
-
-                                    <div className="mb-[22px] mt-5 flex items-center justify-between">
-                                        <label htmlFor="formCheckbox" className="flex cursor-pointer">
-                                            <div className="relative pt-0.5">
-                                                <input
-                                                    type="checkbox"
-                                                    id="formCheckbox"
-                                                    className="taskCheckbox sr-only"
-                                                />
-                                                <div className="box mr-3 flex h-5 w-5 items-center justify-center rounded border border-gray-300 dark:border-gray-900">
-                                                    <span className="text-white opacity-0">
-                                                        <svg
-                                                            className="fill-current"
-                                                            width="10"
-                                                            height="7"
-                                                            viewBox="0 0 10 7"
-                                                            fill="none"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                        >
-                                                            <path
-                                                                fillRule="evenodd"
-                                                                clipRule="evenodd"
-                                                                d="M9.70685 0.292804C9.89455 0.480344 10 0.734667 10 0.999847C10 1.26503 9.89455 1.51935 9.70685 1.70689L4.70059 6.7072C[18px]1283 6.89468 4.2582 7 3.9927 7C3.72721 7 3.47258 6.89468 3.28482 6.7072L0.281063 3.70701C0.0986771 3.5184 -0.00224342 3.26578 3.785e-05 3.00357C0.00231912 2.74136 0.10762 2.49053 0.29326 2.30511C0.4789 2.11969 0.730026 2.01451 0.992551 2.01224C1.25508 2.00996 1.50799 2.11076 1.69683 2.29293L3.9927 [18px]8607L8.29108 0.292804C8.47884 0.105322 8.73347 0 8.99896 0C9.26446 0 9.51908 0.105322 9.70685 0.292804Z"
-                                                                fill=""
-                                                            />
-                                                        </svg>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <p className="text-black dark:text-white">Remember me</p>
-                                        </label>
-
-                                        <Link
-                                            href="#"
-                                            className="text-sm text-primary hover:underline"
-                                        >
-                                            Forget password?
-                                        </Link>
-                                    </div>
-
-                                    <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray-50 hover:bg-opacity-90">
-                                        Sign In
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
-                        {/* <!-- Sign Up Form --> */}
-                        <div className="rounded-sm border border-gray-300 bg-white shadow-default dark:border-gray-900 dark:bg-gray-950">
-                            <div className="border-b border-gray-300 px-[26px] py-4 dark:border-gray-900">
-                                <h3 className="font-medium text-black dark:text-white">
-                                    Sign Up Form
-                                </h3>
-                            </div>
-                            <form action="#">
-                                <div className="p-[26px]">
-                                    <div className="mb-[18px]">
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            placeholder="Enter your full name"
-                                            className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
-                                        />
-                                    </div>
-
-                                    <div className="mb-[18px]">
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            Email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            placeholder="Enter your email address"
-                                            className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
-                                        />
-                                    </div>
-
-                                    <div className="mb-[18px]">
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            Password
-                                        </label>
-                                        <input
-                                            type="password"
-                                            placeholder="Enter password"
-                                            className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
-                                        />
-                                    </div>
-
-                                    <div className="mb-[22px]">
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            Re-type Password
-                                        </label>
-                                        <input
-                                            type="password"
-                                            placeholder="Re-enter password"
-                                            className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
-                                        />
-                                    </div>
-
-                                    <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray-50 hover:bg-opacity-90">
-                                        Sign Up
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
+const ImageElementStyles = {
+    width: 40,
+    height: 40,
+    style:"flex gap-2 border border-gray-500 p-4 rounded-lg w-[250px] justify-center items-center hover:border-black"
 }
 
-export default Publish;
+export default function Publish(){
+    return (
+        <div className="h-screen">
+            <Header/>
+            <Wizar/>
+        </div>
+    );
+}
+
+interface Inmueble {
+    tipoInmueble:'',
+    descripcion:'',
+    servicios:[],
+    amenidades:[],
+    ocupantes:'',
+    reglas:[],
+    costo:''
+}
+
+const Wizar = () => {
+    const [actual, setActual] = useState(1);
+    const {register, handleSubmit, formState : {errors}, setValue, getValues} = useForm<Inmueble>();
+
+    const siguiente = () => {
+        setActual((prev) => prev + 1);
+    }
+
+    const anterior = () => {
+        setActual((prev) => prev - 1);
+    }
+
+    const onSubmit = (data : Inmueble) => {
+        // mandar los datos a la base de datos
+        console.log(data);
+    }
+
+    const estiloBoton = {
+        style:"text-center bg-[#007aff] p-4 rounded-lg w-[150px] text-white font-semibold text-lg hover:bg-opacity-90"
+    }
+
+    return(
+        <>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="w-[95%] mx-auto mt-10 h-[500px] overflow-hidden overflow-y-auto">
+                    {actual === 1 && <TipoInmueble/>}
+                    {actual === 2 && <ServiciosAmenidades/>}
+                    {actual === 3 && <Fotos/>}
+                    {actual === 4 && <Ubicacion/>}
+                    {actual === 5 && <Detalles/>}
+                    {actual === 6 && <Confirmacion/>}
+                </div>
+                <div className="w-[95%] mx-auto">
+                    <Progress size="sm" aria-label="Loading..." value={(actual / 6) * 100}/>
+                    <div className="flex justify-between my-10">
+                        {
+                            actual > 1 && <Boton contenido="Anterior" onClick={anterior} style={estiloBoton.style} />
+                        }
+                        
+                        {
+                            actual < 6 ? <Boton contenido="Siguiente" onClick={siguiente} style={estiloBoton.style}/> : (
+                                <Boton contenido="Publicar" onClick={onSubmit} style={estiloBoton.style}/>
+                            )
+                        }
+                    </div>
+                </div>
+            </form>
+        </>
+    );
+}
+
+const Header = () => {
+    return(
+        <header className="relative h-72">
+            <Image
+                src={'/background/fondo-7.jpg'}
+                alt=""
+                layout="fill"
+                objectFit="cover"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-50 grid grid-cols-1 place-items-center">
+                <h1 className="text-4xl text-white font-bold">Publicar inmueble</h1>
+            </div>
+        </header>
+    );
+}
+
+const Boton = ({contenido, onClick, style}:{contenido:string, onClick:any, style:string}) => {
+    return(
+        <button
+            onClick={onClick}
+            className={style}
+        >
+            {contenido}
+        </button>
+    );
+}
+
+const TipoInmueble = () => {
+
+    const tiposInmueble = [
+        {icon:'/icon/house.svg', content:'Casa'},
+        {icon:'/icon/room.svg', content:'Cuarto'},
+        {icon:'/icon/building.svg', content:'Departamento'},
+    ]
+
+    return(
+        <div className="h-full">
+            <h2 className="text-center font-semibold text-3xl mb-10">Seleccione el tipo de inmueble a publicar</h2>
+            <div className="h-[65%] flex justify-evenly items-center">
+                {
+                    tiposInmueble.map( (data, index) => 
+                        <ImageElement
+                            key={index}
+                            icon={data.icon}
+                            content={data.content}
+                            width={ImageElementStyles.width}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
+                        />
+                    )
+                }
+            </div>
+        </div>
+    );
+}
+
+const ServiciosAmenidades = () => {
+
+    const ServiciosData = [
+        {icon: '/icon/cleaning.png', content: 'Limpieza'},
+        {icon: '/icon/gas.png', content: 'Gas'},
+        {icon: '/icon/power.png', content: 'Electricidad'},
+        {icon: '/icon/television.png', content: 'TV cable'},
+        {icon: '/icon/water-tap.png', content: 'Agua'},
+        {icon: '/icon/washing-machine.png', content: 'Lavadora'},
+        {icon: '/icon/wifi.png', content: 'Wifi'},
+        {icon: '/icon/parking.png', content:'Estacionamiento'},
+        {icon: '/icon/kitchen.png', content:'Cocina'},
+        {icon: '/icon/chair.png', content:'Comedor'},
+        {icon: '/icon/fence.png', content:'Patio'},
+        {icon: '/icon/fridge.png', content:'Refrigerador'},
+        {icon: '/icon/sofa.png', content:'Sala de estar'},
+    ];
+
+    return(
+        <div>
+            <h2 className="text-center font-semibold text-3xl mb-10">Servicios y Amenidades</h2>
+            <p className="text-xl mb-8">Selecciona los servicios con los cuenta el inmueble</p>
+            <div className="grid grid-cols-4 gap-y-8">
+                {
+                    ServiciosData.map((data, index) =>
+                        <ImageElement
+                            key={index}
+                            icon={data.icon}
+                            content={data.content}
+                            width={ImageElementStyles.width}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
+                        />
+                    )
+                }
+            </div>
+            <CaracteristicasInmueble/>
+        </div>
+    );
+}
+
+const CaracteristicasInmueble = () => {
+    return(
+        <div>
+            <p className="text-xl mb-8 mt-8">Información general del inmueble</p>
+
+        </div>
+    );
+}
+
+const Fotos:React.FC = () => {
+
+    const [imagenes, setImagenes] = useState<File[]>([]);
+    const [imagenesPreview, setImagenesPreview] = useState<string[]>([]);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if(files){
+            const fileArray = Array.from(files);
+            setImagenes(fileArray);
+
+            // generar previsualizaciones de las imagenes
+            const previews = fileArray.map( file => URL.createObjectURL(file));
+            setImagenesPreview(previews);
+        }
+    };
+
+    const handleClear = () => {
+        setImagenes([]);
+        setImagenesPreview([]);
+    };
+
+    return(
+        <div>
+            <h2 className="text-center font-semibold text-3xl mb-10">Agrega algunas fotos de tu inmueble a rentar</h2>
+            <p className="text-xl mb-8">Para iniciar se necesitan como mínimo 5 fotografías. Más adelante podrás agregar más y realizar cambios</p>
+
+            <Boton
+                contenido="Seleccionar imagenes"
+                style=""
+                onClick={handleClear}
+            />
+        </div>
+    );
+}
+
+const Ubicacion = () => {
+    return(
+        <div>
+            <h2 className="text-center font-semibold text-3xl mb-10">Selecciona la ubicación del inmueble</h2>
+            <p className="text-xl mb-8">Es necesario que indiques donde se ubica el inmueble para que los alumnos conozcan su ubicación</p>
+        </div>
+    );
+}
+
+const Detalles = () => {
+    return(
+        <div>
+            <h2>Describe </h2>
+        </div>
+    );
+}
+
+const Confirmacion = () => {
+    return(
+        <div>
+
+        </div>
+    );
+}
