@@ -1,6 +1,12 @@
 import Image from "next/image";
 import ImageElement from "@/components/GeneralComponents/ImageElement";
 
+const ImageElementStyles = {
+    with: 120,
+    height: 120,
+    style: "flex flex-col justify-center items-center"
+}
+
 export default function Home(){
     return(
         <>
@@ -27,24 +33,36 @@ export default function Home(){
                         <ImageElement
                             icon={'/icon/operation.png'}
                             content={'Publicar y Gestionar tus inmuebles'}
+                            width={ImageElementStyles.with}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
                         />
                     </li>
                     <li>
                         <ImageElement 
                             icon={'/icon/networking.png'}
                             content={'Conectar con Inquilinos Potenciales'}
+                            width={ImageElementStyles.with}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
                         />
                     </li>
                     <li>
                         <ImageElement
                             icon={'/icon/optimize.png'}
                             content={'Optimizar tus Rentas'}
+                            width={ImageElementStyles.with}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
                         />
                     </li>
                     <li>
                         <ImageElement 
                             icon={'/icon/service.png'}
                             content={'Asegurar tus Inmuebles'}
+                            width={ImageElementStyles.with}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
                         />
                     </li>
                 </ul>                

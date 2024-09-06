@@ -1,19 +1,21 @@
 import Image from "next/image";
 
-export default function ImageElement({ icon, content }: { icon: string, content: string }) {
+export default function ImageElement({
+    icon,
+    content,
+    width,
+    height,
+    style
+}: { icon: string, content: string, width:number, height:number, style:string}) {
     return (
-        <div className="
-            flex flex-col 
-            justify-center 
-            items-center
-            ">
+        <div className={style}>
             <Image
                 src={icon}
                 alt=''
-                width={120}
-                height={120}
+                width={width}
+                height={height}
             />
-            <p className="mt-4 text-center text-lg">
+            <p className="text-center text-lg">
                 {content}
             </p>
         </div>
