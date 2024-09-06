@@ -452,16 +452,71 @@ export interface Property {
  * @interface
  */
 export interface SidebarUserProps {
+    /**
+     * User name
+     * @example
+     * vchname: 'User name'
+     */
     vchname: string;
+    /**
+     * User paternal surname
+     * @example
+     * vchpaternalsurname: 'User last name'
+     */
     vchpaternalsurname: string;
+    /**
+     * User maternal surname
+     * @example
+     * vchmaternalsurname: 'User email'
+     */
     vchmaternalsurname: string;
+    /**
+     * User email
+     * @example
+     * vchemail: 'User email'
+     */
     vchemail: string;
+    /**
+     * User image
+     * @example
+     * vchimage: 'User image'
+     */
     vchimage: string;
+    /*
+    * User id
+    * @example
+    * usuarioid: 1
+    */
     usuarioid: number;
+    /**
+     * User session id
+     * @example
+     * sessionid: 1
+     */
     sessionid: number;
+    /**
+     * User birthdate
+     * @example
+     * dtbirthdate: '1999-11-22'
+     */
     dtbirthdate: string;
+    /*
+    * User verified
+    * @example
+    * bnverified: true | false
+    */
     bnverified: boolean;
+    /*
+    * User status
+    * @example
+    * bnstatus: true | false
+    */
     bnstatus: boolean;
+    /*
+    * User role id
+    * @example
+    * roleid: 1
+    */
     roleid: number;
 }
 /** 
