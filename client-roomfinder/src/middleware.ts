@@ -23,8 +23,8 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/arrendadores",
-    //"/dashboard/:path*",
-    //"/admin",
+    "/dashboard/:path*",
+    "/admin",
     "/user/:path*",
     //'/api/:path*',
   ],
