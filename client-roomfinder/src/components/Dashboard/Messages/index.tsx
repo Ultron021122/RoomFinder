@@ -29,6 +29,7 @@ export default function MessageMainComponent() {
   const [errorSystem, setErrorSystem] = useState<string | null>(null);
 
   useEffect(() => {
+    if (user) {
     (async () => {
       try {
         setIsLoading(true);
@@ -50,7 +51,8 @@ export default function MessageMainComponent() {
         setIsLoading(false);
       }
     })();
-  }, []);
+  }
+  }, [user]);
 
   const handleUserClick = (user: User) => {
     setSelectedUser(user.usuarioid);
