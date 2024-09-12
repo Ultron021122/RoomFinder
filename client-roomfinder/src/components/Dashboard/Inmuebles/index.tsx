@@ -70,7 +70,7 @@ export default function Inmuebles (){
             </section>
             {/* momentaneo */}
             <section className="my-12">
-                <div className="w-[95%] mx-auto grid grid-cols-3 gap-6"> {/* contenedor de propiedades */}
+                <div className="w-[95%] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"> {/* contenedor de propiedades */}
                     <CardElement inmueble={inmuebles[0]}/>
                     <CardElement inmueble={inmuebles[1]}/>
                     <CardElement inmueble={inmuebles[2]}/>

@@ -53,7 +53,7 @@ export const CardOwner = ({ id, title, description, value, image }: CardOwnerPro
                     height="275"
                     image={image}
                     alt={title}
-                    sx={{ width: '100%', height: 275, objectFit: 'cover', objectPosition: 'center' }} // Ajustar la imagen al ancho de la tarjeta
+                    sx={{ width: '100%', height: 275, objectFit: 'cover', objectPosition: 'center', layout: 'fill' }} // Ajustar la imagen al ancho de la tarjeta
                 />
                 <CardContent>
                     <h5 className="text-xl font-semibold text-neutral-950 dark:text-neutral-50">
