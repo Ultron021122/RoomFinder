@@ -35,7 +35,7 @@ export default function MessageMainComponent() {
         setIsLoading(true);
         setErrorSystem(null);
 
-        let route = '/api/users/all';
+        let route = '/api/users/student';
         if (user?.roleid === 1) { route = '/api/users/lessor'; }
         const response = await axios.get<UserResponse>(route);
         setIsLoading(false);

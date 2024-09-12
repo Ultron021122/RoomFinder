@@ -22,7 +22,7 @@ export default function Home() {
                 </header>
 
                 <section className="my-5 mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="">
+                    <div className="p-4">
                         <h3 className="text-xl mt-10 mb-5 sm:text-3xl font-semibold text-gray-800 dark:text-gray-200">
                             ¿Qué es RoomFinder?
                         </h3>

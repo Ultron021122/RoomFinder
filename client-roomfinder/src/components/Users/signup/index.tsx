@@ -246,7 +246,6 @@ const Registrar = () => {
                                     label="Universidad"
                                     className="text-sm"
                                     sx={{
-                                        fontFamily: '__Inter_aaf875',
                                         fontSize: '0.875rem',
                                         lineHeight: '1.25rem',
                                         fontStyle: 'normal',
@@ -727,7 +726,6 @@ const Registrar = () => {
                                                                 label="Tipo de usuario"
                                                                 className="text-sm"
                                                                 sx={{
-                                                                    fontFamily: '__Inter_aaf875',
                                                                     fontSize: '0.875rem',
                                                                     lineHeight: '1.25rem',
                                                                     fontStyle: 'normal',
