@@ -2,10 +2,10 @@ import Image from "next/image";
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: "Propiedades",
+    title: "Propiedad",
 };
 
-export default function Propiedades() {
+export default function Property({ params }: { params: { id: string } }) {
 
     return (
         <>
@@ -16,9 +16,9 @@ export default function Propiedades() {
                     <p className="text-sm leading-4 font-medium text-white sm:text-slate-500 dark:sm:text-slate-400">Entire house</p>
                     </div>
                     <div className="grid gap-4 col-start-1 col-end-3 row-start-1 sm:mb-6 sm:grid-cols-4 lg:gap-6 lg:col-start-2 lg:row-end-6 lg:row-span-6 lg:mb-0">
-                    <Image src="https://tailwindcss.com/_next/static/media/beach-house.9b9ee168.jpg" alt="" className="w-full h-60 object-cover rounded-lg sm:h-52 sm:col-span-2 lg:col-span-full" loading="lazy">
-                    <Image src="https://tailwindcss.com/_next/static/media/beach-house-interior-2.3672af98.jpg" alt="" className="hidden w-full h-52 object-cover rounded-lg sm:block sm:col-span-2 md:col-span-1 lg:row-start-2 lg:col-span-2 lg:h-32" loading="lazy">
-                    <Image src="https://tailwindcss.com/_next/static/media/beach-house-interior-1.f151eb56.jpg" alt="" className="hidden w-full h-52 object-cover rounded-lg md:block lg:row-start-2 lg:col-span-2 lg:h-32" loading="lazy">
+                    <Image src="https://tailwindcss.com/_next/static/media/beach-house.9b9ee168.jpg" alt="" className="w-full h-60 object-cover rounded-lg sm:h-52 sm:col-span-2 lg:col-span-full" loading="lazy" />
+                    <Image src="https://tailwindcss.com/_next/static/media/beach-house-interior-2.3672af98.jpg" alt="" className="hidden w-full h-52 object-cover rounded-lg sm:block sm:col-span-2 md:col-span-1 lg:row-start-2 lg:col-span-2 lg:h-32" loading="lazy" />
+                    <Image src="https://tailwindcss.com/_next/static/media/beach-house-interior-1.f151eb56.jpg" alt="" className="hidden w-full h-52 object-cover rounded-lg md:block lg:row-start-2 lg:col-span-2 lg:h-32" loading="lazy" />
                     </div>
                     <dl className="mt-4 text-xs font-medium flex items-center row-start-2 sm:mt-1 sm:row-start-3 md:mt-2.5 lg:row-start-2">
                     <dt className="sr-only">Reviews</dt>
