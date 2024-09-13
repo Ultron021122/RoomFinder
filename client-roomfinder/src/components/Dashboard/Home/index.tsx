@@ -4,7 +4,7 @@ import { Globe, LayoutTemplate, Network, Settings, ShieldCheck, TrendingUp } fro
 
 export default function Home() {
     return (
-        <div className="h-full max-w-screen-2xl mx-auto bg-zinc-200 dark:bg-gray-900">
+        <div className="h-full max-w-screen-2xl mx-auto dark:bg-gray-900">
             <div className="mx-auto">
                 <header className="relative h-96 sm:h-72 bg-gray-500">
                     <Image
@@ -22,7 +22,7 @@ export default function Home() {
                 </header>
 
                 <section className="my-5 mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="">
+                    <div className="p-4">
                         <h3 className="text-xl mt-10 mb-5 sm:text-3xl font-semibold text-gray-800 dark:text-gray-200">
                             ¿Qué es RoomFinder?
                         </h3>

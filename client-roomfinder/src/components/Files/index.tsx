@@ -165,8 +165,8 @@ export default function ImageUploader() {
   return (
     <>
       <PerfectScrollbar>
-        <div className="h-[calc(100vh-73px)] max-w-screen-2xl mx-auto">
-          <div className="container mx-auto p-2">
+        <div className="h-[100vh] max-w-screen-2xl mx-auto">
+          <div className="container mx-auto p-2 mt-16">
             <h1 className='text-neutral-950 dark:text-gray-200 text-3xl font-bold'>Subida de imagenes</h1>
             <span className='text-neutral-800 dark:text-gray-300 text-small'>Sube una imagen para almacenarla en la base de datos</span>
             <Divider className='bg-neutral-400 dark:bg-gray-500 my-2' />
@@ -226,7 +226,6 @@ export default function ImageUploader() {
                               label="Tipo de usuario"
                               className="text-sm"
                               sx={{
-                                fontFamily: '__Inter_aaf875',
                                 fontSize: '0.875rem',
                                 lineHeight: '1.25rem',
                                 fontStyle: 'normal',

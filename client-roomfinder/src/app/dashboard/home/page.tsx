@@ -13,7 +13,7 @@ export default function DashboardHome() {
     const renderComponent = () => {
         switch (roleName) {
             case role[0].vchname: //Estudiante
-                return <AppHome />;
+                return <Home />;
             case role[1].vchname: // Arrendador
                 return <Home />;
             default:

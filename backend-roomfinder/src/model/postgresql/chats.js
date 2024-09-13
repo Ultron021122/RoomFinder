@@ -99,7 +99,7 @@ export class ChatsModel {
         const db = new Database();
         const client = await db.pool.connect();
         try {
-            const chat = await this.query(
+            const chat = await client.query(
                 `SELECT * FROM "Usuario"."Chats" WHERE (usuario1id = $1 AND usuario2id = $2) OR (usuario1id = $2 AND usuario2id = $1);`,
                 [usuario1id, usuario2id]
             );
