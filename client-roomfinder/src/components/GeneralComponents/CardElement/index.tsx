@@ -1,9 +1,10 @@
 'use client';
 
 import Image from "next/image";
-import { useState } from "react";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronRight, ChevronLeft, InfoIcon } from "lucide-react";
 import clsx from 'clsx';
+import { Button, Card, CardActionArea, CardActions, CardContent, Rating, Typography } from "@mui/material";
 
 interface Imagen {
     url: string,
@@ -20,7 +21,7 @@ interface Inmueble {
     descripcion: string
 }
 
-function Galeria({ imagenes }: { imagenes: any[] }) {
+function Galeria({ imagenes }: { imagenes: JSX.Element[] }) {
     const [actual, setActual] = useState(0);
 
     const prev = () => setActual((actual) => (actual === 0 ? imagenes.length - 1 : actual - 1))
@@ -43,10 +44,10 @@ function Galeria({ imagenes }: { imagenes: any[] }) {
             </div>
 
             <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-all">
-                <button onClick={prev} className="p-1 rounded-full bg-white opacity-80 hover:opacity-100 transition-opacity duration-400">
+                <button onClick={prev} className="p-1 rounded-full bg-white text-neutral-800 opacity-80 hover:opacity-100 transition-opacity duration-400">
                     <ChevronLeft size={25} />
                 </button>
-                <button onClick={next} className="p-1 rounded-full bg-white opacity-80 hover:opacity-100 transition-opacity duration-400">
+                <button onClick={next} className="p-1 rounded-full bg-white text-neutral-800 opacity-80 hover:opacity-100 transition-opacity duration-400">
                     <ChevronRight size={25} />
                 </button>
             </div>
@@ -62,6 +63,26 @@ function Galeria({ imagenes }: { imagenes: any[] }) {
 }
 
 export default function CardElement({ inmueble }: { inmueble: Inmueble }) {
+    const [darkMode, setDarkMode] = useState<boolean>(false);
+    const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+    useEffect(() => {
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const setDarkModeFromMediaQuery = () => setDarkMode(darkModeMediaQuery.matches);
+
+        setDarkModeFromMediaQuery();
+        darkModeMediaQuery.addEventListener('change', setDarkModeFromMediaQuery);
+
+        setIsLoaded(true);
+
+        return () => {
+            darkModeMediaQuery.removeEventListener('change', setDarkModeFromMediaQuery);
+        };
+    }, []);
+
+    if (!isLoaded) {
+        return null;
+    }
 
     const listaImagenes = inmueble.imagenes.map((imagen, index) =>
         <div key={index} className="relative min-w-full h-full" >
@@ -75,14 +96,45 @@ export default function CardElement({ inmueble }: { inmueble: Inmueble }) {
     );
 
     return (
-        <div className="flex flex-col">
-            <Galeria imagenes={listaImagenes} />
-            <div className="bg-gray-200 p-4 border border-[#c8c8c8] text-lg rounded-b-xl">
-                <p className="mb-2">Tipo de Inmueble: {inmueble.tipo}</p>
-                <p className="mb-2"><span className="font-semibold text-xl">{`$${inmueble.costo} MXN `}</span>por mes</p>
-                <p className="mb-4">{inmueble.descripcion}</p>
-                <p className="py-4 text-center bg-amber-400 text-white font-semibold w-[50%] rounded-lg transition-colors hover:bg-amber-500 cursor-pointer"> Ver propiedad</p>
-            </div>
-        </div>
+        <Card
+            sx={{
+                maxWidth: '100%', // Hacer que la tarjeta sea responsiva
+                backgroundColor: darkMode ? '#1f2937' : '#fff',
+                color: darkMode ? '#fff' : '#111827',
+                height: 'auto',
+            }
+            }
+        >
+            <CardActionArea>
+                <Galeria imagenes={listaImagenes} />
+                < CardContent>
+                    <h5 className="text-xl font-semibold text-neutral-950 dark:text-neutral-50" >
+                        Tipo de propiedad {inmueble.tipo}
+                    </h5>
+                    < Typography component="legend" className='text-xs' > Calificación </Typography>
+                    < Rating name="read-only" value={inmueble.costo} readOnly />
+                    <p className="text-neutral-900 text-sm dark:text-neutral-300" >
+                        {inmueble.descripcion}
+                    </p>
+                </CardContent>
+                < CardActions
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'left',
+                        marginBottom: '.5rem'
+                    }}
+                >
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        href={`/property/${inmueble.ocupantes}`}
+                        //startIcon={< InfoIcon />}
+                        sx={{ textTransform: 'none', fontSize: '1rem', margin: '0 .5rem', fontWeight: 'semibold' }}
+                    >
+                        Más información
+                    </Button>
+                </CardActions>
+            </CardActionArea>
+        </Card>
     );
 }

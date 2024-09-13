@@ -1,5 +1,7 @@
 import Image from "next/image";
 import CardElement from "@/components/GeneralComponents/CardElement";
+import Header from "@/components/Dashboard/Home/Header";
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
 export default function AppInmuebles (){
 
@@ -57,6 +59,9 @@ export default function AppInmuebles (){
 
     return(
         <>
+            <Breadcrumb pageName="Inmuebles" />
+            <Header />
+            {/*
             <section className="relative h-72">
                 <Image
                     src={'/background/fondo-6.jpg'}
@@ -65,12 +70,13 @@ export default function AppInmuebles (){
                     objectFit="cover"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <h1 className="font-semibold text-white text-4xl">Inmuebles Disponibles en Renta</h1>
+                    <h1 className="font-semibold text-white text-4xl">Inmuebles con disponibilidad</h1>
                 </div>
             </section>
+            */}
             {/* momentaneo */}
             <section className="my-12">
-                <div className="w-[95%] mx-auto grid grid-cols-3 gap-6"> {/* contenedor de propiedades */}
+                <div className="w-[95%] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"> {/* contenedor de propiedades */}
                     <CardElement inmueble={inmuebles[0]}/>
                     <CardElement inmueble={inmuebles[1]}/>
                     <CardElement inmueble={inmuebles[2]}/>

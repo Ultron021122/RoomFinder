@@ -29,12 +29,13 @@ export default function MessageMainComponent() {
   const [errorSystem, setErrorSystem] = useState<string | null>(null);
 
   useEffect(() => {
+    if (user) {
     (async () => {
       try {
         setIsLoading(true);
         setErrorSystem(null);
 
-        let route = '/api/users/all';
+        let route = '/api/users/student';
         if (user?.roleid === 1) { route = '/api/users/lessor'; }
         const response = await axios.get<UserResponse>(route);
         setIsLoading(false);
@@ -50,7 +51,8 @@ export default function MessageMainComponent() {
         setIsLoading(false);
       }
     })();
-  }, []);
+  }
+  }, [user]);
 
   const handleUserClick = (user: User) => {
     setSelectedUser(user.usuarioid);
