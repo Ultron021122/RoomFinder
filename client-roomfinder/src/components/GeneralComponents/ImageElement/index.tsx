@@ -5,10 +5,11 @@ export default function ImageElement({
     content,
     width,
     height,
-    style
-}: { icon: string, content: string, width:number, height:number, style:string}) {
+    style,
+    onClick
+}: { icon: string, content: string, width:number, height:number, style:string, onClick?: any}) {
     return (
-        <div className={style}>
+        <div className={style} onClick={onClick}>
             <Image
                 src={icon}
                 alt=''
