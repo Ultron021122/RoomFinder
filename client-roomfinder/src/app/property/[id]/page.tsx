@@ -1,11 +1,5 @@
 import Image from "next/image";
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: "Propiedad",
-};
-
-export default function Property({ params }: { params: { id: string } }) {
+export default function Property ({ params }: { params: { id: string } }) {
 
     return (
         <>
