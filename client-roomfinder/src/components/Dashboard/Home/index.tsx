@@ -2,96 +2,11 @@ import Image from "next/image";
 import ImageElement from "@/components/GeneralComponents/ImageElement";
 import { Globe, LayoutTemplate, Network, Settings, ShieldCheck, TrendingUp } from "lucide-react";
 
-<<<<<<< HEAD
-const ImageElementStyles = {
-    with: 120,
-    height: 120,
-    style: "flex flex-col justify-center items-center"
-}
-
-export default function Home(){
-    return(
-        <>
-            <header className="relative h-96 bg-gray-500">
-                <Image
-                    src={'/background/fondo-1.jpg'}
-                    alt="RoomFinder background image"
-                    layout='fill'
-                    objectFit='cover'
-                />
-                <div className="flex flex-col justify-center items-center place-items-center absolute inset-0 bg-black bg-opacity-50">
-                    <h1 className="font-semibold text-4xl mb-4 text-white">¡Bienvenido a RoomFinder!</h1>
-                    <p className="font-medium text-white text-center w-[95%]">
-                        Estamos encantados de que te unas a nuestra comunidad. RoomFinder es una plataforma diseñada específicamente para conectar a arrendadores como tú con estudiantes universitarios que buscan un lugar seguro, cómodo y adecuado para vivir mientras continúan sus estudios.
-                    </p>
-                </div>
-            </header>
-
-            <section className="mt-12">
-                <h2 className="text-center text-3xl mb-9">¿Qué puedes hacer en RoomFinder?</h2>
-
-                <ul className="flex justify-evenly w-[95%] mx-auto">
-                    <li>
-                        <ImageElement
-                            icon={'/icon/operation.png'}
-                            content={'Publicar y Gestionar tus inmuebles'}
-                            width={ImageElementStyles.with}
-                            height={ImageElementStyles.height}
-                            style={ImageElementStyles.style}
-                        />
-                    </li>
-                    <li>
-                        <ImageElement 
-                            icon={'/icon/networking.png'}
-                            content={'Conectar con Inquilinos Potenciales'}
-                            width={ImageElementStyles.with}
-                            height={ImageElementStyles.height}
-                            style={ImageElementStyles.style}
-                        />
-                    </li>
-                    <li>
-                        <ImageElement
-                            icon={'/icon/optimize.png'}
-                            content={'Optimizar tus Rentas'}
-                            width={ImageElementStyles.with}
-                            height={ImageElementStyles.height}
-                            style={ImageElementStyles.style}
-                        />
-                    </li>
-                    <li>
-                        <ImageElement 
-                            icon={'/icon/service.png'}
-                            content={'Asegurar tus Inmuebles'}
-                            width={ImageElementStyles.with}
-                            height={ImageElementStyles.height}
-                            style={ImageElementStyles.style}
-                        />
-                    </li>
-                </ul>                
-            </section>
-
-            <section className="relative mt-12 h-72">
-                <Image
-                    src={'/background/fondo-5.jpg'}
-                    alt='RoomFinder background image'
-                    layout='fill'
-                    objectFit="cover"
-                />
-
-                <div className="flex justify-center items-center absolute inset-0 bg-black bg-opacity-50">
-                    <h2 className="text-center text-3xl mb-6 text-white font-semibold">¿Cuál es  nuestro propósito?</h2>
-                </div>
-            </section>
-
-            <section className="my-12">
-                <div className="w-[95%] mx-auto grid grid-cols-2 gap-5">
-=======
 export default function Home() {
     return (
         <div className="h-full max-w-screen-2xl mx-auto bg-zinc-200 dark:bg-gray-900">
             <div className="mx-auto">
                 <header className="relative h-96 sm:h-72 bg-gray-500">
->>>>>>> bb767cc1f2b016366a9c0b17d4a7d25b66a4c334
                     <Image
                         src={'/background/fondo-1.jpg'}
                         alt="RoomFinder background image"
