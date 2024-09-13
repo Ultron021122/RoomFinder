@@ -7,6 +7,7 @@ import io from "socket.io-client";
 import TimeAgo from "javascript-time-ago";
 import es from "javascript-time-ago/locale/es";
 import { Image } from "@nextui-org/react";
+import { UserProfile } from "@/utils/interfaces";
 
 TimeAgo.addDefaultLocale(es);
 
@@ -34,20 +35,21 @@ export default function MessageComponent({ userID, className }: { userID: number
   const [chats, setChats] = useState<Chat[]>([]);
 
   const { data: session } = useSession();
-  const user = session?.user;
+  const user = session?.user as UserProfile;
   const timeAgo = new TimeAgo("es-MX");
 
+  // Connect to the server when the user is authenticated
   useEffect(() => {
     if (user) {
       socket.auth = {
-        usuarioid: (user as any)?.usuarioid,
-        username: (user as any)?.vchname,
+        usuarioid: user?.usuarioid,
+        username: user?.vchname,
         serverOffset: 0,
       };
       socket.connect(); // Connect manually after setting auth
 
       socket.on("message", (newMessage: Message) => {
-        if (newMessage.usuarioid === (user as any)?.usuarioid || userID) {
+        if (newMessage.usuarioid === user?.usuarioid || userID) {
           setConversations((prevConversations) => [...prevConversations, newMessage]);
         }
       });
@@ -59,11 +61,20 @@ export default function MessageComponent({ userID, className }: { userID: number
     }
   }, [user, userID]);
 
+  // Fetch chats and messages when the component mounts
   useEffect(() => {
     // Fetch chats from the server
+    console.log("Fetching chats for user:", user?.usuarioid);
     const fetchChats = async () => {
       try {
-        const response = await fetch("http://localhost:1234/api/chats");
+        console.log("Prueba 1")
+        const response = await fetch(`${process.env.NEXT_PUBLIC_REST_URL}/chats`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ usuario1id: user.usuarioid, usuario2id: userID }), // Enviar el userID en el cuerpo de la solicitud
+        });
         if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
         setChats(data);
@@ -73,14 +84,14 @@ export default function MessageComponent({ userID, className }: { userID: number
     };
 
     fetchChats();
-  }, []);
+  }, [user, userID]);
 
   useEffect(() => {
     if (userID) {
       // Fetch messages for the selected chat
       const fetchMessages = async () => {
         try {
-          const response = await fetch(`http://localhost:1234/api/messages/chat/${userID}`);
+          const response = await fetch(`${process.env.NEXT_PUBLIC_REST_URL}/messages/chat/${userID}`);
           if (!response.ok) throw new Error("Network response was not ok");
           const data = await response.json();
           setConversations(data);
