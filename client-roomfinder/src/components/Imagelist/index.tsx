@@ -2,20 +2,22 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import { Image } from '@nextui-org/react';
 
-export default function MasonryImageList() {
+export default function MasonryImageList({ className }: { className?: string }) {
     return (
-        <ImageList variant="masonry" cols={3} gap={8}>
-            {itemData.map((item) => (
-                <ImageListItem key={item.img}>
-                    <Image
-                        src={item.img}
-                        alt={item.title}
-                        width={500} // Especifica el ancho
-                        height={300} // Especifica la altura, ajusta según tus necesidades
-                    />
-                </ImageListItem>
-            ))}
-        </ImageList>
+        <div className={className}>
+            <ImageList variant="masonry" cols={3} gap={8}>
+                {itemData.map((item) => (
+                    <ImageListItem key={item.img}>
+                        <Image
+                            src={item.img}
+                            alt={item.title}
+                            width={500} // Especifica el ancho
+                            height={300} // Especifica la altura, ajusta según tus necesidades
+                        />
+                    </ImageListItem>
+                ))}
+            </ImageList>
+        </div>
     );
 }
 

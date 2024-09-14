@@ -16,6 +16,11 @@ const nextConfig = {
                 protocol: 'http',
                 hostname: 'localhost',
                 port: '',
+            },
+            {
+                protocol: 'https',
+                hostname: 'tailwindcss.com',
+                port: '',
             }
         ],
     },
