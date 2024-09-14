@@ -77,7 +77,7 @@ export const CardOwner = ({ id, title, description, value, image }: CardOwnerPro
                         variant="contained"
                         href={`/property/${id}`}
                         startIcon={<InfoIcon />}
-                        sx={{ textTransform: 'none', fontSize: '1rem', margin: '0 .5rem' }}
+                        sx={{ textTransform: 'none', fontSize: '1rem', margin: '0 .5rem', backgroundColor: '#2563eb' }}
                     >
                         Más información
                     </Button>

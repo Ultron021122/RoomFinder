@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import Inicio from "@/components/Main";
+import HomeComponent from "@/components/Main";
 
 export const metadata: Metadata = {
   title: 'Inicio | RoomFinder',
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <Inicio />
+      <HomeComponent />
     </>
   );
 }
