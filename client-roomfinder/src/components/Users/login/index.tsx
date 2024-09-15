@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 // Componentes
 import { Button, Spinner, Image } from "@nextui-org/react";
 // Utilidades
@@ -20,8 +20,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Checkbox, FormControlLabel } from "@mui/material";
 
 function Login() {
-    const { register, handleSubmit, formState: { errors } } = useForm<UserInfo>({ mode: "onChange" });
+    const { status } = useSession();
     const router = useRouter();
+
+    const { register, handleSubmit, formState: { errors } } = useForm<UserInfo>({ mode: "onChange" });
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
 
@@ -55,7 +57,7 @@ function Login() {
                     theme: "colored",
                     transition: Slide,
                 });
-                return router.push("/dashboard/profile");
+                return router.push("/dashboard");
             }
         } catch (Error: any) {
             if (Error.response?.status == 400) {
@@ -87,8 +89,14 @@ function Login() {
     // Enfocar el input email al cargar la página
     useEffect(() => {
         const input = document.getElementById('vchemail') as HTMLInputElement;
-        input.focus();
-    }, []);
+        if (input) {
+            input.focus();
+        }
+
+        if (status === "authenticated") {
+            router.push("/dashboard");
+        }
+    }, [status, router]);
 
     return (
         <>

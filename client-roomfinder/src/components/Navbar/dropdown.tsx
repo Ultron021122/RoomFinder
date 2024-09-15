@@ -90,7 +90,7 @@ const DropdownUser = () => {
                             <p className="text-small">{user.vchemail}</p>
                         </DropdownItem>
                         <DropdownItem key="dashboard" textValue="Panel de administración">
-                            <Link href="/dashboard/profile">Dashboard</Link>
+                            <Link href="/dashboard">Dashboard</Link>
                         </DropdownItem>
                         <DropdownItem key="settings" textValue="Configuraciones">Settings</DropdownItem>
                         <DropdownItem
@@ -102,12 +102,12 @@ const DropdownUser = () => {
                         </DropdownItem>
                     </DropdownSection>
                     <DropdownItem key="settings" textValue="Configuraciones">
-                        My Settings
+                        Mis Configuraciones
                     </DropdownItem>
                     <DropdownItem key="team_settings" textValue="Configuraciones de equipo">Team Settings</DropdownItem>
                     <DropdownSection aria-label="Help & Feedback">
                         <DropdownItem key="help_and_feedback" textValue="Ayuda">
-                            Help & Feedback
+                            Ayuda y Retroalimentación
                         </DropdownItem>
                         <DropdownItem key="logout" textValue="Cerrar sesión" onClick={() => { signOut(); }}>
                             Cerrar Sesión

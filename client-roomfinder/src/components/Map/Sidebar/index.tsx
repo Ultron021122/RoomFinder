@@ -3,7 +3,7 @@ import { universities } from "@/utils/constants";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { FormControl, InputLabel, FormHelperText } from "@mui/material";
 import MenuItem from '@mui/material/MenuItem';
-import BasicSpeedDial from "@/components/Speed";
+import BasicSpeedDial from "@/components/GeneralComponents/Speed";
 
 interface SidebarProps {
     onUniversityChange: (university: string) => void;

@@ -1,7 +1,7 @@
 "use client";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Image } from "@nextui-org/react";
 import { usePathname } from 'next/navigation'
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { MoreVertical } from "lucide-react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { rolesMapping } from "@/utils/constants";
@@ -64,33 +64,34 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
               alt={user?.vchname}
               className="w-10 h-10 rounded-full object-cover border-2 border-gray-300"
             />
-            <DropdownTrigger>
-              <div
-                className={`
+
+            <div
+              className={`
                         flex justify-between items-center
                         overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
                         `}
-              >
-                <div className="leading-4">
-                  <h4 className="font-semibold dark:text-gray-300">
-                    {
-                      shortName({
-                        vchname: user?.vchname,
-                        vchpaternalsurname: user?.vchpaternalsurname,
-                        vchmaternalsurname: user?.vchmaternalsurname
-                      })
-                    }
-                  </h4>
-                  <span className="text-xs text-gray-600 dark:text-gray-400">
-                    {user?.vchemail}
-                  </span>
-                </div>
+            >
+              <div className="leading-4">
+                <h4 className="font-semibold dark:text-gray-300">
+                  {
+                    shortName({
+                      vchname: user?.vchname,
+                      vchpaternalsurname: user?.vchpaternalsurname,
+                      vchmaternalsurname: user?.vchmaternalsurname
+                    })
+                  }
+                </h4>
+                <span className="text-xs text-gray-600 dark:text-gray-400">
+                  {user?.vchemail}
+                </span>
+              </div>
+              <DropdownTrigger>
                 <MoreVertical
                   size={20}
                   className="text-gray-800 dark:text-gray-100"
                 />
-              </div>
-            </DropdownTrigger>
+              </DropdownTrigger>
+            </div>
           </div>
           <DropdownMenu
             aria-label="User Actions"
@@ -119,8 +120,38 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
               }}>
               <DropdownItem isReadOnly key="profile" className="h-14 gap-2" textValue="Pérfil">
                 <p className="font-semibold text-sm capitalize">
-                  Hola mundo
+                  {
+                    shortName({
+                      vchname: user?.vchname,
+                      vchpaternalsurname: user?.vchpaternalsurname,
+                      vchmaternalsurname: user?.vchmaternalsurname
+                    })
+                  }
                 </p>
+                <p className="text-small">{user?.vchemail}</p>
+              </DropdownItem>
+              <DropdownItem isReadOnly key="home" textValue="Home">
+                <Link href='/'>Regresar</Link>
+              </DropdownItem>
+              <DropdownItem key="map" textValue="Mapa de propiedades">
+                <Link href="/propiedades">Mapa</Link>
+              </DropdownItem>
+            </DropdownSection>
+            <DropdownItem key="settings" textValue="Configuraciones">
+              Mis Configuraciones
+            </DropdownItem>
+            <DropdownItem key="team_settings" textValue="Configuraciones de equipo">Team Settings</DropdownItem>
+            <DropdownSection aria-label="Help & Feedback">
+              <DropdownItem key="help_and_feedback" textValue="Ayuda">
+                Ayuda y Retroalimentación
+              </DropdownItem>
+              <DropdownItem
+                key="logout"
+                textValue="Cerrar sesión"
+                onClick={() => { signOut(); }}
+                className="text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-700"
+              >
+                Cerrar Sesión
               </DropdownItem>
             </DropdownSection>
           </DropdownMenu>
