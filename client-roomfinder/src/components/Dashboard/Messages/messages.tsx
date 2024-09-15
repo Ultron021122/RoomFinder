@@ -11,7 +11,7 @@ import { UserProfile } from "@/utils/interfaces";
 
 TimeAgo.addDefaultLocale(es);
 
-const socket = io("http://localhost:3001", {
+const socket = io(`${process.env.NEXTAUTH_URL_WEBSOCKET}`, {
   autoConnect: false, // disable auto-connect to set auth
 });
 

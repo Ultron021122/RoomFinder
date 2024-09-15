@@ -1,4 +1,5 @@
 import { UniversityData, Roles, MapCoordenada, Folder } from '@/utils/interfaces';
+import { url } from 'inspector';
 
 // Iconos
 // ...
@@ -122,7 +123,7 @@ export const messages = {
     dtavailabilitydate: {
         required: "Debes introducir una fecha de disponibilidad",
     },
-    intmincontractduration: {  
+    intmincontractduration: {
         required: "El campo Duración mínima de contrato es requerido",
         min: "La duración mínima de contrato es de 1 mes",
         max: "La duración mínima de contrato es de 12 meses"
@@ -352,7 +353,7 @@ export const universities: UniversityData[] = [
         description: "El CUCOSTA es un centro educativo ubicado en la costa del Pacífico, con programas en turismo, biología marina, y desarrollo sustentable.",
         imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1717300356/resources/n9wubz2sfkdndnt26t95.jpg",
         website: "https://www.cucosta.udg.mx/"
-    }, 
+    },
     {
         name: "Centro Universitario de la Costa Sur (CUCSUR)",
         geocode: [19.774326, -104.357906],
@@ -437,20 +438,32 @@ export const propertiesHome = [
         title: "Casa en renta",
         description: "Hermosa casa en la playa con vista al mar.",
         value: 4,
-        imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg",
+        imagenesUrl: [
+            { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
+            { id: 2, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" },
+            { id: 3, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" }
+        ],
     },
     {
         id: 2,
         title: "Departamento en renta",
         description: "Departamento en el centro de la ciudad.",
         value: 3.5,
-        imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg",
+        imagenesUrl: [
+            { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
+            { id: 2, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" },
+            { id: 3, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" }
+        ],
     },
     {
         id: 3,
         title: "Casa en la montaña",
         description: "Casa en la montaña con vista a la ciudad.",
         value: 5,
-        imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1717565639/resources/osuacongqcobj2hdx8oc.jpg",
+        imagenesUrl: [
+            { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
+            { id: 2, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" },
+            { id: 3, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" }
+        ],
     }
 ]

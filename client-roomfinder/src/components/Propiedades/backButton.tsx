@@ -24,7 +24,7 @@ export default function BackButton({ className }: { className: string }) {
     );
 }
 
-export function CheckDisponibilityButton({ className, children, route }: { className?: string, children: string, route?: string }) {
+export function RouteButton({ className, children, route }: { className?: string, children: string, route?: string }) {
     const clases = className ? className : 'bg-blue-600 text-white text-sm leading-6 font-medium py-2 px-3 rounded-lg';
 
     const router = useRouter();
