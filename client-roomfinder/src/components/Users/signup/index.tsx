@@ -95,6 +95,7 @@ const Registrar = () => {
                             transition: Slide,
                         });
                         reset();
+                        router.push('/users/login');
                     } else {
                         setErrorSystem(response.data.message);
                     }
@@ -122,6 +123,7 @@ const Registrar = () => {
                             transition: Slide,
                         });
                         reset();
+                        router.push('/users/login');
                     } else {
                         setErrorSystem(response.data.message);
                     }

@@ -1,24 +1,33 @@
 'use client';
 // Element: CardOwner
 import { useState, useEffect } from 'react';
-import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions, Rating } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
+import { CardActionArea, CardActions, Rating, Card } from '@mui/material';
+import Image from 'next/image';
+import { Galeria } from '@/components/GeneralComponents/Galeria';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { RouteButton } from '@/components/Propiedades/backButton';
+
+interface Imagen {
+    id: number,
+    url: string
+}
 
 interface CardOwnerProps {
     id: number;
     title: string;
     description: string;
     value: number;
-    image: string;
+    imagenes: Imagen[];
 }
 
-export const CardOwner = ({ id, title, description, value, image }: CardOwnerProps) => {
+export const CardOwner = ({ id, title, description, value, imagenes }: CardOwnerProps) => {
     const [darkMode, setDarkMode] = useState<boolean>(false);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+    const route = useRouter();
 
     // Dark Mode 
     useEffect(() => {
@@ -39,22 +48,30 @@ export const CardOwner = ({ id, title, description, value, image }: CardOwnerPro
         return null;
     }
 
+    const listaImagenes = imagenes.map((imagen, index) =>
+        <div key={index} className="relative min-w-full h-full" >
+            <Image
+                width={800}
+                height={600}
+                src={imagen.url}
+                alt={`Imagen de inmueble ${imagen.id}`}
+                className='absolute inset-0 object-cover w-full h-full'
+            />
+        </div>
+    );
+
     return (
         <Card
             sx={{
                 maxWidth: '100%', // Hacer que la tarjeta sea responsiva
                 backgroundColor: darkMode ? '#1f2937' : '#fff',
-                color: darkMode ? '#fff' : '#111827'
+                color: darkMode ? '#fff' : '#111827',
+                borderTopLeftRadius: '0.5rem',
+                borderTopRightRadius: '0.5rem',
             }}
         >
-            <CardActionArea>
-                <CardMedia
-                    component="img"
-                    height="275"
-                    image={image}
-                    alt={title}
-                    sx={{ width: '100%', height: 275, objectFit: 'cover', objectPosition: 'center', layout: 'fill' }} // Ajustar la imagen al ancho de la tarjeta
-                />
+            <Galeria imagenes={listaImagenes} />
+            <CardActionArea onClick={() => route.push(`/property/${id}`)}>
                 <CardContent>
                     <h5 className="text-xl font-semibold text-neutral-950 dark:text-neutral-50">
                         {title}
@@ -68,21 +85,24 @@ export const CardOwner = ({ id, title, description, value, image }: CardOwnerPro
                 <CardActions
                     sx={{
                         display: 'flex',
-                        justifyContent: 'left',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        paddingX: '1rem',
                         marginBottom: '.5rem'
                     }}
                 >
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        href={`/property/${id}`}
-                        startIcon={<InfoIcon />}
-                        sx={{ textTransform: 'none', fontSize: '1rem', margin: '0 .5rem', backgroundColor: '#2563eb' }}
+                    <span
+                        className="text-xl font-semibold text-gray-900 dark:text-white"
                     >
-                        Más información
-                    </Button>
+                        $599.00 MXN
+                    </span>
+                    <RouteButton route={`/property/${id}`}>
+                        Ver más
+                    </RouteButton>
                 </CardActions>
             </CardActionArea>
         </Card>
     );
 }
+
+export default CardOwner;

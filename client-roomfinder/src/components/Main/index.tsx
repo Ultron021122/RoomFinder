@@ -1,6 +1,6 @@
 import Layout from "@/components/layout";
 import Footer from '@/components/Footer';
-import { images, propertiesHome } from "@/utils/constants";
+import { propertiesHome } from "@/utils/constants";
 import MasonryImageList from "@/components/Imagelist";
 import { CardOwner } from "./Card";
 import Banner from "./Banner";
@@ -30,7 +30,7 @@ export default function HomeComponent() {
                                         id={property.id}
                                         title={property.title}
                                         description={property.description}
-                                        image={property.imageUrl}
+                                        imagenes={property.imagenesUrl}
                                         value={property.value}
                                     />
                                 ))
