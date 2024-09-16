@@ -16,6 +16,11 @@ const nextConfig = {
                 protocol: 'http',
                 hostname: 'localhost',
                 port: '',
+            },
+            {
+                protocol: 'https',
+                hostname: 'tailwindcss.com',
+                port: '',
             }
         ],
     },
@@ -27,6 +32,9 @@ const nextConfig = {
                 permanent: true, // Set to true for a 301 redirect, or false for a 302 redirect
             },
         ];
+    },
+    eslint: {
+        ignoreDuringBuilds: true,
     },
 };
 

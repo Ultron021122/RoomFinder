@@ -14,7 +14,6 @@ const excludedRoutes = [
     '/dashboard/messages',
     '/dashboard/properties',
     '/dashboard/chats',
-    '/prueba',
     '/dashboard/inmuebles',
     '/dashboard/home'
 ];

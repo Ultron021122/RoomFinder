@@ -1,7 +1,7 @@
 "use client";
-import { Image } from "@nextui-org/react";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Image } from "@nextui-org/react";
 import { usePathname } from 'next/navigation'
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { MoreVertical } from "lucide-react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { rolesMapping } from "@/utils/constants";
@@ -10,9 +10,9 @@ import Link from 'next/link';
 import { SidebarUserProps } from "@/utils/interfaces";
 
 interface SidebarProps {
-    children: React.ReactNode;
-    expanded: boolean;
-    onResize: () => void;
+  children: React.ReactNode;
+  expanded: boolean;
+  onResize: () => void;
 }
 
 const SidebarContext = createContext({ expanded: false });
@@ -23,7 +23,7 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
   const roleName = rolesMapping[user?.roleid] || 'Desconocido';
 
   useEffect(() => {
-    function handleResize(){
+    function handleResize() {
       onResize();
     }
 
@@ -53,41 +53,111 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
         <SidebarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3 z-30">{children}</ul>
         </SidebarContext.Provider>
-        <div className="border-t border-gray-300 dark:border-gray-800 flex p-3">
-          <Image
-            //src="https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=SM"
-            src={user?.vchimage}
-            alt={user?.vchname}
-            className="w-10 h-10 rounded-full object-cover border-2 border-gray-300"
-          />
-          <div
-            className={`
+        <Dropdown placement="bottom-start" classNames={{
+          content: "dark:bg-gray-900 border dark:border-gray-800 rounded-md"
+        }}>
+
+          <div className="border-t border-gray-300 dark:border-gray-800 flex p-3">
+            <Image
+              //src="https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=SM"
+              src={user?.vchimage}
+              alt={user?.vchname}
+              className="w-10 h-10 rounded-full object-cover border-2 border-gray-300"
+            />
+
+            <div
+              className={`
                         flex justify-between items-center
                         overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
                         `}
-          >
-            <div className="leading-4">
-              <h4 className="font-semibold dark:text-gray-300">
-                {
-                  shortName({
-                    vchname: user?.vchname,
-                    vchpaternalsurname: user?.vchpaternalsurname,
-                    vchmaternalsurname: user?.vchmaternalsurname
-                  })
-                }
-              </h4>
-              <span className="text-xs text-gray-600 dark:text-gray-400">
-                {user?.vchemail}
-              </span>
+            >
+              <div className="leading-4">
+                <h4 className="font-semibold dark:text-gray-300">
+                  {
+                    shortName({
+                      vchname: user?.vchname,
+                      vchpaternalsurname: user?.vchpaternalsurname,
+                      vchmaternalsurname: user?.vchmaternalsurname
+                    })
+                  }
+                </h4>
+                <span className="text-xs text-gray-600 dark:text-gray-400">
+                  {user?.vchemail}
+                </span>
+              </div>
+              <DropdownTrigger>
+                <MoreVertical
+                  size={20}
+                  className="text-gray-800 dark:text-gray-100"
+                />
+              </DropdownTrigger>
             </div>
-            <MoreVertical
-              size={20}
-              className="text-gray-800 dark:text-gray-100"
-            />
           </div>
-        </div>
+          <DropdownMenu
+            aria-label="User Actions"
+            classNames={{
+              base: "dark:bg-gray-900"
+            }}
+            itemClasses={{
+              base: [
+                "rounded-md",
+                "text-default-700 dark:text-default-300",
+                "transition-opacity",
+                "data-[hover=true]:text-foreground dark:data-[hover=true]:text-default-50",
+                "data-[hover=true]:bg-default-300",
+                "dark:data-[hover=true]:bg-default-700",
+                "data-[selectable=true]:focus:bg-default-50",
+                "data-[pressed=true]:opacity-70",
+                "data-[focus-visible=true]:ring-default-500",
+              ],
+            }}
+          >
+            <DropdownSection
+              aria-label="Profile & actions"
+              showDivider
+              classNames={{
+                divider: "dark:bg-gray-800"
+              }}>
+              <DropdownItem isReadOnly key="profile" className="h-14 gap-2" textValue="Pérfil">
+                <p className="font-semibold text-sm capitalize">
+                  {
+                    shortName({
+                      vchname: user?.vchname,
+                      vchpaternalsurname: user?.vchpaternalsurname,
+                      vchmaternalsurname: user?.vchmaternalsurname
+                    })
+                  }
+                </p>
+                <p className="text-small">{user?.vchemail}</p>
+              </DropdownItem>
+              <DropdownItem isReadOnly key="home" textValue="Home">
+                <Link href='/'>Regresar</Link>
+              </DropdownItem>
+              <DropdownItem key="map" textValue="Mapa de propiedades">
+                <Link href="/propiedades">Mapa</Link>
+              </DropdownItem>
+            </DropdownSection>
+            <DropdownItem key="settings" textValue="Configuraciones">
+              Mis Configuraciones
+            </DropdownItem>
+            <DropdownItem key="team_settings" textValue="Configuraciones de equipo">Team Settings</DropdownItem>
+            <DropdownSection aria-label="Help & Feedback">
+              <DropdownItem key="help_and_feedback" textValue="Ayuda">
+                Ayuda y Retroalimentación
+              </DropdownItem>
+              <DropdownItem
+                key="logout"
+                textValue="Cerrar sesión"
+                onClick={() => { signOut(); }}
+                className="text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-700"
+              >
+                Cerrar Sesión
+              </DropdownItem>
+            </DropdownSection>
+          </DropdownMenu>
+        </Dropdown>
       </nav>
-    </aside>
+    </aside >
   );
 }
 

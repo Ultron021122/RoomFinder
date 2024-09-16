@@ -1,8 +1,13 @@
+'use client';
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 interface BreadcrumbProps {
   pageName: string;
 }
 const Breadcrumb = ({ pageName }: BreadcrumbProps) => {
+  const route = usePathname();
+
   return (
     <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <h2 className="text-xl font-semibold text-black dark:text-white">
