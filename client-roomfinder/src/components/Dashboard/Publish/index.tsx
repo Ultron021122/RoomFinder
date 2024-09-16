@@ -2,12 +2,15 @@
 
 import ImageElement from "@/components/GeneralComponents/ImageElement";
 import Image from "next/image";
-import React, { useState } from "react";
-import { Progress } from "@nextui-org/react";
+import React, { useState, useCallback } from "react";
+import { input, Progress } from "@nextui-org/react";
 import clsx from 'clsx';
 import { FormularioProvider, useFormulario } from "./FormularioContext";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Inmueble } from "./FormularioContext";
+import { useDropzone} from 'react-dropzone';
+import Inmuebles from "../Inmuebles";
 
 const ImageElementStyles = {
     width: 40,
@@ -26,44 +29,56 @@ export default function Publish(){
     );
 }
 
+type funcionValidacion = (inmueble: Inmueble) => boolean | string;
+
+// objeto de validaciones
+const validaciones : Record<number, funcionValidacion> = {
+    1 : ({ tipoInmueble }) : boolean | string => {
+        return tipoInmueble !== '' ? true : 'Selecciona una opción para continuar';
+    },
+
+    2 : ({servicios, amenidades}) : boolean | string => {
+        return servicios.length > 0 && amenidades.length > 0 ? true : 'Para continuar, selecciona como mínimo un servicio y una amenidad';
+    },
+
+    3 : () : boolean => {
+        return true;
+    },
+
+    4 : ({ fotos }) : boolean | string => {
+        return fotos.length >= 5 && fotos.length <= 8 ? true : 'Sube como mínimo 5 fotos para continuar';
+    },
+
+    5 : () : boolean => {
+        return true;
+    },
+
+    6 : () : boolean => {
+        return true;
+    },
+
+    7 : () : boolean => {
+        return true;
+    },
+
+    8 : () : boolean => {
+        return true;
+    }
+}
+
 const Wizar = () => {
     const [actual, setActual] = useState(1);
     const { inmueble } = useFormulario();
 
     const siguiente = () => {
-        let pasa = true;
+        const fnValidar = validaciones[actual];
+        const salida = fnValidar(inmueble);
 
-        switch(actual){
-            case 1:
-                if(inmueble.tipoInmueble != ''){
-                    pasa = true;
-                }else{
-                    toast.error('Selecciona un tipo de inmueble para continuar');
-                    <ToastContainer/>
-                }
-            break;
-
-            case 2:
-            break;
-
-            case 3:
-            break;
-
-            case 4:
-            break;
-
-            case 5:
-            break;
-
-            case 6:
-            break;
-
-            default:
-            break;
-        }
-
-        if(pasa){
+        if(salida === true){
             setActual((prev) => prev + 1);
+        }else{
+            toast.error(salida);
+            <ToastContainer/>
         }
     }
 
@@ -83,19 +98,20 @@ const Wizar = () => {
                 {actual === 3 && <InformacionGeneral/>}
                 {actual === 4 && <Fotos/>}
                 {actual === 5 && <Ubicacion/>}
-                {actual === 6 && <Detalles/>}
-                {actual === 7 && <Confirmacion/>}
+                {actual === 6 && <Titulo/>}
+                {actual === 7 && <Descripcion/>}
+                {actual === 8 && <Confirmar/>}
             </div>
             <div className="w-[95%] mx-auto">
-                <Progress size="sm" aria-label="Loading..." value={(actual / 7) * 100}/>
+                <Progress size="sm" aria-label="Loading..." value={(actual / 8) * 100}/>
                 <div className="flex justify-between my-10">
                     {
-                        actual > 1 && <Boton contenido="Anterior" onClick={anterior} style={estiloBoton.style} />
+                        actual > 1 && <Boton contenido="Anterior" onClick={anterior} className={estiloBoton.style} />
                     }
                     
                     {
-                        actual < 7 ? <Boton contenido="Siguiente" onClick={siguiente} style={estiloBoton.style}/> : (
-                            <Boton contenido="Enviar" onClick={null} style={estiloBoton.style}/>
+                        actual < 8 ? <Boton contenido="Siguiente" onClick={siguiente} className={estiloBoton.style}/> : (
+                            <Boton contenido="Enviar" onClick={null} className={estiloBoton.style}/>
                         )
                     }
                 </div>
@@ -120,18 +136,23 @@ const Header = () => {
     );
 }
 
+const tiposInmueble = [
+    {icon:'/icon/house.svg', content:'Casa'},
+    {icon:'/icon/room.svg', content:'Cuarto'},
+    {icon:'/icon/building.svg', content:'Departamento'}
+]
+
 const TipoInmueble = () => {
-    const { inmueble ,setInmueble } = useFormulario();
+    const { inmueble ,setInmueble, reiniciarValores } = useFormulario();
 
     const handleSelect = (tipo : string) => {
-        setInmueble({tipoInmueble:tipo});
-    }
+        
+        if(inmueble.tipoInmueble !== ''){
+            reiniciarValores();
+        }
 
-    const tiposInmueble = [
-        {icon:'/icon/house.svg', content:'Casa'},
-        {icon:'/icon/room.svg', content:'Cuarto'},
-        {icon:'/icon/building.svg', content:'Departamento'}
-    ];
+        setInmueble({tipoInmueble:tipo});
+    }    
 
     return(
         <div className="h-full">
@@ -307,7 +328,7 @@ const Campo = ({content, min, max} : {content:string, min:number, max:number}) =
                 <Boton
                     contenido="-"
                     onClick={decrementar}
-                    style={clsx(
+                    className={clsx(
                         `${estBtn} left-0`,
                         {
                             'hover:cursor-not-allowed border-zinc-300 text-zinc-300' : inmueble[propiedad] === min
@@ -320,7 +341,7 @@ const Campo = ({content, min, max} : {content:string, min:number, max:number}) =
                 <Boton
                     contenido="+"
                     onClick={incrementar}
-                    style={clsx(
+                    className={clsx(
                         `${estBtn} right-0`,
                         {
                             'hover:cursor-not-allowed border-zinc-300 text-zinc-300 ' : inmueble[propiedad] === max
@@ -353,7 +374,7 @@ const Departamento = {
 }
 
 const InformacionGeneral = () => {
-    const {inmueble, setInmueble} = useFormulario();
+    const {inmueble} = useFormulario();
 
     return(
         <div>
@@ -386,38 +407,85 @@ const InformacionGeneral = () => {
     );
 }
 
-const Fotos:React.FC = () => {
+const ImageUploader = () => {
+    const { inmueble, setInmueble } = useFormulario();
 
-    const [imagenes, setImagenes] = useState<File[]>([]);
-    const [imagenesPreview, setImagenesPreview] = useState<string[]>([]);
+    const onDrop = (acceptedFiles: File[]) => {
+        const prev = inmueble.fotos;
+        console.log(prev);
+        setInmueble({fotos : [...prev, ...acceptedFiles] });
+    }
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files;
-        if(files){
-            const fileArray = Array.from(files);
-            setImagenes(fileArray);
+    const quitarImg = (imagen : File) => {
+        const fotosActuales = inmueble.fotos;
+        let fotosActualizadas = fotosActuales.filter(foto => {
+            return foto !== imagen;
+        });
 
-            // generar previsualizaciones de las imagenes
-            const previews = fileArray.map( file => URL.createObjectURL(file));
-            setImagenesPreview(previews);
-        }
-    };
+        setInmueble({fotos : fotosActualizadas});
+    }
 
-    const handleClear = () => {
-        setImagenes([]);
-        setImagenesPreview([]);
-    };
+    // integrando react-dropzone
+    const {getRootProps, getInputProps, isDragActive, isDragAccept} = useDropzone({
+        onDrop,
+        multiple: true,
+        accept: {
+            'image/jpeg': [],
+            'image/png': []
+        },
+        maxFiles: 8,
+    });
 
+    //generar preview de las imágenes seleccionadas
+    const renderPreviews = () => {
+        return inmueble.fotos.map((imagen, index) => {
+            const imagenURL = URL.createObjectURL(imagen);
+            return(
+                <div key={index} className="relative group w-[470px] h-[300px] m-2">
+                    <Image
+                        src={imagenURL}
+                        alt={`preview de imagen ${index}`}
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                    <div className="absolute left-0 right-0 bottom-4 opacity-0 group-hover:opacity-100 transition-all">
+                        <div className="grid place-items-center">
+                            <Boton
+                                contenido="X"
+                                className="w-[35px] h-[35px] rounded-full border border-solid border-white text-white hover:bg-gray-600"
+                                onClick={() => {quitarImg(imagen)}}
+                            />
+                        </div>
+                    </div>
+                </div>
+            );
+        })
+    }
+
+    return(
+        <div className="w-[85%] mx-auto">
+            <div {...getRootProps()} className={`p-4 border-2 border-dashed ${isDragActive ? 'border-blue-400' : 'border-gray-400'} rounded-lg hover:cursor-pointer`}>                
+                <input {...getInputProps()} />
+                {isDragActive && isDragAccept ?
+                    <p className="text-center">Suelta tus imágenes aquí...</p> : <p className="text-center">Arrastra y suelta imágenes aquí o haz click para seleccionar</p>
+                }
+                <p className="text-center text-zinc-300">Solo se permiten imágenes con extensión .png o .jpeg</p>
+            </div>
+
+            {/* mostrar los preview */}
+            <div className="flex flex-wrap mt-4">
+                {renderPreviews()}
+            </div>
+        </div>
+    );
+}
+
+const Fotos = () => {
     return(
         <div>
             <h2 className="text-center font-semibold text-3xl mb-10">Agrega algunas fotos de tu inmueble a rentar</h2>
             <p className="text-xl mb-8">Para iniciar se necesitan como mínimo 5 fotografías. Más adelante podrás agregar más y realizar cambios</p>
-
-            <Boton
-                contenido="Seleccionar imagenes"
-                style=""
-                onClick={handleClear}
-            />
+            <ImageUploader/>
         </div>
     );
 }
@@ -431,29 +499,180 @@ const Ubicacion = () => {
     );
 }
 
-const Detalles = () => {
+const Entrada = ({ nombre, tipo, descripcion, placeholder}
+    : {nombre : string, tipo : string, descripcion : string, placeholder:string}) => {
+
+    const { inmueble } = useFormulario();
+
     return(
-        <div>
-            <h2>Describe </h2>
+        <div className="grid grid-cols-2 items-center">
+            <div className="relative w-[90%] h-[300px] mx-auto">
+                <Image
+                    src={URL.createObjectURL(inmueble.fotos[0])}
+                    alt="Imagen de casa en renta"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-lg"
+                />
+            </div>
+            <div>
+                <h2 className="text-2xl font-semibold mb-1">{nombre}</h2>
+                <p className="text-gray-600 mb-4">{descripcion}</p>
+                { tipo === 'text' ? 
+                    <input
+                        className='p-1 rounded-md w-[500px] h-[250px] bg-gray-100 text-center text-lg'
+                        type="text"
+                        placeholder={placeholder}/> :
+                    <textarea
+                        className='p-1 rounded-md w-[500px] h-[250px] bg-gray-100 text-lg'
+                        placeholder={placeholder}>
+                    </textarea>
+                }
+            </div>
         </div>
     );
 }
 
-const Confirmacion = () => {
+const Titulo = () => {
     return(
         <div>
-
+            <h2 className="text-center font-semibold text-3xl mb-10">Establece un título a tu inmueble</h2>
+            <Entrada nombre="Título" tipo="text" descripcion="Los títulos cortos funcionan mejor. No te preocupes, posteriormente podrás modificarlo." placeholder="Departamentos el foráneo"/>
         </div>
     );
 }
 
-const Boton = ({contenido, onClick, style}:{contenido:string, onClick:any, style:string}) => {
+const Descripcion = () => {
+    return(
+        <div>
+            <h2 className="text-center font-semibold text-3xl mb-10">Agrega una descripción del inmueble</h2>
+            <Entrada nombre="Descripción" tipo="textarea" descripcion="Una buena descripción permite que los alumnos conozcan brevemente tu inmueble" placeholder="Casa acogedora cerca de la universidad ubicada en un coto privado. Está cerca de la estación del metro, FORUM y Tlaquepaque."/>
+        </div>
+    );
+}
+
+function getIcon(inmueble:string){
+    const iconos : Record<string, string> = {
+        'Casa' : '/icon/house.svg',
+        'Cuarto' : '/icon/room.svg',
+        'Departamento' : '/icon/building.svg',
+        'Limpieza' : '/icon/cleaning.png',
+        'Gas' : '/icon/gas.png',
+        'Luz' : '/icon/power.png',
+        'TV cable' : '/icon/television.png',
+        'Agua' : '/icon/water-tap.png',
+        'Wifi' : '/icon/wifi.png',
+        'Boiler' : '/icon/boiler.png',
+        'Lavadora' : '/icon/washing-machine.png',
+        'Estacionamiento' : '/icon/parking.png',
+        'Cocina' : '/icon/kitchen.png',
+        'Refrigerador' : '/icon/fridge.png',
+        'Comedor' : '/icon/chair.png',
+        'Patio' : '/icon/fence.png',
+        'Sala de estar' : '/icon/sofa.png',
+        'Área de lavado' : '/icon/area-lavado.png',
+        'Aire acondicionado' : '/icon/ac.png'
+    }
+
+    return iconos[inmueble];
+}
+
+const Confirmar = () => {
+    const {inmueble} = useFormulario();
+
+    return(
+        <div>
+            <h2 className="text-center font-semibold text-3xl mb-10"> Confirma los datos de tu inmueble</h2>
+            <h3 className="font-semibold text-xl">Tipo de inmueble</h3>
+            <ImageElement
+                icon={getIcon(inmueble.tipoInmueble)}
+                content={inmueble.tipoInmueble}
+                width={ImageElementStyles.width}
+                height={ImageElementStyles.height}
+                style={ImageElementStyles.style}
+            />
+
+            <h3 className="font-semibold text-xl">Servicios y Amenidades</h3>
+            <h4 className="text-lg">Servicios</h4>
+            {
+                inmueble.servicios.map((servicio, index) => {
+                    const icono = getIcon(servicio);
+                    return(
+                        <ImageElement
+                            key={index}
+                            icon={icono}
+                            content={servicio}
+                            width={ImageElementStyles.width}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
+                        />
+                    );
+                })
+            }
+            
+            <h4 className="text-lg">Amenidades</h4>
+            {
+                inmueble.amenidades.map((amenidad, index) => {
+                    const icono = getIcon(amenidad);
+                    return(
+                        <ImageElement
+                            key={index}
+                            icon={icono}
+                            content={amenidad}
+                            width={ImageElementStyles.width}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
+                        />
+                    );
+                })
+            }
+
+            <h3 className="font-semibold text-xl">Información general del inmueble</h3>
+            {/* Recamaras, camas, baños y huéspedes | pendiente de immplementar*/}
+            <p>Recámaras: {inmueble.numRecamaras > 0 ? inmueble.numRecamaras : 'No aplica'}</p>
+            <p>Camas: {inmueble.numCamas}</p>
+            <p>Baños: {inmueble.numBanos > 0 ? inmueble.numBanos : 'No aplica'}</p>
+            <p>Huéspedes: {inmueble.numHuespedes}</p>
+
+            <h3 className="font-semibold text-xl">Fotografías del inmueble</h3>
+            <div className="grid grid-cols-4 gap-4">
+                {
+                    inmueble.fotos.map((imagen, index)=> {
+                        const url = URL.createObjectURL(imagen);
+                        return(
+                            <div key={index} className="relative w-[100%] h-[250px]">
+                                <Image
+                                    src={url}
+                                    alt={`Imagen de inmueble ${index}`}
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="rounded-lg"
+                                />
+                            </div>
+                        );
+                    })
+                }
+            </div>
+
+            <h3 className="font-semibold text-xl">Ubicación</h3>
+            <p>pendiente de implementar </p>
+
+            <h3 className="font-semibold text-xl">Título</h3>
+
+            <h3 className="font-semibold text-xl">Descripción</h3>
+        </div>
+    );
+}
+
+const Boton = ({contenido, onClick, className}:{contenido:string, onClick:any, className:string}) => {
     return(
         <button
             onClick={onClick}
-            className={style}
+            className={className}
         >
             {contenido}
         </button>
     );
 }
+
+// falta agregar el costo por mes del inmueble
