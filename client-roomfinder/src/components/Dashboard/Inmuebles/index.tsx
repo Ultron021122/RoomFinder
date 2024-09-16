@@ -17,7 +17,7 @@ export default function Inmuebles (){
             ],
             tipo:'Casa',
             dormitorios: 2,
-            banos: 5,
+            baths: 5,
             ocupantes: 6,
             costo: 1200,
             descripcion: 'Casa acogedora ubicada en un vecindario tranquilo, cerca de la universidad y con buenos servicios. ¡Ideal para estudiantes!'
@@ -33,7 +33,7 @@ export default function Inmuebles (){
             ],
             tipo:'Departamento',
             dormitorios: 1,
-            banos: 1,
+            baths: 1,
             ocupantes: 2,
             costo: 3500,
             descripcion: 'Casa acogedora ubicada en un vecindario tranquilo, cerca de la universidad y con buenos servicios. ¡Ideal para estudiantes!'
@@ -49,7 +49,7 @@ export default function Inmuebles (){
             ],
             tipo:'Cuarto',
             dormitorios: 1,
-            banos: 1,
+            baths: 1,
             ocupantes: 6,
             costo: 2200,
             descripcion: 'Casa acogedora ubicada en un vecindario tranquilo, cerca de la universidad y con buenos servicios. ¡Ideal para estudiantes!'}

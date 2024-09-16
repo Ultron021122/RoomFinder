@@ -1,11 +1,13 @@
 import Image from "next/image";
 import ImageElement from "@/components/GeneralComponents/ImageElement";
 import { Globe, LayoutTemplate, Network, Settings, ShieldCheck, TrendingUp } from "lucide-react";
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
 export default function Home() {
     return (
         <div className="h-full max-w-screen-2xl mx-auto dark:bg-gray-900">
             <div className="mx-auto">
+                <Breadcrumb pageName="Inicio" />
                 <header className="relative h-96 sm:h-72 bg-gray-500">
                     <Image
                         src={'/background/fondo-1.jpg'}

@@ -13,6 +13,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 /* Iconos */
 import { GraduationCapIcon, Home, LayoutDashboard, LifeBuoy, Mail, MenuIcon, Settings, UserCircle, LogOut } from "lucide-react";
 import { UserProfile } from "@/utils/interfaces";
+import Link from "next/link";
 
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -60,12 +61,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         {!expanded ? <ChevronFirst /> : <ChevronLast />
                         */}
                         </IconButton>
-                        <div className="flex items-center">
+                        <Link href="/" className="flex items-center">
                             <GraduationCapIcon size={25} />
                             <h1 className="ml-1 text-2xl font-semibold">
                                 Roomfinder
                             </h1>
-                        </div>
+                        </Link>
                     </Toolbar>
                 </AppBar>
                 <div
@@ -86,7 +87,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <hr className="my-3 border-gray-300 dark:border-gray-800" /> {/* se  pueden eliminar estas opciones del sideBar */}
                         <SidebarItem icon={<Settings size={20} />} text="Ajustes" url="/dashboard/settings" />
                         <SidebarItem icon={<LifeBuoy size={20} />} text="Ayuda" url="/dashboard/help" alert />
-                        <SidebarItem icon={<LogOut size={20} />} text="Cerrar sesión" url="" /> {/* pendiente de implementar */}
                     </Sidebar>
                     <main className={`flex-1 p-4 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
                         <section className={`${windowWidth <= 640 && expanded && 'hidden'}`}>
