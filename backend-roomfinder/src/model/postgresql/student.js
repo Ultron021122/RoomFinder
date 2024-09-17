@@ -3,8 +3,8 @@ import { UsersModel } from './user.js'
 
 export class StudentsModel extends UsersModel {
 
-    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at, intcodestudent, vchuniversity }) {
-        super({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at });
+    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, created_at, intcodestudent, vchuniversity }) {
+        super({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, created_at });
         this.intcodestudent = intcodestudent;
         this.vchuniversity = vchuniversity;
     }
@@ -52,7 +52,7 @@ export class StudentsModel extends UsersModel {
                     [intcodestudent, usuarioid, vchuniversity]
                 )
 
-                return new StudentsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at, intcodestudent, vchuniversity })
+                return new StudentsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, created_at, intcodestudent, vchuniversity })
             } finally {
                 client.release();
             }
@@ -72,7 +72,7 @@ export class StudentsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, intcodestudent, vchuniversity } = input
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, intcodestudent, vchuniversity } = input
             const user = await UsersModel.update({ id, input })
             if (user === false) return false;
             if (!user) return null;
