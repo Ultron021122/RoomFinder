@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt'
 
 export class UsersModel {
 
-    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at }) {
+    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, created_at }) {
         this.usuarioid = usuarioid;
         this.vchname = vchname;
         this.vchpaternalsurname = vchpaternalsurname;
@@ -16,6 +16,7 @@ export class UsersModel {
         this.bnstatus = bnstatus;
         this.bnverified = bnverified;
         this.vchimage = vchimage;
+        this.vchcoverimage = vchcoverimage;
         this.roleid = roleid;
         this.created_at = created_at;
     }
@@ -75,6 +76,20 @@ export class UsersModel {
         }
     }
 
+    static async getImages({ id }) {
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const user = await client.query(
+                `SELECT vchImage, vchCoverImage FROM "Usuario"."Usuario" WHERE usuarioid = $1;`,
+                [id]
+            );
+            return user.rowCount > 0 ? new UsersModel(user.rows[0]) : null;
+        } finally {
+            client.release();
+        }
+    }
+
     static async create({ input }) {
         try {
             const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid } = input
@@ -121,7 +136,7 @@ export class UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid } = input
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid } = input
             const validate = vchemail ? await this.getByEmail({ email: vchemail }) : null;
             if (validate) return false;
             const user = await this.getById({ id })
@@ -137,6 +152,7 @@ export class UsersModel {
                 bnstatus,
                 bnverified,
                 vchimage,
+                vchcoverimage,
                 roleid
             })
                 .filter(([key, value]) => value !== undefined)
@@ -155,6 +171,7 @@ export class UsersModel {
                 bnstatus,
                 bnverified,
                 vchimage,
+                vchcoverimage,
                 roleid
             })
                 .filter(value => value !== undefined);

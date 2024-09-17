@@ -8,7 +8,9 @@ import Image from "next/image";
 import { UserProfile } from "@/utils/interfaces";
 import { Camera } from "lucide-react";
 import { useDisclosure } from "@nextui-org/react";
-//import ImageModal from "./ImageModal";
+import ImageModal from "./ImageModal";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Profile = () => {
     const { data: session } = useSession();
@@ -22,6 +24,7 @@ const Profile = () => {
         vchphone: '',
         vchstreet: '',
         vchimage: '',
+        vchcoverimage: '',
     };
 
     // Sobrescribir los valores predeterminados con los del usuario (si existen)
@@ -30,19 +33,38 @@ const Profile = () => {
         ...(user ?? {}),
     };
 
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const roleName = rolesMapping[user?.roleid] || 'Desconocido';
+    const [coverImage, setCoverImage] = useState<string>("");
+    const [profileImage, setProfileImage] = useState<string>("");
+
+    useEffect(() => {
+        const fetchImageUrls = async () => {
+            if (user) {
+                try {
+                    const response = await axios.get(`/api/users/images/${user.usuarioid}`);
+                    setCoverImage(response.data.data.vchcoverimage);
+                    setProfileImage(response.data.data.vchimage);
+                } catch (error) {
+                    console.error("Error al cargar las imágenes:", error);
+                }
+            }
+        };
+
+        fetchImageUrls();
+    }, [user]);
+
 
     return (
         <div className="h-full max-w-screen-2xl mx-auto">
             <div className="mx-auto">
-            <Breadcrumb pageName="Profile" />
+                <Breadcrumb pageName="Profile" />
                 <div className="mx-auto overflow-hidden rounded-sm shadow-md">
                     <div className="relative z-20 h-32 md:h-64">
                         <Image
                             width={1920}
                             height={1080}
-                            src="https://res.cloudinary.com/dal8aivch/image/upload/v1726519469/resources/czbmlhej2uvzgamc5ge0.jpg"
+                            src={coverImage ? `${coverImage}?t=${new Date().getTime()}` : "https://res.cloudinary.com/dal8aivch/image/upload/v1726535626/users/uxnhlufka723qhshytie.jpg"}
                             alt="profile cover"
                             className="absolute inset-0 h-full w-full max-h-64 rounded-tl-xsm rounded-tr-xsm object-cover object-center"
                             priority
@@ -63,7 +85,7 @@ const Profile = () => {
                         <div className="relative z-30 mx-auto -mt-24 w-full h-full max-h-32 max-w-32 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-h-44 sm:max-w-44 sm:p-3">
                             <div className="relative drop-shadow">
                                 <Image
-                                    src={userData.vchimage || "https://res.cloudinary.com/dal8aivch/image/upload/v1718165421/students/vqzn2osc7durkopymszd.jpg"}
+                                    src={profileImage ? `${profileImage}?t=${new Date().getTime()}` : "https://res.cloudinary.com/dal8aivch/image/upload/v1726537529/users/ixjpqfc2vfn5ziahwwgw.jpg"}
                                     width={160}
                                     height={160}
                                     style={{
@@ -287,7 +309,7 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-            {/*<ImageModal isOpen={isOpen} onClose={onOpenChange} />*/}
+            <ImageModal isOpen={isOpen} onClose={onOpenChange} />
         </div>
     );
 }

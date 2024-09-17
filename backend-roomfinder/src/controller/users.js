@@ -40,6 +40,16 @@ export class UserController {
             .catch(next); // Pass the error to the error handler
     }
 
+    getImages = async (req, res, next) => {
+        const { id } = req.params
+        await this.userModel.getImages({ id })
+            .then(user => {
+                if (user) return res.json(user)
+                return res.status(404).json({ message: 'User not found' })
+            })
+            .catch(next); // Pass the error to the error handler
+    }
+
     create = async (req, res, next) => {
         const result = validateUser(req.body)
         if (result.error) {
@@ -81,13 +91,11 @@ export class UserController {
         if (!result.success) {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
-        console.log('Update user', result.data)
         if (result.data.vchpassword) {
             const salt = await bcrypt.genSalt(10)
             const hashedPassword = await bcrypt.hash(result.data.vchpassword, salt)
             result.data.vchpassword = hashedPassword
         }
-        console.log('Update user', result.data)
         const { id } = req.params
         await this.userModel.update({ id, input: result.data })
             .then(updateUser => {
