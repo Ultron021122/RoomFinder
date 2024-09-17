@@ -1,4 +1,4 @@
-import DashboardLayout from "@/components/Dashboard";
+import DashboardLayout from "@/components/Dashboard/layout";
 
 export default function DashboardApp(
     {
