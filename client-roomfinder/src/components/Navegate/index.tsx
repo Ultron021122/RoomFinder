@@ -17,7 +17,6 @@ interface SidebarProps {
 
 const SidebarContext = createContext({ expanded: false });
 export default function Sidebar({ children, expanded, onResize }: SidebarProps) {
-  //const [expanded, setExpanded] = useState(true);
   const { data: session } = useSession();
   const user = session?.user as SidebarUserProps;
   const roleName = rolesMapping[user?.roleid] || 'Desconocido';
@@ -60,7 +59,7 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
           <div className="border-t border-gray-300 dark:border-gray-800 flex p-3">
             <Image
               //src="https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=SM"
-              src={user?.vchimage}
+              src={user?.vchimage || "https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=SM"}
               alt={user?.vchname}
               className="w-10 h-10 rounded-full object-cover border-2 border-gray-300"
             />

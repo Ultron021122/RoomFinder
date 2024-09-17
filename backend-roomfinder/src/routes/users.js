@@ -139,6 +139,26 @@ export const createUsersRouter = ({ userModel }) => {
         },
         userController.getById
     ])
+        /**
+     * @swagger
+     * /api/users/images/{id}:
+     *  get:
+     *      summary: Get images of a user.
+     *      tags: [Users]
+     */
+    usersRouter.get('/images/:id', [
+        // Validation
+        param('id').isInt().withMessage('id must be an integer'),
+        (req, res, next) => {
+            // Check for errors
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        userController.getImages
+    ])
     /**
      * @swagger
      * /api/users/type/{roleid}:
