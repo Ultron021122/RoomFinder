@@ -5,7 +5,6 @@ import axios from 'axios';
 export async function GET() {
     try {
         const response = await axios.get(`${process.env.REST_URL}/lessors/`);
-        console.log(response.data)
         return NextResponse.json(
             { data: response.data },
             { status: 200 }
