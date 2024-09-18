@@ -26,12 +26,14 @@ app.use(express.urlencoded({ extended: false }));
 io.on("connection", (socket) => {
   console.log("A user has connected! " + socket.id);
 
-  socket.on('join', (userId) => {
-    socket.join(userId);
+  socket.on('join', (chatid) => {
+    console.log('User joined the chat:', chatid);
+    socket.join(chatid);
   });
 
-  socket.on('sendMessage', async (data) => {
-    const { from, to, message } = data;
+  socket.on('message', async (data) => {
+    console.log('', data);
+    const { chatid, usuarioid, vchcontenido, created_at } = data;
 
     try {
       // Save the message in the database
@@ -40,12 +42,12 @@ io.on("connection", (socket) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ from, to, message }),
+        body: JSON.stringify({ chatid, usuarioid, vchcontenido, created_at }),
       });
       // Send the message to the receiver
-      io.to(to).emit('receiveMessage', { from, message });
+      io.to(chatid).emit('receiveMessage', { chatid, usuarioid, vchcontenido, created_at });
     } catch (error) {
-      console.error('Error al guardar el mensaje:',error);
+      console.error('Error al guardar el mensaje:', error);
     }
   });
 
@@ -57,7 +59,7 @@ io.on("connection", (socket) => {
       const messages = await result.json();
       socket.emit('receiveMessages', messages);
     } catch (error) {
-      console.error('Error al obtener los mensajes:',error);
+      console.error('Error al obtener los mensajes:', error);
     }
   });
 

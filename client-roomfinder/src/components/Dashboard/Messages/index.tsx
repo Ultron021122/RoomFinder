@@ -105,7 +105,7 @@ export default function MessageMainComponent() {
             {selectedUser ? (
               <MessageComponent userID={selectedUser} className='w-full' />
             ) : (
-              <div className="flex flex-col items-center justify-center h-full overflow-y-auto custom-scrollbar">
+              <div className="w-full flex flex-col items-center justify-center h-full overflow-y-auto custom-scrollbar">
                 <RocketIcon size={64} className="text-gray-500 dark:text-gray-300" />
                 <div>
                   <p className="p-4 text-gray-400">Únete a una nueva conversación.</p>
