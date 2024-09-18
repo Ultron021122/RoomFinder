@@ -13,10 +13,6 @@ export const VerifyComponent = ({ usuarioid, token }: { usuarioid: number, token
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
     const hasFetched = useRef(false); // Cambiado a useRef
-
-    useEffect(() => {
-        console.log('Componente renderizado');
-    }, []);
     
 
     useEffect(() => {
