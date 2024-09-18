@@ -39,10 +39,8 @@ export class MessageController {
     create = async (req, res, next) => {
         console.log("req.body: ", req.body);
         const result = validateMessage(req.body)
-        if (result.error) {
-            console.log(result.error.message)
-            return res.status(400).json({ error: JSON.parse(result.error.message) })
-        }
+        if (result.error) return res.status(400).json({ error: JSON.parse(result.error.message) })
+            
         await this.messageModel.create({ input: result.data })
             .then(message => {
                 if (message) return res.status(201).json(message)
