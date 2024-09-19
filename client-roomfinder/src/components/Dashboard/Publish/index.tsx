@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Inmueble } from "./FormularioContext";
 import { useDropzone} from 'react-dropzone';
 import Inmuebles from "../Inmuebles";
+import Map from "@/components/Map";
 
 const ImageElementStyles = {
     width: 40,
@@ -495,6 +496,7 @@ const Ubicacion = () => {
         <div>
             <h2 className="text-center font-semibold text-3xl mb-10">Selecciona la ubicación del inmueble</h2>
             <p className="text-xl mb-8">Es necesario que indiques donde se ubica el inmueble para que los alumnos conozcan su ubicación</p>
+            <Map position={[20.123456, -103.123456]} zoom={15} name=""/>
         </div>
     );
 }
