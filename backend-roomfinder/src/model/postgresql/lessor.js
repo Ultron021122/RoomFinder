@@ -3,8 +3,8 @@ import { UsersModel } from './user.js'
 
 export class LessorsModel extends UsersModel {
 
-    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate }) {
-        super({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at });
+    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, created_at, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate }) {
+        super({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, created_at });
         this.vchphone = vchphone;
         this.vchstreet = vchstreet;
         this.intzip = intzip;
@@ -77,7 +77,7 @@ export class LessorsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
             const user = await UsersModel.update({ id, input })
             if (user === false) return false;
             if (!user) return null;

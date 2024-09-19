@@ -22,8 +22,12 @@ export function middleware(request: NextRequest) {
 */
 export const config = {
   matcher: [
+<<<<<<< HEAD
     "/arrendadores",
     //"/dashboard/:path*",
+=======
+    "/dashboard/:path*",
+>>>>>>> 0d800f4daaf85d51cc24e502d4ec6469d29bdf79
     "/admin",
     "/user/:path*",
     //'/api/:path*',

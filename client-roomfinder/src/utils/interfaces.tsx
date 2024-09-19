@@ -83,6 +83,12 @@ export interface User {
      */
     vchimage: string;
     /**
+     * User Cover-Image
+     * @example
+     * vchcoverimage: 'https://example.com/image.jpg'
+     */
+    vchcoverimage: string;
+    /**
      * User type
      * @example
      * roleid: 1
@@ -482,6 +488,12 @@ export interface SidebarUserProps {
      * vchimage: 'User image'
      */
     vchimage: string;
+    /**
+     * User Cover-Image
+     * @example
+     * vchcoverimage: 'https://example.com/image.jpg'
+     */
+    vchcoverimage: string;
     /*
     * User id
     * @example
@@ -554,6 +566,12 @@ export interface UserProfile {
      * vchimage: 'https://example.com/image.jpg'
      */
     vchimage: string;
+    /**
+     * User Cover-Image
+     * @example
+     * vchcoverimage: 'https://example.com/image.jpg'
+     */
+    vchcoverimage: string;
     /**
      * User id
      * @example
