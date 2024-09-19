@@ -39,7 +39,7 @@ app.disable('x-powered-by')
 
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: 100, // limit each IP to 100 requests per windowMs
+    limit: 10000, // limit each IP to 100 requests per windowMs
     handler: (req, res) => {
         res.status(429).json({ message: 'Too many requests, please try again later.' })
     }

@@ -20,6 +20,7 @@ const userSchema = z.object({
     bnstatus: z.boolean(),
     bnverified: z.boolean(),
     vchimage: z.string().url(),
+    vchcoverimage: z.string().url(),
     roleid: z.number()
 })
 
