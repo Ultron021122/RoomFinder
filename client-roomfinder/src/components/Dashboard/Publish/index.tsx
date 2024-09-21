@@ -2,16 +2,28 @@
 
 import ImageElement from "@/components/GeneralComponents/ImageElement";
 import Image from "next/image";
-import React, { useState, useCallback } from "react";
-import { input, Progress } from "@nextui-org/react";
+import React, { useState, useEffect, useRef } from "react";
+import { Progress } from "@nextui-org/react";
 import clsx from 'clsx';
 import { FormularioProvider, useFormulario } from "./FormularioContext";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Inmueble } from "./FormularioContext";
 import { useDropzone} from 'react-dropzone';
-import Inmuebles from "../Inmuebles";
-import Map from "@/components/Map";
+
+// módulos para el mapa
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import mapboxgl, {Map} from "mapbox-gl";
+
+/*
+import Map, { Marker, MapRef } from 'react-map-gl'; // Importa MapRef
+import mapboxgl from 'mapbox-gl'; // Importa Mapbox GL JS
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'; // Geocoder
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';*/
+
 
 const ImageElementStyles = {
     width: 40,
@@ -490,13 +502,135 @@ const Fotos = () => {
         </div>
     );
 }
+/*
+const Mapa = () => {
+    const mapRef = useRef<MapRef>(null);
+    const geocoderContainerRef = useRef<HTMLDivElement>(null); // Referencia para el contenedor del geocodificador
+
+    const [viewport, setViewport] = useState({
+        longitude: -103.3274,
+        latitude: 20.662,
+        zoom: 11
+    });
+
+    const [marker, setMarker] = useState({lat : 20.662, lng: -103.3274});
+
+    const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+
+    useEffect(() => {
+        if(mapRef.current && geocoderContainerRef.current){
+            const geocoder = new MapboxGeocoder({
+                accessToken: `${token}`,
+                placeholder: 'Ingresa tu dirección',
+                marker: true,
+            });
+
+            // agregar geocodificador al mapa
+            geocoder.addTo(geocoderContainerRef.current);
+
+            // Escuchar los eventos del geocodificador
+            geocoder.on('result', (e) => {
+                const {result} = e;
+                setMarker({
+                    lat: result.center[1],
+                    lng: result.center[0],
+                });
+            });
+        }
+
+    }, [token]);
+
+    return(
+        <div className="w-[80%] mx-auto">
+      {/* Contenedor de la barra de búsqueda }
+      <div ref={geocoderContainerRef} className="mb-4" />
+
+      {/* Mapa  }
+      <div className="h-[400px] rounded-lg relative">
+        <Map
+          ref={mapRef}
+          initialViewState={viewport}
+          style={{ width: '100%', height: '100%' }}
+          mapStyle="mapbox://styles/mapbox/streets-v12"
+          mapboxAccessToken={token}
+          onMove={(evt) => setViewport(evt.viewState)}
+        >
+          <Marker latitude={marker.lat} longitude={marker.lng}>
+            <img src="/marker-icon.png" alt="marker" />
+          </Marker>
+        </Map>
+      </div>
+    </div>
+    );
+}*/
+
+/*
+const MapaEstatico = () => {
+
+    const Data = {
+        longitude: -103.3274,
+        latitude: 20.662,
+        zoom: 11,
+        width: 650,
+        height: 500
+    };
+
+    /*const mapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${Data.longitude},${Data.latitude},${Data.zoom},0/${Data.width}x${Data.height}?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`;
+
+    return(
+        <div className="relative w-[650px] h-[500px] mx-auto">
+            <Image
+                src={'/inmueble.jpg'}
+                alt="Mapa de guadalajara"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-lg"
+                unoptimized
+            />
+        </div>
+    );
+}*/
+
+const Mapa = () => {
+    const mapContainerRef = useRef<HTMLDivElement | null>(null);
+    const mapRef = useRef<Map | null>(null);
+
+    useEffect(() => {
+        if(!mapContainerRef.current) return;
+
+        mapboxgl.accessToken = `${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`;
+
+        mapRef.current = new mapboxgl.Map({
+            container: mapContainerRef.current,
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [-103.3274, 20.662],
+            zoom: 10
+        });
+
+        mapRef.current.addControl(
+            new MapboxGeocoder({
+                accessToken: mapboxgl.accessToken,
+                placeholder: 'Ingresa tu dirección',
+                marker: true,
+                
+            })
+        );
+
+        return () => mapRef.current?.remove();
+
+    }, []);
+
+    return(
+        <div ref={mapContainerRef} className="h-[500px] w-[650px] rounded-lg mx-auto"/>
+    );
+}
 
 const Ubicacion = () => {
     return(
-        <div>
+        <div className="pb-8">
             <h2 className="text-center font-semibold text-3xl mb-10">Selecciona la ubicación del inmueble</h2>
-            <p className="text-xl mb-8">Es necesario que indiques donde se ubica el inmueble para que los alumnos conozcan su ubicación</p>
-            <Map position={[20.123456, -103.123456]} zoom={15} name=""/>
+            <p className="text-xl mb-8 text-center">Es necesario que indiques donde se ubica el inmueble para que los alumnos conozcan su ubicación</p>
+            <Mapa/>
         </div>
     );
 }
