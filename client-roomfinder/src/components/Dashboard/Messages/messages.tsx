@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
-import { SendIcon } from "lucide-react";
+import { ArrowLeftIcon, SendIcon } from "lucide-react";
 import io from "socket.io-client";
 import TimeAgo from "javascript-time-ago";
 import es from "javascript-time-ago/locale/es";
@@ -23,12 +23,26 @@ interface Message {
   created_at: Date;
 }
 
-export default function MessageComponent({ userID, className }: { userID: number, className?: string | null }) {
+export default function MessageComponent({
+  userID,
+  image,
+  nameUser,
+  className,
+  onBack
+}: {
+  userID: number,
+  image: string,
+  nameUser: string,
+  className?: string | null,
+  onBack: () => void
+}) {
   const [conversations, setConversations] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [chatID, setChatID] = useState<number | null>(null);
   const hasFetched = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null); // Nueva referencia para el scroll
+
+  const timeAgo = new TimeAgo("es-ES");
 
   const { data: session } = useSession();
   const user = session?.user as UserProfile;
@@ -44,7 +58,7 @@ export default function MessageComponent({ userID, className }: { userID: number
 
       if (chatID) {
         socket.emit("join", chatID);
-        socket.emit("getMessages", { user1: user.usuarioid, user2: userID });
+        socket.emit("getMessages", { chatid: chatID });
       }
 
       socket.on("receiveMessages", (data) => {
@@ -53,7 +67,7 @@ export default function MessageComponent({ userID, className }: { userID: number
 
       socket.on("receiveMessage", (newMessage) => {
         setConversations((prev) => [...prev, newMessage]);
-      }); 
+      });
 
       return () => {
         socket.off("receiveMessages");
@@ -64,23 +78,26 @@ export default function MessageComponent({ userID, className }: { userID: number
   }, [user, chatID]);
 
   useEffect(() => {
-    if (hasFetched.current) return;
     if (userID) {
       const fetchMessages = async () => {
         try {
           const response = await axios.post('/api/chats', {
-            usuario1id: user?.usuarioid, usuario2id: userID
+            usuario1id: user?.usuarioid,
+            usuario2id: userID
           });
+          console.log(response.data);
           setChatID(response.data.data.chatid);
+          setConversations([]); // Limpiar las conversaciones al cambiar de usuario
+          hasFetched.current = true; // Permitir la recuperación de mensajes
         } catch (error) {
           console.error("Error fetching messages:", error);
         }
       };
 
-      hasFetched.current = true;
       fetchMessages();
     }
-  }, [userID]);
+  }, [userID, user]);
+
 
   const sendMessage = (event: React.FormEvent) => {
     event.preventDefault();
@@ -107,10 +124,21 @@ export default function MessageComponent({ userID, className }: { userID: number
     <>
       <section className={`h-[calc(100vh-150px)] flex flex-col bg-white dark:bg-gray-950 ${className}`}>
         <div className="h-full w-full flex flex-col">
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-900">
+            <div className="flex items-center">
+              <div className="md:hidden cursor-pointer" onClick={onBack}>
+                <ArrowLeftIcon size={20} className="text-gray-500 dark:text-gray-300 mr-2 hover:text-gray-700 dark:hover:text-gray-100" />
+              </div>
+              <Image src={image} alt="avatar" className="object-cover h-10 w-10 rounded-full" />
+              <p className="ml-2 text-base sm:text-lg font-semibold dark:text-neutral-50">{nameUser}</p>
+            </div>
+          </div>
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             <div>
               {conversations.length === 0 ? (
-                <p className="p-4 text-gray-500">No hay mensajes en esta conversación.</p>
+                <div className="flex items-center justify-center h-full">
+                  <p className="p-4 text-gray-500 dark:text-gray-300 text-center text-sm">No hay mensajes en esta conversación.</p>
+                </div>
               ) : (
                 conversations.map((msg, index) => (
                   <div key={`${msg.usuarioid}-${index}`} className="flex flex-col mt-5 px-3">
@@ -118,9 +146,10 @@ export default function MessageComponent({ userID, className }: { userID: number
                       <div className="flex justify-end items-center mb-2">
                         <div className="py-3 px-4 bg-blue-400 rounded-lg text-white text-sm shadow-md max-w-[calc(80%-40px)]">
                           {msg.vchcontenido}
+                          <p className="text-xs text-gray-300">{timeAgo.format(new Date(msg.created_at))}</p>
                         </div>
                         <Image
-                          src="https://images.unsplash.com/photo-1573455494057-12684d151bf4?q=80&w=600"
+                          src={user?.vchimage}
                           alt="avatar"
                           className="object-cover h-10 w-10 rounded-full ml-2 border-2 border-white"
                         />
@@ -128,12 +157,13 @@ export default function MessageComponent({ userID, className }: { userID: number
                     ) : (
                       <div className="flex justify-start items-center mb-2">
                         <Image
-                          src="https://images.unsplash.com/photo-1722799037558-69a4dc8e08d1?q=80&w=600"
+                          src={image}
                           className="object-cover h-10 w-10 rounded-full mr-2 border-2 border-white"
                           alt="avatar"
                         />
                         <div className="py-3 px-4 bg-gray-400 rounded-lg text-white text-sm shadow-md max-w-[calc(80%)]">
                           {msg.vchcontenido}
+                          <p className="text-xs text-gray-300">{timeAgo.format(new Date(msg.created_at))}</p>
                         </div>
                       </div>
                     )}
@@ -149,11 +179,11 @@ export default function MessageComponent({ userID, className }: { userID: number
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type your message..."
-              className="flex-1 p-2 border border-gray-300 rounded-lg"
+              placeholder="Escribe tu mensaje..."
+              className="flex-1 p-2 border text-sm dark:text-neutral-50 border-gray-300 dark:border-gray-700 dark:bg-gray-600 rounded-lg"
             />
             <button type="submit" className="ml-2 p-2 bg-green-500 text-white rounded-lg">
-              <SendIcon />
+              <SendIcon size={20} />
             </button>
           </form>
         </div>

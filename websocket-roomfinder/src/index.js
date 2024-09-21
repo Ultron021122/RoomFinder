@@ -52,10 +52,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on('getMessages', async (data) => {
-    const { user1, user2 } = data;
+    const { chatid } = data;
 
     try {
-      const result = await fetch(`${process.env.API_URL}/messages?user1=${user1}&user2=${user2}`);
+      const result = await fetch(`${process.env.API_URL}/messages/chat/${chatid}`);
       const messages = await result.json();
       socket.emit('receiveMessages', messages);
     } catch (error) {
