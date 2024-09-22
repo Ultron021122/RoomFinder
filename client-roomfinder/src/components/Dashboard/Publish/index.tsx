@@ -1,7 +1,6 @@
 'use client';
 
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import SelectGroupOne from "@/components/SelectGroup/SelectGroupOne";
 import Link from "next/link";
 
 const Publish = () => {
@@ -64,8 +63,6 @@ const Publish = () => {
                                             className="w-full rounded border-[1.5px] border-gray-300 bg-white px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-white dark:border-gray-900 dark:bg-gray-900 dark:text-white dark:focus:border-primary"
                                         />
                                     </div>
-
-                                    <SelectGroupOne />
 
                                     <div className="mb-6">
                                         <label className="mb-3 block text-sm font-medium text-black dark:text-white">

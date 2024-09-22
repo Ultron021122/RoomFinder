@@ -3,26 +3,16 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { SendIcon, RocketIcon, MessageSquareText } from "lucide-react";
-import { User, UserProfile } from "@/utils/interfaces";
+import { User, UserList, UserProfile } from "@/utils/interfaces";
 import axios from "axios";
 import { Spinner } from "@nextui-org/react";
 import MessageComponent from "./messages";
 
-interface Chat {
-  chatid: number;
-  usuario1id: number;
-  usuario2id: number;
-  created_at: Date;
-}
-
-interface UserResponse {
-  data: User[];
-}
 
 export default function MessageMainComponent() {
   const { data: session } = useSession();
   const user = session?.user as UserProfile;
-  const [users, setUsers] = useState<UserResponse | null>(null);
+  const [users, setUsers] = useState<UserList | null>(null);
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [imageUser, setImageUser] = useState<string>('');
   const [nameUser, setNameUser] = useState<string>('');
@@ -37,7 +27,7 @@ export default function MessageMainComponent() {
         setErrorSystem(null);
 
         let route = user.roleid === 1 ? '/api/users/lessor' : '/api/users/student';
-        const response = await axios.get<UserResponse>(route);
+        const response = await axios.get<UserList>(route);
 
         if (response.status === 200) {
           setUsers(response.data);

@@ -32,7 +32,7 @@ const createClusterCustomIcon = function (cluster: any) {
     });
 };
 
-export default function Map({ position, zoom, name }: MapData) {
+export default function Map({ position, zoom, name, typeProperty}: MapData) {
     const mapRef = useRef<Mapa | null>(null);
     const markerRefs = useRef<Record<string, React.RefObject<LeafletMarker>>>({});
 
@@ -63,6 +63,10 @@ export default function Map({ position, zoom, name }: MapData) {
             }, 4000);
         }
     }, [name]);
+
+    useEffect(() => {
+        console.log('Tipo de propiedad:', typeProperty);
+    }, [typeProperty]);
 
     return (
         <div>
