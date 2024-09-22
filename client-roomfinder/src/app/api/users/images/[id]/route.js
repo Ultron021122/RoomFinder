@@ -4,7 +4,11 @@ import axios from 'axios';
 export async function GET(request, { params }) {
     const id = params.id;
     try {
-        const response = await axios.get(`${process.env.REST_URL}/users/images/${id}`);
+        const response = await axios.get(`${process.env.REST_URL}/users/images/${id}`, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
         const statusMessageMap = {
             200: { message: 'Exito', data: response.data },
             404: { message: 'Usuario no encontrado' },
