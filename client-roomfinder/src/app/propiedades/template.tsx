@@ -58,9 +58,8 @@ export default function Template() {
       {/* Botón flotante para abrir el FloatingBox */}
       {!isBoxVisible && (
         <div className="fixed bottom-5 right-5">
-          <Fab onClick={handleOpen} color="primary" variant="extended">
-            <GraduationCapIcon size={32} className="mr-1"/>
-            RoomFinder
+          <Fab onClick={handleOpen} color="primary" araria-label="show">
+            <GraduationCapIcon size={32}/>
           </Fab>
         </div>
       )}
