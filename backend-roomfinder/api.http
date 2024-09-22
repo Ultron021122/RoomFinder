@@ -15,7 +15,7 @@ Content-Type: application/json
 
 ### Recuperar todos los usuarios
 GET http://localhost:1234/api/users
-
+Authorization: Beare eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEwMDEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MjcwMzI4MDB9.Gfp2bQlJuW5hS8seWd3wEuHEH3PX_msm_34YnEcLf6I
 ### Recuperar un usuario
 GET http://localhost:1234/api/users/type/student
 
