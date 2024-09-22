@@ -4,7 +4,11 @@ import axios from 'axios';
 
 export async function GET() {
     try {
-        const response = await axios.get(`${process.env.REST_URL}/students`);
+        const response = await axios.get(`${process.env.REST_URL}/students`, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
         return NextResponse.json(
             { data: response.data },
             { status: 200 }
@@ -55,6 +59,10 @@ export async function POST(req, res) {
             roleid,
             intcodestudent,
             vchuniversity,
+        }, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
         });
 
         const statusMessageMap = {
