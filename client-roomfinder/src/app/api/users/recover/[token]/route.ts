@@ -7,7 +7,11 @@ export async function GET(req: NextRequest) {
     const getValues = pathname.split('/');
     const token = getValues.pop();
     try {
-        const response = await axios.get(`${process.env.REST_URL}/recovery/token/${token}`);
+        const response = await axios.get(`${process.env.REST_URL}/recovery/token/${token}`, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
         return NextResponse.json(
             { data: response.data },
             { status: 200 }
@@ -33,11 +37,19 @@ export async function POST(req: NextRequest) {
     const { vchpassword, vchconfirm_password } = await req.json();
 
     try {
-        const findUser = await axios.get(`${process.env.REST_URL}/recovery/token/${token}`);
+        const findUser = await axios.get(`${process.env.REST_URL}/recovery/token/${token}`, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
         const usuarioid = findUser.data.usuarioid;
         console.log('Usuario:',usuarioid)
         const response = await axios.patch(`${process.env.REST_URL}/users/${usuarioid}`, {
             vchpassword 
+        }, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
         });
         return NextResponse.json(
             { data: response.data, message: 'Contraseña actualizada'},

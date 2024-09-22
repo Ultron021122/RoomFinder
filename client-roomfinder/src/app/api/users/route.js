@@ -7,6 +7,10 @@ export async function POST(req) {
         const response = await axios.post(`${process.env.REST_URL}/users/login`, {
             email,
             password,
+        }, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
         });
 
         const statusMessageMap = {
