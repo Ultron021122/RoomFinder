@@ -7,7 +7,7 @@ import io from "socket.io-client";
 import TimeAgo from "javascript-time-ago";
 import es from "javascript-time-ago/locale/es";
 import { Image } from "@nextui-org/react";
-import { UserProfile } from "@/utils/interfaces";
+import { Message, UserProfile } from "@/utils/interfaces";
 import axios from "axios";
 
 TimeAgo.addDefaultLocale(es);
@@ -15,13 +15,6 @@ TimeAgo.addDefaultLocale(es);
 const socket = io(`${process.env.NEXT_PUBLIC_WEBSOCKET}`, {
   autoConnect: false, // disable auto-connect to set auth
 });
-
-interface Message {
-  vchcontenido: string;
-  usuarioid: number;
-  chatid: number;
-  created_at: Date;
-}
 
 export default function MessageComponent({
   userID,
