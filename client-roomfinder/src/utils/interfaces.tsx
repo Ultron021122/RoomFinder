@@ -227,6 +227,12 @@ export interface MapData {
      * zoom: 15
      */
     zoom: number;
+    /**
+     * Type property
+     * @example
+     * typeProperty: 'Type property'
+     */
+    typeProperty: string;
 }
 
 /**
@@ -608,4 +614,54 @@ export interface UserProfile {
      * roleid: 1
      */
     roleid: number;
+}
+
+/**
+ * Interface to manage the users chats
+ * @interface
+ */
+export interface UserList {
+    /**
+     * Users data
+     * @example
+     * data: [User]
+     */
+    data: User[];
+}
+
+/**
+ * Interface to manage the messages
+ * @interface
+ */
+export interface Message {
+    /**
+     * Message id
+     * @example
+     * messageid: 1
+     */
+    messageid?: number;
+    /**
+     * Message content
+     * @example
+     * vchcontenido: 'Message content'
+     */
+    vchcontenido: string;
+    /**
+     * User id
+     * @example
+     * usuarioid: 1
+     */
+    usuarioid: number;
+    /**
+     * Chat id
+     * @example
+     * chatid: 1
+     */
+    chatid: number;
+    /**
+     * Message created date
+     * @example
+     * created_at: '2021-11-22'
+     */
+    created_at: Date;
 }

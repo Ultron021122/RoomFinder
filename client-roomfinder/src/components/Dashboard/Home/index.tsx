@@ -2,7 +2,7 @@ import Image from "next/image";
 import ImageElement from "@/components/GeneralComponents/ImageElement";
 import { Globe, LayoutTemplate, Network, Settings, ShieldCheck, TrendingUp } from "lucide-react";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import Header from "./Header";
+import Header from "../Inmuebles/Header";
 
 export default function Home() {
     return (
@@ -25,7 +25,7 @@ export default function Home() {
                 </header>
                 <section className="my-5 mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="p-4">
-                        <h3 className="text-xl mt-10 mb-5 sm:text-3xl font-semibold text-gray-800 dark:text-gray-200">
+                        <h3 className="text-xl mt-10 mb-5 sm:text-2xl font-semibold text-gray-800 dark:text-gray-200">
                             ¿Qué es RoomFinder?
                         </h3>
                         <p className="text-neutral-800 text-sm sm:text-base dark:text-gray-200">
