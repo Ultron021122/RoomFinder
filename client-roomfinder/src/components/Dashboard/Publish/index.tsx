@@ -5,7 +5,7 @@ import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
 import { Progress } from "@nextui-org/react";
 import clsx from 'clsx';
-import { FormularioProvider, useFormulario } from "./FormularioContext";
+import { FormularioProvider, InterfaceUbicacion, useFormulario } from "./FormularioContext";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Inmueble } from "./FormularioContext";
@@ -16,14 +16,6 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import mapboxgl, {Map} from "mapbox-gl";
-
-/*
-import Map, { Marker, MapRef } from 'react-map-gl'; // Importa MapRef
-import mapboxgl from 'mapbox-gl'; // Importa Mapbox GL JS
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'; // Geocoder
-import 'mapbox-gl/dist/mapbox-gl.css';
-import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';*/
-
 
 const ImageElementStyles = {
     width: 40,
@@ -80,7 +72,7 @@ const validaciones : Record<number, funcionValidacion> = {
 }
 
 const Wizar = () => {
-    const [actual, setActual] = useState(1);
+    const [actual, setActual] = useState(4);
     const { inmueble } = useFormulario();
 
     const siguiente = () => {
@@ -111,19 +103,20 @@ const Wizar = () => {
                 {actual === 3 && <InformacionGeneral/>}
                 {actual === 4 && <Fotos/>}
                 {actual === 5 && <Ubicacion/>}
-                {actual === 6 && <Titulo/>}
-                {actual === 7 && <Descripcion/>}
-                {actual === 8 && <Confirmar/>}
+                {actual === 6 && <ConfirmarUbicacion/>}
+                {actual === 7 && <Titulo/>}
+                {actual === 8 && <Descripcion/>}
+                {actual === 9 && <Confirmar/>}
             </div>
             <div className="w-[95%] mx-auto">
-                <Progress size="sm" aria-label="Loading..." value={(actual / 8) * 100}/>
+                <Progress size="sm" aria-label="Loading..." value={(actual / 9) * 100}/>
                 <div className="flex justify-between my-10">
                     {
                         actual > 1 && <Boton contenido="Anterior" onClick={anterior} className={estiloBoton.style} />
                     }
                     
                     {
-                        actual < 8 ? <Boton contenido="Siguiente" onClick={siguiente} className={estiloBoton.style}/> : (
+                        actual < 9 ? <Boton contenido="Siguiente" onClick={siguiente} className={estiloBoton.style}/> : (
                             <Boton contenido="Enviar" onClick={null} className={estiloBoton.style}/>
                         )
                     }
@@ -326,7 +319,8 @@ const Campo = ({content, min, max} : {content:string, min:number, max:number}) =
             'Recámaras' : 'numRecamaras',
             'Camas' : 'numCamas',
             'Baños' : 'numBanos',
-            'Huéspedes' : 'numHuespedes'
+            'Huéspedes' : 'numHuespedes',
+            'Capacidad del estacionamiento' : 'capEstacionamiento'
         }
 
         return campos[campo];
@@ -376,7 +370,6 @@ const Casa = {
 const Cuarto = {
     huespedes : {min: 1, max : 4},
     camas: {min:1, max: 4}
-
 }
 
 const Departamento = {
@@ -386,36 +379,52 @@ const Departamento = {
     huespedes: {min: 1, max: 6}
 }
 
+const Estacionamiento = {
+    min: 1,
+    max: 5
+}
+
 const InformacionGeneral = () => {
     const {inmueble} = useFormulario();
 
     return(
         <div>
             <h2 className="text-center font-semibold text-3xl mb-10">Información general del inmueble</h2>
-            {inmueble.tipoInmueble === 'Casa' &&
-                <div className="flex flex-col gap-4">
-                    <Campo content="Recámaras" min={Casa.recamaras.min} max={Casa.recamaras.max}/>
-                    <Campo content="Camas" min={Casa.camas.min} max={Casa.camas.max}/>
-                    <Campo content="Baños" min={Casa.banos.min} max={Casa.banos.max}/>
-                    <Campo content="Huéspedes" min={Casa.huespedes.min} max={Casa.huespedes.max}/>
-                </div>
-            }
+            <div className="flex flex-col gap-4">
+                {inmueble.tipoInmueble === 'Casa' && (
+                    <>
+                        <Campo content="Recámaras" min={Casa.recamaras.min} max={Casa.recamaras.max}/>
+                        <Campo content="Camas" min={Casa.camas.min} max={Casa.camas.max}/>
+                        <Campo content="Baños" min={Casa.banos.min} max={Casa.banos.max}/>
+                        <Campo content="Huéspedes" min={Casa.huespedes.min} max={Casa.huespedes.max}/>
+                    </>
+                )}
 
-            {inmueble.tipoInmueble === 'Cuarto' && (
-                <div className="flex flex-col gap-4">
-                    <Campo content="Huéspedes" min={Cuarto.huespedes.min} max={Cuarto.huespedes.max}/>
-                    <Campo content="Camas" min={Cuarto.camas.min} max={Cuarto.camas.max}/>
-                </div>
-            )}
+                {inmueble.tipoInmueble === 'Cuarto' && (
+                    <>
+                        <Campo content="Huéspedes" min={Cuarto.huespedes.min} max={Cuarto.huespedes.max}/>
+                        <Campo content="Camas" min={Cuarto.camas.min} max={Cuarto.camas.max}/>
+                    </>
+                )}
 
-            {inmueble.tipoInmueble === 'Departamento' && (
-                <div className="flex flex-col gap-4">
-                    <Campo content="Recámaras" min={Departamento.recamaras.min} max={Departamento.recamaras.max}/>
-                    <Campo content="Camas" min={Departamento.camas.min} max={Departamento.camas.max}/>
-                    <Campo content="Baños" min={Departamento.banos.min} max={Departamento.banos.max}/>
-                    <Campo content="Huéspedes" min={Departamento.huespedes.min} max={Departamento.huespedes.max}/>
-                </div>
-            )}
+                {inmueble.tipoInmueble === 'Departamento' && (
+                    <>
+                        <Campo content="Recámaras" min={Departamento.recamaras.min} max={Departamento.recamaras.max}/>
+                        <Campo content="Camas" min={Departamento.camas.min} max={Departamento.camas.max}/>
+                        <Campo content="Baños" min={Departamento.banos.min} max={Departamento.banos.max}/>
+                        <Campo content="Huéspedes" min={Departamento.huespedes.min} max={Departamento.huespedes.max}/>
+                    </>
+                )}
+
+                {
+                    inmueble.amenidades.includes('Estacionamiento') && 
+                    <Campo
+                        content="Capacidad del estacionamiento"
+                        min={Estacionamiento.min}
+                        max={Estacionamiento.max}
+                    />
+                }
+            </div>
         </div>
     );
 }
@@ -502,96 +511,9 @@ const Fotos = () => {
         </div>
     );
 }
-/*
-const Mapa = () => {
-    const mapRef = useRef<MapRef>(null);
-    const geocoderContainerRef = useRef<HTMLDivElement>(null); // Referencia para el contenedor del geocodificador
-
-    const [viewport, setViewport] = useState({
-        longitude: -103.3274,
-        latitude: 20.662,
-        zoom: 11
-    });
-
-    const [marker, setMarker] = useState({lat : 20.662, lng: -103.3274});
-
-    const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-
-    useEffect(() => {
-        if(mapRef.current && geocoderContainerRef.current){
-            const geocoder = new MapboxGeocoder({
-                accessToken: `${token}`,
-                placeholder: 'Ingresa tu dirección',
-                marker: true,
-            });
-
-            // agregar geocodificador al mapa
-            geocoder.addTo(geocoderContainerRef.current);
-
-            // Escuchar los eventos del geocodificador
-            geocoder.on('result', (e) => {
-                const {result} = e;
-                setMarker({
-                    lat: result.center[1],
-                    lng: result.center[0],
-                });
-            });
-        }
-
-    }, [token]);
-
-    return(
-        <div className="w-[80%] mx-auto">
-      {/* Contenedor de la barra de búsqueda }
-      <div ref={geocoderContainerRef} className="mb-4" />
-
-      {/* Mapa  }
-      <div className="h-[400px] rounded-lg relative">
-        <Map
-          ref={mapRef}
-          initialViewState={viewport}
-          style={{ width: '100%', height: '100%' }}
-          mapStyle="mapbox://styles/mapbox/streets-v12"
-          mapboxAccessToken={token}
-          onMove={(evt) => setViewport(evt.viewState)}
-        >
-          <Marker latitude={marker.lat} longitude={marker.lng}>
-            <img src="/marker-icon.png" alt="marker" />
-          </Marker>
-        </Map>
-      </div>
-    </div>
-    );
-}*/
-
-/*
-const MapaEstatico = () => {
-
-    const Data = {
-        longitude: -103.3274,
-        latitude: 20.662,
-        zoom: 11,
-        width: 650,
-        height: 500
-    };
-
-    /*const mapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${Data.longitude},${Data.latitude},${Data.zoom},0/${Data.width}x${Data.height}?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`;
-
-    return(
-        <div className="relative w-[650px] h-[500px] mx-auto">
-            <Image
-                src={'/inmueble.jpg'}
-                alt="Mapa de guadalajara"
-                layout="fill"
-                objectFit="cover"
-                className="rounded-lg"
-                unoptimized
-            />
-        </div>
-    );
-}*/
 
 const Mapa = () => {
+    const {setInmueble} = useFormulario();
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const mapRef = useRef<Map | null>(null);
 
@@ -607,15 +529,36 @@ const Mapa = () => {
             zoom: 10
         });
 
-        mapRef.current.addControl(
-            new MapboxGeocoder({
-                accessToken: mapboxgl.accessToken,
-                placeholder: 'Ingresa tu dirección',
-                marker: true,
-                
-            })
-        );
+        const geocoder = new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            placeholder: 'Ingresa tu dirección',
+            marker: false,
+        })
 
+        geocoder.on('result', function(e){
+            const result = e.result;
+
+            const address = result.place_name; // Dirección completa
+            const country = result.context?.find((c: any) => c.id.includes('country'))?.text; // País
+            const state = result.context?.find((c: any) => c.id.includes('region'))?.text; // Estado
+            const city = result.context?.find((c: any) => c.id.includes('place') || c.id.includes('locality'))?.text; // Ciudad o Municipio
+            const postalCode = result.context?.find((c: any) => c.id.includes('postcode'))?.text; // Código postal
+
+            // obj ubicacion
+            const ubicacion : InterfaceUbicacion = {
+                pais: country,
+                direccion: address,
+                estado: state,
+                codigoPostal: postalCode,
+                ciudad_municipio: city
+            }
+
+            // almacenar datos en el contexto
+            setInmueble({ubicacion: ubicacion})
+        });
+
+        mapRef.current.addControl(geocoder);
+        
         return () => mapRef.current?.remove();
 
     }, []);
@@ -631,6 +574,56 @@ const Ubicacion = () => {
             <h2 className="text-center font-semibold text-3xl mb-10">Selecciona la ubicación del inmueble</h2>
             <p className="text-xl mb-8 text-center">Es necesario que indiques donde se ubica el inmueble para que los alumnos conozcan su ubicación</p>
             <Mapa/>
+        </div>
+    );
+}
+
+const Input = ({type, nombre, value, placeholder, editable} : 
+    {
+        type:string,
+        nombre:string,
+        value?:string | number,
+        placeholder:string,
+        editable:boolean
+    }) => {
+
+    return(
+        <div>
+            <h3>{nombre}</h3>
+            <input
+                className="border border-gray-300 rounded-md p-2 block w-full"
+                type={type}
+                value={value}
+                placeholder={placeholder}
+                contentEditable={editable}
+            />
+        </div>
+    );
+}
+
+const ConfirmarUbicacion = () => {
+
+    const {inmueble} = useFormulario();
+    let {
+        pais,
+        direccion,
+        estado,
+        codigoPostal,
+        ciudad_municipio
+    } = inmueble.ubicacion;
+
+    return(
+        <div>
+            <h2 className="text-center font-semibold text-3xl mb-10">Confirma la ubicación de tu inmueble</h2>
+            <div className="grid grid-cols-2 gap-4 w-[85%] mx-auto px-8 py-4">
+                <Input type="text" nombre="País" value={pais} placeholder="ingrese algo. . ." editable={false}/>
+                <Input type="text" nombre="Dirección" value={direccion} placeholder="ingrese algo. . ." editable={true}/>
+                <Input type="text" nombre="Estado" value={estado} placeholder="ingrese algo. . ." editable={false}/>
+                <Input type="number" nombre="Código postal" value={codigoPostal} placeholder="ingrese algo. . ." editable={false}/>
+                <Input type="text" nombre="Ciudad / municipio" value={ciudad_municipio} placeholder="ingrese algo. . ." editable={false}/>
+                <Input type="number" nombre="Número exterior (opcional)" placeholder="ingrese algo. . ." editable={true}/>
+                <Input type="number" nombre="Número interior (opcional)" placeholder="ingrese algo. . ." editable={true}/>
+            </div>
         </div>
     );
 }

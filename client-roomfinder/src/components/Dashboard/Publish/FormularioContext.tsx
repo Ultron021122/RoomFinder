@@ -1,6 +1,17 @@
 import React, { createContext, useContext, useState } from 'react';
 
 // Define la interfaz para el estado del formulario
+
+export interface InterfaceUbicacion {
+    pais:string;
+    direccion:string;
+    estado:string;
+    codigoPostal:number;
+    ciudad_municipio:string;
+    numExt?:number;
+    numInt?:number;
+}
+
 export interface Inmueble {
     tipoInmueble: string;
     servicios: string[];
@@ -9,7 +20,9 @@ export interface Inmueble {
     numCamas: number;
     numBanos: number;
     numHuespedes: number;
+    capEstacionamiento: number,
     fotos: File[];
+    ubicacion: InterfaceUbicacion;
     descripcion: string;
     reglas: string;
     costo: number;
@@ -17,7 +30,17 @@ export interface Inmueble {
 }
 
 // valores por defecto para el inmueble
-const valoresDefecto : Inmueble = {
+const valoresDefectoUbicacion : InterfaceUbicacion = {
+    pais: '',
+    direccion: '',
+    estado: '',
+    codigoPostal: -1,
+    ciudad_municipio: '',
+    numExt: -1,
+    numInt: -1
+}
+
+const valoresDefectoInmueble : Inmueble = {
     tipoInmueble: '',
     servicios: [],
     amenidades: [],
@@ -25,7 +48,9 @@ const valoresDefecto : Inmueble = {
     numCamas: 1,
     numBanos: 1,
     numHuespedes: 1,
+    capEstacionamiento: 1,
     fotos: [],
+    ubicacion: valoresDefectoUbicacion,
     descripcion: '',
     reglas: '',
     costo: 0,
@@ -44,7 +69,7 @@ const FormularioContext = createContext<FormularioContextProps | undefined>(unde
 // Proveedor del contexto
 export const FormularioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     // Definir el estado inicial del inmueble
-    const [inmueble, setInmuebleState] = useState<Inmueble>(valoresDefecto);
+    const [inmueble, setInmuebleState] = useState<Inmueble>(valoresDefectoInmueble);
 
     // Función para actualizar el estado del inmueble
     const setInmueble = (data: Partial<Inmueble>) => {
@@ -53,7 +78,7 @@ export const FormularioProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     // función para reiniciar los valores del inmueble
     const reiniciarValores = () => {
-        setInmuebleState(valoresDefecto);
+        setInmuebleState(valoresDefectoInmueble);
     }
 
     return (
