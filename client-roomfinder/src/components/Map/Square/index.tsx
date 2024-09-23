@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { Global } from '@emotion/react';
-import { Box, Button, Typography, SwipeableDrawer, SelectChangeEvent } from '@mui/material';
+import { Box, Button, Typography, SwipeableDrawer, SelectChangeEvent, Rating } from '@mui/material';
 import { blue, grey } from '@mui/material/colors';
 import { FormControl, Select, InputLabel, MenuItem, FormHelperText } from '@mui/material';
 import { universities } from "@/utils/constants";
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import 'react-perfect-scrollbar/dist/css/styles.css';
+import { StarIcon } from 'lucide-react';
 
 const drawerBleeding = 56;
 
@@ -24,6 +27,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
     });
     const [darkMode, setDarkMode] = React.useState<boolean>(false);
     const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
+    const [rating, setRating] = React.useState<number | null>(2.5);
 
     const handleChangeUniversity = (event: SelectChangeEvent) => {
         const newValue = event.target.value;
@@ -96,201 +100,233 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                         left: 'calc(50% - 15px)',
                     }}
                 />
-                <button onClick={onClose} className='absolute top-2 left-[calc(50vw-3.5rem)] rounded-lg bg-gray-600 h-2 w-14'>
+                <button onClick={onClose} className='absolute top-2 left-[calc(50vw-28px)] rounded-lg bg-gray-600 h-2 w-14'>
                 </button>
                 <Typography className='text-lg font-medium text-gray-900 dark:text-white'>Búsqueda de inmueble</Typography>
-                <div className="flex flex-col">
-                    <FormControl
-                        variant="standard"
-                        className="w-full"
-                        sx={{
-                            '.MuiInput-underline:after': {
-                                borderBottomColor: darkMode === true ? '#3b82f6' : '#2563eb',
-                            },
-                            '.MuiInput-underline:before': {
-                                borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
-                                borderBottomWidth: '2px',
-                            },
-                            '.MuiInput-underline:hover:not(.Mui-disabled):before': {
-                                borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
-                            },
-                        }}>
-                        <InputLabel
-                            id="university"
-                            className="peer-focus:font-medium text-sm peer-focus:text-sm"
-                            sx={{
-                                color: darkMode ? '#d1d5db' : '#6b7280',
-                                fontSize: '0.875rem',
-                                lineHeight: '1.25rem',
-                            }}>
-                            Universidad
-                        </InputLabel>
-                        <Select
-                            labelId="university"
-                            value={university}
-                            onChange={handleChangeUniversity}
-                            label="Universidad"
-                            className="text-sm"
-                            sx={{
-                                fontSize: '0.875rem',
-                                lineHeight: '1.25rem',
-                                fontStyle: 'normal',
-                                color: darkMode ? "white" : "#111827",
-                                '.MuiSvgIcon-root ': {
-                                    fill: darkMode ? "white !important" : "#111827 !important",
-                                }
-                            }}
-                            MenuProps={{
-                                PaperProps: {
-                                    sx: {
-                                        backgroundColor: darkMode ? "#374151" : "#f3f4f6",
-                                        color: darkMode ? "#fff" : "#111827",
-                                        height: 245,
-                                        scrollbarWidth: 'thin',
+                <PerfectScrollbar>
+                    <div className='w-full h-[25vh] p-2'>
+                        <div className="flex flex-col">
+                            <FormControl
+                                variant="standard"
+                                className="w-full"
+                                sx={{
+                                    '.MuiInput-underline:after': {
+                                        borderBottomColor: darkMode === true ? '#3b82f6' : '#2563eb',
                                     },
-                                },
-                            }}
-                        >
-                            {universities.map((universidad, index) => (
-                                <MenuItem
-                                    value={universidad.name}
-                                    key={index}
+                                    '.MuiInput-underline:before': {
+                                        borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                        borderBottomWidth: '2px',
+                                    },
+                                    '.MuiInput-underline:hover:not(.Mui-disabled):before': {
+                                        borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                    },
+                                }}>
+                                <InputLabel
+                                    id="university"
+                                    className="peer-focus:font-medium text-sm peer-focus:text-sm"
+                                    sx={{
+                                        color: darkMode ? '#d1d5db' : '#6b7280',
+                                        fontSize: '0.875rem',
+                                        lineHeight: '1.25rem',
+                                    }}>
+                                    Universidad
+                                </InputLabel>
+                                <Select
+                                    labelId="university"
+                                    value={university}
+                                    onChange={handleChangeUniversity}
+                                    label="Universidad"
+                                    className="text-sm"
                                     sx={{
                                         fontSize: '0.875rem',
                                         lineHeight: '1.25rem',
-                                        '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
-                                        '&.Mui-selected:hover': {
-                                            backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                            color: darkMode ? '#3b82f6' : '#fff',
-                                        }, // Style when selected and hovered
-                                        '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                        fontStyle: 'normal',
+                                        color: darkMode ? "white" : "#111827",
+                                        '.MuiSvgIcon-root ': {
+                                            fill: darkMode ? "white !important" : "#111827 !important",
+                                        }
+                                    }}
+                                    MenuProps={{
+                                        PaperProps: {
+                                            sx: {
+                                                backgroundColor: darkMode ? "#374151" : "#f3f4f6",
+                                                color: darkMode ? "#fff" : "#111827",
+                                                height: 245,
+                                                scrollbarWidth: 'thin',
+                                            },
+                                        },
+                                    }}
+                                >
+                                    {universities.map((universidad, index) => (
+                                        <MenuItem
+                                            value={universidad.name}
+                                            key={index}
+                                            sx={{
+                                                fontSize: '0.875rem',
+                                                lineHeight: '1.25rem',
+                                                '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                                '&.Mui-selected:hover': {
+                                                    backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                    color: darkMode ? '#3b82f6' : '#fff',
+                                                }, // Style when selected and hovered
+                                                '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                            }}>
+                                            {universidad.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                <FormHelperText
+                                    sx={{
+                                        color: darkMode ? '#d1d5db' : '#4b5563',
                                     }}>
-                                    {universidad.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <FormHelperText
-                            sx={{
-                                color: darkMode ? '#d1d5db' : '#4b5563',
-                            }}>
-                            Selecciona una universidad
-                        </FormHelperText>
-                    </FormControl>
-
-                    <FormControl
-                        variant="standard"
-                        className="w-full mt-2"
-                        sx={{
-                            '.MuiInput-underline:after': {
-                                borderBottomColor: darkMode === true ? '#3b82f6' : '#2563eb',
-                            },
-                            '.MuiInput-underline:before': {
-                                borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
-                                borderBottomWidth: '2px',
-                            },
-                            '.MuiInput-underline:hover:not(.Mui-disabled):before': {
-                                borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
-                            },
-                        }}>
-                        <InputLabel
-                            id="type_property"
-                            className="peer-focus:font-medium text-sm peer-focus:text-sm"
-                            sx={{
-                                color: darkMode ? '#d1d5db' : '#6b7280',
-                                fontSize: '0.875rem',
-                                lineHeight: '1.25rem',
-                            }}>
-                            Tipo de inmueble
-                        </InputLabel>
-                        <Select
-                            labelId="type_property"
-                            value={type_property}
-                            onChange={handleChange}
-                            className="text-sm"
-                            sx={{
-                                fontSize: '0.875rem',
-                                lineHeight: '1.25rem',
-                                fontStyle: 'normal',
-                                color: darkMode ? "white" : "#111827",
-                                '.MuiSvgIcon-root ': {
-                                    fill: darkMode ? "white !important" : "#111827 !important",
-                                }
-                            }}
-                            MenuProps={{
-                                PaperProps: {
-                                    sx: {
-                                        backgroundColor: darkMode ? "#374151" : "#f3f4f6",
-                                        color: darkMode ? "#fff" : "#111827",
-                                        scrollbarWidth: 'thin',
+                                    Selecciona una universidad
+                                </FormHelperText>
+                            </FormControl>
+                            <FormControl
+                                variant="standard"
+                                className="w-full mt-2"
+                                sx={{
+                                    '.MuiInput-underline:after': {
+                                        borderBottomColor: darkMode === true ? '#3b82f6' : '#2563eb',
                                     },
-                                },
-                            }}
-                        >
-                            <MenuItem
-                                value="Apartamento"
+                                    '.MuiInput-underline:before': {
+                                        borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                        borderBottomWidth: '2px',
+                                    },
+                                    '.MuiInput-underline:hover:not(.Mui-disabled):before': {
+                                        borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                    },
+                                }}>
+                                <InputLabel
+                                    id="type_property"
+                                    className="peer-focus:font-medium text-sm peer-focus:text-sm"
+                                    sx={{
+                                        color: darkMode ? '#d1d5db' : '#6b7280',
+                                        fontSize: '0.875rem',
+                                        lineHeight: '1.25rem',
+                                    }}>
+                                    Tipo de inmueble
+                                </InputLabel>
+                                <Select
+                                    labelId="type_property"
+                                    value={type_property}
+                                    onChange={handleChange}
+                                    className="text-sm"
+                                    sx={{
+                                        fontSize: '0.875rem',
+                                        lineHeight: '1.25rem',
+                                        fontStyle: 'normal',
+                                        color: darkMode ? "white" : "#111827",
+                                        '.MuiSvgIcon-root ': {
+                                            fill: darkMode ? "white !important" : "#111827 !important",
+                                        }
+                                    }}
+                                    MenuProps={{
+                                        PaperProps: {
+                                            sx: {
+                                                backgroundColor: darkMode ? "#374151" : "#f3f4f6",
+                                                color: darkMode ? "#fff" : "#111827",
+                                                scrollbarWidth: 'thin',
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <MenuItem
+                                        value="Apartamento"
+                                        sx={{
+                                            fontSize: '0.875rem',
+                                            lineHeight: '1.25rem',
+                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                color: darkMode ? '#3b82f6' : '#fff',
+                                            }, // Style when selected and hovered
+                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                        }}>
+                                        Apartamento
+                                    </MenuItem>
+                                    <MenuItem
+                                        value="Casa"
+                                        sx={{
+                                            fontSize: '0.875rem',
+                                            lineHeight: '1.25rem',
+                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                color: darkMode ? '#3b82f6' : '#fff',
+                                            }, // Style when selected and hovered
+                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                        }}>
+                                        Casa
+                                    </MenuItem>
+                                    <MenuItem
+                                        value="Habitación"
+                                        sx={{
+                                            fontSize: '0.875rem',
+                                            lineHeight: '1.25rem',
+                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                color: darkMode ? '#3b82f6' : '#fff',
+                                            }, // Style when selected and hovered
+                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                        }}>
+                                        Habitación
+                                    </MenuItem>
+                                    <MenuItem
+                                        value="Todas"
+                                        sx={{
+                                            fontSize: '0.875rem',
+                                            lineHeight: '1.25rem',
+                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                color: darkMode ? '#3b82f6' : '#fff',
+                                            }, // Style when selected and hovered
+                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                        }}>
+                                        Todas
+                                    </MenuItem>
+                                </Select>
+                                <FormHelperText
+                                    sx={{
+                                        color: darkMode ? '#d1d5db' : '#4b5563',
+                                    }}>
+                                    Selecciona un tipo de inmueble
+                                </FormHelperText>
+                            </FormControl>
+                            <Typography
+                                component="legend"
+                                className="peer-focus:font-medium text-sm peer-focus:text-sm"
                                 sx={{
+                                    color: darkMode ? '#d1d5db' : '#6b7280',
                                     fontSize: '0.875rem',
                                     lineHeight: '1.25rem',
-                                    '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
-                                    '&.Mui-selected:hover': {
-                                        backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                        color: darkMode ? '#3b82f6' : '#fff',
-                                    }, // Style when selected and hovered
-                                    '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
-                                }}>
-                                Apartamento
-                            </MenuItem>
-                            <MenuItem
-                                value="Casa"
+                                }}>Valoración</Typography>
+                            <Rating
+                                name="simple-controlled"
+                                value={rating}
+                                onChange={(event, newValue) => {
+                                    setRating(newValue);
+                                }}
+                                precision={0.5}
                                 sx={{
-                                    fontSize: '0.875rem',
-                                    lineHeight: '1.25rem',
-                                    '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
-                                    '&.Mui-selected:hover': {
-                                        backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                        color: darkMode ? '#3b82f6' : '#fff',
-                                    }, // Style when selected and hovered
-                                    '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
-                                }}>
-                                Casa
-                            </MenuItem>
-                            <MenuItem
-                                value="Habitación"
-                                sx={{
-                                    fontSize: '0.875rem',
-                                    lineHeight: '1.25rem',
-                                    '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
-                                    '&.Mui-selected:hover': {
-                                        backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                        color: darkMode ? '#3b82f6' : '#fff',
-                                    }, // Style when selected and hovered
-                                    '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
-                                }}>
-                                Habitación
-                            </MenuItem>
-                            <MenuItem
-                                value="Todas"
-                                sx={{
-                                    fontSize: '0.875rem',
-                                    lineHeight: '1.25rem',
-                                    '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
-                                    '&.Mui-selected:hover': {
-                                        backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                        color: darkMode ? '#3b82f6' : '#fff',
-                                    }, // Style when selected and hovered
-                                    '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
-                                }}>
-                                Todas
-                            </MenuItem>
-                        </Select>
-                        <FormHelperText
-                            sx={{
-                                color: darkMode ? '#d1d5db' : '#4b5563',
-                            }}>
-                            Selecciona un tipo de inmueble
-                        </FormHelperText>
-                    </FormControl>
-                </div>
+                                    color: darkMode ? '#3b82f6' : '#2563eb',
+                                    '& .MuiRating-iconFilled': {
+                                        color: '#ff6d75',
+                                    },
+                                    '& .MuiRating-iconHover': {
+                                        color: '#ff3d47',
+                                    },
+                                    '& .MuiRating-iconEmpty': {
+                                        color: grey[600],
+                                    },
+                                }}
+                                emptyIcon={<StarIcon style={{ opacity: 1 }} fontSize="inherit" />}
+                            />
+                        </div>
+                    </div>
+                </PerfectScrollbar>
             </Box>
         </SwipeableDrawer>
     );
