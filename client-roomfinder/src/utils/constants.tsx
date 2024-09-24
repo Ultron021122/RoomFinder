@@ -407,27 +407,81 @@ export const universities: UniversityData[] = [
 export const properties: MapCoordenada[] = [
     {
         geocode: [20.656114, -103.331217],
-        popUp: "Propiedad Número 1"
+        popUp: "Propiedad Número 1",
+        vchtitle: "Casa en renta",
+        vchdescription: "Hermosa casa en la playa con vista al mar.",
+        decpropertyrating: 4.0,
+        imagenesUrl: [
+            { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
+            { id: 2, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" },
+            { id: 3, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" }
+        ],
+        propertyid: 1,
     },
     {
         geocode: [20.651617, -103.324075],
-        popUp: "Propiedad Número 2"
+        popUp: "Propiedad Número 2",
+        vchtitle: "Casa en renta",
+        vchdescription: "Hermosa casa en la playa con vista al mar.",
+        decpropertyrating: 4.0,
+        imagenesUrl: [
+            { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
+            { id: 2, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" },
+            { id: 3, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" }
+        ],
+        propertyid: 1,
     },
     {
         geocode: [20.657007, -103.316989],
-        popUp: "Propiedad Número 3"
+        popUp: "Propiedad Número 3",
+        vchtitle: "Casa en renta",
+        vchdescription: "Hermosa casa en la playa con vista al mar.",
+        decpropertyrating: 4.0,
+        imagenesUrl: [
+            { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
+            { id: 2, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" },
+            { id: 3, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" }
+        ],
+        propertyid: 1,
     },
     {
         geocode: [20.659820, -103.328892],
-        popUp: "Propiedad Número 4"
+        popUp: "Propiedad Número 4",
+        vchtitle: "Casa en renta",
+        vchdescription: "Hermosa casa en la playa con vista al mar.",
+        decpropertyrating: 4.0,
+        imagenesUrl: [
+            { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
+            { id: 2, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" },
+            { id: 3, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" }
+        ],
+        propertyid: 1,
     },
     {
         geocode: [20.650588, -103.329476],
-        popUp: "Propiedad Número 5"
+        popUp: "Propiedad Número 5",
+        vchtitle: "Casa en renta",
+        vchdescription: "Hermosa casa en la playa con vista al mar.",
+        decpropertyrating: 4.0,
+        imagenesUrl: [
+            { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
+            { id: 2, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" },
+            { id: 3, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" }
+        ],
+        propertyid: 1,
     },
     {
         geocode: [20.653525, -103.319747],
-        popUp: "Propiedad Número 6"
+        popUp: "Propiedad Número 6",
+        vchtitle: "Casa en renta",
+        vchdescription: "Hermosa casa en la playa con vista al mar.",
+        decpropertyrating: 4.0,
+        imagenesUrl: [
+            { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
+            { id: 2, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" },
+            { id: 3, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" }
+        ],
+        propertyid: 1,
     }
 ];
 
@@ -437,7 +491,7 @@ export const propertiesHome = [
         id: 1,
         title: "Casa en renta",
         description: "Hermosa casa en la playa con vista al mar.",
-        value: 4,
+        value: 4.0,
         imagenesUrl: [
             { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
             { id: 2, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" },
@@ -459,11 +513,11 @@ export const propertiesHome = [
         id: 3,
         title: "Casa en la montaña",
         description: "Casa en la montaña con vista a la ciudad.",
-        value: 5,
+        value: 5.0,
         imagenesUrl: [
             { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
             { id: 2, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" },
             { id: 3, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713586413/resources/up7t5qoheawy9ejra0xy.jpg" }
         ],
-    }
+    },
 ]
