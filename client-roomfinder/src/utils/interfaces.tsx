@@ -252,6 +252,55 @@ export interface MapCoordenada {
      * popUp: 'Popup message'
      */
     popUp: string;
+    /**
+     * Description
+     * @example
+     * description: 'Description'
+     */
+    vchdescription: string;
+    /**
+     * Title property
+     * @example
+     * vchtitle: 'Title property'
+     */
+    vchtitle: string;
+    /**
+     * Property rating
+     * @example
+     * decpropertyrating: 4.5
+     */
+    decpropertyrating: number;
+    /**
+     * Image url
+     * @example
+     * imageUrl: 'https://example.com/image.jpg'
+     */
+    imagenesUrl: ImageUrl[];
+    /**
+     * Property id
+     * @example
+     * propertyid: 1
+     */
+    propertyid: number;
+}
+
+/**
+ * Interface to manage the image url
+ * @interface 
+ */
+export interface ImageUrl {
+    /**
+     * Image id
+     * @example
+     * id: 1
+     */
+    id: number;
+    /**
+     * Image url
+     * @example
+     * url: 'https://example.com/image.jpg'
+     */
+    url: string;
 }
 
 /**

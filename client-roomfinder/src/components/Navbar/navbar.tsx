@@ -59,8 +59,8 @@ function Navbar({
                             <Link href="/" className={`block lg:inline-block dark:hover:text-white ${pathname === '/' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                 Inicio
                             </Link>
-                            <Link href="/propiedades" className={`block lg:inline-block dark:hover:text-white ${pathname === '/propiedades' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                Propiedades
+                            <Link href="/map" className={`block lg:inline-block dark:hover:text-white ${pathname === '/map' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                Mapa de propiedades
                             </Link>
                             <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                 Arrendadores
@@ -91,9 +91,9 @@ function Navbar({
                                             Inicio
                                         </Link>
                                     </li>
-                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800 ${pathname === '/propiedades' ? 'dark:bg-gray-800' : ''}`}>
-                                        <Link href="/propiedades" className={`block lg:inline-block dark:hover:text-white ${pathname === '/propiedades' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                            Propiedades
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800 ${pathname === '/map' ? 'dark:bg-gray-800' : ''}`}>
+                                        <Link href="/map" className={`block lg:inline-block dark:hover:text-white ${pathname === '/map' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                            Mapa de propiedades
                                         </Link>
                                     </li>
                                     <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800 ${pathname === '/arrendadores' ? 'dark:bg-gray-800' : ''}`}>
