@@ -2,13 +2,10 @@
 // Element: CardOwner
 import { useState, useEffect } from 'react';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import { CardActionArea, CardActions, Rating, Card } from '@mui/material';
 import Image from 'next/image';
 import { Galeria } from '@/components/GeneralComponents/Galeria';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { RouteButton } from '@/components/Propiedades/backButton';
 
 interface Imagen {
     id: number,
@@ -76,9 +73,11 @@ export const CardOwner = ({ id, title, description, value, imagenes }: CardOwner
                     <h5 className="text-xl font-semibold text-neutral-950 dark:text-neutral-50">
                         {title}
                     </h5>
-                    <Typography component="legend" className='text-xs'>Calificación</Typography>
-                    <Rating name="read-only" value={value} readOnly />
-                    <p className="text-neutral-900 dark:text-neutral-300">
+                    <div className='flex items-center gap-2'>
+                        <Rating name="read-only" value={value} precision={0.5} readOnly />
+                        <p className="text-base font-semibold text-neutral-900 dark:text-neutral-300">{value}</p>
+                    </div>
+                    <p className="text-sm text-neutral-900 dark:text-neutral-300">
                         {description}
                     </p>
                 </CardContent>
@@ -96,9 +95,6 @@ export const CardOwner = ({ id, title, description, value, imagenes }: CardOwner
                     >
                         $599.00 MXN
                     </span>
-                    <RouteButton route={`/property/${id}`}>
-                        Ver más
-                    </RouteButton>
                 </CardActions>
             </CardActionArea>
         </Card>

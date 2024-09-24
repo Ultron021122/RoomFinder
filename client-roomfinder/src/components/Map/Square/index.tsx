@@ -80,7 +80,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
             <Box
                 //bgcolor='#1f2937'
                 sx={{
-                    backgroundColor: darkMode === true ? '#1f2937' : '#fff',
+                    backgroundColor: darkMode === true ? '#1f2937' : '#e5e7eb',
                     borderTopLeftRadius: 12,
                     borderTopRightRadius: 12,
                     boxShadow: 4,
@@ -100,9 +100,9 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                         left: 'calc(50% - 15px)',
                     }}
                 />
-                <button onClick={onClose} className='absolute top-2 left-[calc(50vw-28px)] rounded-lg bg-gray-600 h-2 w-14'>
+                <button onClick={onClose} className='absolute top-2 left-[calc(50vw-28px)] rounded-lg bg-gray-400 dark:bg-gray-600 h-2 w-14'>
                 </button>
-                <Typography className='text-lg font-medium text-gray-900 dark:text-white'>Búsqueda de inmueble</Typography>
+                <Typography className='text-base sm:text-lg font-medium text-gray-900 dark:text-white ml-2 mb-2'>Búsqueda de inmueble</Typography>
                 <PerfectScrollbar>
                     <div className='w-full h-[25vh] p-2'>
                         <div className="flex flex-col">
@@ -302,7 +302,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                     color: darkMode ? '#d1d5db' : '#6b7280',
                                     fontSize: '0.875rem',
                                     lineHeight: '1.25rem',
-                                }}>Valoración</Typography>
+                                }}>Calificación</Typography>
                             <Rating
                                 name="simple-controlled"
                                 value={rating}
@@ -313,10 +313,10 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                 sx={{
                                     color: darkMode ? '#3b82f6' : '#2563eb',
                                     '& .MuiRating-iconFilled': {
-                                        color: '#ff6d75',
+                                        color: '#fbbf24',
                                     },
                                     '& .MuiRating-iconHover': {
-                                        color: '#ff3d47',
+                                        color: '#fcd34d',
                                     },
                                     '& .MuiRating-iconEmpty': {
                                         color: grey[600],
