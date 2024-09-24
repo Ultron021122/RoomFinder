@@ -10,7 +10,9 @@ import { universities, properties } from "@/utils/constants";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
-import { Image, Button } from '@nextui-org/react';
+import { Rating } from '@mui/material';
+import Image from 'next/image';
+import { Link } from 'lucide-react';
 
 // Icons personalizados
 const customIcon = new Icon({
@@ -32,7 +34,7 @@ const createClusterCustomIcon = function (cluster: any) {
     });
 };
 
-export default function Map({ position, zoom, name, typeProperty}: MapData) {
+export default function Map({ position, zoom, name, typeProperty }: MapData) {
     const mapRef = useRef<Mapa | null>(null);
     const markerRefs = useRef<Record<string, React.RefObject<LeafletMarker>>>({});
 
@@ -94,14 +96,18 @@ export default function Map({ position, zoom, name, typeProperty}: MapData) {
                                 ref={markerRefs.current[universidad.name]}
                             >
                                 <Popup>
-                                    <div className="max-w-xs">
-                                        <h3 className='text-sm text-center mb-2'>{universidad.name}</h3>
-                                        <Image src={universidad.imageUrl} alt={'Imagen ' + universidad.name} className="w-full h-auto mb-2 rounded" />
+                                    <div className='font-sans'>
+                                        <h3 className='text-sm font-semibold text-center mb-2'>{universidad.name}</h3>
+                                        <Image
+                                            width={'400'}
+                                            height={'350'}
+                                            src={universidad.imageUrl}
+                                            alt={'Imagen ' + universidad.name}
+                                            className="w-full h-auto mb-2 rounded" />
                                         <p className="text-xs text-center text-gray-700 mb-2">{universidad.description}</p>
                                         <a
                                             href={universidad.website}
                                             target="_blank"
-                                            rel="noopener noreferrer"
                                             style={{ color: 'white', textDecoration: 'none' }}
                                             className="block text-center text-white no-underline text-current bg-blue-500 hover:bg-blue-700 transition-colors duration-300 py-2 rounded-lg"
                                         >
@@ -120,10 +126,39 @@ export default function Map({ position, zoom, name, typeProperty}: MapData) {
                 >
                     {properties.map((propertie, index) => (
                         <Marker position={propertie.geocode} icon={customIcon} key={index}>
-                            <Popup>{propertie.popUp}</Popup>
+                            <Popup>
+                                <div className="popup-content font-sans">
+                                    <h3 className="text-sm font-semibold">{propertie.vchtitle}</h3>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs">Calificación:</span>
+                                        <Rating size='small' name="read-only" value={propertie.decpropertyrating} precision={0.5} readOnly />
+                                    </div>
+                                    <p className="text-xs">
+                                        {propertie.vchdescription}
+                                    </p>
+                                    <div className="image-gallery">
+                                        {propertie.imagenesUrl.map((image, imgIndex) => (
+                                            <Image
+                                                width={imgIndex === 0 ? 400 : 200}
+                                                height={imgIndex === 0 ? 300 : 150}
+                                                key={image.id}
+                                                src={image.url}
+                                                alt={`Imagen ${image.id}`}
+                                                className={imgIndex === 0 ? "popup-image large" : "popup-image small"}
+                                            />
+                                        ))}
+                                    </div>
+                                    <a
+                                        href={`/property/${propertie.propertyid}`}
+                                        style={{ color: 'white', textDecoration: 'none' }}
+                                        className="block mt-2 text-center text-white no-underline text-current bg-blue-500 hover:bg-blue-700 transition-colors duration-300 py-1 rounded-lg"
+                                    >
+                                        Ver más
+                                    </a>
+                                </div>
+                            </Popup>
                         </Marker>
-                    ))
-                    }
+                    ))}
                 </MarkerClusterGroup>
             </MapContainer>
         </div>

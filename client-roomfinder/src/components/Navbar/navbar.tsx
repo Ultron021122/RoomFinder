@@ -18,10 +18,10 @@ function Navbar({
 
     return (
         <>
-            <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-900 absolute top-0 z-50 min-h-[73px]">
+            <nav className="w-full bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-900 absolute top-0 z-50">
                 <div className="max-w-screen-2xl mx-auto p-4 sm:py-4">
                     <div className="flex items-center justify-between">
-                        <Link href="/" className="flex items-center justify-center h-[40px]">
+                        <Link href="/" className="flex items-center justify-center h-auto">
                             <GraduationCapIcon size={32} className="mr-2 text-neutral-900 dark:text-white" />
                             <h1 className="dark:text-gray-100 dark:hover:text-white text-2xl font-semibold">
                                 RoomFinder
@@ -55,17 +55,21 @@ function Navbar({
                                 </svg>
                             </button>
                         </div>
-                        <div className="hidden md:flex items-center space-x-6 text-sm">
-                            <Link href="/" className={`block lg:inline-block dark:hover:text-white ${pathname === '/' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                Inicio
-                            </Link>
-                            <Link href="/propiedades" className={`block lg:inline-block dark:hover:text-white ${pathname === '/propiedades' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                Propiedades
-                            </Link>
-                            <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                Arrendadores
-                            </Link>
-                        </div>
+                        {
+                            pathname != '/properties/map' && (
+                                <div className="hidden md:flex items-center space-x-6 text-sm">
+                                    <Link href="/" className={`block lg:inline-block dark:hover:text-white ${pathname === '/' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                        Inicio
+                                    </Link>
+                                    <Link href="/properties/map" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties/map' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                        Mapa de propiedades
+                                    </Link>
+                                    <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                        Arrendadores
+                                    </Link>
+                                </div>
+                            )
+                        }
                         <div className="hidden md:flex items-center space-x-6 text-sm">
                             {session ? (
                                 <DropdownUser />
@@ -91,9 +95,9 @@ function Navbar({
                                             Inicio
                                         </Link>
                                     </li>
-                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800 ${pathname === '/propiedades' ? 'dark:bg-gray-800' : ''}`}>
-                                        <Link href="/propiedades" className={`block lg:inline-block dark:hover:text-white ${pathname === '/propiedades' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                            Propiedades
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800 ${pathname === '/properties/map' ? 'dark:bg-gray-800' : ''}`}>
+                                        <Link href="/properties/map" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties/map' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                            Mapa de propiedades
                                         </Link>
                                     </li>
                                     <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800 ${pathname === '/arrendadores' ? 'dark:bg-gray-800' : ''}`}>
