@@ -73,8 +73,8 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
             }}
             sx={{
                 '& .MuiDrawer-paper': {
-                    backgroundColor: 'rgba(0, 0, 0, 0.04)', // o 'transparent'
-                },
+                    backgroundColor: 'rgba(0, 0, 0, 0.0)',
+                    boxShadow: '0px -4px 4px rgba(0, 0, 0, 0.0)',          },
             }}
         >
             <Box

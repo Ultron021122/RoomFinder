@@ -47,7 +47,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
         <PerfectScrollbar>
             <div className="flex flex-col h-[100vh]">
-                <AppBar component="nav" position="static" className="bg-white text-neutral-950 dark:bg-primary dark:text-gray-100">
+                <AppBar 
+                    component="nav" 
+                    position="static" 
+                    className="bg-white text-neutral-950 dark:bg-primary dark:text-gray-100"
+                    sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                >
                     <Toolbar variant="dense">
                         <IconButton
                             edge="start"

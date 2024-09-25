@@ -89,8 +89,8 @@ const DropdownUser = () => {
                             </p>
                             <p className="text-small">{user.vchemail}</p>
                         </DropdownItem>
-                        <DropdownItem key="dashboard" textValue="Panel de administración">
-                            <Link href="/dashboard">Dashboard</Link>
+                        <DropdownItem as={Link} href="/dashboard" key="dashboard" textValue="Panel de administración">
+                            Dashboard
                         </DropdownItem>
                         <DropdownItem key="settings" textValue="Configuraciones">Settings</DropdownItem>
                         <DropdownItem

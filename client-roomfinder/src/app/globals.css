@@ -158,3 +158,13 @@ input[type="number"] {
     grid-row: span 1;
     /* Ocupa una fila */
 }
+
+/* components/TextFader.module.css */
+.normal {
+    transition: opacity 0.5s ease;
+}
+
+.faded {
+    opacity: 0.5;
+    /* Sombra más tenue */
+}
