@@ -12,7 +12,7 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import "leaflet-defaulticon-compatibility";
 import { Rating } from '@mui/material';
 import Image from 'next/image';
-import { Link } from 'lucide-react';
+import { Link, MapPin, Star } from 'lucide-react';
 
 // Icons personalizados
 const customIcon = new Icon({
@@ -128,30 +128,51 @@ export default function Map({ position, zoom, name, typeProperty }: MapData) {
                         <Marker position={propertie.geocode} icon={customIcon} key={index}>
                             <Popup>
                                 <div className="popup-content font-sans">
-                                    <h3 className="text-sm font-semibold">{propertie.vchtitle}</h3>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-xs">Calificación:</span>
-                                        <Rating size='small' name="read-only" value={propertie.decpropertyrating} precision={0.5} readOnly />
-                                    </div>
-                                    <p className="text-xs">
+                                    <h3 className="mt-1 text-base font-semibold text-white sm:text-slate-900 md:text-xl">{propertie.vchtitle}</h3>
+                                    <dl className="mt-4 text-xs font-medium flex items-center row-start-2 sm:mt-1 sm:row-start-3 md:mt-2.5 lg:row-start-2">
+                                        <dt className="sr-only">Reviews</dt>
+                                        <dd className="text-blue-600 flex items-center">
+                                            <Star size={18} className="mr-1" />
+                                            <span>{propertie.decpropertyrating} <span className="text-slate-600 font-normal">(128)</span></span>
+                                        </dd>
+                                        <dt className="sr-only">Location</dt>
+                                        <dd className="flex items-center text-neutral-700">
+                                            <svg width="2" height="2" aria-hidden="true" fill="currentColor" className="mx-3 text-slate-300">
+                                                <circle cx="1" cy="1" r="1" />
+                                            </svg>
+                                            <MapPin size={18} className="mr-1" />
+                                            Collingwood, Ontario
+                                        </dd>
+                                    </dl>
+                                    <p className="mt-2 text-xs leading-6 col-start-1 sm:col-span-2 lg:row-start-4 lg:col-span-1">
                                         {propertie.vchdescription}
                                     </p>
-                                    <div className="image-gallery">
-                                        {propertie.imagenesUrl.map((image, imgIndex) => (
+                                    {propertie && (
+                                        <div className="grid gap-2 col-start-1 col-end-3 row-start-1 sm:mb-6 sm:grid-cols-4 lg:gap-4 lg:col-start-2 lg:row-end-6 lg:row-span-6 lg:mb-0">
                                             <Image
-                                                width={imgIndex === 0 ? 400 : 200}
-                                                height={imgIndex === 0 ? 300 : 150}
-                                                key={image.id}
-                                                src={image.url}
-                                                alt={`Imagen ${image.id}`}
-                                                className={imgIndex === 0 ? "popup-image large" : "popup-image small"}
-                                            />
-                                        ))}
-                                    </div>
+                                                width={800}
+                                                height={800}
+                                                src={propertie.imagenesUrl[0].url}
+                                                alt={`Imagen ${propertie.imagenesUrl[0].id}`}
+                                                className="w-40 h-auto object-cover rounded-lg sm:w-60 sm:col-span-2 lg:col-span-full" />
+                                            <Image
+                                                width={800}
+                                                height={800}
+                                                src={propertie.imagenesUrl[1].url}
+                                                alt={`Imagen ${propertie.imagenesUrl[1].id}`}
+                                                className="hidden h-auto w-20 object-cover rounded-lg sm:block sm:col-span-2 md:col-span-1 lg:row-start-2 lg:col-span-2 lg:w-28" />
+                                            <Image
+                                                width={800}
+                                                height={800}
+                                                src={propertie.imagenesUrl[2].url}
+                                                alt={`Imagen ${propertie.imagenesUrl[2].id}`}
+                                                className="hidden h-auto w-20 object-cover rounded-lg md:block lg:row-start-2 lg:col-span-2 lg:w-28" />
+                                        </div>
+                                    )}
                                     <a
                                         href={`/property/${propertie.propertyid}`}
                                         style={{ color: 'white', textDecoration: 'none' }}
-                                        className="block mt-2 text-center text-white no-underline text-current bg-blue-500 hover:bg-blue-700 transition-colors duration-300 py-1 rounded-lg"
+                                        className="block mt-2 text-center text-white no-underline text-current bg-blue-500 hover:bg-blue-700 transition-colors duration-300 py-2 rounded-lg"
                                     >
                                         Ver más
                                     </a>
