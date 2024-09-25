@@ -41,7 +41,7 @@ export default function ListItems() {
         <>
             <PerfectScrollbar className='custom-scrollbar'>
                 <div className='container mx-auto px-4 h-[100vh]'>
-                    <h1 className="dark:text-white text-3xl font-bold pt-14 pb-10 text-center">
+                    <h1 className="dark:text-white text-3xl font-bold pt-20 pb-10 text-center">
                         Arrendadores
                     </h1>
                     {isLoading ?

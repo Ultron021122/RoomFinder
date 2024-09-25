@@ -33,21 +33,7 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
   return (
     <aside>
       <nav className="h-full flex-col max-w-max bg-white dark:bg-gray-950 border-r dark:border-gray-900 shadow-sm">
-        <div className="pb-3 flex justify-between items-center text-gray-800 dark:text-gray-100">{/* p-4 */}
-          {/*
-            <div
-              className={`overflow-hidden transition-all flex items-center ${expanded ? "h-10" : "w-0"}`}
-            >
-              //<Home size={20} />
-              <span className="text-lg font-medium">Regresar atras </span>
-            </div>
-            <button
-              className="p-1.5 rounded-lg bg-gray-50 dark:bg-gray-950 hover:bg-gray-100 dark:hover:bg-gray-800"
-            >
-              <LogOut size={20} />
-              {/*expanded ? <ChevronFirst /> : <ChevronLast />
-            </button>
-          */}
+        <div className="pb-3 flex justify-between items-center text-gray-800 dark:text-gray-100">
         </div>
         <SidebarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3 z-30">{children}</ul>
@@ -178,7 +164,7 @@ export function SidebarItem({
   return (
     <li
       className={`
-            relative flex items-center py-2 px-3 my-1
+            relative flex items-center my-1
             font-medium rounded-md cursor-pointer
             transition-colors group
             z-50
@@ -192,8 +178,8 @@ export function SidebarItem({
         href={`${url}`}
         className={`
             ${pathname === url
-            ? "text-blue-800 dark:text-indigo-100"
-            : "text-gray-600 dark:text-gray-400"
+            ? "px-3 py-2 text-blue-800 dark:text-indigo-100"
+            : "px-3 py-2 text-gray-600 dark:text-gray-400"
           }
           flex
         `}

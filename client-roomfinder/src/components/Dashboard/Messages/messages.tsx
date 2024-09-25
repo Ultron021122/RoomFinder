@@ -6,9 +6,9 @@ import { ArrowLeftIcon, SendIcon } from "lucide-react";
 import io from "socket.io-client";
 import TimeAgo from "javascript-time-ago";
 import es from "javascript-time-ago/locale/es";
-import { Image } from "@nextui-org/react";
 import { Message, UserProfile } from "@/utils/interfaces";
 import axios from "axios";
+import Image from "next/image";
 
 TimeAgo.addDefaultLocale(es);
 
@@ -20,12 +20,14 @@ export default function MessageComponent({
   userID,
   image,
   nameUser,
+  bnstatus,
   className,
   onBack
 }: {
   userID: number,
   image: string,
   nameUser: string,
+  bnstatus: boolean,
   className?: string | null,
   onBack: () => void
 }) {
@@ -122,7 +124,13 @@ export default function MessageComponent({
               <div className="md:hidden cursor-pointer" onClick={onBack}>
                 <ArrowLeftIcon size={20} className="text-gray-500 dark:text-gray-300 mr-2 hover:text-gray-700 dark:hover:text-gray-100" />
               </div>
-              <Image src={image} alt="avatar" className="object-cover h-10 w-10 rounded-full" />
+              <Image
+                width={100}
+                height={100}
+                src={image}
+                alt="avatar"
+                className="object-cover h-10 w-10 rounded-full"
+              />
               <p className="ml-2 text-base sm:text-lg font-semibold dark:text-neutral-50">{nameUser}</p>
             </div>
           </div>
@@ -142,6 +150,8 @@ export default function MessageComponent({
                           <p className="text-xs text-gray-300">{timeAgo.format(new Date(msg.created_at))}</p>
                         </div>
                         <Image
+                          width={100}
+                          height={100}
                           src={user?.vchimage}
                           alt="avatar"
                           className="object-cover h-10 w-10 rounded-full ml-2 border-2 border-white"
@@ -150,6 +160,8 @@ export default function MessageComponent({
                     ) : (
                       <div className="flex justify-start items-center mb-2">
                         <Image
+                          width={100}
+                          height={100}
                           src={image}
                           className="object-cover h-10 w-10 rounded-full mr-2 border-2 border-white"
                           alt="avatar"

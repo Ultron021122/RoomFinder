@@ -6,7 +6,7 @@ export default function Property({ params }: { params: { id: string } }) {
     return (
         <Layout>
             <div className='h-[100vh] container mx-auto'>
-                <BackButton className="mt-20" />
+                <BackButton className="pt-20" />
                 <PropertyComponent id={params.id} />
             </div>
         </Layout>
