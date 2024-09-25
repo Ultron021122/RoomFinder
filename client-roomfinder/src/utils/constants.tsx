@@ -489,8 +489,8 @@ export const properties: MapCoordenada[] = [
 export const propertiesHome = [
     {
         id: 1,
-        title: "Casa en renta",
-        description: "Hermosa casa en la playa con vista al mar.",
+        title: "Rancho El Paraíso",
+        description: "Esta es la tercera y más grande cabaña de Rancho El Paraíso, ubicada en el interior de la sierra con un camino de terracería, para ser exactos está en el kilómetro 11.5 de Atemajac de Brizuela-Divisadero.",
         value: 4.0,
         imagenesUrl: [
             { id: 1, url: "https://res.cloudinary.com/dal8aivch/image/upload/v1713591079/resources/gzd4czbpdy9ksy3tw8fv.jpg" },
