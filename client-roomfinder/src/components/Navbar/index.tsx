@@ -15,6 +15,7 @@ const excludedRoutes = [
     '/dashboard/chats',
     '/dashboard/inmuebles',
     '/dashboard/home',
+    '/dashboard/manage',
 ];
 
 function Navigate() {
