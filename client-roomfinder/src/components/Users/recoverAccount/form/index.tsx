@@ -74,7 +74,7 @@ export default function Form({ token }: { token: string }) {
                     transition: Bounce,
                 });
                 reset();
-                // router.push('/users/login');
+                router.push('/users/login');
             } else {
                 setErrorSystem(response.data.message);
             }
@@ -104,102 +104,113 @@ export default function Form({ token }: { token: string }) {
     }, [status, router]);
 
     return (
-        <section className="bg-gray-50 dark:bg-gray-900">
+        <>
             {isLoading ?
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
                     <Spinner />
                 </div>
                 :
-                <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
-                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-5 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                        <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                    <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                        <div>
                             <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                 Cambio de contraseña
                             </h2>
-                            <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit(onSubmit)}>
-                                <div>
-                                    <label htmlFor="vchpassword" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nueva Contraseña</label>
-                                    <input
-                                        {...register("vchpassword", {
-                                            required: {
-                                                value: true,
-                                                message: messages.vchpassword.required
-                                            },
-                                            minLength: {
-                                                value: 8,
-                                                message: messages.vchpassword.min
-                                            },
-                                            maxLength: {
-                                                value: 16,
-                                                message: messages.vchpassword.max
-                                            }
-                                        })}
-                                        type="password"
-                                        name="vchpassword"
-                                        id="vchpassword"
-                                        placeholder="••••••••"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        autoComplete="off"
-                                    />
-                                    {errors?.vchpassword && (
-                                        <Alert message={errors?.vchpassword.message} />
-                                    )}
-                                </div>
-                                <div>
-                                    <label htmlFor="vchconfirmPassword" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirma Contraseña</label>
-                                    <input
-                                        {...register("vchconfirmPassword", {
-                                            required: {
-                                                value: true,
-                                                message: messages.confirm_password.required
-                                            },
-                                            minLength: {
-                                                value: 8,
-                                                message: messages.confirm_password.min
-                                            },
-                                            maxLength: {
-                                                value: 16,
-                                                message: messages.confirm_password.max
-                                            },
-                                            validate: validatePasswordConfirmation // Agregar función de validation
-                                        })}
-                                        type="password"
-                                        name="vchconfirmPassword"
-                                        id="vchconfirmPassword"
-                                        placeholder="••••••••"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    />
-                                    {errors?.vchconfirmPassword && (
-                                        <Alert message={errors?.vchconfirmPassword.message} />
-                                    )}
-                                </div>
-                                <div className="flex items-start">
-                                    <div className="flex items-center h-5">
-                                        <input id="newsletter" aria-describedby="newsletter" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
-                                    </div>
-                                    <div className="ml-3 text-sm">
-                                        <label
-                                            htmlFor="newsletter"
-                                            className="font-light text-gray-500 dark:text-gray-300"
-                                        >
-                                            Acepto los 
-                                            <Link
-                                                className="ml-1 text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
-                                                href="#"
-                                            >
-                                                Terminos y Condiciones
-                                            </Link>
-                                        </label>
-                                    </div>
-                                </div>
-                                <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
-                                    Restablecer Contraseña
-                                </Button>
-                            </form>
                         </div>
+                        <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <input
+                                    {...register("vchpassword", {
+                                        required: {
+                                            value: true,
+                                            message: messages.vchpassword.required
+                                        },
+                                        minLength: {
+                                            value: 8,
+                                            message: messages.vchpassword.min
+                                        },
+                                        maxLength: {
+                                            value: 16,
+                                            message: messages.vchpassword.max
+                                        }
+                                    })}
+                                    type="password"
+                                    name="vchpassword"
+                                    id="vchpassword"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=""
+                                    autoComplete="off"
+                                />
+                                <label
+                                    htmlFor="vchpassword"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    Nueva contraseña
+                                </label>
+                                {errors?.vchpassword && (
+                                    <Alert message={errors?.vchpassword.message} />
+                                )}
+                            </div>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <input
+                                    {...register("vchconfirmPassword", {
+                                        required: {
+                                            value: true,
+                                            message: messages.confirm_password.required
+                                        },
+                                        minLength: {
+                                            value: 8,
+                                            message: messages.confirm_password.min
+                                        },
+                                        maxLength: {
+                                            value: 16,
+                                            message: messages.confirm_password.max
+                                        },
+                                        validate: validatePasswordConfirmation // Agregar función de validation
+                                    })}
+                                    type="password"
+                                    name="vchconfirmPassword"
+                                    id="vchconfirmPassword"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=""
+                                    autoComplete="off"
+                                />
+                                <label
+                                    htmlFor="vchconfirmPassword"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    Confirmar contraseña
+                                </label>
+                                {errors?.vchconfirmPassword && (
+                                    <Alert message={errors?.vchconfirmPassword.message} />
+                                )}
+                            </div>
+                            <div className="flex items-start">
+                                <div className="flex items-center h-5">
+                                    <input id="newsletter" aria-describedby="newsletter" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
+                                </div>
+                                <div className="ml-3 text-sm">
+                                    <label
+                                        htmlFor="newsletter"
+                                        className="font-light text-gray-500 dark:text-gray-300"
+                                    >
+                                        Acepto los
+                                        <Link
+                                            className="ml-1 text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                            href="#"
+                                        >
+                                            Terminos y Condiciones
+                                        </Link>
+                                    </label>
+                                </div>
+                            </div>
+                            <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
+                                Restablecer Contraseña
+                            </Button>
+                        </form>
                     </div>
                 </div>
             }
-        </section>
+        </>
     );
 }

@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
             }
         });
         return NextResponse.json(
-            { data: response.data },
+            { data: response.data, message: 'Token válido' },
             { status: 200 }
         );
     } catch (error: any) {
@@ -43,10 +43,15 @@ export async function POST(req: NextRequest) {
             }
         });
         const usuarioid = findUser.data.usuarioid;
-        console.log('Usuario:',usuarioid)
+        const recuperacionid = findUser.data.recuperacionid;
         const response = await axios.patch(`${process.env.REST_URL}/users/${usuarioid}`, {
             vchpassword 
         }, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
+        const deleteToken = await axios.delete(`${process.env.REST_URL}/recovery/${recuperacionid}`, {
             headers: {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }
@@ -58,7 +63,7 @@ export async function POST(req: NextRequest) {
 
     } catch (error: any) {
         const statusMessageMap: Record<number, { message: string }> = {
-            409: { message: 'El correo ya está registrado' },
+            409: { message: 'El token ya esta utilizado' },
             400: { message: error.message },
             0: { message: 'Connection error' },
         };
