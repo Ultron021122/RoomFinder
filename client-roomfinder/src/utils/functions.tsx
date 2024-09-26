@@ -6,6 +6,10 @@ interface fullName {
     vchmaternalsurname: string;
 }
 
+export function capitalize(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 export const getFullName = ({ vchname = '', vchpaternalsurname = '', vchmaternalsurname = '' }: fullName) => {
     // Validar que los campos no estén vacíos
     if (!vchname.trim() || !vchpaternalsurname.trim() || !vchmaternalsurname.trim()) {
