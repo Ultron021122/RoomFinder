@@ -8,8 +8,8 @@ export interface InterfaceUbicacion {
     estado:string;
     codigoPostal:number;
     ciudad_municipio:string;
-    numExt?:number;
-    numInt?:number;
+    numExt?:string;
+    numInt?:string;
     [key : string] : any
 }
 

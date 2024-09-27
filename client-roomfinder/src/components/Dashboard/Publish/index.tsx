@@ -23,8 +23,11 @@ const ImageElementStyles = {
     style:"flex gap-2 border border-gray-500 p-4 rounded-lg w-[250px] justify-center items-center hover:border-black hover:cursor-pointer"
 }
 
-function esNumero(valor : string) : boolean{
-    return /^[0-9]+$/.test(valor);;
+function esNumero(valor : string | undefined) : boolean{
+    if(valor == undefined){
+        return false
+    }
+    return /^[0-9]+$/.test(valor);
 }
 
 export default function Publish(){
@@ -39,6 +42,12 @@ export default function Publish(){
 }
 
 type funcionValidacion = (inmueble: Inmueble) => boolean | string;
+
+function inputVacio(input : string | undefined) : boolean{
+    if(input == undefined || input == '') return true;
+
+    return false;
+}
 
 // objeto de validaciones
 const validaciones : Record<number, funcionValidacion> = {
@@ -55,7 +64,7 @@ const validaciones : Record<number, funcionValidacion> = {
     },
 
     4 : ({ fotos }) : boolean | string => {
-        return fotos.length >= 5 && fotos.length <= 8 ? true : 'Sube como mínimo 5 fotos para continuar';
+        return fotos.length >= 5 && fotos.length <= 8 ? true : 'Sube como mínimo 5 fotografías para continuar, como máximo 8';
     },
 
     5 : () : boolean => {
@@ -63,7 +72,26 @@ const validaciones : Record<number, funcionValidacion> = {
     },
 
     6 : ({ubicacion}) : boolean | string => {
-        return true;
+
+        const {numExt, numInt} = ubicacion;
+        let salida : boolean | string = 'Para continuar agregue información válida';
+
+        if(inputVacio(numExt) && inputVacio(numInt)){ // ningún campo contiene información
+            salida = true;
+
+        }else if(!inputVacio(numExt) && !inputVacio(numInt)){ // ambos campos contienen información
+            if(esNumero(numExt) && esNumero(numInt)){
+                salida = true;
+            }
+
+        }else if(!inputVacio(numExt) && esNumero(numExt)){
+            salida = true;
+
+        }else if(!inputVacio(numInt) && esNumero(numInt)){
+            salida = true;
+        }
+
+        return salida;
     },
 
     7 : ({titulo}) : boolean | string => {
@@ -95,7 +123,10 @@ const validaciones : Record<number, funcionValidacion> = {
     },
 
     10 : ({costo}) : boolean | string => {
-        return esNumero(costo.toString()) ? true : 'Entrada no válida. Favor de ingresar solo números';
+        if(esNumero(costo.toString()) && costo > 0){
+            return true
+        }
+        return 'El valor ingresado no es válido';
     },
 
     11: () : boolean | string => {
@@ -353,7 +384,7 @@ const Campo = ({content, min, max} : {content:string, min:number, max:number}) =
             'Recámaras' : 'numRecamaras',
             'Camas' : 'numCamas',
             'Baños' : 'numBanos',
-            'Huéspedes' : 'numHuespedes',
+            'Huéspedes (capacidad)' : 'numHuespedes',
             'Capacidad del estacionamiento' : 'capEstacionamiento'
         }
 
@@ -430,13 +461,13 @@ const InformacionGeneral = () => {
                         <Campo content="Recámaras" min={Casa.recamaras.min} max={Casa.recamaras.max}/>
                         <Campo content="Camas" min={Casa.camas.min} max={Casa.camas.max}/>
                         <Campo content="Baños" min={Casa.banos.min} max={Casa.banos.max}/>
-                        <Campo content="Huéspedes" min={Casa.huespedes.min} max={Casa.huespedes.max}/>
+                        <Campo content="Huéspedes (capacidad)" min={Casa.huespedes.min} max={Casa.huespedes.max}/>
                     </>
                 )}
 
                 {inmueble.tipoInmueble === 'Cuarto' && (
                     <>
-                        <Campo content="Huéspedes" min={Cuarto.huespedes.min} max={Cuarto.huespedes.max}/>
+                        <Campo content="Huéspedes (capacidad)" min={Cuarto.huespedes.min} max={Cuarto.huespedes.max}/>
                         <Campo content="Camas" min={Cuarto.camas.min} max={Cuarto.camas.max}/>
                     </>
                 )}
@@ -446,7 +477,7 @@ const InformacionGeneral = () => {
                         <Campo content="Recámaras" min={Departamento.recamaras.min} max={Departamento.recamaras.max}/>
                         <Campo content="Camas" min={Departamento.camas.min} max={Departamento.camas.max}/>
                         <Campo content="Baños" min={Departamento.banos.min} max={Departamento.banos.max}/>
-                        <Campo content="Huéspedes" min={Departamento.huespedes.min} max={Departamento.huespedes.max}/>
+                        <Campo content="Huéspedes (capacidad)" min={Departamento.huespedes.min} max={Departamento.huespedes.max}/>
                     </>
                 )}
 
@@ -549,10 +580,10 @@ const Fotos = () => {
 const Mapa = () => {
     const {setInmueble} = useFormulario();
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
-    //const mapRef = useRef<Map | null>(null);
+    const mapRef = useRef<Map | null>(null);
 
     useEffect(() => {
-        /*if(!mapContainerRef.current) return;
+        if(!mapContainerRef.current) return;
 
         mapboxgl.accessToken = `${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`;
 
@@ -593,7 +624,7 @@ const Mapa = () => {
 
         mapRef.current.addControl(geocoder);
         
-        return () => mapRef.current?.remove();*/
+        return () => mapRef.current?.remove();
 
     }, []);
 
@@ -688,8 +719,8 @@ const ConfirmarUbicacion = () => {
                 <Input type="text" nombre="Estado" value={estado} placeholder="ingrese algo. . ." editable={false}/>
                 <Input type="number" nombre="Código postal" value={codigoPostal} placeholder="ingrese algo. . ." editable={false}/>
                 <Input type="text" nombre="Ciudad / municipio" value={ciudad_municipio} placeholder="ingrese algo. . ." editable={false}/>
-                <Input type="number" nombre="Número exterior" value={numExt} placeholder="Número exterior (opcional)" editable={true} handleInput={handleInput}/>
-                <Input type="number" nombre="Número interior" value={numInt} placeholder="Número interior (opcional)" editable={true} handleInput={handleInput}/>
+                <Input type="text" nombre="Número exterior" value={numExt} placeholder="Número exterior (opcional)" editable={true} handleInput={handleInput}/>
+                <Input type="text" nombre="Número interior" value={numInt} placeholder="Número interior (opcional)" editable={true} handleInput={handleInput}/>
             </div>
         </div>
     );
@@ -1075,5 +1106,3 @@ const Boton = ({contenido, onClick, className}:{contenido:string, onClick:any, c
         </button>
     );
 }
-
-// falta agregar el costo por mes del inmueble
