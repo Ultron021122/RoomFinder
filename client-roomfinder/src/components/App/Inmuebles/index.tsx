@@ -1,6 +1,6 @@
 import Image from "next/image";
 import CardElement from "@/components/GeneralComponents/CardElement";
-import Header from "@/components/Dashboard/Home/Header";
+import Header from "@/components/Dashboard/Inmuebles/Header";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
 export default function AppInmuebles (){

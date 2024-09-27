@@ -73,6 +73,7 @@ function Recover() {
                     transition: Slide,
                 });
                 reset();
+                router.push('/users/recoverAccount');
             } else if (response.status === 404) {
                 //console.log(response);
                 setErrorSystem(response.data.message);

@@ -64,7 +64,7 @@ const Profile = () => {
                         <Image
                             width={1920}
                             height={1080}
-                            src={coverImage ? `${coverImage}?t=${new Date().getTime()}` : "https://res.cloudinary.com/dal8aivch/image/upload/v1726535626/users/uxnhlufka723qhshytie.jpg"}
+                            src={coverImage}
                             alt="profile cover"
                             className="absolute inset-0 h-full w-full max-h-64 rounded-tl-xsm rounded-tr-xsm object-cover object-center"
                             priority
@@ -85,7 +85,7 @@ const Profile = () => {
                         <div className="relative z-30 mx-auto -mt-24 w-full h-full max-h-32 max-w-32 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-h-44 sm:max-w-44 sm:p-3">
                             <div className="relative drop-shadow">
                                 <Image
-                                    src={profileImage ? `${profileImage}?t=${new Date().getTime()}` : "https://res.cloudinary.com/dal8aivch/image/upload/v1726537529/users/ixjpqfc2vfn5ziahwwgw.jpg"}
+                                    src={profileImage}
                                     width={160}
                                     height={160}
                                     style={{

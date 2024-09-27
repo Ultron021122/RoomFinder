@@ -23,6 +23,7 @@ import { StudentsModel } from './model/postgresql/student.js'
 import { MessagesModel } from './model/postgresql/messages.js'
 import { ChatsModel } from './model/postgresql/chats.js'
 import { RecoveryPassModel } from './model/postgresql/recoverypass.js'
+import { verificarJWT } from './auth.js'
 //MySQL 
 // import { UsersModel } from './model/mysql/user.js'
 // import { PropertiesModel } from './model/mysql/propertie.js'
@@ -48,15 +49,15 @@ const apiLimiter = rateLimit({
 // apply to all requests
 app.use('/api/', apiLimiter);
 
-app.use('/api/users', createUsersRouter({ userModel: UsersModel }))
-app.use('/api/properties', createPropertiesRouter({ propertieModel: PropertiesModel }))
-app.use('/api/lessors', createLessorsRouter({ lessorModel: LessorsModel }))
-app.use('/api/students', createStudentsRouter({ studentModel: StudentsModel }))
-app.use('/api/messages', createMessagesRouter({ messageModel: MessagesModel }))
-app.use('/api/chats', createChatsRouter({ chatsModel: ChatsModel }))
-app.use('/api/recovery', createRecoveryPassRouter({ recoveryPassModel: RecoveryPassModel }))
+app.use('/api/users', verificarJWT, createUsersRouter({ userModel: UsersModel }))
+app.use('/api/properties', verificarJWT, createPropertiesRouter({ propertieModel: PropertiesModel }))
+app.use('/api/lessors', verificarJWT, createLessorsRouter({ lessorModel: LessorsModel }))
+app.use('/api/students', verificarJWT, createStudentsRouter({ studentModel: StudentsModel }))
+app.use('/api/messages', verificarJWT, createMessagesRouter({ messageModel: MessagesModel }))
+app.use('/api/chats', verificarJWT, createChatsRouter({ chatsModel: ChatsModel }))
+app.use('/api/recovery', verificarJWT, createRecoveryPassRouter({ recoveryPassModel: RecoveryPassModel }))
 
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(swagger)) // Documentation of the API
+app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swagger)) // Documentation of the API
 app.use(errorHandler) // Middleware for error handling
 app.use((req, res) => {
     res.status(404).json({ message: 'Not found' });

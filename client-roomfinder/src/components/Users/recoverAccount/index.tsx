@@ -1,61 +1,38 @@
 'use client';
 
 import axios from "axios";
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { patterns } from '@/utils/constants';
+import Link from "next/link";
+import { useRouter } from "next/navigation"; // importante aqui!
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
+// Componentes
+import { Button, Spinner } from "@nextui-org/react";
+// Utilidades
+import { messages, patterns } from "@/utils/constants";
+import Footer from "@/components/Footer";
+import { Alert } from "@/utils/alert";
+// Estilos de algunos componentes
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import Form from '@/components/Users/recoverAccount/form';
-import { Spinner } from "@nextui-org/react";
+import Form from "./form";
 
-export const RecoverComponent = ({ token }: { token: string }) => {
-    const router = useRouter();
 
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+interface RecoverUser {
+    vchtoken: string;
+}
+
+function RecoverComponent() {
+    const { status } = useSession(); // determinar si el usuario tiene una sesión iniciada { cargando, autenticado y no autenticado}
+    const router = useRouter(); // redirecciona las pantallas
+
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<RecoverUser>({ mode: "onChange" }); // control sobre el formulario
+    const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-
-            try {
-                const response = await axios.get(`/api/users/recover/${token}`);
-                setIsLoading(false);
-                console.log('Response:', response.status);
-                if (response.status === 200) {
-                    toast.success(response.data.message.message, {
-                        position: "bottom-center",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Slide,
-                    });
-                    //router.push('/users/login');
-                } else {
-                    setErrorSystem(response.data.message.message);
-                }
-            } catch (Error: string | any) {
-                setErrorSystem(Error.response?.data?.message.message);
-                //router.push('/users/login')
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        if (patterns.uuidv4.test(token)) {
-            fetchData();
-        }
-        else {
-            setIsLoading(false);
-            setErrorSystem('Token inválido');
-            router.push('/not-found');
-        }
-    }, [token, router]);
+    const [isTokenValid, setIsTokenValid] = useState<boolean>(false);
+    const [token, setToken] = useState<string>("");
 
     // Errores
     useEffect(() => {
@@ -74,19 +51,138 @@ export const RecoverComponent = ({ token }: { token: string }) => {
         }
     }, [errorSystem]);
 
-    if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
-                <Spinner />
-            </div>
-        );
-    }
+    // Función para enviar los datos del formulario
+    const onSubmit = async (recoverUser: RecoverUser) => {
+        setIsLoading(true);
+        setErrorSystem(null);
+
+        const dataToken: RecoverUser = {
+            vchtoken: recoverUser.vchtoken
+        };
+
+        try {
+            const response = await axios.get(`/api/users/recover/${dataToken.vchtoken}`);
+            console.log(response)
+            setIsLoading(false);
+            if (response.status === 200) {
+                toast.success(response.data.message, {
+                    position: "bottom-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Slide,
+                });
+                setIsTokenValid(true);
+                setToken(dataToken.vchtoken);
+            }
+        } catch (Error: any) {
+            if (Error.response?.status == 404) {
+                setErrorSystem('Token no válido');
+            } else {
+                setErrorSystem(Error.response?.data.message);
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Efectos
+    useEffect(() => {
+        const input = document.getElementById('vchtoken') as HTMLInputElement;
+        if (input) {
+            input.focus();
+        }
+
+        if (status === "authenticated") {
+            router.push('/dashboard');
+        }
+    }, [status, router]);
 
     return (
         <>
-            <div className="flex flex-col min-h-[100vh] justify-center items-center mx-auto">
-                <Form token={token} />
-            </div>
+            <section className="bg-gray-50 dark:bg-gray-900">
+                <PerfectScrollbar>
+                    <div className="h-[100vh]">
+                        {isLoading ? (
+                            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                                <Spinner />
+                            </div>
+                        )
+                            : (
+                                <>
+                                    {
+                                        !isTokenValid ? (
+                                            <>
+                                                <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                                                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                                                        <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                                                            <div>
+                                                                <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                                                                    Validar token
+                                                                </h2>
+                                                                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                                    Recibiste un correo electrónico con un token, ingrésalo a continuación.
+                                                                </p>
+                                                            </div>
+                                                            <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
+                                                                <div className="relative z-0 w-full mb-5 group">
+                                                                    <input
+                                                                        {...register("vchtoken", {
+                                                                            required: {
+                                                                                value: true,
+                                                                                message: messages.vchtoken.required
+                                                                            },
+                                                                            pattern: {
+                                                                                value: patterns.vchtoken,
+                                                                                message: messages.vchtoken.pattern
+                                                                            }
+                                                                        })}
+                                                                        type="text"
+                                                                        name="vchtoken"
+                                                                        id="vchtoken"
+                                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                                        placeholder=""
+                                                                        autoComplete="off"
+                                                                    />
+                                                                    <label
+                                                                        htmlFor="vchtoken"
+                                                                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                                    >
+                                                                        Token de recuperación
+                                                                    </label>
+                                                                    {errors?.vchtoken && (
+                                                                        <Alert message={errors?.vchtoken.message} />
+                                                                    )}
+                                                                </div>
+                                                                <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
+                                                                    Validar token
+                                                                </Button>
+                                                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                                    ¿No tienes una cuenta? <Link href='/users/signup' className="text-sky-600 hover:underline dark:text-sky-500">Crear una cuenta</Link>
+                                                                </p>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                                                    <Form token={token} />
+                                                </div>
+                                            </>)
+                                    }
+                                </>
+                            )
+                        }
+                        <Footer />
+                    </div>
+                </PerfectScrollbar>
+            </section >
         </>
     );
 };

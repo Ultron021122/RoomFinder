@@ -33,6 +33,7 @@ const handler = NextAuth({
                     const login = await fetch(`${process.env.REST_URL}/users/login`, {
                         method: "POST",
                         headers: {
+                            "Authorization": `Bearer ${process.env.REST_SECRET}`,
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify(credentials),
@@ -82,6 +83,7 @@ const handler = NextAuth({
                 await fetch(`${process.env.REST_URL}/users/logout/`, {
                     method: "POST",
                     headers: {
+                        "Authorization": `Bearer ${process.env.REST_SECRET}`,
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({ sessionid: sessionid.sessionid }),

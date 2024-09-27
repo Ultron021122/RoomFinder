@@ -8,7 +8,11 @@ export async function GET(req: NextRequest) {
     const token = getValues.pop();
     const usuarioid = getValues[getValues.length - 1];
     try {
-        const response = await axios.get(`${process.env.REST_URL}/users/verify/${usuarioid}/${token}`);
+        const response = await axios.get(`${process.env.REST_URL}/users/verify/${usuarioid}/${token}`, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
         console.log(response.data.message);
         const statusMessageMap: Record<number, { message: string }> = {
             503: { message: 'Service unavailable' },

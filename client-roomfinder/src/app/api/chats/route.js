@@ -8,6 +8,10 @@ export async function POST(req, res) {
         const response = await axios.post(`${process.env.REST_URL}/chats/`, {
             usuario1id,
             usuario2id,
+        }, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
         });
         console.log('chats:', response.data);
         return NextResponse.json(

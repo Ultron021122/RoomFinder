@@ -17,6 +17,7 @@
     z-index: -20;
     float: left;
 }
+
 /* @media (min-width: 640px) {
     .map-width {
         min-width: calc(100vw - 14rem);
@@ -68,15 +69,18 @@ input[type="number"] {
     appearance: textfield;
 }
 
-.custom-scrollbar .ps__rail-x > .ps__thumb-x,
-.custom-scrollbar .ps__rail-y > .ps__thumb-y {
-    background-color: #4299e1; /* Este es el color 'blue-500' de Tailwind */
-    border-radius: 0.375rem; /* Este es 'rounded-md' en Tailwind */
+.custom-scrollbar .ps__rail-x>.ps__thumb-x,
+.custom-scrollbar .ps__rail-y>.ps__thumb-y {
+    background-color: #4299e1;
+    /* Este es el color 'blue-500' de Tailwind */
+    border-radius: 0.375rem;
+    /* Este es 'rounded-md' en Tailwind */
 }
 
-.custom-scrollbar .ps__rail-x:hover > .ps__thumb-x,
-.custom-scrollbar .ps__rail-y:hover > .ps__thumb-y {
-    background-color: #2b6cb0; /* Este es el color 'blue-700' de Tailwind */
+.custom-scrollbar .ps__rail-x:hover>.ps__thumb-x,
+.custom-scrollbar .ps__rail-y:hover>.ps__thumb-y {
+    background-color: #2b6cb0;
+    /* Este es el color 'blue-700' de Tailwind */
 }
 
 /**
@@ -88,40 +92,79 @@ input[type="number"] {
     display: flex;
     flex-direction: column;
     margin-top: 20px;
-  }
-  
-  .messageTop{
-      display: flex;
-  }
-  
-  .messageImg {
+}
+
+.messageTop {
+    display: flex;
+}
+
+.messageImg {
     width: 32px;
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
-  }
-  
-  .messageText{
-      padding: 10px;
-      border-radius: 20px;
-      background-color: #1877f2;
-      color: white;
-      max-width: 300px;
-  }
-  
-  .messageBottom{
-      font-size: 12px;
-      margin-top: 10px;
-  }
-  
-  .message.own{
-      align-items: flex-end;
-  }
-  
-  .message.own .messageText{
-      background-color: rgb(245, 241, 241);
-      color: black;
-  }
+}
+
+.messageText {
+    padding: 10px;
+    border-radius: 20px;
+    background-color: #1877f2;
+    color: white;
+    max-width: 300px;
+}
+
+.messageBottom {
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+.message.own {
+    align-items: flex-end;
+}
+
+.message.own .messageText {
+    background-color: rgb(245, 241, 241);
+    color: black;
+}
 
 /* Globales */
+.image-gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Dos columnas */
+    grid-template-columns: auto auto;
+    gap: 10px;
+    /* Espacio entre las imágenes */
+}
+
+.popup-image {
+    width: 100%;
+    /* Ancho completo */
+    height: auto;
+    /* Altura automática para mantener la proporción */
+}
+
+.popup-image.large {
+    grid-column: span 2;
+    /* La primera imagen ocupa dos columnas */
+    grid-row: span 1;
+    /* Ocupa una fila */
+}
+
+.popup-image.small {
+    grid-column: span 1;
+    /* Las otras imágenes ocupan una columna */
+    grid-row: span 1;
+    /* Ocupa una fila */
+}
+
+/* components/TextFader.module.css */
+.normal {
+    transition: opacity 0.5s ease;
+}
+
+.faded {
+    opacity: 0.5;
+    /* Sombra más tenue */
+}
