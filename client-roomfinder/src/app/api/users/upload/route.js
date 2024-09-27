@@ -33,6 +33,10 @@ export async function PATCH(req, res) {
     try {
         const response = await axios.patch(`${process.env.REST_URL}/users/${usuarioid}`, {
             vchcoverimage: imageUrl.secure_url,
+        }, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
         });
 
         const statusMessageMap = {

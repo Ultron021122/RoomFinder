@@ -6,6 +6,10 @@ export async function POST(req, res) {
     try {
         const response = await axios.post(`${process.env.REST_URL}/users/forgot`, {
             vchemail,
+        }, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
         });
         return NextResponse.json(
             { message: "Correo enviado correctamente" },

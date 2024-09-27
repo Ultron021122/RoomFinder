@@ -7,9 +7,13 @@ export async function GET(req: NextRequest) {
     const getValues = pathname.split('/');
     const token = getValues.pop();
     try {
-        const response = await axios.get(`${process.env.REST_URL}/recovery/token/${token}`);
+        const response = await axios.get(`${process.env.REST_URL}/recovery/token/${token}`, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
         return NextResponse.json(
-            { data: response.data },
+            { data: response.data, message: 'Token válido' },
             { status: 200 }
         );
     } catch (error: any) {
@@ -33,11 +37,24 @@ export async function POST(req: NextRequest) {
     const { vchpassword, vchconfirm_password } = await req.json();
 
     try {
-        const findUser = await axios.get(`${process.env.REST_URL}/recovery/token/${token}`);
+        const findUser = await axios.get(`${process.env.REST_URL}/recovery/token/${token}`, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
         const usuarioid = findUser.data.usuarioid;
-        console.log('Usuario:',usuarioid)
+        const recuperacionid = findUser.data.recuperacionid;
         const response = await axios.patch(`${process.env.REST_URL}/users/${usuarioid}`, {
             vchpassword 
+        }, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
+        const deleteToken = await axios.delete(`${process.env.REST_URL}/recovery/${recuperacionid}`, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
         });
         return NextResponse.json(
             { data: response.data, message: 'Contraseña actualizada'},
@@ -46,7 +63,7 @@ export async function POST(req: NextRequest) {
 
     } catch (error: any) {
         const statusMessageMap: Record<number, { message: string }> = {
-            409: { message: 'El correo ya está registrado' },
+            409: { message: 'El token ya esta utilizado' },
             400: { message: error.message },
             0: { message: 'Connection error' },
         };

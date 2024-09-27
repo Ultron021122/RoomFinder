@@ -11,7 +11,7 @@ import { rolesMapping } from "@/utils/constants";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 /* Iconos */
-import { GraduationCapIcon, Home, LayoutDashboard, LifeBuoy, Mail, MenuIcon, Settings, UserCircle, LogOut } from "lucide-react";
+import { GraduationCapIcon, Home, LayoutDashboard, LifeBuoy, Mail, MenuIcon, Settings, UserCircle, LogOut, Folder } from "lucide-react";
 import { UserProfile } from "@/utils/interfaces";
 import Link from "next/link";
 
@@ -47,7 +47,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
         <PerfectScrollbar>
             <div className="flex flex-col h-[100vh]">
-                <AppBar component="nav" position="static" className="bg-white text-neutral-950 dark:bg-primary dark:text-gray-100">
+                <AppBar 
+                    component="nav" 
+                    position="static" 
+                    className="bg-white text-neutral-950 dark:bg-primary dark:text-gray-100"
+                    sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                >
                     <Toolbar variant="dense">
                         <IconButton
                             edge="start"
@@ -75,18 +80,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <Sidebar expanded={expanded} onResize={toggleSidebar}>
                         <SidebarItem icon={<LayoutDashboard size={20} />} text="Inicio" url="/dashboard/home" />
                         <SidebarItem icon={<Home size={20} />} text="Inmuebles" url="/dashboard/inmuebles" />
-                        <SidebarItem icon={<Mail size={20} />} text="Mensajes" url="/dashboard/messages" />
-                        <SidebarItem icon={<UserCircle size={20} />} text="Perfil" url="/dashboard/profile" />
+                        <SidebarItem icon={<Mail size={20} />} text="Mensajes" url="/dashboard/messages" alert />
                         {// optiones para arrendadores
                             roleName === 'Arrendador' && (
                                 <>
+                                    <SidebarItem icon={<Folder size={20} />} text="Administrar" url="/dashboard/manage" alert />
                                     <SidebarItem icon={<AddHomeOutlinedIcon style={{ fontSize: 20 }} />} text="Publicar" url="/dashboard/publish" />
                                 </>
                             )
                         }
-                        <hr className="my-3 border-gray-300 dark:border-gray-800" /> {/* se  pueden eliminar estas opciones del sideBar */}
+                        <hr className="my-2 border-gray-300 dark:border-gray-800" /> {/* se  pueden eliminar estas opciones del sideBar */}
+                        <SidebarItem icon={<UserCircle size={20} />} text="Perfil" url="/dashboard/profile" />
                         <SidebarItem icon={<Settings size={20} />} text="Ajustes" url="/dashboard/settings" />
-                        <SidebarItem icon={<LifeBuoy size={20} />} text="Ayuda" url="/dashboard/help" alert />
                     </Sidebar>
                     <main className={`flex-1 p-4 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
                         <section className={`${windowWidth <= 640 && expanded && 'hidden'}`}>

@@ -3,7 +3,11 @@ import axios from 'axios';
 
 export async function GET() {
     try {
-        const response = await axios.get(`${process.env.REST_URL}/users/`);
+        const response = await axios.get(`${process.env.REST_URL}/users/`, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
         console.log(response.data)
         return NextResponse.json(
             { data: response.data },

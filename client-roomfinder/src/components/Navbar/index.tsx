@@ -6,7 +6,6 @@ import Navbar from "./navbar";
 const excludedRoutes = [
     '/user/messages',
     '/signup',
-    '/propiedades',
     '/dashboard',
     '/dashboard/profile',
     '/dashboard/help',
@@ -15,7 +14,8 @@ const excludedRoutes = [
     '/dashboard/properties',
     '/dashboard/chats',
     '/dashboard/inmuebles',
-    '/dashboard/home'
+    '/dashboard/home',
+    '/dashboard/manage',
 ];
 
 function Navigate() {
