@@ -10,6 +10,7 @@ export interface InterfaceUbicacion {
     ciudad_municipio:string;
     numExt?:number;
     numInt?:number;
+    [key : string] : any
 }
 
 export interface Inmueble {
@@ -23,8 +24,9 @@ export interface Inmueble {
     capEstacionamiento: number,
     fotos: File[];
     ubicacion: InterfaceUbicacion;
+    titulo:string;
     descripcion: string;
-    reglas: string;
+    reglas: string[];
     costo: number;
     [key : string]: any
 }
@@ -35,9 +37,7 @@ const valoresDefectoUbicacion : InterfaceUbicacion = {
     direccion: '',
     estado: '',
     codigoPostal: -1,
-    ciudad_municipio: '',
-    numExt: -1,
-    numInt: -1
+    ciudad_municipio: ''
 }
 
 const valoresDefectoInmueble : Inmueble = {
@@ -51,8 +51,9 @@ const valoresDefectoInmueble : Inmueble = {
     capEstacionamiento: 1,
     fotos: [],
     ubicacion: valoresDefectoUbicacion,
+    titulo:'',
     descripcion: '',
-    reglas: '',
+    reglas: [],
     costo: 0,
 }
 

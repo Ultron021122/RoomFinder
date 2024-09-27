@@ -2,7 +2,7 @@
 
 import ImageElement from "@/components/GeneralComponents/ImageElement";
 import Image from "next/image";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Progress } from "@nextui-org/react";
 import clsx from 'clsx';
 import { FormularioProvider, InterfaceUbicacion, useFormulario } from "./FormularioContext";
@@ -21,6 +21,10 @@ const ImageElementStyles = {
     width: 40,
     height: 40,
     style:"flex gap-2 border border-gray-500 p-4 rounded-lg w-[250px] justify-center items-center hover:border-black hover:cursor-pointer"
+}
+
+function esNumero(valor : string) : boolean{
+    return /^[0-9]+$/.test(valor);;
 }
 
 export default function Publish(){
@@ -58,21 +62,49 @@ const validaciones : Record<number, funcionValidacion> = {
         return true;
     },
 
-    6 : () : boolean => {
+    6 : ({ubicacion}) : boolean | string => {
         return true;
     },
 
-    7 : () : boolean => {
-        return true;
+    7 : ({titulo}) : boolean | string => {
+        return titulo.length >= 10 ? true : 'Ingrese un título de propiedad válido';
     },
 
-    8 : () : boolean => {
+    8 : ({descripcion}) : boolean | string => {
+        return descripcion.length >= 20 ? true : 'La descripción debe contener como mínimo 20 caracteres';
+    },
+
+    9 : ({reglas}) : boolean | string => {
+        
+        if(reglas.length >= NUM_MIN_RESTRICCIONES){
+            
+            let salida : boolean | string = true;
+
+            reglas.forEach((regla) => {
+                if(regla.length < 8){
+                    salida = 'Las reglas deben contener información válida';
+                    return;
+                }
+            });
+
+            return salida;
+
+        }else{
+            return `Es indispensable que agregues como mínimo ${NUM_MIN_RESTRICCIONES} restricciones`;
+        }
+    },
+
+    10 : ({costo}) : boolean | string => {
+        return esNumero(costo.toString()) ? true : 'Entrada no válida. Favor de ingresar solo números';
+    },
+
+    11: () : boolean | string => {
         return true;
     }
 }
 
 const Wizar = () => {
-    const [actual, setActual] = useState(4);
+    const [actual, setActual] = useState(1);
     const { inmueble } = useFormulario();
 
     const siguiente = () => {
@@ -106,17 +138,19 @@ const Wizar = () => {
                 {actual === 6 && <ConfirmarUbicacion/>}
                 {actual === 7 && <Titulo/>}
                 {actual === 8 && <Descripcion/>}
-                {actual === 9 && <Confirmar/>}
+                {actual === 9 && <Restricciones/>}
+                {actual === 10 && <CostoMes/>}
+                {actual === 11 && <Confirmar/>}
             </div>
             <div className="w-[95%] mx-auto">
-                <Progress size="sm" aria-label="Loading..." value={(actual / 9) * 100}/>
+                <Progress size="sm" aria-label="Loading..." value={(actual / 11) * 100}/>
                 <div className="flex justify-between my-10">
                     {
                         actual > 1 && <Boton contenido="Anterior" onClick={anterior} className={estiloBoton.style} />
                     }
                     
                     {
-                        actual < 9 ? <Boton contenido="Siguiente" onClick={siguiente} className={estiloBoton.style}/> : (
+                        actual < 11 ? <Boton contenido="Siguiente" onClick={siguiente} className={estiloBoton.style}/> : (
                             <Boton contenido="Enviar" onClick={null} className={estiloBoton.style}/>
                         )
                     }
@@ -515,10 +549,10 @@ const Fotos = () => {
 const Mapa = () => {
     const {setInmueble} = useFormulario();
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
-    const mapRef = useRef<Map | null>(null);
+    //const mapRef = useRef<Map | null>(null);
 
     useEffect(() => {
-        if(!mapContainerRef.current) return;
+        /*if(!mapContainerRef.current) return;
 
         mapboxgl.accessToken = `${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`;
 
@@ -559,7 +593,7 @@ const Mapa = () => {
 
         mapRef.current.addControl(geocoder);
         
-        return () => mapRef.current?.remove();
+        return () => mapRef.current?.remove();*/
 
     }, []);
 
@@ -578,14 +612,21 @@ const Ubicacion = () => {
     );
 }
 
-const Input = ({type, nombre, value, placeholder, editable} : 
+const Input = ({type, nombre, value, placeholder, editable, handleInput} : 
     {
         type:string,
         nombre:string,
         value?:string | number,
         placeholder:string,
-        editable:boolean
+        editable:boolean,
+        handleInput?: (name:string, value: number | string) => void
     }) => {
+
+    function handleChange(e : React.ChangeEvent<HTMLInputElement>){
+        if(handleInput){ // comprobar si la función está definida
+            handleInput(nombre, e.target.value)
+        }
+    }
 
     return(
         <div>
@@ -596,48 +637,86 @@ const Input = ({type, nombre, value, placeholder, editable} :
                 value={value}
                 placeholder={placeholder}
                 contentEditable={editable}
+                onChange={handleChange}
             />
         </div>
     );
 }
 
-const ConfirmarUbicacion = () => {
+function getInput(tipoInput : string) : string{
 
-    const {inmueble} = useFormulario();
+    const inputs : Record<string, string> = {
+        'Número exterior' : 'numExt',
+        'Número interior' : 'numInt',
+        'Costo' : 'costo'
+    };
+
+    return inputs[tipoInput];
+}
+
+const ConfirmarUbicacion = () => {
+    const {inmueble, setInmueble} = useFormulario();
     let {
         pais,
         direccion,
         estado,
         codigoPostal,
-        ciudad_municipio
+        ciudad_municipio,
+        numExt,
+        numInt
     } = inmueble.ubicacion;
+
+    // fijar los datos directamente en el contexto
+    function handleInput(name: string, value : number | string){ 
+
+        const prop = getInput(name);
+
+        setInmueble({
+            ubicacion: {
+                ...inmueble.ubicacion,
+                [prop]: value
+            }
+        });
+    }
 
     return(
         <div>
             <h2 className="text-center font-semibold text-3xl mb-10">Confirma la ubicación de tu inmueble</h2>
             <div className="grid grid-cols-2 gap-4 w-[85%] mx-auto px-8 py-4">
                 <Input type="text" nombre="País" value={pais} placeholder="ingrese algo. . ." editable={false}/>
-                <Input type="text" nombre="Dirección" value={direccion} placeholder="ingrese algo. . ." editable={true}/>
+                <Input type="text" nombre="Dirección" value={direccion} placeholder="ingrese algo. . ." editable={false}/>
                 <Input type="text" nombre="Estado" value={estado} placeholder="ingrese algo. . ." editable={false}/>
                 <Input type="number" nombre="Código postal" value={codigoPostal} placeholder="ingrese algo. . ." editable={false}/>
                 <Input type="text" nombre="Ciudad / municipio" value={ciudad_municipio} placeholder="ingrese algo. . ." editable={false}/>
-                <Input type="number" nombre="Número exterior (opcional)" placeholder="ingrese algo. . ." editable={true}/>
-                <Input type="number" nombre="Número interior (opcional)" placeholder="ingrese algo. . ." editable={true}/>
+                <Input type="number" nombre="Número exterior" value={numExt} placeholder="Número exterior (opcional)" editable={true} handleInput={handleInput}/>
+                <Input type="number" nombre="Número interior" value={numInt} placeholder="Número interior (opcional)" editable={true} handleInput={handleInput}/>
             </div>
         </div>
     );
 }
 
-const Entrada = ({ nombre, tipo, descripcion, placeholder}
-    : {nombre : string, tipo : string, descripcion : string, placeholder:string}) => {
+const Entrada = React.memo(({ nombre, tipo, descripcion, placeholder, value, src, handleInput} : 
+    {
+        nombre : string,
+        tipo : string,
+        descripcion : string,
+        placeholder:string,
+        value:string,
+        src: string,
+        handleInput: (value : string) => void
+    }) => {
 
     const { inmueble } = useFormulario();
+
+    function handleChange(e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
+        handleInput(e.target.value);
+    }
 
     return(
         <div className="grid grid-cols-2 items-center">
             <div className="relative w-[90%] h-[300px] mx-auto">
                 <Image
-                    src={URL.createObjectURL(inmueble.fotos[0])}
+                    src={src}
                     alt="Imagen de casa en renta"
                     layout="fill"
                     objectFit="cover"
@@ -651,31 +730,70 @@ const Entrada = ({ nombre, tipo, descripcion, placeholder}
                     <input
                         className='p-1 rounded-md w-[500px] h-[250px] bg-gray-100 text-center text-lg'
                         type="text"
-                        placeholder={placeholder}/> :
+                        placeholder={placeholder}
+                        onChange={handleChange}
+                        value={value}
+                    /> :
                     <textarea
                         className='p-1 rounded-md w-[500px] h-[250px] bg-gray-100 text-lg'
-                        placeholder={placeholder}>
+                        placeholder={placeholder}
+                        onChange={handleChange}
+                        value={value}
+                    >
                     </textarea>
                 }
             </div>
         </div>
     );
-}
+})
 
 const Titulo = () => {
+
+    const {inmueble, setInmueble} = useFormulario();
+
+    const imagen = useMemo(() => URL.createObjectURL(inmueble.fotos[0]), []);
+
+    const handlOnChange = useCallback((value : string) => {
+        setInmueble({titulo : value});
+    }, []);
+
     return(
         <div>
             <h2 className="text-center font-semibold text-3xl mb-10">Establece un título a tu inmueble</h2>
-            <Entrada nombre="Título" tipo="text" descripcion="Los títulos cortos funcionan mejor. No te preocupes, posteriormente podrás modificarlo." placeholder="Departamentos el foráneo"/>
+            <Entrada
+                src={imagen}
+                nombre="Título"
+                tipo="text"
+                descripcion="Los títulos cortos funcionan mejor. No te preocupes, posteriormente podrás modificarlo."
+                placeholder="Departamentos el foráneo"
+                handleInput={handlOnChange}
+                value={inmueble.titulo}
+            />
         </div>
     );
 }
 
 const Descripcion = () => {
+    const {inmueble, setInmueble} = useFormulario();
+
+    const imagen = useMemo(() => URL.createObjectURL(inmueble.fotos[1]), []);
+
+    const handleOnChange = useCallback((value : string) => {
+        setInmueble({descripcion : value});
+    }, []);
+
     return(
         <div>
             <h2 className="text-center font-semibold text-3xl mb-10">Agrega una descripción del inmueble</h2>
-            <Entrada nombre="Descripción" tipo="textarea" descripcion="Una buena descripción permite que los alumnos conozcan brevemente tu inmueble" placeholder="Casa acogedora cerca de la universidad ubicada en un coto privado. Está cerca de la estación del metro, FORUM y Tlaquepaque."/>
+            <Entrada
+                src={imagen}
+                nombre="Descripción"
+                tipo="textarea"
+                descripcion="Una buena descripción permite que los alumnos conozcan brevemente tu inmueble"
+                placeholder="Casa acogedora cerca de la universidad ubicada en un coto privado. Está cerca de la estación del metro, FORUM y Tlaquepaque."
+                handleInput={handleOnChange}
+                value={inmueble.descripcion}
+            />
         </div>
     );
 }
@@ -704,6 +822,160 @@ function getIcon(inmueble:string){
     }
 
     return iconos[inmueble];
+}
+
+const Restriccion = ({placeholder, value, index, handleDelete, handleInput} : 
+    {
+        placeholder:string,
+        value:string,
+        index:number,
+        handleDelete:(index : number) => void,
+        handleInput:(index : number, value : string) => void
+    }) => {
+
+        function handleClick(){
+            handleDelete(index);
+        }
+
+        function handleChange(e : React.ChangeEvent<HTMLInputElement>){
+            handleInput(index, e.target.value);
+        }
+
+    return(
+        <div className="flex gap-4 mb-8">
+            <input
+                className="block w-full p-2 rounded-md border border-gray-300"
+                type="text"
+                placeholder={placeholder}
+                value={value}
+                onChange={handleChange}
+            />
+            <Boton
+                contenido="Eliminar"
+                onClick={handleClick}
+                className="bg-[#007aff] p-2 rounded-md text-white font-semibold hover:bg-opacity-90"
+            />
+        </div>
+    );
+}
+
+const NUM_MIN_RESTRICCIONES = 4;
+
+const Restricciones = () => {
+    const {inmueble, setInmueble} = useFormulario();
+
+    function handleAdd(){
+        const arregloActual = inmueble.reglas;
+        const nvoArreglo = [...arregloActual, ''];
+        setInmueble({reglas : nvoArreglo})
+    }
+
+    function handleDelete(index : number){
+        const arregloActual = inmueble.reglas;
+        const nvoArreglo = arregloActual.filter((element, i) => {
+            return i !== index;
+        });
+
+        setInmueble({reglas : nvoArreglo})
+    }
+
+    function handleInput(index:number, value : string){
+        const nvasReglas = [...inmueble.reglas];
+        nvasReglas[index] = value;
+        setInmueble({reglas : nvasReglas});
+    }
+
+    return(
+        <div>
+            <h2 className="text-center font-semibold text-3xl mb-10">Restricciones del inmueble</h2>
+            <p className="text-gray-600 mb-4 text-center text-xl">Establecer restricciones permite que los alumnos conozcan qué es lo que no está permitido hacer en el inmueble</p>
+            <div className="w-[85%] mx-auto"> { /* contenedor de restricciones */ }
+                {
+                    inmueble.reglas.map((regla, index) => {
+                        return (
+                            <Restriccion
+                                key={index}
+                                placeholder="Ingrese descripción de la restricción"
+                                value={regla}
+                                handleDelete={handleDelete}
+                                handleInput={handleInput}
+                                index={index}
+                            />
+                        )
+                    }
+                    )
+                }
+                {
+                    // mostrar mensaje en caso de que no haya reglas registradas
+                    inmueble.reglas.length < NUM_MIN_RESTRICCIONES && (
+                        <p className="text-lg text-center mb-4">Es indispensable que agregues como mínimo {NUM_MIN_RESTRICCIONES} restricciones</p>
+                    )
+                }
+                
+            </div>
+            <div className="w-[85%] mx-auto grid place-items-center mb-4">
+                <Boton
+                    contenido="+"
+                    onClick={handleAdd}
+                    className="w-11 h-11 rounded-full bg-[#007aff] text-white font-bold"
+                />
+            </div>
+        </div>
+    );
+}
+
+const CostoMes = () => {
+
+    const {inmueble, setInmueble} = useFormulario();
+
+    const imagenes = useMemo(() => {
+        return inmueble.fotos.map((foto, index) => {
+            const url = URL.createObjectURL(foto);
+
+            /* posicionamiento de la imágen principal */
+            let colSpan = index === 0 ? 'col-span-2' : null;
+            let rowSpan = index === 0 ? 'row-span-2' : null;
+            let height = index === 0 ? 'h-[100%]' : 'h-[180px]';
+
+            return index < 5 &&(
+                <div key={index} className={`relative w-[100%] ${height}  ${colSpan} ${rowSpan}`}>
+                    <Image
+                        src={url}
+                        alt="Imagen del inmueble"
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-md"
+                    />
+                </div>
+            );
+        });
+    },[]);
+
+    function handleInput(nombre: string, value : string | number){
+        const prop = getInput(nombre);
+        setInmueble({[prop] : value})
+    }
+
+    return(
+        <div>
+            <h2 className="text-center font-semibold text-3xl mb-10">Para finalizar, establece el costo del inmueble por mes</h2>
+            <h3 className="text-xl mb-4">{inmueble.titulo}</h3>
+            <div className="grid grid-cols-4 grid-rows-2 gap-2"> {/* contenedor de imagenes */}
+                {imagenes}
+            </div>
+            <p className="text-xl mt-4">{inmueble.descripcion}</p>
+            <div className="w-[50%] mx-auto p-8">
+                <Input
+                    type="number"
+                    nombre="Costo"
+                    placeholder="Ingrese el costo por mes"
+                    editable={true}
+                    handleInput={handleInput}
+                    value={inmueble.costo}
+                />
+            </div>
+        </div>
+    );
 }
 
 const Confirmar = () => {
@@ -764,7 +1036,7 @@ const Confirmar = () => {
             <p>Huéspedes: {inmueble.numHuespedes}</p>
 
             <h3 className="font-semibold text-xl">Fotografías del inmueble</h3>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-2">
                 {
                     inmueble.fotos.map((imagen, index)=> {
                         const url = URL.createObjectURL(imagen);
