@@ -5,6 +5,12 @@ let Content = {
     Title: "¡Bienvenido a RoomFinder, estudiante!"
 }
 
+const ImageElementStyles = {
+    with: 120,
+    height: 120,
+    style: "flex flex-col justify-center items-center"
+}
+
 
 export default function AppHome(){
     return(
@@ -32,24 +38,36 @@ export default function AppHome(){
                         <ImageElement
                             icon={'/icon/operation.png'}
                             content={'Buscar y gestionar inmuebles'}
+                            width={ImageElementStyles.with}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
                         />
                     </li>
                     <li>
                         <ImageElement 
                             icon={'/icon/networking.png'}
                             content={'Conectar con Arrendadores Potenciales'}
+                            width={ImageElementStyles.with}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
                         />
                     </li>
                     <li>
                         <ImageElement
                             icon={'/icon/optimize.png'}
                             content={'Ahorrar en rentas'}
+                            width={ImageElementStyles.with}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
                         />
                     </li>
                     <li>
                         <ImageElement 
                             icon={'/icon/service.png'}
                             content={'Vivir seguro'}
+                            width={ImageElementStyles.with}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
                         />
                     </li>
                 </ul>                
