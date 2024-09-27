@@ -22,7 +22,7 @@ export function middleware(request: NextRequest) {
 */
 export const config = {
   matcher: [
-    //"/dashboard/:path*",
+    "/dashboard/:path*",
     "/admin",
     "/user/:path*",
     //'/api/:path*',
