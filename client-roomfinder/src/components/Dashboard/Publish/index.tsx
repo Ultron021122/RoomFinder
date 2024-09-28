@@ -59,36 +59,92 @@ const validaciones : Record<number, funcionValidacion> = {
         return servicios.length > 0 && amenidades.length > 0 ? true : 'Para continuar, selecciona como mínimo un servicio y una amenidad';
     },
 
-    3 : () : boolean => {
-        return true;
+    3 : (inmueble : Inmueble) : boolean | string => {
+        const {
+            tipoInmueble,
+            numRecamaras,
+            numCamas,
+            numBanos,
+            numHuespedes,
+            capEstacionamiento,
+            amenidades
+        } = inmueble;
+        let salida : boolean | string = 'Llene todos los campos para continuar';
+
+        switch(tipoInmueble){
+            case 'Casa':
+                if(numRecamaras > 0 && numCamas > 0 && numBanos > 0 && numHuespedes > 0){
+                   salida = true;
+                }
+            break;
+
+            case 'Cuarto':
+                if(numHuespedes > 0 && numCamas > 0){
+                    salida = true;
+                }
+            break;
+
+            case 'Departamento':
+                if(numRecamaras > 0 && numCamas > 0 && numBanos > 0 && numHuespedes > 0){
+                    salida = true;
+                }
+            break;
+
+            default:
+            break;
+        }
+
+        if(amenidades.includes('Estacionamiento') && salida == true){
+            if(capEstacionamiento > 0){
+                salida = true;
+            }else{
+                salida = 'Falta establecer la capacidad del estacionamiento';
+            }
+        }
+
+        return salida;
     },
 
     4 : ({ fotos }) : boolean | string => {
         return fotos.length >= 5 && fotos.length <= 8 ? true : 'Sube como mínimo 5 fotografías para continuar, como máximo 8';
     },
 
-    5 : () : boolean => {
+    5 : ({ubicacion}) : boolean | string => {
+        return true
+        const {
+            pais,
+            direccion,
+            estado,
+            codigoPostal,
+            ciudad_municipio
+        } = ubicacion;
+
+        if(pais == '' || direccion == '' || estado == '' || codigoPostal == -1 || ciudad_municipio == ''){
+            return 'Ingresa la dirección de tu inmueble para continuar';
+        }
+
         return true;
     },
 
     6 : ({ubicacion}) : boolean | string => {
 
         const {numExt, numInt} = ubicacion;
-        let salida : boolean | string = 'Para continuar agregue información válida';
+        let salida : boolean | string = 'El número exterior es obligatorio';
 
-        if(inputVacio(numExt) && inputVacio(numInt)){ // ningún campo contiene información
-            salida = true;
-
-        }else if(!inputVacio(numExt) && !inputVacio(numInt)){ // ambos campos contienen información
-            if(esNumero(numExt) && esNumero(numInt)){
+        if(!inputVacio(numExt)){
+            if(esNumero(numExt)){
                 salida = true;
+            }else{
+                salida = 'El número exterior ingresado no es válido';
             }
 
-        }else if(!inputVacio(numExt) && esNumero(numExt)){
-            salida = true;
-
-        }else if(!inputVacio(numInt) && esNumero(numInt)){
-            salida = true;
+            if(salida == true && !inputVacio(numInt)){
+                if(esNumero(numInt)){
+                    salida = true;
+                }else{
+                    salida = 'El número interior ingresado no es válido';
+                }
+            }
         }
 
         return salida;
@@ -161,7 +217,7 @@ const Wizar = () => {
     return(
         <div>
             <div className="w-[95%] mx-auto mt-10 h-[500px] overflow-hidden overflow-y-auto">
-                {actual === 1 && <TipoInmueble/>}
+                {actual === 1 && <TipoInmueble/>} 
                 {actual === 2 && <ServiciosAmenidades/>}
                 {actual === 3 && <InformacionGeneral/>}
                 {actual === 4 && <Fotos/>}
@@ -171,7 +227,7 @@ const Wizar = () => {
                 {actual === 8 && <Descripcion/>}
                 {actual === 9 && <Restricciones/>}
                 {actual === 10 && <CostoMes/>}
-                {actual === 11 && <Confirmar/>}
+                {actual === 11 && <Confirmar/>} {/* falta terminar esta parte */} 
             </div>
             <div className="w-[95%] mx-auto">
                 <Progress size="sm" aria-label="Loading..." value={(actual / 11) * 100}/>
@@ -581,7 +637,7 @@ const Mapa = () => {
     const {setInmueble} = useFormulario();
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const mapRef = useRef<Map | null>(null);
-
+/*
     useEffect(() => {
         if(!mapContainerRef.current) return;
 
@@ -626,7 +682,7 @@ const Mapa = () => {
         
         return () => mapRef.current?.remove();
 
-    }, []);
+    }, []);*/
 
     return(
         <div ref={mapContainerRef} className="h-[500px] w-[650px] rounded-lg mx-auto"/>
@@ -643,13 +699,13 @@ const Ubicacion = () => {
     );
 }
 
-const Input = ({type, nombre, value, placeholder, editable, handleInput} : 
+const Input = ({type, nombre, value, placeholder, disabled, handleInput} : 
     {
         type:string,
         nombre:string,
         value?:string | number,
-        placeholder:string,
-        editable:boolean,
+        placeholder?:string,
+        disabled:boolean,
         handleInput?: (name:string, value: number | string) => void
     }) => {
 
@@ -667,7 +723,7 @@ const Input = ({type, nombre, value, placeholder, editable, handleInput} :
                 type={type}
                 value={value}
                 placeholder={placeholder}
-                contentEditable={editable}
+                disabled={disabled}
                 onChange={handleChange}
             />
         </div>
@@ -714,13 +770,13 @@ const ConfirmarUbicacion = () => {
         <div>
             <h2 className="text-center font-semibold text-3xl mb-10">Confirma la ubicación de tu inmueble</h2>
             <div className="grid grid-cols-2 gap-4 w-[85%] mx-auto px-8 py-4">
-                <Input type="text" nombre="País" value={pais} placeholder="ingrese algo. . ." editable={false}/>
-                <Input type="text" nombre="Dirección" value={direccion} placeholder="ingrese algo. . ." editable={false}/>
-                <Input type="text" nombre="Estado" value={estado} placeholder="ingrese algo. . ." editable={false}/>
-                <Input type="number" nombre="Código postal" value={codigoPostal} placeholder="ingrese algo. . ." editable={false}/>
-                <Input type="text" nombre="Ciudad / municipio" value={ciudad_municipio} placeholder="ingrese algo. . ." editable={false}/>
-                <Input type="text" nombre="Número exterior" value={numExt} placeholder="Número exterior (opcional)" editable={true} handleInput={handleInput}/>
-                <Input type="text" nombre="Número interior" value={numInt} placeholder="Número interior (opcional)" editable={true} handleInput={handleInput}/>
+                <Input type="text" nombre="País" value={pais} placeholder="ingrese algo. . ." disabled={true}/>
+                <Input type="text" nombre="Dirección" value={direccion} placeholder="ingrese algo. . ." disabled={true}/>
+                <Input type="text" nombre="Estado" value={estado} placeholder="ingrese algo. . ." disabled={false}/>
+                <Input type="number" nombre="Código postal" value={codigoPostal} placeholder="ingrese algo. . ." disabled={true}/>
+                <Input type="text" nombre="Ciudad / municipio" value={ciudad_municipio} placeholder="ingrese algo. . ." disabled={true}/>
+                <Input type="text" nombre="Número exterior" value={numExt} placeholder="Número exterior (obligatorio)" disabled={false} handleInput={handleInput}/>
+                <Input type="text" nombre="Número interior" value={numInt} placeholder="Número interior (opcional)" disabled={false} handleInput={handleInput}/>
             </div>
         </div>
     );
@@ -988,19 +1044,21 @@ const CostoMes = () => {
     }
 
     return(
-        <div>
+        <div className="w-[95%] mx-auto">
             <h2 className="text-center font-semibold text-3xl mb-10">Para finalizar, establece el costo del inmueble por mes</h2>
-            <h3 className="text-xl mb-4">{inmueble.titulo}</h3>
+            <h3 className="text-xl mb-4 font-semibold">Título: <span className="font-normal">{inmueble.titulo}</span> </h3>
+            <p className="text-xl font-semibold">Fotografías del inmueble</p>
+            <p className="text-gray-600 mb-4 text-lg">No todas las fotografías están incluidas en este apartado. Posteriormente se mostrarán todas.</p>
             <div className="grid grid-cols-4 grid-rows-2 gap-2"> {/* contenedor de imagenes */}
                 {imagenes}
             </div>
-            <p className="text-xl mt-4">{inmueble.descripcion}</p>
-            <div className="w-[50%] mx-auto p-8">
+            <p className="text-xl mt-4 font-semibold">Descripción: <span className="font-normal">{inmueble.descripcion}</span></p>
+            <div className="w-[50%] mx-auto p-4">
                 <Input
                     type="number"
                     nombre="Costo"
-                    placeholder="Ingrese el costo por mes"
-                    editable={true}
+                    placeholder="Ingrese el costo por mes MXN"
+                    disabled={false}
                     handleInput={handleInput}
                     value={inmueble.costo}
                 />
@@ -1012,86 +1070,190 @@ const CostoMes = () => {
 const Confirmar = () => {
     const {inmueble} = useFormulario();
 
+    const {
+        tipoInmueble,
+        servicios,
+        amenidades,
+        numRecamaras,
+        numCamas,
+        numBanos,
+        numHuespedes,
+        capEstacionamiento,
+        fotos,
+        ubicacion,
+        titulo,
+        descripcion,
+        reglas,
+        costo
+    } = inmueble;
+
+    const {
+        pais,
+        direccion,
+        estado,
+        codigoPostal,
+        ciudad_municipio,
+        numExt,
+        numInt
+    } = ubicacion;
+
     return(
-        <div>
+        <div className="w-[95%] mx-auto">
             <h2 className="text-center font-semibold text-3xl mb-10"> Confirma los datos de tu inmueble</h2>
-            <h3 className="font-semibold text-xl">Tipo de inmueble</h3>
-            <ImageElement
-                icon={getIcon(inmueble.tipoInmueble)}
-                content={inmueble.tipoInmueble}
-                width={ImageElementStyles.width}
-                height={ImageElementStyles.height}
-                style={ImageElementStyles.style}
-            />
+            <section>
+                <h3 className="font-semibold text-xl mb-4">Tipo de inmueble</h3>
+                <ImageElement
+                    icon={getIcon(inmueble.tipoInmueble)}
+                    content={tipoInmueble}
+                    width={ImageElementStyles.width}
+                    height={ImageElementStyles.height}
+                    style={ImageElementStyles.style}
+                />
 
-            <h3 className="font-semibold text-xl">Servicios y Amenidades</h3>
-            <h4 className="text-lg">Servicios</h4>
-            {
-                inmueble.servicios.map((servicio, index) => {
-                    const icono = getIcon(servicio);
-                    return(
-                        <ImageElement
-                            key={index}
-                            icon={icono}
-                            content={servicio}
-                            width={ImageElementStyles.width}
-                            height={ImageElementStyles.height}
-                            style={ImageElementStyles.style}
-                        />
-                    );
-                })
-            }
-            
-            <h4 className="text-lg">Amenidades</h4>
-            {
-                inmueble.amenidades.map((amenidad, index) => {
-                    const icono = getIcon(amenidad);
-                    return(
-                        <ImageElement
-                            key={index}
-                            icon={icono}
-                            content={amenidad}
-                            width={ImageElementStyles.width}
-                            height={ImageElementStyles.height}
-                            style={ImageElementStyles.style}
-                        />
-                    );
-                })
-            }
-
-            <h3 className="font-semibold text-xl">Información general del inmueble</h3>
-            {/* Recamaras, camas, baños y huéspedes | pendiente de immplementar*/}
-            <p>Recámaras: {inmueble.numRecamaras > 0 ? inmueble.numRecamaras : 'No aplica'}</p>
-            <p>Camas: {inmueble.numCamas}</p>
-            <p>Baños: {inmueble.numBanos > 0 ? inmueble.numBanos : 'No aplica'}</p>
-            <p>Huéspedes: {inmueble.numHuespedes}</p>
-
-            <h3 className="font-semibold text-xl">Fotografías del inmueble</h3>
-            <div className="grid grid-cols-4 gap-2">
-                {
-                    inmueble.fotos.map((imagen, index)=> {
-                        const url = URL.createObjectURL(imagen);
-                        return(
-                            <div key={index} className="relative w-[100%] h-[250px]">
-                                <Image
-                                    src={url}
-                                    alt={`Imagen de inmueble ${index}`}
-                                    layout="fill"
-                                    objectFit="cover"
-                                    className="rounded-lg"
+                <h3 className="font-semibold text-xl mt-4">Servicios y Amenidades</h3>
+                <h4 className="text-lg my-2">Servicios</h4>
+                <div className="flex flex-wrap gap-4"> {/* contenedor de servicios */}
+                    {
+                        servicios.map((servicio, index) => {
+                            const icono = getIcon(servicio);
+                            return(
+                                <ImageElement
+                                    key={index}
+                                    icon={icono}
+                                    content={servicio}
+                                    width={ImageElementStyles.width}
+                                    height={ImageElementStyles.height}
+                                    style={ImageElementStyles.style}
                                 />
-                            </div>
-                        );
-                    })
-                }
-            </div>
+                            );
+                        })
+                    }
+                </div>
+                
+                <h4 className="text-lg my-2">Amenidades</h4>
+                <div className="flex flex-wrap gap-4">
+                    {
+                        amenidades.map((amenidad, index) => {
+                            const icono = getIcon(amenidad);
+                            return(
+                                <ImageElement
+                                    key={index}
+                                    icon={icono}
+                                    content={amenidad}
+                                    width={ImageElementStyles.width}
+                                    height={ImageElementStyles.height}
+                                    style={ImageElementStyles.style}
+                                />
+                            );
+                        })
+                    }
+                </div>
+            </section>
+            
+            <section className="my-4">
+                <h3 className="font-semibold text-xl my-4">Información general del inmueble</h3>
+                <div className="flex flex-wrap gap-4">
+                    <ImageElement
+                        icon="/icon/beds.png"
+                        content={`Camas (${numCamas})`}
+                        width={ImageElementStyles.width}
+                        height={ImageElementStyles.height}
+                        style={ImageElementStyles.style}
+                    />
+                    <ImageElement
+                        icon="/icon/people.png"
+                        content={`Huéspedes (${numHuespedes})`}
+                        width={ImageElementStyles.width}
+                        height={ImageElementStyles.height}
+                        style={ImageElementStyles.style}
+                    />
+                    {
+                        numRecamaras > 0 &&
+                        <ImageElement
+                            icon="/icon/bedroom-furniture.png"
+                            content={`Recámaras (${numRecamaras})`}
+                            width={ImageElementStyles.width}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
+                        />
+                    }
+                    {
+                        numBanos > 0 &&
+                        <ImageElement
+                            icon="/icon/bathroom-cabinet.png"
+                            content={`Baños (${numBanos})`}
+                            width={ImageElementStyles.width}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
+                        />
+                    }
+                    {
+                        amenidades.includes('Estacionamiento') &&
+                        <ImageElement
+                            icon="/icon/parking.png"
+                            content={`Estacionamiento (${capEstacionamiento})`}
+                            width={ImageElementStyles.width}
+                            height={ImageElementStyles.height}
+                            style={ImageElementStyles.style}
+                        />
+                    }
+                </div>
+            </section>
 
-            <h3 className="font-semibold text-xl">Ubicación</h3>
-            <p>pendiente de implementar </p>
+            <section>
+                <h3 className="font-semibold text-xl my-4">Fotografías del inmueble</h3>
+                <div className="grid grid-cols-3 gap-2 mt-2">
+                    {
+                        fotos.map((imagen, index)=> {
+                            const url = URL.createObjectURL(imagen);
+                            return(
+                                <div key={index} className="relative w-[100%] h-[250px]">
+                                    <Image
+                                        src={url}
+                                        alt={`Imagen de inmueble ${index}`}
+                                        layout="fill"
+                                        objectFit="cover"
+                                        className="rounded-lg"
+                                    />
+                                </div>
+                            );
+                        })
+                    }
+                </div>
+            </section>
 
-            <h3 className="font-semibold text-xl">Título</h3>
+            <section className="my-4">
+                <h3 className="font-semibold text-xl">Ubicación</h3>
+                <div className="grid grid-cols-3 gap-4 mt-2">
+                    <Input type="text" nombre="País" value={pais} disabled={true}/>
+                    <Input type="text" nombre="Dirección" value={direccion} disabled={true}/>
+                    <Input type="text" nombre="Estado" value={estado} disabled={true}/>
+                    <Input type="number" nombre="Código postal" value={codigoPostal} disabled={true}/>
+                    <Input type="text" nombre="Ciudad / municipio" value={ciudad_municipio} disabled={true}/>
+                    <Input type="text" nombre="Número exterior" value={numExt} disabled={true}/>
+                    {
+                        !inputVacio(numInt) && 
+                        <Input type="text" nombre="Número interior" value={numInt} disabled={true}/>
+                    }
+                </div>
+            </section>
 
-            <h3 className="font-semibold text-xl">Descripción</h3>
+            <section className="mb-8">
+                <h3 className="font-semibold text-xl my-4">Título</h3>
+                <p className="text-lg">{titulo}</p>
+                <h3 className="font-semibold text-xl my-4">Descripción</h3>
+                <p className="text-lg">{descripcion}</p>
+                <h3 className="font-semibold text-xl my-4">Restricciones</h3>
+                <div className="grid grid-cols-2 gap-4">
+                    {
+                        reglas.map((regla, index) => 
+                            <Input key={index} type="text" nombre={`Restricción ${index + 1}`} value={regla} disabled={true}/>
+                        )
+                    }
+                </div>
+                <h3 className="font-semibold text-xl my-4">Costo por mes</h3>
+                <p className="text-lg">${costo} MXN</p>
+            </section>
         </div>
     );
 }
