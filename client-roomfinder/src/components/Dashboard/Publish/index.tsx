@@ -2,7 +2,6 @@
 
 import Header from '@/components/GeneralComponents/Header';
 import Form from '@/components/Form';
-import { Inmueble } from "../../Form/FormularioContext";
 
 export default function Publish(){
     return (

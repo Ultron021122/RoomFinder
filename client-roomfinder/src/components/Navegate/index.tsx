@@ -1,5 +1,5 @@
 "use client";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Image } from "@nextui-org/react";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@nextui-org/react";
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from "next-auth/react";
 import { MoreVertical } from "lucide-react";
@@ -8,6 +8,7 @@ import { rolesMapping } from "@/utils/constants";
 import { shortName } from "@/utils/functions";
 import Link from 'next/link';
 import { SidebarUserProps } from "@/utils/interfaces";
+import Image from "next/image";
 
 interface SidebarProps {
   children: React.ReactNode;
@@ -41,20 +42,33 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
         <Dropdown placement="bottom-start" classNames={{
           content: "dark:bg-gray-900 border dark:border-gray-800 rounded-md"
         }}>
-
           <div className="border-t border-gray-300 dark:border-gray-800 flex p-3">
-            <Image
-              //src="https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=SM"
-              src={user?.vchimage || "https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=SM"}
-              alt={user?.vchname}
-              className="w-10 h-10 rounded-full object-cover border-2 border-gray-300"
-            />
-
+            {!expanded ? (
+              <DropdownTrigger>
+                <Image
+                  width={400}
+                  height={400}
+                  //src="https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=SM"
+                  src={user?.vchimage || "https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=UX"}
+                  alt={user?.vchname}
+                  className="w-10 h-10 rounded-full object-cover border-2 border-gray-300"
+                />
+              </DropdownTrigger>
+            ) : (
+              <Image
+                width={400}
+                height={400}
+                //src="https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=SM"
+                src={user?.vchimage || "https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=UX"}
+                alt={user?.vchname}
+                className="w-10 h-10 rounded-full object-cover border-2 border-gray-300"
+              />
+            )}
             <div
               className={`
-                        flex justify-between items-center
-                        overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
-                        `}
+                          flex justify-between items-center
+                          overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
+                          `}
             >
               <div className="leading-4">
                 <h4 className="font-semibold dark:text-gray-300">
@@ -125,7 +139,6 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
             <DropdownItem key="settings" textValue="Configuraciones">
               Mis Configuraciones
             </DropdownItem>
-            <DropdownItem key="team_settings" textValue="Configuraciones de equipo">Team Settings</DropdownItem>
             <DropdownSection aria-label="Help & Feedback">
               <DropdownItem key="help_and_feedback" textValue="Ayuda">
                 Ayuda y Retroalimentación
@@ -164,13 +177,13 @@ export function SidebarItem({
   return (
     <li
       className={`
-            relative flex items-center my-1
+            relative flex items-center justify-center my-1
             font-medium rounded-md cursor-pointer
             transition-colors group
             z-50
             ${pathname === url
-          ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 dark:from-blue-700 dark:to-blue-800"
-          : "hover:bg-indigo-50 dark:hover:bg-blue-900"
+          ? "bg-gradient-to-tr from-blue-200 to-blue-100 dark:from-blue-700 dark:to-blue-800"
+          : "hover:bg-blue-50 dark:hover:bg-blue-900"
         }
         `}
     >
@@ -178,7 +191,7 @@ export function SidebarItem({
         href={`${url}`}
         className={`
             ${pathname === url
-            ? "px-3 py-2 text-blue-800 dark:text-indigo-100"
+            ? "px-3 py-2 text-blue-800 dark:text-blue-100"
             : "px-3 py-2 text-gray-600 dark:text-gray-400"
           }
           flex
@@ -187,7 +200,7 @@ export function SidebarItem({
         {icon}
         <span
           className={`
-                overflow-hidden transition-all 
+                overflow-hidden transition-all text-sm sm:text-base
                 ${expanded ? "w-52 ml-3" : "w-0"}
                 `}
         >
@@ -197,7 +210,7 @@ export function SidebarItem({
       {alert && (
         <div
           className={`
-                    absolute right-2 w-2 h-2 rounded bg-blue-400 dark:bg-indigo-400
+                    absolute right-2 w-2 h-2 rounded bg-blue-400 dark:bg-blue-400
                     ${expanded ? "" : "top-2"}
                     `}
         />
@@ -206,7 +219,7 @@ export function SidebarItem({
         <div
           className={`
                     absolute left-full rounded-md px-2 py-1 ml-6
-                    bg-indigo-100 text-blue-800 text-sm
+                    bg-blue-100 text-blue-800 text-sm
                     invisible opacity-20 -translate-x-3 transition-all
                     group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
                     `}
