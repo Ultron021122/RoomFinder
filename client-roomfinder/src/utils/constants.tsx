@@ -528,14 +528,14 @@ export const propertiesHome = [
 ]
 
 export const columns = [
-    { name: "ID", uid: "id", sortable: true },
-    { name: "NAME", uid: "name", sortable: true },
-    { name: "AGE", uid: "age", sortable: true },
-    { name: "ROLE", uid: "role", sortable: true },
-    { name: "TEAM", uid: "team" },
-    { name: "EMAIL", uid: "email" },
-    { name: "STATUS", uid: "status", sortable: true },
-    { name: "ACTIONS", uid: "actions" },
+    { name: "Id", uid: "id", sortable: true },
+    { name: "Nombre", uid: "name", sortable: true },
+    { name: "Edad", uid: "age", sortable: true },
+    { name: "Role", uid: "role", sortable: true },
+    { name: "Team", uid: "team" },
+    { name: "Email", uid: "email" },
+    { name: "Status", uid: "status", sortable: true },
+    { name: "Actions", uid: "actions" },
 ];
 
 export const statusOptions = [

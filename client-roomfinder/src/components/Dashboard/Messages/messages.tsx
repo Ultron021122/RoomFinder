@@ -9,6 +9,7 @@ import es from "javascript-time-ago/locale/es";
 import { Message, UserProfile } from "@/utils/interfaces";
 import axios from "axios";
 import Image from "next/image";
+import { Avatar, Badge } from "@nextui-org/react";
 
 TimeAgo.addDefaultLocale(es);
 
@@ -20,6 +21,7 @@ export default function MessageComponent({
   userID,
   image,
   nameUser,
+  name,
   bnstatus,
   className,
   onBack
@@ -27,6 +29,7 @@ export default function MessageComponent({
   userID: number,
   image: string,
   nameUser: string,
+  name: string
   bnstatus: boolean,
   className?: string | null,
   onBack: () => void
@@ -116,22 +119,23 @@ export default function MessageComponent({
   }, [conversations]);
 
   return (
-    <>
-      <section className={`h-[calc(100vh-150px)] flex flex-col bg-white dark:bg-gray-950 ${className}`}>
+    <div>
+      <section className={`h-[calc(100vh-150px)] flex flex-col bg-gray-100 dark:bg-gray-900 ${className}`}>
         <div className="h-full w-full flex flex-col">
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-900">
+          <div className="flex items-center justify-between p-4 border-b border-gray-300 bg-white dark:bg-gray-950 dark:border-gray-900">
             <div className="flex items-center">
               <div className="md:hidden cursor-pointer" onClick={onBack}>
                 <ArrowLeftIcon size={20} className="text-gray-500 dark:text-gray-300 mr-2 hover:text-gray-700 dark:hover:text-gray-100" />
               </div>
-              <Image
-                width={100}
-                height={100}
-                src={image}
-                alt="avatar"
-                className="object-cover h-10 w-10 rounded-full"
-              />
-              <p className="ml-2 text-base sm:text-lg font-semibold dark:text-neutral-50">{nameUser}</p>
+              <Badge content="" color={bnstatus == true ? "success" : "danger"} shape="circle" placement="bottom-right">
+                <Avatar
+                  radius="full"
+                  src={image}
+                />
+              </Badge>
+              <p className="ml-2 text-sm sm:text-base font-semibold dark:text-neutral-50">
+                {nameUser}
+              </p>
             </div>
           </div>
           <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -145,9 +149,18 @@ export default function MessageComponent({
                   <div key={`${msg.usuarioid}-${index}`} className="flex flex-col mt-5 px-3">
                     {msg.usuarioid === user?.usuarioid ? (
                       <div className="flex justify-end items-center mb-2">
-                        <div className="py-3 px-4 bg-blue-400 rounded-lg text-white text-sm shadow-md max-w-[calc(80%-40px)]">
-                          {msg.vchcontenido}
-                          <p className="text-xs text-gray-300">{timeAgo.format(new Date(msg.created_at))}</p>
+                        <div className="max-w-full sm:max-w-[calc(80%-40px)] text-right">
+                          <p
+                            className="text-xs dark:text-gray-100 font-semibold">
+                            Tú
+                          </p>
+                          <div
+                            className="py-2 px-3 max-w-max bg-blue-400 rounded-bl-lg rounded-br-lg rounded-tl-lg text-white text-sm shadow-md">
+                            <p>{msg.vchcontenido}</p>
+                          </div>
+                          <span className="text-xs dark:text-gray-300">
+                            {timeAgo.format(new Date(msg.created_at))}
+                          </span>
                         </div>
                         <Image
                           width={100}
@@ -166,9 +179,19 @@ export default function MessageComponent({
                           className="object-cover h-10 w-10 rounded-full mr-2 border-2 border-white"
                           alt="avatar"
                         />
-                        <div className="py-3 px-4 bg-gray-400 rounded-lg text-white text-sm shadow-md max-w-[calc(80%)]">
-                          {msg.vchcontenido}
-                          <p className="text-xs text-gray-300">{timeAgo.format(new Date(msg.created_at))}</p>
+                        <div className="max-w-full sm:max-w-[calc(80%)] text-left">
+                          <p
+                            className="text-xs dark:text-gray-100 font-semibold">
+                            {name}
+                          </p>
+                          <div
+                            className="py-2 px-3 max-w-max bg-green-600 rounded-bl-lg rounded-tr-lg rounded-br-lg text-white text-sm shadow-md"
+                          >
+                            <p>{msg.vchcontenido}</p>
+                          </div>
+                          <span className="text-xs dark:text-gray-300">
+                            {timeAgo.format(new Date(msg.created_at))}
+                          </span>
                         </div>
                       </div>
                     )}
@@ -202,6 +225,6 @@ export default function MessageComponent({
           scrollbar-width: none; /* Firefox */
         }
       `}</style>
-    </>
+    </div>
   );
 }
