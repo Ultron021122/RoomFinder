@@ -17,6 +17,7 @@ export default function MessageMainComponent() {
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [imageUser, setImageUser] = useState<string>('');
   const [nameUser, setNameUser] = useState<string>('');
+  const [name, setName] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorSystem, setErrorSystem] = useState<string | null>(null);
 
@@ -49,11 +50,12 @@ export default function MessageMainComponent() {
   const handleUserClick = (user: User) => {
     setSelectedUser(user.usuarioid);
     setImageUser(user.vchimage);
+    setName(user.vchname);
     setNameUser(user.vchname + ' ' + user.vchpaternalsurname + ' ' + user.vchmaternalsurname);
   }
 
   return (
-    <>
+    <div>
       <section className="h-[calc(100vh-150px)] flex flex-col bg-white dark:bg-gray-950">
         <div className="flex flex-col md:flex-row h-full">
           {/* Users Box */}
@@ -80,7 +82,7 @@ export default function MessageMainComponent() {
                     onClick={() => handleUserClick(user)}
                     className="flex items-center p-4 cursor-pointer text-gray-900 dark:text-gray-300 hover:text-white bg-gray-200 dark:bg-gray-950 hover:bg-primary-500"
                   >
-                    <Badge content="" color="success" shape="circle" placement="bottom-right">
+                    <Badge content="" color={user.bnstatus == true ? "success" : "danger" } shape="circle" placement="bottom-right">
                       <Avatar
                         radius="full"
                         src={user.vchimage}
@@ -100,9 +102,9 @@ export default function MessageMainComponent() {
           {/* Other Box */}
           <div className={`w-full md:w-3/4 flex flex-col ${selectedUser ? '' : 'items-center justify-center'}`}>
             {selectedUser ? (
-              <MessageComponent userID={selectedUser} image={imageUser} nameUser={nameUser} bnstatus className='w-full' onBack={() => setSelectedUser(null)} />
+              <MessageComponent userID={selectedUser} name={name} image={imageUser} nameUser={nameUser} bnstatus className='w-full' onBack={() => setSelectedUser(null)} />
             ) : (
-              <div className={`w-full flex-col items-center justify-center h-full overflow-y-auto custom-scrollbar sm:flex hidden`}>
+              <div className={`w-full flex-col items-center justify-center h-full overflow-y-auto custom-scrollbar md:flex hidden`}>
                 <RocketIcon size={64} className="text-gray-500 dark:text-gray-300" />
                 <div>
                   <p className="p-4 text-gray-400">Únete a una nueva conversación.</p>
@@ -121,6 +123,6 @@ export default function MessageMainComponent() {
           scrollbar-width: none; /* Firefox */
         }
       `}</style>
-    </>
+    </div>
   );
 }

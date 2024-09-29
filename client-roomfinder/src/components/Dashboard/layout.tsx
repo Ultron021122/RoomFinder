@@ -11,13 +11,13 @@ import { rolesMapping } from "@/utils/constants";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 /* Iconos */
-import { GraduationCapIcon, Home, LayoutDashboard, LifeBuoy, Mail, MenuIcon, Settings, UserCircle, LogOut, Folder } from "lucide-react";
+import { GraduationCapIcon, Home, LayoutDashboard, LifeBuoy, Mail, MenuIcon, Settings, UserCircle, LogOut, Folder, SlidersHorizontal } from "lucide-react";
 import { UserProfile } from "@/utils/interfaces";
 import Link from "next/link";
 
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-    const [expanded, setExpanded] = useState(true);
+    const [expanded, setExpanded] = useState(false);
     const [windowWidth, setWindowWidth] = useState(0);
     const { data: session } = useSession();
     const user = session?.user as UserProfile;
@@ -47,11 +47,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
         <PerfectScrollbar>
             <div className="flex flex-col h-[100vh]">
-                <AppBar 
-                    component="nav" 
-                    position="static" 
-                    className="bg-white text-neutral-950 dark:bg-primary dark:text-gray-100"
-                    sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                <AppBar
+                    component="nav"
+                    position="static"
+                    className="dark:bg-primary dark:text-gray-100"
+                    sx={{
+                        bgcolor: (theme) => theme.palette.background.paper,
+                        color: (theme) => theme.palette.text.primary,
+                        zIndex: (theme) => theme.zIndex.drawer + 1
+                    }}
                 >
                     <Toolbar variant="dense">
                         <IconButton
@@ -91,9 +95,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         }
                         <hr className="my-2 border-gray-300 dark:border-gray-800" /> {/* se  pueden eliminar estas opciones del sideBar */}
                         <SidebarItem icon={<UserCircle size={20} />} text="Perfil" url="/dashboard/profile" />
-                        <SidebarItem icon={<Settings size={20} />} text="Ajustes" url="/dashboard/settings" />
+                        <SidebarItem icon={<SlidersHorizontal size={20} />} text="Ajustes" url="/dashboard/settings" />
                     </Sidebar>
-                    <main className={`flex-1 p-4 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
+                    <main className={`flex-1 px-2 pt-4 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
                         <section className={`${windowWidth <= 640 && expanded && 'hidden'}`}>
                             {children}
                         </section>
