@@ -205,6 +205,25 @@ export interface LessorInfo extends User {
 }
 
 /**
+ * Property interface to manage the map data
+ * @interface
+ */
+export interface MapDataComponent {
+    /**
+     * Property position
+     * @example
+     * position: [20.123456, -103.123456]
+     */
+    position: [number, number];
+    /**
+     * Property zoom
+     * @example
+     * zoom: 15
+     */
+    zoom: number;
+}
+
+/**
  * Property interface to manage the property data
  * @interface
  */

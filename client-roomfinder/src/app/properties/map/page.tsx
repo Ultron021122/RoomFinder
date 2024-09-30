@@ -1,4 +1,4 @@
-import {Metadata} from 'next';
+import { Metadata } from 'next';
 import Template from './template';
 
 export const metadata: Metadata = {
@@ -8,8 +8,6 @@ export const metadata: Metadata = {
 export default function Propiedades() {
 
     return (
-        <>
-            <Template />
-        </>
+        <Template />
     );
 }
