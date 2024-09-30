@@ -2,12 +2,13 @@
 
 import Header from '@/components/GeneralComponents/Header';
 import Form from '@/components/Form';
+import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
 
-export default function Publish(){
+export default function Publish() {
     return (
-        <div className="h-screen">
-            <Header imageURL='/background/fondo-7.jpg' content="Publicar inmueble"/>
-            <Form/>
+        <div>
+            <Breadcrumb pageName='Publicar inmueble' />
+            <Form />
         </div>
     );
 }

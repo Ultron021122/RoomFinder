@@ -49,7 +49,7 @@ export default function Sidebar({ children, expanded, onResize }: SidebarProps) 
                   width={400}
                   height={400}
                   //src="https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=SM"
-                  src={user?.vchimage || "https://ui-avatars.com/api/?background=60a5fa&color=3730a3&bold=true&name=UX"}
+                  src={user?.vchimage}
                   alt={user?.vchname}
                   className="w-10 h-10 rounded-full object-cover border-2 border-gray-300"
                 />

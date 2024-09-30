@@ -10,6 +10,8 @@ export interface InterfaceUbicacion {
     ciudad_municipio:string;
     numExt?:string;
     numInt?:string;
+    latitud:number;
+    longitud:number;
     [key : string] : any
 }
 
@@ -37,7 +39,9 @@ const valoresDefectoUbicacion : InterfaceUbicacion = {
     direccion: '',
     estado: '',
     codigoPostal: -1,
-    ciudad_municipio: ''
+    ciudad_municipio: '',
+    latitud: 0,
+    longitud: 0,
 }
 
 const valoresDefectoInmueble : Inmueble = {
