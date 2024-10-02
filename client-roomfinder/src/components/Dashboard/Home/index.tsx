@@ -1,5 +1,4 @@
 import Image from "next/image";
-import ImageElement from "@/components/GeneralComponents/ImageElement";
 import { Globe, LayoutTemplate, Network, Settings, ShieldCheck, TrendingUp } from "lucide-react";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Header from "../Inmuebles/Header";
