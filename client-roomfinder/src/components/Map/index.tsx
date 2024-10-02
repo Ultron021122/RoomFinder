@@ -10,9 +10,8 @@ import { universities, properties } from "@/utils/constants";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
-import { Rating } from '@mui/material';
 import Image from 'next/image';
-import { Link, MapPin, Star } from 'lucide-react';
+import { MapPin, Star } from 'lucide-react';
 
 // Icons personalizados
 const customIcon = new Icon({

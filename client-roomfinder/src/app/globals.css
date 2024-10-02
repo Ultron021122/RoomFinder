@@ -18,6 +18,15 @@
     float: left;
 }
 
+/* Mapa */
+.map-width-two {
+    height: 50vh;
+    min-width: 50vw;
+    position: relative;
+    z-index: 50;
+    float: left;
+}
+
 /* @media (min-width: 640px) {
     .map-width {
         min-width: calc(100vw - 14rem);

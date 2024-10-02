@@ -1,30 +1,47 @@
 'use client';
 
 import { useFormulario } from './FormularioContext';
-import { useDropzone} from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
-import Button from '../GeneralComponents/Button';
+import { Images, X } from 'lucide-react';
+import { toast, Bounce, Slide } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
-function ImageUploader(){
+function ImageUploader() {
     const { inmueble, setInmueble } = useFormulario();
 
     const onDrop = (acceptedFiles: File[]) => {
         const prev = inmueble.fotos;
-        console.log(prev);
-        setInmueble({fotos : [...prev, ...acceptedFiles] });
+        // Verifica cuántas imágenes se pueden añadir sin exceder el límite
+        if (prev.length + acceptedFiles.length > 8) {
+            toast.error("Solo se permiten 8 imagenes como maximo", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                style: { fontSize: '0.9rem' },
+                theme: "colored",
+                transition: Bounce,
+            });
+            return;
+        }
+        setInmueble({ fotos: [...prev, ...acceptedFiles] });
     }
 
-    const quitarImg = (imagen : File) => {
+    const quitarImg = (imagen: File) => {
         const fotosActuales = inmueble.fotos;
         let fotosActualizadas = fotosActuales.filter(foto => {
             return foto !== imagen;
         });
 
-        setInmueble({fotos : fotosActualizadas});
+        setInmueble({ fotos: fotosActualizadas });
     }
 
     // integrando react-dropzone
-    const {getRootProps, getInputProps, isDragActive, isDragAccept} = useDropzone({
+    const { getRootProps, getInputProps, isDragActive, isDragAccept } = useDropzone({
         onDrop,
         multiple: true,
         accept: {
@@ -32,58 +49,69 @@ function ImageUploader(){
             'image/png': []
         },
         maxFiles: 8,
+        maxSize: 5242880 // 5MB
     });
 
     //generar preview de las imágenes seleccionadas
     const renderPreviews = () => {
         return inmueble.fotos.map((imagen, index) => {
             const imagenURL = URL.createObjectURL(imagen);
-            return(
-                <div key={index} className="relative group w-[470px] h-[300px] m-2">
+            return (
+                <div key={index} className="relative group w-full h-0 pb-[100%] m-2"> {/* Proporción 1:1 */}
                     <Image
                         src={imagenURL}
                         alt={`preview de imagen ${index}`}
                         layout="fill"
-                        objectFit="cover"
+                        objectFit="cover" // Asegura que la imagen cubra el contenedor
                     />
-                    <div className="absolute left-0 right-0 bottom-4 opacity-0 group-hover:opacity-100 transition-all">
-                        <div className="grid place-items-center">
-                            <Button
-                                contenido="X"
-                                className="w-[35px] h-[35px] rounded-full border border-solid border-white text-white hover:bg-gray-600"
-                                onClick={() => {quitarImg(imagen)}}
-                            />
-                        </div>
-                    </div>
+                    <button
+                        className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full border border-solid border-white bg-transparent text-white hover:bg-gray-600"
+                        onClick={() => quitarImg(imagen)}
+                    >
+                        <X size={20} />
+                    </button>
                 </div>
             );
-        })
+        });
     }
 
-    return(
-        <div className="w-[85%] mx-auto">
-            <div {...getRootProps()} className={`p-4 border-2 border-dashed ${isDragActive ? 'border-blue-400' : 'border-gray-400'} rounded-lg hover:cursor-pointer`}>                
-                <input {...getInputProps()} />
-                {isDragActive && isDragAccept ?
-                    <p className="text-center">Suelta tus imágenes aquí...</p> : <p className="text-center">Arrastra y suelta imágenes aquí o haz click para seleccionar</p>
-                }
-                <p className="text-center text-zinc-300">Solo se permiten imágenes con extensión .png o .jpeg</p>
-            </div>
+    return (
+        <div>
+            <div className="max-w-4xl mx-auto">
+                <div {...getRootProps()} className={`p-4 border-2 border-dashed ${isDragActive ? 'border-blue-400' : 'border-gray-400'} rounded-lg hover:cursor-pointer`}>
+                    <input {...getInputProps()} />
+                    <div className="flex flex-col items-center justify-center mx-auto gap-2 text-gray-600 dark:text-gray-400">
+                        <Images size={34} />
+                        {isDragActive && isDragAccept ? (
+                            <p className="text-sm text-center">Suelta tus imágenes aquí...</p>
+                        ) : (
+                            <p className="text-sm text-center">
+                                Arrastra y suelta imágenes aquí o haz click para seleccionar
+                            </p>
+                        )}
+                    </div>
 
+                    <p className="text-center text-xs text-gray-500 dark:text-gray-600">Solo se permiten imágenes con extensión .png o .jpeg</p>
+                </div>
+            </div>
             {/* mostrar los preview */}
-            <div className="flex flex-wrap mt-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {renderPreviews()}
             </div>
         </div>
     );
 }
 
-export default function Fotos(){
-    return(
-        <div>
-            <h2 className="text-center font-semibold text-3xl mb-10">Agrega algunas fotos de tu inmueble a rentar</h2>
-            <p className="text-xl mb-8">Para iniciar se necesitan como mínimo 5 fotografías. Más adelante podrás agregar más y realizar cambios</p>
-            <ImageUploader/>
-        </div>
+export default function Fotos() {
+    return (
+        <section>
+            <div className='mb-12 text-center'>
+                <h2 className="font-semibold text-base sm:text-xl md:text-2xl text-neutral-900 dark:text-gray-100">
+                    Agrega algunas fotos de tu inmueble a rentar
+                </h2>
+                <p className="text-sm mb-8 text-neutral-800 dark:text-gray-400">Selecciona un mínimo 5 fotografías. Más adelante podrás agregar más y realizar cambios</p>
+            </div>
+            <ImageUploader />
+        </section>
     );
 }

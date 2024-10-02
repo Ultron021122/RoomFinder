@@ -42,7 +42,7 @@ export default function Template() {
   };
 
   return (
-    <>
+    <div>
       {isBoxVisible && (
         <FloatingBox
           onClose={handleClose}
@@ -94,6 +94,6 @@ export default function Template() {
           </SpeedDial>
         </div>
       )}
-    </>
+    </div>
   );
 }
