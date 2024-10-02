@@ -1,14 +1,14 @@
 'use client';
 
+import { Spinner } from "@nextui-org/react";
 import { useFormulario } from "./FormularioContext";
 import dynamic from "next/dynamic";
 
 export function getInput(tipoInput: string): string {
-    console.log('tipoInput', tipoInput);
     const inputs: Record<string, string> = {
         'numExt': 'numExt',
         'numInt': 'numInt',
-        'Costo': 'costo'
+        'precio': 'precio'
     };
     return inputs[tipoInput];
 }
@@ -16,7 +16,7 @@ export function getInput(tipoInput: string): string {
 const DynamicMap = dynamic(() => import("@/components/Form/Map"),
     {
         ssr: false,
-        loading: () => <p>Loading...</p>,
+        loading: () => <Spinner />,
     });
 
 export default function ConfirmarUbicacion() {
@@ -36,7 +36,6 @@ export default function ConfirmarUbicacion() {
     // fijar los datos directamente en el contexto
     function handleInput(name: string, value: number | string) {
         const prop = getInput(name);
-        console.log(prop, value, name);
 
         setInmueble({
             ubicacion: {
@@ -57,6 +56,27 @@ export default function ConfirmarUbicacion() {
                 </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mx-auto px-8 py-4">
+                {/* Campos de la ubicación */}
+                {/* Dirección */}
+                <div className="relative col-span-1 md:col-span-2 z-0 w-full mb-5 group">
+                    <input
+                        type="text"
+                        name="direccion"
+                        id="direccion"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=""
+                        autoComplete="off"
+                        disabled={true}
+                        value={direccion}
+                    />
+                    <label
+                        htmlFor="direccion"
+                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                    >
+                        Dirección
+                    </label>
+                </div>
+                {/* Pais */}
                 <div className="relative z-0 w-full mb-5 group">
                     <input
                         type="text"
@@ -75,24 +95,7 @@ export default function ConfirmarUbicacion() {
                         País
                     </label>
                 </div>
-                <div className="relative z-0 w-full mb-5 group">
-                    <input
-                        type="text"
-                        name="direccion"
-                        id="direccion"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=""
-                        autoComplete="off"
-                        disabled={true}
-                        value={direccion}
-                    />
-                    <label
-                        htmlFor="direccion"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                        Dirección
-                    </label>
-                </div>
+                {/* Estado */}
                 <div className="relative z-0 w-full mb-5 group">
                     <input
                         type="text"
@@ -111,24 +114,7 @@ export default function ConfirmarUbicacion() {
                         Estado
                     </label>
                 </div>
-                <div className="relative z-0 w-full mb-5 group">
-                    <input
-                        type="number"
-                        name="codigoPostal"
-                        id="codigoPostal"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=""
-                        autoComplete="off"
-                        disabled={true}
-                        value={codigoPostal}
-                    />
-                    <label
-                        htmlFor="codigoPostal"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                        Código Postal
-                    </label>
-                </div>
+                {/* Ciudad / Municipio */}
                 <div className="relative z-0 w-full mb-5 group">
                     <input
                         type="text"
@@ -147,41 +133,65 @@ export default function ConfirmarUbicacion() {
                         Ciudad / municipio
                     </label>
                 </div>
+                {/* Código Postal */}
                 <div className="relative z-0 w-full mb-5 group">
                     <input
-                        type="text"
-                        name="numExt"
-                        id="numExt"
+                        type="number"
+                        name="codigoPostal"
+                        id="codigoPostal"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=""
                         autoComplete="off"
-                        value={numExt}
-                        onChange={(e) => handleInput('numExt', e.target.value)}
+                        disabled={true}
+                        value={codigoPostal}
                     />
                     <label
-                        htmlFor="numExt"
+                        htmlFor="codigoPostal"
                         className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                     >
-                        Número exterior (obligatorio)
+                        Código Postal
                     </label>
                 </div>
-                <div className="relative z-0 w-full mb-5 group">
-                    <input
-                        type="text"
-                        name="numInt"
-                        id="numInt"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=""
-                        autoComplete="off"
-                        value={numInt}
-                        onChange={(e) => handleInput('numInt', e.target.value)}
-                    />
-                    <label
-                        htmlFor="numInt"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                        Número interior (opcional)
-                    </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 w-full">
+                    {/* Número exterior */}
+                    <div className="relative z-0 w-full mb-5 group pr-2">
+                        <input
+                            type="text"
+                            name="numExt"
+                            id="numExt"
+                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            placeholder=""
+                            autoComplete="off"
+                            value={numExt}
+                            onChange={(e) => handleInput('numExt', e.target.value)}
+                        />
+                        <label
+                            htmlFor="numExt"
+                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                            Núm.Ext
+                            <span className="ml-2 text-red-500">*</span>
+                        </label>
+                    </div>
+                    {/* Número interior */}
+                    <div className="relative z-0 w-full mb-5 group">
+                        <input
+                            type="text"
+                            name="numInt"
+                            id="numInt"
+                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            placeholder=""
+                            autoComplete="off"
+                            value={numInt}
+                            onChange={(e) => handleInput('numInt', e.target.value)}
+                        />
+                        <label
+                            htmlFor="numInt"
+                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                            Núm.Int
+                        </label>
+                    </div>
                 </div>
                 <input
                     type="hidden"

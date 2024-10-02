@@ -11,8 +11,6 @@ import InformacionGeneral from "./InformacionGeneral";
 import Fotos from "./Fotos";
 import Ubicacion from "./Ubicacion";
 import ConfirmarUbicacion from "./ConfirmarUbicacion";
-import Titulo from "./Titulo";
-import Descripcion from "./Descripcion";
 import Restricciones from "./Restricciones";
 import CostoMes from "./CostoMes";
 import Confirmar from "./Confirmar";
@@ -20,6 +18,7 @@ import Confirmar from "./Confirmar";
 /* Mejora de perfomance */
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import AddProperty from "./Titulo";
 
 const esNumero = (valor?: string): boolean => valor !== undefined && /^[0-9]+$/.test(valor);
 export const inputVacio = (input?: string): boolean => !input;
@@ -49,22 +48,28 @@ const validaciones: Record<number, FuncionValidacion> = {
         return (pais && direccion && estado && codigoPostal !== -1 && ciudad_municipio && latitud && longitud) ? true : 'Ingresa la dirección de tu inmueble para continuar';
     },
     6: ({ ubicacion: { numExt, numInt } }) => {
-        console.log(numExt, numInt);
         if (inputVacio(numExt)) return 'El número exterior es obligatorio';
         if (!esNumero(numExt)) return 'El número exterior ingresado no es válido';
         if (!inputVacio(numInt) && !esNumero(numInt)) return 'El número interior ingresado no es válido';
         return true;
     },
-    7: ({ titulo }) => (titulo.length >= 10) ? true : 'Ingrese un título de propiedad válido',
-    8: ({ descripcion }) => (descripcion.length >= 20) ? true : 'La descripción debe contener como mínimo 20 caracteres',
-    9: ({ reglas }) => {
+    7: ({ titulo, descripcion }) => {
+        if (titulo.length <= 10) return 'El título es muy corto';
+        if (descripcion.length <= 20) return 'La descripción es muy corta';
+        return true;
+    },
+    8: ({ reglas }) => {
         if (reglas.length < NUM_MIN_RESTRICCIONES) {
             return `Es indispensable que agregues como mínimo ${NUM_MIN_RESTRICCIONES} restricciones`;
         }
         return reglas.every(regla => regla.length >= 8) ? true : 'Las reglas deben contener información válida';
     },
-    10: ({ costo }) => (esNumero(costo.toString()) && costo > 0) ? true : 'El valor ingresado no es válido',
-    11: () => true,
+    9: ({ precio }) => {
+        if (precio < 0 || precio == undefined) return 'El precio tiene que ser mayor a 0';
+        if (esNumero(precio.toString()) != true) return 'El valor ingresado no es válido';
+        return true;
+    },
+    10: () => true,
 };
 
 export default function Wizar() {
@@ -93,7 +98,7 @@ export default function Wizar() {
     };
 
     const handleClick = () => {
-        if (actual < 11) {
+        if (actual < 10) {
             siguiente();
         }
     };
@@ -111,11 +116,10 @@ export default function Wizar() {
                         {actual === 4 && <Fotos />}
                         {actual === 5 && <Ubicacion />}
                         {actual === 6 && <ConfirmarUbicacion />}
-                        {actual === 7 && <Titulo />}
-                        {actual === 8 && <Descripcion />}
-                        {actual === 9 && <Restricciones />}
-                        {actual === 10 && <CostoMes />}
-                        {actual === 11 && <Confirmar />}
+                        {actual === 7 && <AddProperty />}
+                        {actual === 8 && <Restricciones />}
+                        {actual === 9 && <CostoMes />}
+                        {actual === 10 && <Confirmar />}
                     </div>
                     <div className="w-full sm:w-3/4 mx-auto pt-5 pb-10">
                         <Progress
@@ -125,8 +129,8 @@ export default function Wizar() {
                                 label: "font-medium text-default-700 dark:text-gray-200",
                                 value: "text-gray-700 dark:text-gray-200",
                             }}
-                            value={(actual / 11) * 100}
-                            label={`Paso ${actual} de 11`}
+                            value={(actual / 10) * 100}
+                            label={`Paso ${actual} de 10`}
                             showValueLabel={true}
                         />
                         <div className="flex justify-between mt-5 mb-10">
@@ -141,10 +145,10 @@ export default function Wizar() {
                                 Anterior
                             </Button>
                             <Button
-                                color="primary"
+                                color={actual < 10 ? 'primary' : 'success'}
                                 onClick={handleClick}
                             >
-                                {actual < 11 ? "Siguiente" : "Enviar"}
+                                {actual < 10 ? "Siguiente" : "Enviar"}
                             </Button>
                         </div>
                     </div>

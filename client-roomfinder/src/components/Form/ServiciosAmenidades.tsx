@@ -86,7 +86,7 @@ export default function ServiciosAmenidades() {
                                     width={40}
                                     height={40}
                                     alt={`Icono de ${data.content}`}
-                                    className="filter invert"
+                                    className={`filter dark:invert ${inmueble.servicios.includes(data.content) ? 'invert' : ''}`}
                                 />
                                 {data.content}
                             </div>
@@ -111,7 +111,7 @@ export default function ServiciosAmenidades() {
                                     width={40}
                                     height={40}
                                     alt={`Icono de ${data.content}`}
-                                    className="filter invert"
+                                    className={`filter dark:invert ${inmueble.amenidades.includes(data.content) ? 'invert' : ''}`}
                                 />
                                 {data.content}
                             </div>
