@@ -1,8 +1,8 @@
 'use client';
 
-import { toast, ToastContainer } from "react-toastify";
+import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { Progress } from "@nextui-org/react";
+import { Button, Progress } from "@nextui-org/react";
 import { useFormulario, Inmueble } from "./FormularioContext";
 import { useState } from "react";
 import TipoInmueble from "./TipoInmueble";
@@ -11,224 +11,149 @@ import InformacionGeneral from "./InformacionGeneral";
 import Fotos from "./Fotos";
 import Ubicacion from "./Ubicacion";
 import ConfirmarUbicacion from "./ConfirmarUbicacion";
-import Titulo from "./Titulo";
-import Descripcion from "./Descripcion";
 import Restricciones from "./Restricciones";
 import CostoMes from "./CostoMes";
 import Confirmar from "./Confirmar";
-import Button from "../GeneralComponents/Button";
 
-function esNumero(valor : string | undefined) : boolean{
-    if(valor == undefined){
-        return false
-    }
-    return /^[0-9]+$/.test(valor);
-}
+/* Mejora de perfomance */
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import 'react-perfect-scrollbar/dist/css/styles.css';
+import AddProperty from "./Titulo";
 
-export function inputVacio(input : string | undefined) : boolean{
-    if(input == undefined || input == '') return true;
-
-    return false;
-}
+const esNumero = (valor?: string): boolean => valor !== undefined && /^[0-9]+$/.test(valor);
+export const inputVacio = (input?: string): boolean => !input;
 
 export const NUM_MIN_RESTRICCIONES = 4;
 
-type funcionValidacion = (inmueble: Inmueble) => boolean | string;
+type FuncionValidacion = (inmueble: Inmueble) => boolean | string;
 
-// objeto de validaciones
-const validaciones : Record<number, funcionValidacion> = {
-    1 : ({ tipoInmueble }) : boolean | string => {
-        return tipoInmueble !== '' ? true : 'Selecciona una opción para continuar';
-    },
+const validaciones: Record<number, FuncionValidacion> = {
+    1: ({ tipoInmueble }) => tipoInmueble ? true : 'Selecciona una opción para continuar',
+    2: ({ servicios, amenidades }) => (servicios.length && amenidades.length) ? true : 'Selecciona un servicio y una amenidad',
+    3: ({ tipoInmueble, numRecamaras, numCamas, numBanos, numHuespedes, capEstacionamiento, amenidades }) => {
+        const esValido = {
+            'Casa': numRecamaras > 0 && numCamas > 0 && numBanos > 0 && numHuespedes > 0,
+            'Habitación': numHuespedes > 0 && numCamas > 0,
+            'Departamento': numRecamaras > 0 && numCamas > 0 && numBanos > 0 && numHuespedes > 0,
+        }[tipoInmueble] || false;
 
-    2 : ({servicios, amenidades}) : boolean | string => {
-        return servicios.length > 0 && amenidades.length > 0 ? true : 'Para continuar, selecciona como mínimo un servicio y una amenidad';
-    },
-
-    3 : (inmueble : Inmueble) : boolean | string => {
-        const {
-            tipoInmueble,
-            numRecamaras,
-            numCamas,
-            numBanos,
-            numHuespedes,
-            capEstacionamiento,
-            amenidades
-        } = inmueble;
-        let salida : boolean | string = 'Llene todos los campos para continuar';
-
-        switch(tipoInmueble){
-            case 'Casa':
-                if(numRecamaras > 0 && numCamas > 0 && numBanos > 0 && numHuespedes > 0){
-                   salida = true;
-                }
-            break;
-
-            case 'Cuarto':
-                if(numHuespedes > 0 && numCamas > 0){
-                    salida = true;
-                }
-            break;
-
-            case 'Departamento':
-                if(numRecamaras > 0 && numCamas > 0 && numBanos > 0 && numHuespedes > 0){
-                    salida = true;
-                }
-            break;
-
-            default:
-            break;
+        if (amenidades.includes('Estacionamiento') && esValido && capEstacionamiento <= 0) {
+            return 'Falta establecer la capacidad del estacionamiento';
         }
-
-        if(amenidades.includes('Estacionamiento') && salida == true){
-            if(capEstacionamiento > 0){
-                salida = true;
-            }else{
-                salida = 'Falta establecer la capacidad del estacionamiento';
-            }
-        }
-
-        return salida;
+        return esValido ? true : 'Llene todos los campos para continuar';
     },
-
-    4 : ({ fotos }) : boolean | string => {
-        return fotos.length >= 5 && fotos.length <= 8 ? true : 'Sube como mínimo 5 fotografías para continuar, como máximo 8';
+    4: ({ fotos }) => (fotos.length >= 5 && fotos.length <= 8) ? true : 'Sube de 5 a 8 fotos para continuar',
+    5: ({ ubicacion }) => {
+        const { pais, direccion, estado, codigoPostal, ciudad_municipio, latitud, longitud } = ubicacion;
+        return (pais && direccion && estado && codigoPostal !== -1 && ciudad_municipio && latitud && longitud) ? true : 'Ingresa la dirección de tu inmueble para continuar';
     },
-
-    5 : ({ubicacion}) : boolean | string => {
-        return true;
-        const {
-            pais,
-            direccion,
-            estado,
-            codigoPostal,
-            ciudad_municipio
-        } = ubicacion;
-
-        if(pais == '' || direccion == '' || estado == '' || codigoPostal == -1 || ciudad_municipio == ''){
-            return 'Ingresa la dirección de tu inmueble para continuar';
-        }
-
+    6: ({ ubicacion: { numExt, numInt } }) => {
+        if (inputVacio(numExt)) return 'El número exterior es obligatorio';
+        if (!esNumero(numExt)) return 'El número exterior ingresado no es válido';
+        if (!inputVacio(numInt) && !esNumero(numInt)) return 'El número interior ingresado no es válido';
         return true;
     },
-
-    6 : ({ubicacion}) : boolean | string => {
-
-        const {numExt, numInt} = ubicacion;
-        let salida : boolean | string = 'El número exterior es obligatorio';
-
-        if(!inputVacio(numExt)){
-            if(esNumero(numExt)){
-                salida = true;
-            }else{
-                salida = 'El número exterior ingresado no es válido';
-            }
-
-            if(salida == true && !inputVacio(numInt)){
-                if(esNumero(numInt)){
-                    salida = true;
-                }else{
-                    salida = 'El número interior ingresado no es válido';
-                }
-            }
-        }
-
-        return salida;
+    7: ({ titulo, descripcion }) => {
+        if (titulo.length <= 10) return 'El título es muy corto';
+        if (descripcion.length <= 20) return 'La descripción es muy corta';
+        return true;
     },
-
-    7 : ({titulo}) : boolean | string => {
-        return titulo.length >= 10 ? true : 'Ingrese un título de propiedad válido';
-    },
-
-    8 : ({descripcion}) : boolean | string => {
-        return descripcion.length >= 20 ? true : 'La descripción debe contener como mínimo 20 caracteres';
-    },
-
-    9 : ({reglas}) : boolean | string => {
-        
-        if(reglas.length >= NUM_MIN_RESTRICCIONES){
-            
-            let salida : boolean | string = true;
-
-            reglas.forEach((regla) => {
-                if(regla.length < 8){
-                    salida = 'Las reglas deben contener información válida';
-                    return;
-                }
-            });
-
-            return salida;
-
-        }else{
+    8: ({ reglas }) => {
+        if (reglas.length < NUM_MIN_RESTRICCIONES) {
             return `Es indispensable que agregues como mínimo ${NUM_MIN_RESTRICCIONES} restricciones`;
         }
+        return reglas.every(regla => regla.length >= 8) ? true : 'Las reglas deben contener información válida';
     },
-
-    10 : ({costo}) : boolean | string => {
-        if(esNumero(costo.toString()) && costo > 0){
-            return true
-        }
-        return 'El valor ingresado no es válido';
-    },
-
-    11: () : boolean | string => {
+    9: ({ precio }) => {
+        if (precio < 0 || precio == undefined) return 'El precio tiene que ser mayor a 0';
+        if (esNumero(precio.toString()) != true) return 'El valor ingresado no es válido';
         return true;
-    }
-}
+    },
+    10: () => true,
+};
 
 export default function Wizar() {
-    const [actual, setActual] = useState(1);
+    const [actual, setActual] = useState<number>(1);
     const { inmueble } = useFormulario();
 
     const siguiente = () => {
         const fnValidar = validaciones[actual];
         const salida = fnValidar(inmueble);
-
-        if(salida === true){
-            setActual((prev) => prev + 1);
-        }else{
-            toast.error(salida);
-            <ToastContainer/>
+        if (salida === true) {
+            setActual(prev => prev + 1);
+        } else {
+            toast.error(salida, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                style: { fontSize: '0.9rem' },
+                transition: Bounce,
+            });
         }
-    }
+    };
 
-    const anterior = () => {
-        setActual((prev) => prev - 1);
-    }
+    const handleClick = () => {
+        if (actual < 10) {
+            siguiente();
+        }
+    };
 
-    const estiloBoton = {
-        style:"text-center bg-[#007aff] p-4 rounded-lg w-[150px] text-white font-semibold text-lg hover:bg-opacity-90"
-    }
+    const anterior = () => setActual(prev => prev - 1);
 
-    return(
-        <div>
-            <div className="w-[95%] mx-auto mt-10 h-[500px] overflow-hidden overflow-y-auto">
-                {actual === 1 && <TipoInmueble/>} 
-                {actual === 2 && <ServiciosAmenidades/>}
-                {actual === 3 && <InformacionGeneral/>}
-                {actual === 4 && <Fotos/>}
-                {actual === 5 && <Ubicacion/>}
-                {actual === 6 && <ConfirmarUbicacion/>}
-                {actual === 7 && <Titulo/>}
-                {actual === 8 && <Descripcion/>}
-                {actual === 9 && <Restricciones/>}
-                {actual === 10 && <CostoMes/>}
-                {actual === 11 && <Confirmar/>}
-            </div>
-            <div className="w-[95%] mx-auto">
-                <Progress size="sm" aria-label="Loading..." value={(actual / 11) * 100}/>
-                <div className="flex justify-between my-10">
-                    {
-                        actual > 1 && <Button contenido="Anterior" onClick={anterior} className={estiloBoton.style} />
-                    }
-                    
-                    {
-                        actual < 11 ? <Button contenido="Siguiente" onClick={siguiente} className={estiloBoton.style}/> : (
-                            <Button contenido="Enviar" onClick={null} className={estiloBoton.style}/>
-                        )
-                    }
+    return (
+        <div className="w-full">
+            <PerfectScrollbar>
+                <div className="h-[100vh]">
+                    <div className="w-full sm:w-3/4 mt-8 mx-auto h-auto overflow-hidden overflow-y-auto">
+                        {actual === 1 && <TipoInmueble />}
+                        {actual === 2 && <ServiciosAmenidades />}
+                        {actual === 3 && <InformacionGeneral />}
+                        {actual === 4 && <Fotos />}
+                        {actual === 5 && <Ubicacion />}
+                        {actual === 6 && <ConfirmarUbicacion />}
+                        {actual === 7 && <AddProperty />}
+                        {actual === 8 && <Restricciones />}
+                        {actual === 9 && <CostoMes />}
+                        {actual === 10 && <Confirmar />}
+                    </div>
+                    <div className="w-full sm:w-3/4 mx-auto pt-5 pb-10">
+                        <Progress
+                            size="sm"
+                            aria-label="Loading..."
+                            classNames={{
+                                label: "font-medium text-default-700 dark:text-gray-200",
+                                value: "text-gray-700 dark:text-gray-200",
+                            }}
+                            value={(actual / 10) * 100}
+                            label={`Paso ${actual} de 10`}
+                            showValueLabel={true}
+                        />
+                        <div className="flex justify-between mt-5 mb-10">
+                            <Button
+                                onClick={anterior}
+                                style={{
+                                    backgroundColor: actual === 1 ? '#64748b' : '#1e293b',
+                                    color: actual === 1 ? '#fff' : '#fff',
+                                }}
+                                disabled={actual === 1}
+                            >
+                                Anterior
+                            </Button>
+                            <Button
+                                color={actual < 10 ? 'primary' : 'success'}
+                                onClick={handleClick}
+                            >
+                                {actual < 10 ? "Siguiente" : "Enviar"}
+                            </Button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </PerfectScrollbar >
+        </div >
     );
 }

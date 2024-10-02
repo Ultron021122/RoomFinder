@@ -2,9 +2,7 @@ import Publish from "@/components/Dashboard/Publish";
 
 function PublishPage() {
   return (
-    <>
-      <Publish />
-    </>
+    <Publish />
   );
 }
 

@@ -1,48 +1,63 @@
 'use client';
 
 import { useFormulario } from "./FormularioContext";
-import ImageElement from "../GeneralComponents/ImageElement";
-import { ImageElementStyles } from "./ServiciosAmenidades";
-import clsx from 'clsx';
+import { Building, DoorClosed, Home } from "lucide-react";
+import { Card, CardFooter, Image, Button } from "@nextui-org/react";
+
 
 const tiposInmueble = [
-    {icon:'/icon/house.svg', content:'Casa'},
-    {icon:'/icon/room.svg', content:'Cuarto'},
-    {icon:'/icon/building.svg', content:'Departamento'}
+    { icon: <Home size={24} />, content: 'Casa', img: '/utils/tipoPropiedad.jpg' },
+    { icon: <DoorClosed size={24} />, content: 'Habitación', img: '/utils/tipoPropiedad2.jpg' },
+    { icon: <Building size={24} />, content: 'Departamento', img: '/utils/tipoPropiedad3.jpg' }
 ]
 
 export default function TipoInmueble() {
-    const { inmueble ,setInmueble, reiniciarValores } = useFormulario();
+    const { inmueble, setInmueble, reiniciarValores } = useFormulario();
 
-    const handleSelect = (tipo : string) => {
-        
-        if(inmueble.tipoInmueble !== ''){
+    const handleSelect = (tipo: string) => {
+
+        if (inmueble.tipoInmueble.trim() !== '') {
             reiniciarValores();
         }
 
-        setInmueble({tipoInmueble:tipo});
-    }    
+        setInmueble({ tipoInmueble: tipo });
+    }
 
-    return(
+    return (
         <div className="h-full">
-            <h2 className="text-center font-semibold text-3xl mb-10">Seleccione el tipo de inmueble a publicar</h2>
-            <div className="h-[65%] flex justify-evenly items-center">
+            <h2 className="font-semibold text-base sm:text-xl md:text-2xl mb-10 text-neutral-900 dark:text-gray-100">
+                Seleccione el tipo de inmueble a publicar
+            </h2>
+            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                 {
                     tiposInmueble.map((data, index) =>
-                        <ImageElement
+                        <div
                             key={index}
-                            icon={data.icon}
-                            content={data.content}
-                            width={ImageElementStyles.width}
-                            height={ImageElementStyles.height}
-                            style={clsx(
-                                ImageElementStyles.style,
-                                {
-                                    'bg-zinc-300' : data.content === inmueble.tipoInmueble
-                                }
-                            )}
                             onClick={() => handleSelect(data.content)}
-                        />
+                        >
+                            <Card
+                                isFooterBlurred
+                                radius="lg"
+                                className="border-none bg-gray-800"
+                            >
+                                <div className="h-52">
+                                    <Image
+                                        alt={`Icono de ${data.content}`}
+                                        height={800}
+                                        src={data.img}
+                                        width={800}
+                                        className='object-cover w-full h-full'
+                                    />
+                                </div>
+                                <CardFooter
+                                    className={`justify-center bg-black/20 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10 ${inmueble.tipoInmueble === data.content ? 'bg-[#007aff]' : ''}`}
+                                >
+                                    <p className={`text-center text-sm ${inmueble.tipoInmueble === data.content ? 'text-white' : 'text-white/80'}`}>
+                                        {data.content}
+                                    </p>
+                                </CardFooter>
+                            </Card>
+                        </div>
                     )
                 }
             </div>

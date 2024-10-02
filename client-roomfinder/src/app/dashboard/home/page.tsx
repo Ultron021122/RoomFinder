@@ -1,6 +1,5 @@
 'use client';
 import Home from '@/components/Dashboard/Home';
-import AppHome from '@/components/App/Home';
 import { useSession } from 'next-auth/react';
 import { rolesMapping, role } from "@/utils/constants";
 import { UserProfile } from "@/utils/interfaces";

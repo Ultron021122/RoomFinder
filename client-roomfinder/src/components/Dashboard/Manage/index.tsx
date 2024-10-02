@@ -334,7 +334,7 @@ export default function ManageComponent() {
   );
 
   return (
-    <div className="">
+    <div className="overflow-x-visible max-w-full">
       <Table
         isCompact
         removeWrapper
