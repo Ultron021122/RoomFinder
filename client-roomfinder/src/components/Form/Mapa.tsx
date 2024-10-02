@@ -20,7 +20,7 @@ export default function Mapa() {
 
         mapRef.current = new mapboxgl.Map({
             container: mapContainerRef.current,
-            style: 'mapbox://styles/mapbox/streets-v12',
+            style: 'mapbox://styles/mapbox/outdoors-v12',
             center: [-103.3274, 20.662],
             zoom: 10
         });
@@ -84,6 +84,6 @@ export default function Mapa() {
     }, []);
 
     return (
-        <div ref={mapContainerRef} className="h-96 w-96 sm:w-[400px] md:w-[700px] rounded-sm mx-auto" />
+        <div ref={mapContainerRef} className="h-96 w-96 sm:w-[400px] md:w-[500px] lg:w-[725px] rounded-sm mx-auto" />
     );
 }

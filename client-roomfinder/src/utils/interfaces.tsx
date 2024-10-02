@@ -221,6 +221,11 @@ export interface MapDataComponent {
      * zoom: 15
      */
     zoom: number;
+    /**
+     * Style property
+     * @example
+     */
+    style?: string;
 }
 
 /**

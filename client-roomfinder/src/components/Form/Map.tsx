@@ -12,14 +12,16 @@ const customIcon = new Icon({
     iconSize: [52, 52]
 });
 
-export default function Map({ position, zoom }: MapDataComponent) {
+const styleDefault = 'rounded-sm shadow-lg h-96 w-96 sm:w-[400px] md:w-[500px] lg:w-[725px] mx-auto';
+
+export default function Map({ position, zoom, style }: MapDataComponent) {
     return (
         <div>
             <MapContainer
                 center={position}
                 zoom={zoom}
                 scrollWheelZoom={false}
-                className="rounded-lg shadow-lg h-96 w-96 sm:w-[400px] md:w-[700px] mx-auto"
+                className={style ? style : styleDefault}
                 zoomControl={false}
             >
                 <TileLayer
@@ -31,8 +33,8 @@ export default function Map({ position, zoom }: MapDataComponent) {
                     icon={customIcon}
                 >
                     <Popup>
-                        This Marker icon is displayed correctly with{" "}
-                        <i>leaflet-defaulticon-compatibility</i>.
+                        Ubicación de la propiedad. <br />
+                        <i>Propiedad Marcada</i>.
                     </Popup>
                 </Marker>
             </MapContainer>
