@@ -153,7 +153,7 @@ export default function Confirmar() {
             </div>
             <div className="my-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="mx-auto my-5 p-2">
+                    <div className="my-5 p-2">
                         <DynamicMap
                             position={[latitud, longitud]}
                             zoom={16}
@@ -308,11 +308,11 @@ export default function Confirmar() {
                     </div>
                 </div>
                 <h3
-                    className="font-semibold text-sm sm:text-base my-3 text-blue-600 dark:text-blue-400">
+                    className="font-semibold text-sm sm:text-base my-5 text-blue-600 dark:text-blue-400">
                     Servicios y amenidades
                 </h3>
                 <div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
                         {/* contenedor de servicios */}
                         {
                             servicios.map((servicio, index) => {
@@ -320,12 +320,12 @@ export default function Confirmar() {
                                 return (
                                     <div
                                         key={index}
-                                        className="rounded-md text-center text-xs md:text-sm px-5 py-3 flex flex-col items-center text-neutral-900 bg-gray-200 dark:text-gray-200 dark:bg-blue-500"
+                                        className="rounded-md text-center text-xs px-5 py-3 flex flex-col items-center text-neutral-900 bg-gray-200 dark:text-gray-200 dark:border dark:border-gray-300 dark:bg-transparent"
                                     >
                                         <Image
                                             src={icono}
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                             alt={`Icono de ${servicio}`}
                                             className="filter dark:invert"
                                         />
@@ -340,12 +340,12 @@ export default function Confirmar() {
                                 return (
                                     <div
                                         key={index}
-                                        className="rounded-md text-center text-xs md:text-sm px-5 py-3 flex flex-col items-center text-neutral-900 bg-gray-200 dark:text-gray-200 dark:bg-blue-500"
+                                        className="rounded-md text-center text-xs px-5 py-3 flex flex-col items-center text-neutral-900 bg-gray-200 dark:text-gray-200 dark:border dark:border-gray-300 dark:bg-transparent"
                                     >
                                         <Image
                                             src={icono}
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                             alt={`Icono de ${amenidad}`}
                                             className="filter dark:invert"
                                         />
@@ -363,11 +363,11 @@ export default function Confirmar() {
                         className="font-semibold text-sm sm:text-base my-3 text-blue-600 dark:text-blue-400">
                         Información general del inmueble
                     </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mx-auto">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mx-auto">
                         {/* Beds */}
-                        <div className="w-full bg-blue-200 p-3 mt-3 flex justify-between rounded-md">
+                        <div className="w-full border dark:border-gray-200 p-3 mt-3 flex justify-between rounded-md">
                             <div className="flex items-center">
-                                <div className="p-3 bg-blue-500 rounded-full">
+                                <div className="p-3 bg-blue-500 dark:bg-blue-400 rounded-full">
                                     <Image
                                         src={'/icon/beds.png'}
                                         width={30}
@@ -381,16 +381,16 @@ export default function Confirmar() {
                                         className="font-semibold text-sm sm:text-base">
                                         Camas
                                     </h3>
-                                    <p className="text-xs text-neutral-800">
+                                    <p className="text-xs text-neutral-800 dark:text-neutral-200">
                                         {`Cantidad: (${numCamas})`}
                                     </p>
                                 </div>
                             </div>
                         </div>
                         {/* Parking */}
-                        <div className="w-full bg-blue-200 p-3 mt-3 flex justify-between rounded-md">
+                        <div className="w-full border dark:border-gray-200 p-3 mt-3 flex justify-between rounded-md">
                             <div className="flex items-center">
-                                <div className="p-3 bg-blue-500 rounded-full">
+                                <div className="p-3 bg-blue-500 dark:bg-blue-400 rounded-full">
                                     <Image
                                         src={'/icon/parking.png'}
                                         width={30}
@@ -404,7 +404,7 @@ export default function Confirmar() {
                                         className="font-semibold text-sm sm:text-base">
                                         Estacionamiento
                                     </h3>
-                                    <p className="text-xs text-neutral-800">
+                                    <p className="text-xs text-neutral-800 dark:text-neutral-200">
                                         {
                                             amenidades.includes('Estacionamiento') ?
                                                 `Capacidad: (${capEstacionamiento})` :
@@ -415,9 +415,9 @@ export default function Confirmar() {
                             </div>
                         </div>
                         {/* Huespedes */}
-                        <div className="w-full bg-blue-200 p-3 mt-3 flex justify-between rounded-md">
+                        <div className="w-full border dark:border-gray-200 p-3 mt-3 flex justify-between rounded-md">
                             <div className="flex items-center">
-                                <div className="p-3 bg-blue-500 rounded-full">
+                                <div className="p-3 bg-blue-500 dark:bg-blue-400 rounded-full">
                                     <Image
                                         src={'/icon/people.png'}
                                         width={30}
@@ -431,16 +431,16 @@ export default function Confirmar() {
                                         className="font-semibold text-sm sm:text-base">
                                         Huespedes
                                     </h3>
-                                    <p className="text-xs text-neutral-800">
+                                    <p className="text-xs text-neutral-800 dark:text-neutral-200">
                                         {`Cantidad: (${numHuespedes})`}
                                     </p>
                                 </div>
                             </div>
                         </div>
                         {/* Bedroom */}
-                        <div className="w-full bg-blue-200 p-3 mt-3 flex justify-between rounded-md">
+                        <div className="w-full border dark:border-gray-200 p-3 mt-3 flex justify-between rounded-md">
                             <div className="flex items-center">
-                                <div className="p-3 bg-blue-500 rounded-full">
+                                <div className="p-3 bg-blue-500 dark:bg-blue-400 rounded-full">
                                     <Image
                                         src={'/icon/bedroom-furniture.png'}
                                         width={30}
@@ -454,16 +454,16 @@ export default function Confirmar() {
                                         className="font-semibold text-sm sm:text-base">
                                         Recámaras
                                     </h3>
-                                    <p className="text-xs text-neutral-800">
+                                    <p className="text-xs text-neutral-800 dark:text-neutral-200">
                                         {`Cantidad: (${numRecamaras})`}
                                     </p>
                                 </div>
                             </div>
                         </div>
                         {/* Bathroom */}
-                        <div className="w-full bg-blue-200 p-3 mt-3 flex justify-between rounded-md">
+                        <div className="w-full border dark:border-gray-200 p-3 mt-3 flex justify-between rounded-md">
                             <div className="flex items-center">
-                                <div className="p-3 bg-blue-500 rounded-full">
+                                <div className="p-3 bg-blue-500 dark:bg-blue-400 rounded-full">
                                     <Image
                                         src={'/icon/bathroom-cabinet.png'}
                                         width={30}
@@ -477,7 +477,7 @@ export default function Confirmar() {
                                         className="font-semibold text-sm sm:text-base">
                                         Baños
                                     </h3>
-                                    <p className="text-xs text-neutral-800">
+                                    <p className="text-xs text-neutral-800 dark:text-neutral-200">
                                         {`Cantidad: (${numBanos})`}
                                     </p>
                                 </div>
