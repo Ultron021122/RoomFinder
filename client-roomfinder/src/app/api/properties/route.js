@@ -1,0 +1,72 @@
+import axios from "axios";
+import { NextResponse } from "next/server";
+import { deleteImage, uploadImage } from "../cloudinary";
+
+
+export async function POST(req, res) {
+    const { tipoInmueble, servicios, amenidades, numRecamaras, numCamas, numBanos, numHuespedes, capEstacionamiento, fotos, ubicacion, titulo, descripcion, reglas, precio } = await req.json();
+    let imageUrl;
+    try {
+        imageUrl = await uploadImage(
+            vchimage,
+            'properties', // noombre de la carpeta en la que se va a almacenar los archivos
+            {
+                transformation: [
+                    { width: 800, height: 600, crop: "fill" },
+                    { quality: "auto" },
+                    { format: "jpg" }
+                ]
+            }
+        );
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json(
+            { messages: "Server error" },
+            { status: 503 }
+        );
+    }
+
+    try {
+        const response = await axios.post(`${process.env.REST_URL}/students/`, {
+            vchname,
+            vchpaternalsurname,
+            vchmaternalsurname,
+            vchemail,
+            vchpassword,
+            dtbirthdate,
+            bnstatus,
+            bnverified: false,
+            vchimage: imageUrl.secure_url,
+            roleid,
+            intcodestudent,
+            vchuniversity,
+        }, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
+
+        const statusMessageMap = {
+            201: { message: 'Estudiante creado correctamente', data: response.data },
+            409: { message: 'El correo ya está registrado' },
+            400: { message: response.data.message },
+            default: { message: 'Error al crear el estudiante' },
+        };
+
+        const message = statusMessageMap[response.status] || statusMessageMap.default;
+        return NextResponse.json(
+            { message },
+            { status: response.status }
+        );
+
+    } catch (error) {
+        console.error(error)
+        if (imageUrl && imageUrl.public_id) {
+            await deleteImage(imageUrl.public_id);
+        }
+        return NextResponse.json(
+            { message: 'Server error' },
+            { status: 503 }
+        );
+    }
+}

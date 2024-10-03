@@ -29,7 +29,7 @@ export interface Inmueble {
     titulo:string;
     descripcion: string;
     reglas: string[];
-    costo: number;
+    precio: number;
     [key : string]: any
 }
 
@@ -58,7 +58,7 @@ const valoresDefectoInmueble : Inmueble = {
     titulo:'',
     descripcion: '',
     reglas: [],
-    costo: 0,
+    precio: 0,
 }
 
 // Interfaz para el contexto

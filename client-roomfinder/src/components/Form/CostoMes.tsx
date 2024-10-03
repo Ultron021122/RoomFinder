@@ -74,7 +74,7 @@ export default function CostoMes() {
                     startAdornment={
                         <InputAdornment position="start"
                             sx={{
-                                color: '#a3a3a3',
+                                color: '#fff', // Color del ícono
                             }}
                         > {/* Color del ícono */}
                             $
@@ -83,7 +83,7 @@ export default function CostoMes() {
                     sx={{
                         '& .MuiInputBase-input': {
                             fontSize: '1rem', // Tamaño del texto
-                            color: '#a3a3a3', // Color del texto
+                            color: '#fff', // Color del texto
                         },
                         '&:before': {
                             borderBottom: '2px solid #a3a3a3', // Color del borde antes de enfocar
@@ -108,7 +108,7 @@ export default function CostoMes() {
                 {imagenes}
             </div>
             <p className="text-sm mt-2 sm:text-base md:text-xl font-semibold text-neutral-800 dark:text-gray-300">Fotografías del inmueble</p>
-            <p className="text-gray-600 mb-4 text-sm italic">No todas las fotografías están incluidas en este apartado. Posteriormente se mostrarán todas.</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm italic">No todas las fotografías están incluidas en este apartado. Posteriormente se mostrarán todas.</p>
         </div>
     );
 }

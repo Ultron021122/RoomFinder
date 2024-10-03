@@ -61,22 +61,9 @@ export default function AppInmuebles (){
     ]
 
     return(
-        <>
+        <div>
             <Breadcrumb pageName="Inmuebles" />
             <Header />
-            {/*
-            <section className="relative h-72">
-                <Image
-                    src={'/background/fondo-6.jpg'}
-                    alt='RoomFinder background image'
-                    layout="fill"
-                    objectFit="cover"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <h1 className="font-semibold text-white text-4xl">Inmuebles con disponibilidad</h1>
-                </div>
-            </section>
-            */}
             {/* momentaneo */}
             <section className="my-12">
                 <div className="w-[95%] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"> {/* contenedor de propiedades */}
@@ -88,6 +75,6 @@ export default function AppInmuebles (){
                     <CardElement inmueble={inmuebles[2]}/>
                 </div>
             </section>
-        </>
+        </div>
     );
 }

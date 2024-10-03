@@ -88,7 +88,7 @@ const Registrar = () => {
                             autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
-                            pauseOnHover: true,
+                            pauseOnHover: false,
                             draggable: false,
                             progress: undefined,
                             theme: "colored",
@@ -171,7 +171,7 @@ const Registrar = () => {
     // Render de Estudiante
     const renderStudent = () => {
         return (
-            <>
+            <div>
                 <div className="relative z-0 w-full mb-2 group">
                     <input
                         {...register("intcodestudent", {
@@ -302,13 +302,13 @@ const Registrar = () => {
                         )}
                     </FormControl>
                 </div>
-            </>
+            </div>
         );
     };
     // Render de Arrendador 
     const renderLessor = () => {
         return (
-            <>
+            <div>
                 <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
                     <div>
                         <div className="relative z-0 w-full group">
@@ -464,12 +464,12 @@ const Registrar = () => {
                         )}
                     </div>
                 </div>
-            </>
+            </div>
         );
     };
 
     return (
-        <>
+        <div>
             <section className="bg-gray-50 dark:bg-gray-900">
                 <PerfectScrollbar>
                     {isLoading ?
@@ -830,7 +830,7 @@ const Registrar = () => {
                     }
                 </PerfectScrollbar>
             </section >
-        </>
+        </div>
     );
 }
 
