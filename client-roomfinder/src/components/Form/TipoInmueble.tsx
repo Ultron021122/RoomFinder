@@ -2,8 +2,7 @@
 
 import { useFormulario } from "./FormularioContext";
 import { Building, DoorClosed, Home } from "lucide-react";
-import { Card, CardFooter, Image, Button } from "@nextui-org/react";
-
+import { Card, CardFooter, Image } from "@nextui-org/react";
 
 const tiposInmueble = [
     { icon: <Home size={24} />, content: 'Casa', img: '/utils/tipoPropiedad.jpg' },

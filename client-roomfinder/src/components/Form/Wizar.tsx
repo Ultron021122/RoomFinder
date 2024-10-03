@@ -4,7 +4,7 @@ import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Button, Progress } from "@nextui-org/react";
 import { useFormulario, Inmueble } from "./FormularioContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TipoInmueble from "./TipoInmueble";
 import ServiciosAmenidades from "./ServiciosAmenidades";
 import InformacionGeneral from "./InformacionGeneral";
@@ -19,6 +19,8 @@ import Confirmar from "./Confirmar";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import AddProperty from "./Titulo";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const esNumero = (valor?: string): boolean => valor !== undefined && /^[0-9]+$/.test(valor);
 export const inputVacio = (input?: string): boolean => !input;
@@ -75,6 +77,9 @@ const validaciones: Record<number, FuncionValidacion> = {
 export default function Wizar() {
     const [actual, setActual] = useState<number>(1);
     const { inmueble } = useFormulario();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [errorSystem, setErrorSystem] = useState<string | null>(null);
+    const router = useRouter();
 
     const siguiente = () => {
         const fnValidar = validaciones[actual];
@@ -97,10 +102,58 @@ export default function Wizar() {
         }
     };
 
-    const handleClick = () => {
-        if (actual < 10) {
-            siguiente();
+    // Errores
+    useEffect(() => {
+        if (errorSystem) {
+            toast.error(errorSystem, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
         }
+    }, [errorSystem]);
+
+    const handleClick = () => {
+        if (actual < 10) return siguiente();
+        console.log(inmueble);
+        // Enviar formulario
+        const submit = async () => {
+            setIsLoading(true);
+            setErrorSystem(null);
+            // Intentar enviar la información
+            try {
+                const response = await axios.post('/api/properties', inmueble);
+                setIsLoading(false);
+                if (response.status === 201) {
+                    toast.success(response.data.message.message, {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        style: { fontSize: '0.9rem' },
+                        transition: Slide,
+                    });
+                    router.push('/dashboard/');
+                } else {
+                    setErrorSystem(response.data.message);
+                }
+            } catch (Error: any) {
+                setErrorSystem(Error.response.data.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        submit();
     };
 
     const anterior = () => setActual(prev => prev - 1);
