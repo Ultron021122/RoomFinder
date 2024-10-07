@@ -16,6 +16,7 @@ export interface InterfaceUbicacion {
 }
 
 export interface Inmueble {
+    lessorId?: number;
     tipoInmueble: string;
     servicios: string[];
     amenidades: string[];
@@ -26,9 +27,9 @@ export interface Inmueble {
     capEstacionamiento: number,
     fotos: File[];
     ubicacion: InterfaceUbicacion;
-    titulo:string;
-    descripcion: string;
-    reglas: string[];
+    titulo:string;//
+    descripcion: string;//
+    reglas: string[];//
     precio: number;
     [key : string]: any
 }

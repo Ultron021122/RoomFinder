@@ -33,12 +33,17 @@ export default function InformacionGeneral() {
 
     return (
         <div>
-            <h2 className="font-semibold text-base sm:text-xl md:text-2xl mb-8 text-neutral-900 dark:text-gray-100">
-                Información general del inmueble
-            </h2>
+            <div className='mb-12 text-center'>
+                <h2 className="font-semibold text-base sm:text-xl md:text-2xl text-neutral-900 dark:text-gray-100">
+                    Información general
+                </h2>
+                <p className="text-sm mb-8 text-neutral-800 dark:text-gray-400">
+                    Selecciona la cantidad de recámaras, camas, baños y huéspedes
+                </p>
+            </div>
             <div className="flex flex-col gap-4">
                 {inmueble.tipoInmueble === 'Casa' && (
-                    <div>
+                    <div className="space-y-3 md:space-y-4">
                         <PropertyModifier content="Recámaras" min={Casa.recamaras.min} max={Casa.recamaras.max} />
                         <PropertyModifier content="Camas" min={Casa.camas.min} max={Casa.camas.max} />
                         <PropertyModifier content="Baños" min={Casa.banos.min} max={Casa.banos.max} />

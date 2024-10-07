@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { Galeria } from '@/components/GeneralComponents/Galeria';
 import { useRouter } from 'next/navigation';
 import { MapPin, Star } from 'lucide-react';
-import TextFader from '@/components/GeneralComponents/TextFader';
 
 interface Imagen {
     id: number,
