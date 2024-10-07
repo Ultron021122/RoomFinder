@@ -24,11 +24,12 @@ export async function GET() {
 
 export async function POST(req, res) {
     const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, confirm_password, bnstatus, dtbirthdate, vchimage, roleid, intcodestudent, vchuniversity } = await req.json();
+    console.log('Image', vchimage);
     let imageUrl;
     try {
         imageUrl = await uploadImage(
             vchimage,
-            'students', // noombre de la carpeta en la que se va a almacenar los archivos
+            'students', // nombre de la carpeta en la que se va a almacenar los archivos
             {
                 transformation: [
                     { width: 600, height: 600, crop: "fill" },
