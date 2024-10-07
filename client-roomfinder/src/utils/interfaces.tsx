@@ -476,11 +476,11 @@ export interface Property {
      * @example
      * vchfurnituretype: 'Furniture type'
      */
-    vchfurnituretype: string;
+    vchfurnituretype?: string;
     /**
      * Rental cost
      * @example
-     * decrentalcost: 1000
+     * decrentalcost: 1000.00
      */
     decrentalcost: number;
     /**
@@ -528,10 +528,226 @@ export interface Property {
     /**
      * Property rules
      * @example
-     * vchpropertyrules: 'Property rules'
+     * vchpropertyrules: ['Property rules']
      */
-    vchpropertyrules: string;
+    vchpropertyrules: string[];
+    /**
+     * Location property
+     * @example
+     * vchlocation: ['address', 'city', 'state', 'country'] 
+     */
+    vchlocation: LocationProperty;
+    /**
+     * Property images
+     * @example
+     * vchimages: ['https://example.com/image.jpg']
+     */
+    vchimages: string[];
+    /**
+     * Property services
+     * @example
+     * bnpropertyservices: [PropertyServices]
+     */
+    bnpropertyservices: PropertyServices[];
 }
+/**
+ * Interface to manage the location property
+ * @interface
+ * @extends LocationProperty
+ */
+export interface LocationProperty {
+    /**
+     * Property address
+     * @example
+     * vchaddress: 'Property address'
+     */
+    vchaddress: string;
+    /**
+     * Property suburb
+     * @example
+     * vchsuburb: 'Property suburb'
+     */
+    vchsuburb: string;
+    /**
+     * Property municipality
+     * @example
+     * vchmunicipality: 'Property municipality'
+     */
+    vchmunicipality: string;
+    /**
+     * Property state
+     * @example
+     * vchstate: 'Property state'
+     */
+    vchstate: string;
+    /**
+     * Property country
+     * @example
+     * vchcountry: 'Property country'
+     */
+    vchcountry: string;
+    /**
+     * Property zip code
+     * @example
+     * intzipcode: 12345
+     */
+    intzipcode: number;
+    /**
+     * Property number exterior
+     * @example
+     * vchnumberexterior: 'Property number exterior'
+     */
+    vchnumberexterior: string;
+    /**
+     * Property number interior
+     * @example
+     * vchnumberinterior: 'Property number interior'
+     */
+    vchnumberinterior?: string;
+    /**
+     * Property latitude
+     * @example
+     * declatitude: 20.123456
+     */
+    declatitude: number;
+    /**
+     * Property longitude
+     * @example
+     * declongitude: -103.123456
+     */
+    declongitude: number;
+}
+
+/**
+ * Interface to manage the property services
+ * @interface
+ * @extends PropertyServices
+ */
+export interface PropertyServices {
+    /**
+     * Include water
+     * @example
+     * bnwaterincluded: true | false
+     */
+    bnwaterincluded: boolean;
+    /**
+     * Include electricity
+     * @example
+     * bnelectricityincluded: true | false
+     */
+    bnelectricityincluded: boolean;
+    /**
+     * Included internet
+     * @example
+     * bninternetincluded: true | false
+     */
+    bninternetincluded: boolean;
+    /**
+     * Include gas
+     * @example
+     * bngasincluded: true | false
+     */
+    bngasincluded: boolean;
+    /**
+     * Include heating
+     * @example
+     * bnheatingincluded: true | false
+     */
+    bnheatingincluded: boolean;
+    /**
+     * Include laundry
+     * @example
+     * bnlaundryincluded: true | false
+     */
+    bnlaundryincluded: boolean;
+    /**
+     * Include parking
+     * @example
+     * bnparkingincluded: true | false
+     */
+    bnparkingincluded: boolean;
+    /**
+     * Count of parking
+     * @example
+     * intparkingcount: 1
+     */
+    intparkingcount: number;
+    /**
+     * Include cleaning
+     * @example
+     * bncleaningincluded: true | false
+     */
+    bncleaningincluded: boolean;
+    /**
+     * Include cable tv
+     * @example
+     * bncabletvincluded: true | false
+     */
+    bncabletvincluded: boolean;
+}
+
+/**
+ * Interface to manage the property amenities
+ * @interface
+ * @extends PropertyAmenities
+ */
+export interface PropertyAmenities {
+    /**
+     * Include kitchen
+     * @example
+     * bnkitchenincluded: true | false
+     */
+    bnkitchenincluded: boolean;
+    /**
+     * Include refrigerator
+     * @example
+     * bnrefrigeratorincluded: true | false
+     */
+    bnrefrigeratorincluded: boolean;
+    /**
+     * Include dining room
+     * @example
+     * bndiningroomincluded: true | false
+     */
+    bndiningroomincluded: boolean;
+    /**
+     * Include living room
+     * @example
+     * bnlivingroomincluded: true | false
+     */
+    bnlivingroomincluded: boolean;
+    /**
+     * Include patio
+     * @example
+     * bnpatioincluded: true | false
+     */
+    bnpatioincluded: boolean;
+    /**
+     * Include laundry area
+     * @example
+     * bnlaundryareaincluded: true | false
+     */
+    bnlaundryareaincluded: boolean;
+    /**
+     * Include air conditioning
+     * @example
+     * bnairconditioningincluded: true | false
+     */
+    bnairconditioningincluded: boolean;
+    /**
+     * Include heating
+     * @example
+     * bnheatingincluded: true | false
+     */
+    bnheatingincluded: boolean;
+    /**
+     * Include washing machine
+     * @example
+     * bnwashingmachineincluded: true | false
+     */
+    bnwashingmachineincluded: boolean;
+}
+
 /**
  * Interface to manage Sidebar user props
  * @interface

@@ -3,8 +3,7 @@ import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger 
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from "next-auth/react";
 import { MoreVertical } from "lucide-react";
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { rolesMapping } from "@/utils/constants";
+import React, { createContext, useContext } from "react";
 import { shortName } from "@/utils/functions";
 import Link from 'next/link';
 import { SidebarUserProps } from "@/utils/interfaces";
@@ -13,23 +12,12 @@ import Image from "next/image";
 interface SidebarProps {
   children: React.ReactNode;
   expanded: boolean;
-  onResize: () => void;
 }
 
 const SidebarContext = createContext({ expanded: false });
-export default function Sidebar({ children, expanded, onResize }: SidebarProps) {
+export default function Sidebar({ children, expanded }: SidebarProps) {
   const { data: session } = useSession();
   const user = session?.user as SidebarUserProps;
-  const roleName = rolesMapping[user?.roleid] || 'Desconocido';
-
-  useEffect(() => {
-    function handleResize() {
-      onResize();
-    }
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [onResize]);
 
   return (
     <aside>
@@ -165,12 +153,14 @@ export function SidebarItem({
   active,
   alert,
   url,
+  onClickSidebar
 }: {
   icon: any;
   text: any;
   active?: any;
   alert?: any;
   url: string;
+  onClickSidebar?: () => void; // Define the type of onClick
 }) {
   const { expanded } = useContext(SidebarContext);
   const pathname = usePathname();
@@ -186,6 +176,7 @@ export function SidebarItem({
           : "hover:bg-blue-50 dark:hover:bg-blue-900"
         }
         `}
+      onClick={onClickSidebar}
     >
       <Link
         href={`${url}`}

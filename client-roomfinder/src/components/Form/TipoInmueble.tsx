@@ -1,13 +1,13 @@
 'use client';
 
 import { useFormulario } from "./FormularioContext";
-import { Building, DoorClosed, Home } from "lucide-react";
-import { Card, CardFooter, Image } from "@nextui-org/react";
+import { Card, CardFooter} from "@nextui-org/react";
+import Image from "next/image";
 
 const tiposInmueble = [
-    { icon: <Home size={24} />, content: 'Casa', img: '/utils/tipoPropiedad.jpg' },
-    { icon: <DoorClosed size={24} />, content: 'Habitación', img: '/utils/tipoPropiedad2.jpg' },
-    { icon: <Building size={24} />, content: 'Departamento', img: '/utils/tipoPropiedad3.jpg' }
+    { content: 'Casa', img: '/utils/tipoPropiedad.jpg' },
+    { content: 'Habitación', img: '/utils/tipoPropiedad2.jpg' },
+    { content: 'Departamento', img: '/utils/tipoPropiedad3.jpg' }
 ]
 
 export default function TipoInmueble() {
@@ -24,9 +24,14 @@ export default function TipoInmueble() {
 
     return (
         <div className="h-full">
-            <h2 className="font-semibold text-base sm:text-xl md:text-2xl mb-10 text-neutral-900 dark:text-gray-100">
-                Seleccione el tipo de inmueble a publicar
-            </h2>
+            <div className='mb-12 text-center'>
+                <h2 className="font-semibold text-base sm:text-xl md:text-2xl text-neutral-900 dark:text-gray-100">
+                    Tipo de inmueble
+                </h2>
+                <p className="text-sm mb-8 text-neutral-800 dark:text-gray-400">
+                    Selecciona el tipo de inmueble que deseas publicar
+                </p>
+            </div>
             <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                 {
                     tiposInmueble.map((data, index) =>
@@ -39,12 +44,11 @@ export default function TipoInmueble() {
                                 radius="lg"
                                 className="border-none bg-gray-800"
                             >
-                                <div className="h-52">
+                                <div className="relative h-52 overflow-hidden">
                                     <Image
-                                        alt={`Icono de ${data.content}`}
-                                        height={800}
                                         src={data.img}
-                                        width={800}
+                                        alt={`Icono de ${data.content}`}
+                                        fill
                                         className='object-cover w-full h-full'
                                     />
                                 </div>
