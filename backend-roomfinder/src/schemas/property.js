@@ -24,10 +24,14 @@ const propertySchema = z.object({
     suburb: z.string(),
     municipality: z.string(),
     state: z.string(),
+    country: z.string(),
+    num_ext: z.string(),
+    num_int: z.string().optional(),
     lat: z.number().min(-90).max(90, 'La latitud debe ser menor o igual a 90'),
     lng: z.number().min(-180).max(180, 'La longitud debe ser menor o igual a 180'),
     availability: z.enum([0, 1]),
     price: z.number().positive(),
+    rules: z.array(z.string()).min(1, { message: 'Must have at least one rule' }),
 })
 
 export function validateProperty(input) {

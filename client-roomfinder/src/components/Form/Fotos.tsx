@@ -57,11 +57,11 @@ function ImageUploader() {
         return inmueble.fotos.map((imagen, index) => {
             const imagenURL = URL.createObjectURL(imagen);
             return (
-                <div key={index} className="relative group w-full h-0 pb-[100%] m-2"> {/* Proporción 1:1 */}
+                <div key={index} className="relative group w-full h-0 pb-[100%]"> {/* Proporción 1:1 */}
                     <Image
                         src={imagenURL}
                         alt={`preview de imagen ${index}`}
-                        layout="fill"
+                        fill
                         objectFit="cover" // Asegura que la imagen cubra el contenedor
                     />
                     <button
@@ -95,7 +95,7 @@ function ImageUploader() {
                 </div>
             </div>
             {/* mostrar los preview */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-5">
                 {renderPreviews()}
             </div>
         </div>

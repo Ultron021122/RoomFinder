@@ -6,9 +6,11 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import mapboxgl, { Map } from "mapbox-gl";
 import { useFormulario, InterfaceUbicacion } from './FormularioContext';
 import { useRef, useEffect } from 'react';
+import useSidebarStore from '@/stores/useSideStore';
 
 export default function Mapa() {
     const { setInmueble } = useFormulario();
+    const { expanded, toggleSidebar } = useSidebarStore();
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const mapRef = useRef<Map | null>(null);
     const markerRef = useRef<mapboxgl.Marker | null>(null);
