@@ -3,24 +3,32 @@
 import Sidebar, { SidebarItem } from "@/components/Navegate";
 import { AppBar, IconButton, Toolbar } from "@mui/material";
 import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { rolesMapping } from "@/utils/constants";
 // Alerts and notifications
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 /* Iconos */
-import { GraduationCapIcon, Home, LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal } from "lucide-react";
+import { GraduationCapIcon, Home, LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal, MoreVerticalIcon } from "lucide-react";
 import { UserProfile } from "@/utils/interfaces";
 import Link from "next/link";
 import useSidebarStore from "@/stores/useSideStore";
+import { useRouter } from "next/navigation";
 
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const { expanded, toggleSidebar } = useSidebarStore();
     const [windowWidth, setWindowWidth] = useState(0);
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
+    const router = useRouter();
     const user = session?.user as UserProfile;
+
+    const dropdownItems = [
+        { text: 'Profile', onClick: () => console.log('Profile clicked') },
+        { text: 'Settings', onClick: () => console.log('Settings clicked') },
+        { text: 'Cerrar sesión ', onClick: () => signOut() },
+    ];
 
     // Update the window width state
     useEffect(() => {
@@ -36,6 +44,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         // Clean up the event listener
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    // Redirect to login page if the user is not authenticated
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            router.push('/users/login');
+        }
+    }, [status]);
 
     const roleName = rolesMapping[user?.roleid] || 'Desconocido';
     const handleSidebarItemClick = () => {
@@ -69,7 +84,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         </IconButton>
                         <Link href="/" className="flex items-center">
                             <GraduationCapIcon size={25} />
-                            <h1 className="ml-1 text-2xl font-semibold">
+                            <h1 className="ml-2 text-2xl font-semibold">
                                 Roomfinder
                             </h1>
                         </Link>
@@ -78,6 +93,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <div
                     className="flex flex-1"
                 >
+                    {/* Sidebar */}
                     <Sidebar expanded={expanded}>
                         <SidebarItem
                             icon={<LayoutDashboard size={20} />}
@@ -129,6 +145,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             text="Ajustes"
                             url="/dashboard/settings"
                             onClickSidebar={handleSidebarItemClick}
+                        />
+                        <SidebarItem
+                            icon={<MoreVerticalIcon size={20} />}
+                            vchname={user?.vchname}
+                            vchpaternalsurname={user?.vchpaternalsurname}
+                            vchmaternalsurname={user?.vchmaternalsurname}
+                            url="/dashboard/profile"
+                            onClickSidebar={handleSidebarItemClick}
+                            dropdownItems={dropdownItems}
+                            color='active'
+                            alert
                         />
                     </Sidebar>
                     <main className={`flex-1 px-2 pt-4 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>

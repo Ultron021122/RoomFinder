@@ -61,8 +61,8 @@ export default function Inmuebles (){
                 <Image
                     src={'/background/fondo-6.jpg'}
                     alt='RoomFinder background image'
-                    layout="fill"
-                    objectFit="cover"
+                    fill
+                    className="object-cover w-full h-full"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
                     <h1 className="font-semibold text-white text-4xl">Mis Inmuebles en Renta</h1>

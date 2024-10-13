@@ -76,9 +76,7 @@ const handler = NextAuth({
     },
     events: {
         signOut: async (message) => {
-            console.log("signOut", message);
             const sessionid = message.token?.user as SessionInterface;
-            console.log("sessionid", sessionid.sessionid);
             try {
                 await fetch(`${process.env.REST_URL}/users/logout/`, {
                     method: "POST",
