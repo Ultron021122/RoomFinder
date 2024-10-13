@@ -7,12 +7,12 @@ export default function AppHome() {
         <div className="h-full max-w-screen-2xl mx-auto dark:bg-gray-900">
             <div className="mx-auto">
                 <Breadcrumb pageName="Inicio" />
-                <header className="relative h-96 sm:h-72 bg-gray-500">
+                <header className="relative h-96 sm:h-72 bg-gray-500 overflow-hidden">
                     <Image
                         src={'/background/fondo-1.jpg'}
                         alt="RoomFinder background image"
-                        layout='fill'
-                        objectFit='cover'
+                        fill
+                        className="object-cover w-full h-full"
                     />
                     <div className="flex flex-col justify-center items-center place-items-center absolute inset-0 bg-black bg-opacity-50">
                         <h1 className="font-semibold text-2xl md:text-5xl mb-4 text-white">¡Bienvenido a RoomFinder!</h1>
