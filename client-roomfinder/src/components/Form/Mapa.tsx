@@ -35,7 +35,6 @@ export default function Mapa() {
 
         geocoder.on('result', function (e) {
             const result = e.result;
-            console.log(result);
             const coordenadas = result.geometry.coordinates; // Latitud y longitud
             const lat = coordenadas[1];
             const lng = coordenadas[0];
@@ -86,6 +85,9 @@ export default function Mapa() {
     }, []);
 
     return (
-        <div ref={mapContainerRef} className="h-96 w-96 sm:w-[400px] md:w-[500px] lg:w-[725px] rounded-sm mx-auto" />
+        <div 
+            ref={mapContainerRef} 
+            className={`h-96 w-96 sm:w-[400px] ${expanded ? 'md:w-[400px]' : 'md:w-[500px]'} lg:w-[725px] rounded-sm mx-auto`}
+        />
     );
 }
