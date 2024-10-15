@@ -8,6 +8,7 @@ import { SidebarUserProps } from "@/utils/interfaces";
 import Dropdown from './dropdown';
 import { shortName } from '@/utils/functions';
 import useDropdownStore from '@/stores/useDropdownStore';
+import { rolesMapping } from '@/utils/constants';
 
 interface SidebarProps {
   children: React.ReactNode;
@@ -30,18 +31,7 @@ export default function Sidebar({ children, expanded }: SidebarProps) {
   );
 }
 
-export function SidebarItem({
-  icon,
-  text,
-  vchname,
-  vchpaternalsurname,
-  vchmaternalsurname,
-  color,
-  alert,
-  url,
-  onClickSidebar,
-  dropdownItems, // Prop para los elementos del dropdown
-}: {
+interface SidebarItemProps {
   icon: React.ReactNode;
   text?: string;
   vchname?: string;
@@ -52,20 +42,34 @@ export function SidebarItem({
   url: string;
   onClickSidebar?: () => void;
   dropdownItems?: { icon?: React.ReactNode; text: string; link?: string; onClick?: () => void }[]; // Define la estructura de los elementos del dropdown
-}) {
+}
+
+export function SidebarItem({
+  icon,
+  text,
+  vchname,
+  vchpaternalsurname,
+  vchmaternalsurname,
+  color,
+  alert,
+  url,
+  onClickSidebar,
+  dropdownItems
+}: SidebarItemProps) {
   const { expanded } = useContext(SidebarContext);
   const { toggleDropdown } = useDropdownStore();
   const pathname = usePathname();
   const { data: session } = useSession();
 
   const user = session?.user as SidebarUserProps;
+  const roleName = rolesMapping[user?.roleid] || 'Desconocido';
 
   return (
     <li className={`relative flex items-center justify-center my-1 font-medium rounded-md cursor-pointer transition-colors group z-50 ${pathname === url ? "bg-gradient-to-tr from-blue-200 to-blue-100 dark:from-blue-700 dark:to-blue-800" : "hover:bg-blue-50 dark:hover:bg-blue-900"}`} onClick={onClickSidebar}>
       {!dropdownItems ? (
         <Link href={url} className={`${pathname === url ? "px-3 py-2 text-blue-800 dark:text-blue-100" : "px-3 py-2 text-gray-600 dark:text-gray-400"} flex`}>
           {icon}
-          <span className={`overflow-hidden transition-all text-sm sm:text-base ${expanded ? "w-52 ml-3" : "w-0"}`}>
+          <span className={`overflow-hidden transition-all text-sm ${expanded ? "w-52 ml-3" : "w-0"}`}>
             {text}
           </span>
         </Link>
@@ -83,6 +87,7 @@ export function SidebarItem({
                 vchmaternalsurname: user?.vchmaternalsurname
               }) as string
             }
+            vchemail={user?.vchemail as string}
             vchimage={user?.vchimage as string}
             items={dropdownItems}
           />
@@ -97,7 +102,7 @@ export function SidebarItem({
               {vchname + ' ' + vchpaternalsurname + ' ' + vchmaternalsurname}
             </p>
             <span className='text-xs'>
-              administrador
+              {roleName}
             </span>
           </div>
         </div>

@@ -334,9 +334,8 @@ export default function ManageComponent() {
   );
 
   return (
-    <div className="overflow-x-visible max-w-full">
+    <div className="overflow-x-auto">
       <Table
-        isCompact
         removeWrapper
         aria-label="Table with users"
         bottomContent={bottomContent}
@@ -361,7 +360,7 @@ export default function ManageComponent() {
               key={column.uid}
               align={column.uid === "actions" ? "center" : "start"}
               allowsSorting={column.sortable}
-              className="whitespace-nowrap" // Asegura que los textos no se dividan
+              className={`whitespace-nowrap ${column.uid === 'name' ? 'sticky left-0 bg-white z-10' : ''}`}
             >
               {column.name}
             </TableColumn>
@@ -371,7 +370,7 @@ export default function ManageComponent() {
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (
-                <TableCell className="text-sm p-2">
+                <TableCell className={`text-sm p-2 ${columnKey === 'name' ? 'sticky left-0 bg-white z-10' : ''}`}>
                   {renderCell(item, columnKey)}
                 </TableCell>
               )}
@@ -381,4 +380,5 @@ export default function ManageComponent() {
       </Table>
     </div>
   );
+
 }
