@@ -30,7 +30,7 @@ const handler = NextAuth({
             },
             async authorize(credentials) {
                 try {
-                    const login = await fetch(`${process.env.REST_URL}/users/login`, {
+                    const login = await fetch(`${process.env.NEXT_PUBLIC_REST_URL}/users/login`, {
                         method: "POST",
                         headers: {
                             "Authorization": `Bearer ${process.env.REST_SECRET}`,

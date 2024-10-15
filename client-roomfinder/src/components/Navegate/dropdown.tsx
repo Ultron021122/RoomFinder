@@ -10,10 +10,11 @@ interface DropdownItem {
 interface DropdownProps {
   usuarioName: string;
   vchimage: string;
+  vchemail: string;
   items: DropdownItem[];
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ usuarioName, vchimage, items }) => {
+const Dropdown: React.FC<DropdownProps> = ({ usuarioName, vchimage, vchemail, items }) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const { isOpen, toggleDropdown, closeDropdown } = useDropdownStore();
 
@@ -57,7 +58,7 @@ const Dropdown: React.FC<DropdownProps> = ({ usuarioName, vchimage, items }) => 
             {usuarioName}
             </p>
             <span className='text-xs'>
-              Correo electronico
+              {vchemail}
             </span>
           </li>
           {items.map((item, index) => (

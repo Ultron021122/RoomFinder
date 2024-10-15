@@ -103,7 +103,9 @@ const DropdownUser = () => {
                 <DropdownItem key="settings" textValue="Configuraciones">
                     Mis Configuraciones
                 </DropdownItem>
-                <DropdownItem key="team_settings" textValue="Configuraciones de equipo">Team Settings</DropdownItem>
+                <DropdownItem key="team_settings" textValue="Configuraciones de equipo">
+                    Team Settings
+                </DropdownItem>
                 <DropdownSection aria-label="Help & Feedback">
                     <DropdownItem key="help_and_feedback" textValue="Ayuda">
                         Ayuda y Retroalimentación
