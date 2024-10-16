@@ -2,7 +2,7 @@
 
 import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { Button, Progress } from "@nextui-org/react";
+import { Progress } from "@nextui-org/react";
 import { useFormulario, Inmueble } from "./FormularioContext";
 import { useEffect, useState } from "react";
 import TipoInmueble from "./TipoInmueble";
@@ -19,10 +19,10 @@ import Confirmar from "./Confirmar";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import AddProperty from "./Titulo";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { UserProfile } from "@/utils/interfaces";
+import { Button } from "../ui/button";
 
 const esNumero = (valor?: string): boolean => valor !== undefined && /^[0-9]+$/.test(valor);
 export const inputVacio = (input?: string): boolean => !input;
