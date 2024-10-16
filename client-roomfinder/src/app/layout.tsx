@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Providers from "./providers";
 import { ToastContainer } from "react-toastify";
 import Navigate from "@/components/Navbar";
+import { ThemeProvider } from "@/components/theme-provider";
 // import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -32,12 +33,19 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={mainClass}>
-        <Providers>
-          <ToastContainer limit={3} />
-          <Navigate />
-          {children}
-          {/* <SpeedInsights /> */}
-        </Providers>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Providers>
+            <ToastContainer limit={3} />
+            <Navigate />
+            {children}
+            {/* <SpeedInsights /> */}
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );

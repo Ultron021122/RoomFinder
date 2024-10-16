@@ -60,18 +60,12 @@ export const CardOwner = ({ id, title, description, value, imagenes }: CardOwner
 
     return (
         <Card
-            sx={{
-                maxWidth: '100%', // Hacer que la tarjeta sea responsiva
-                backgroundColor: darkMode ? '#1f2937' : '#fff',
-                color: darkMode ? '#fff' : '#111827',
-                borderTopLeftRadius: '0.5rem',
-                borderTopRightRadius: '0.5rem',
-            }}
+            className="max-w-full rounded-md shadow-md dark:shadow-lg bg-white dark:bg-gray-800 rounded-t-[0.5rem]"
         >
             <Galeria imagenes={listaImagenes} />
             <CardActionArea onClick={() => route.push(`/property/${id}`)}>
                 <CardContent>
-                    <h5 className="mt-1 text-lg font-semibold text-white sm:text-slate-900 md:text-2xl dark:sm:text-white">
+                    <h5 className="mt-1 text-lg font-semibold dark:text-white text-slate-900 md:text-2xl dark:sm:text-white">
                         {title}
                     </h5>
                     <dl className="mt-4 text-xs font-medium flex items-center row-start-2 sm:mt-1 sm:row-start-3 md:mt-2.5 lg:row-start-2">
@@ -81,7 +75,7 @@ export const CardOwner = ({ id, title, description, value, imagenes }: CardOwner
                             <span>{value} <span className="text-slate-400 font-normal">(128)</span></span>
                         </dd>
                         <dt className="sr-only">Location</dt>
-                        <dd className="flex items-center text-neutral-700 dark:text-neutral-200">
+                        <dd className="flex items-center text-gray-700 dark:text-gray-200">
                             <svg width="2" height="2" aria-hidden="true" fill="currentColor" className="mx-3 text-slate-300">
                                 <circle cx="1" cy="1" r="1" />
                             </svg>

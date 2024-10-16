@@ -1,5 +1,10 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import MessageMainComponent from "@/components/Dashboard/Messages";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Mensajes',
+};
 
 export default function Messages() {
     return (

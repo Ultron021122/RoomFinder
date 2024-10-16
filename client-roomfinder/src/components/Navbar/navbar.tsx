@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { Button, Link as LinkUI } from "@nextui-org/react";
 import DropdownUser from "./dropdown";
 import { GraduationCapIcon } from "lucide-react";
+import { ModeToggle } from "../mode-toggle";
 
 function Navbar({
     isOpen,
@@ -31,8 +32,8 @@ function Navbar({
                             {session ? (
                                 <DropdownUser />
                             ) : (
-                                <Button as={LinkUI} href="/users/signup" size="sm" color="primary" variant="bordered" className="font-normal">
-                                    Registrar
+                                <Button as={LinkUI} href="/users/login" size="sm" color="primary" variant="solid" className="font-normal">
+                                    Iniciar sesión
                                 </Button>
                             )
                             }
@@ -67,6 +68,7 @@ function Navbar({
                                     <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                         Arrendadores
                                     </Link>
+                                    <ModeToggle />
                                 </div>
                             )
                         }
@@ -104,6 +106,9 @@ function Navbar({
                                         <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                             Arrendadores
                                         </Link>
+                                    </li>
+                                    <li className="block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800">
+                                        <ModeToggle />
                                     </li>
                                 </ul>
                             </div>
