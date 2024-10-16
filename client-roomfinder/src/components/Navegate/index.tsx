@@ -91,13 +91,15 @@ export function SidebarItem({
             vchimage={user?.vchimage as string}
             items={dropdownItems}
           />
-          <div className={`overflow-hidden whitespace-nowrap transition-all flex flex-col ${expanded ? "w-52 ml-3" : "w-0"}`}>
+          <div
+            className={`overflow-hidden whitespace-nowrap transition-all flex flex-col ${expanded ? "w-52 ml-3" : "w-0"}`}
+            onClick={(e) => {
+              e.stopPropagation(); // Evita que el clic propague al contenedor principal
+              toggleDropdown();
+            }}
+          >
             <p
               className='text-xs sm:text-sm'
-              onClick={(e) => {
-                e.stopPropagation(); // Evita que el clic propague al contenedor principal
-                toggleDropdown();
-              }}
             >
               {vchname + ' ' + vchpaternalsurname + ' ' + vchmaternalsurname}
             </p>
