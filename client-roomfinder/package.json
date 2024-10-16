@@ -31,7 +31,7 @@
     "cloudinary": "^2.1.0",
     "clsx": "^2.1.1",
     "flatpickr": "^4.6.13",
-    "framer-motion": "^11.0.24",
+    "framer-motion": "^11.11.9",
     "javascript-time-ago": "^2.5.10",
     "jsvectormap": "^1.6.0",
     "leaflet": "^1.9.4",
