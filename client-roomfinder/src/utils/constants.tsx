@@ -215,7 +215,8 @@ export const messages = {
     },
     vchtoken: {
         required: "El campo Token es requerido",
-        pattern: "No es un token válido"
+        pattern: "No es un token válido",
+        min: 'El token debe ser de 8 caracteres',
     },
 }
 

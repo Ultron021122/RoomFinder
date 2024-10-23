@@ -69,9 +69,18 @@ export default function Map({ position, zoom, name, typeProperty }: MapData) {
         console.log('Tipo de propiedad:', typeProperty);
     }, [typeProperty]);
 
+    // Renderiza el mapa
+    // .map-width {
+    //     height: 100vh;
+    //     min-width: 100vw;
+    //     position: relative;
+    //     z-index: -20;
+    //     float: left;
+    // }
+
     return (
         <div>
-            <MapContainer center={position} zoom={zoom} className="map-width" zoomControl={false}>
+            <MapContainer center={position} zoom={zoom} className="h-screen w-screen max-w-screen-2xl relative -z-20 float-left" zoomControl={false}>
                 <SetMapRef />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

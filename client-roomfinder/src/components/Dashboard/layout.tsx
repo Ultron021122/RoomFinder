@@ -65,14 +65,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <AppBar
                     component="nav"
                     position="static"
-                    className="dark:bg-primary dark:text-gray-100"
+                    className=" text-black dark:text-white bg-white border-b border-gray-220 dark:bg-gray-900 dark:border-gray-900"
                     sx={{
                         bgcolor: (theme) => theme.palette.background.paper,
                         color: (theme) => theme.palette.text.primary,
                         zIndex: (theme) => theme.zIndex.drawer + 1
                     }}
                 >
-                    <Toolbar variant="dense">
+                    <Toolbar variant="regular">
                         <IconButton
                             edge="start"
                             color="inherit"
@@ -83,9 +83,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             <MenuIcon />
                         </IconButton>
                         <Link href="/" className="flex items-center">
-                            <GraduationCapIcon size={25} />
-                            <h1 className="ml-2 text-2xl font-semibold">
-                                Roomfinder
+                            <GraduationCapIcon size={32} />
+                            <h1 className="ml-2 font-sans dark:text-gray-100 dark:hover:text-white text-2xl font-semibold">
+                                RoomFinder
                             </h1>
                         </Link>
                     </Toolbar>
@@ -96,19 +96,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     {/* Sidebar */}
                     <Sidebar expanded={expanded}>
                         <SidebarItem
-                            icon={<LayoutDashboard size={20} />}
+                            icon={<LayoutDashboard size={22} />}
                             text="Inicio"
                             url="/dashboard/home"
                             onClickSidebar={handleSidebarItemClick}
                         />
                         <SidebarItem
-                            icon={<Home size={20} />}
+                            icon={<Home size={22} />}
                             text="Inmuebles"
                             url="/dashboard/inmuebles"
                             onClickSidebar={handleSidebarItemClick}
                         />
                         <SidebarItem
-                            icon={<Mail size={20} />}
+                            icon={<Mail size={22} />}
                             text="Mensajes"
                             url="/dashboard/messages"
                             alert
@@ -118,14 +118,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             roleName === 'Arrendador' && (
                                 <>
                                     <SidebarItem
-                                        icon={<Folder size={20} />}
+                                        icon={<Folder size={22} />}
                                         text="Administrar"
                                         url="/dashboard/manage"
                                         alert
                                         onClickSidebar={handleSidebarItemClick}
                                     />
                                     <SidebarItem
-                                        icon={<AddHomeOutlinedIcon style={{ fontSize: 20 }} />}
+                                        icon={<AddHomeOutlinedIcon style={{ fontSize: 22 }} />}
                                         text="Publicar"
                                         url="/dashboard/publish"
                                         onClickSidebar={handleSidebarItemClick}
@@ -135,19 +135,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         }
                         <hr className="my-2 border-gray-300 dark:border-gray-800" /> {/* se  pueden eliminar estas opciones del sideBar */}
                         <SidebarItem
-                            icon={<UserCircle size={20} />}
+                            icon={<UserCircle size={22} />}
                             text="Perfil"
                             url="/dashboard/profile"
                             onClickSidebar={handleSidebarItemClick}
                         />
                         <SidebarItem
-                            icon={<SlidersHorizontal size={20} />}
+                            icon={<SlidersHorizontal size={22} />}
                             text="Ajustes"
                             url="/dashboard/settings"
                             onClickSidebar={handleSidebarItemClick}
                         />
                         <SidebarItem
-                            icon={<MoreVerticalIcon size={20} />}
+                            icon={<MoreVerticalIcon size={22} />}
                             vchname={user?.vchname}
                             vchpaternalsurname={user?.vchpaternalsurname}
                             vchmaternalsurname={user?.vchmaternalsurname}
