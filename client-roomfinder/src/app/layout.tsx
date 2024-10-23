@@ -31,8 +31,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
-      <body className={mainClass}>
+    <html lang="es" suppressHydrationWarning={true}>
+      <body className={mainClass} suppressHydrationWarning={true}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -40,9 +40,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers>
-            <ToastContainer limit={3} />
-            <Navigate />
-            {children}
+            <div className="max-w-screen-2xl mx-auto">
+              <Navigate />
+              <ToastContainer limit={3} />
+              {children}
+            </div>
             {/* <SpeedInsights /> */}
           </Providers>
         </ThemeProvider>
