@@ -1,12 +1,11 @@
 "use client";
 import TypingAnimation from '@/components/ui/typing-animation';
-import { images } from '@/utils/constants';
 import { cn } from "@/lib/utils";
 import GridPattern from '@/components/ui/grid-pattern';
 import { ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 
-export default function FrontPage() {
+export default function MainBanner() {
     return (
         <>
             <div className="relative flex size-full items-center justify-center overflow-hidden rounded-lg bg-background dark:bg-gray-900 p-10 md:p-14 lg:p-20">

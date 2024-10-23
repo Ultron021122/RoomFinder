@@ -98,26 +98,25 @@ export function SidebarItem({
               toggleDropdown();
             }}
           >
-            <p
-              className='text-xs sm:text-sm'
-            >
+            <p className='text-xs sm:text-sm'>
               {vchname + ' ' + vchpaternalsurname + ' ' + vchmaternalsurname}
             </p>
-            <span className='text-xs'>
-              {roleName}
-            </span>
+            <span className='text-xs'>{roleName}</span>
           </div>
         </div>
       )}
+      {/* Styles from Sidebar Expand */}
       {!dropdownItems && !expanded &&
         <div className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-blue-100 text-blue-800 text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}>
           {text}
         </div>
       }
-
+      {/* Alert */}
       {alert && (
         <div
-          className={`absolute ${dropdownItems ? 'right-3' : 'right-4'} w-2 h-2 rounded ${color === 'active' ? 'bg-green-600 dark:bg-green-500' : color === 'inactive' ? 'bg-red-600 dark:bg-red-500' : 'bg-blue-400 dark:bg-blue-400'} ${expanded ? "" : "top-2"}`}
+          className={`absolute 
+            ${dropdownItems ? 'right-3' : 'right-4'} w-2 h-2 rounded 
+            ${color === 'active' ? 'bg-green-600 dark:bg-green-500' : color === 'inactive' ? 'bg-red-600 dark:bg-red-500' : 'bg-blue-400 dark:bg-blue-400'} ${expanded ? "" : "top-2"}`}
         />
       )}
     </li>

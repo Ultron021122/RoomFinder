@@ -184,7 +184,12 @@ function Login() {
                                                 className="text-sm font-medium text-gray-400 dark:text-gray-300"
                                                 disableTypography
                                             />
-                                            <Link href="/users/recover" className="text-sm font-medium text-sky-600 hover:underline dark:text-sky-500">¿Has olvidado tú contraseña?</Link>
+                                            <Link
+                                                href="/users/recover"
+                                                className="text-xs font-medium text-sky-600 hover:underline dark:text-sky-500"
+                                            >
+                                                ¿Has olvidado tú contraseña?
+                                            </Link>
                                         </div>
                                         <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
                                             Ingresar

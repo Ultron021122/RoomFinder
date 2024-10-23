@@ -4,14 +4,13 @@ import { propertiesHome } from "@/utils/constants";
 import MasonryImageList from "@/components/Imagelist";
 import { CardOwner } from "./Card";
 import Banner from "./Banner";
-import FrontPage from "./FrontPage";
-import LetterPullup from "../ui/letter-pullup";
+import MainBanner from "./MainBanner";
 
 export default function HomeComponent() {
     return (
         <Layout key={1}>
             <div className='h-[100vh] w-full'>
-                <FrontPage />
+                <MainBanner />
                 <section className="max-w-screen-2xl mx-auto my-14 p-2 sm:p-0">
                     <div className="mb-10">
                         <div className="mb-16 max-w-7xl mx-auto">

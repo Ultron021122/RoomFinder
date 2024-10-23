@@ -41,33 +41,16 @@ const DropdownUser = () => {
                         src: `${user.vchimage}`
                     }}
                     className="transition-transform"
-                    description={roleName}
-                    name={user.vchname}
+                    description={user.vchemail}
+                    name={user.vchname + " " + user.vchpaternalsurname + " " + user.vchmaternalsurname}
                     classNames={{
                         wrapper: "hidden sm:inline-flex flex-col items-start",
                         name: "dark:text-gray-200",
-                        description: "capitalize"
                     }}
                 />
             </DropdownTrigger>
             <DropdownMenu
                 aria-label="User Actions"
-                classNames={{
-                    base: "dark:bg-gray-900"
-                }}
-                itemClasses={{
-                    base: [
-                        "rounded-md",
-                        "text-default-700 dark:text-default-300",
-                        "transition-opacity",
-                        "data-[hover=true]:text-foreground dark:data-[hover=true]:text-default-50",
-                        "data-[hover=true]:bg-default-300",
-                        "dark:data-[hover=true]:bg-default-700",
-                        "data-[selectable=true]:focus:bg-default-50",
-                        "data-[pressed=true]:opacity-70",
-                        "data-[focus-visible=true]:ring-default-500",
-                    ],
-                }}
             >
                 <DropdownSection
                     aria-label="Profile & actions"
@@ -110,7 +93,7 @@ const DropdownUser = () => {
                     <DropdownItem key="help_and_feedback" textValue="Ayuda">
                         Ayuda y Retroalimentación
                     </DropdownItem>
-                    <DropdownItem key="logout" textValue="Cerrar sesión" onClick={() => { signOut(); }}>
+                    <DropdownItem key="logout" textValue="Cerrar sesión" color="danger" onClick={() => { signOut(); }}>
                         Cerrar Sesión
                     </DropdownItem>
                 </DropdownSection>
