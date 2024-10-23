@@ -478,7 +478,7 @@ const Registrar = () => {
                         </div>
                         :
                         <div className="h-[100vh]">
-                            <div className="flex flex-col items-center px-6 pb-8 pt-14 mx-auto">
+                            <div className="flex flex-col justify-center items-center px-6 pb-8 pt-24 mx-auto">
                                 <div className="w-full my-5 bg-white rounded-lg shadow dark:border sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">

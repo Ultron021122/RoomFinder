@@ -2,39 +2,33 @@
 
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // importante aqui!
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
-// Componentes
 import { Button, Spinner } from "@nextui-org/react";
-// Utilidades
-import { messages, patterns } from "@/utils/constants";
 import Footer from "@/components/Footer";
 import { Alert } from "@/utils/alert";
-// Estilos de algunos componentes
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Form from "./form";
-
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 interface RecoverUser {
     vchtoken: string;
 }
 
 function RecoverComponent() {
-    const { status } = useSession(); // determinar si el usuario tiene una sesión iniciada { cargando, autenticado y no autenticado}
-    const router = useRouter(); // redirecciona las pantallas
-
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<RecoverUser>({ mode: "onChange" }); // control sobre el formulario
+    const { status } = useSession();
+    const router = useRouter();
+    const { register, handleSubmit, formState: { errors }, setValue, trigger } = useForm<RecoverUser>({ mode: "onChange" });
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
     const [isTokenValid, setIsTokenValid] = useState<boolean>(false);
     const [token, setToken] = useState<string>("");
 
-    // Errores
     useEffect(() => {
         if (errorSystem) {
             toast.error(errorSystem, {
@@ -51,18 +45,16 @@ function RecoverComponent() {
         }
     }, [errorSystem]);
 
-    // Función para enviar los datos del formulario
-    const onSubmit = async (recoverUser: RecoverUser) => {
+    const onSubmit = async () => {
         setIsLoading(true);
         setErrorSystem(null);
 
         const dataToken: RecoverUser = {
-            vchtoken: recoverUser.vchtoken
+            vchtoken: token // Usar el valor del OTP
         };
 
         try {
             const response = await axios.get(`/api/users/recover/${dataToken.vchtoken}`);
-            console.log(response)
             setIsLoading(false);
             if (response.status === 200) {
                 toast.success(response.data.message, {
@@ -90,9 +82,8 @@ function RecoverComponent() {
         }
     };
 
-    // Efectos
     useEffect(() => {
-        const input = document.getElementById('vchtoken') as HTMLInputElement;
+        const input = document.getElementById('otpInput') as HTMLInputElement;
         if (input) {
             input.focus();
         }
@@ -103,87 +94,73 @@ function RecoverComponent() {
     }, [status, router]);
 
     return (
-        <>
-            <section className="bg-gray-50 dark:bg-gray-900">
-                <PerfectScrollbar>
-                    <div className="h-[100vh]">
-                        {isLoading ? (
-                            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
-                                <Spinner />
-                            </div>
-                        )
-                            : (
-                                <>
-                                    {
-                                        !isTokenValid ? (
-                                            <>
-                                                <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
-                                                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                                                        <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                                                            <div>
-                                                                <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                                                                    Validar token
-                                                                </h2>
-                                                                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                                                    Recibiste un correo electrónico con un token, ingrésalo a continuación.
-                                                                </p>
-                                                            </div>
-                                                            <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
-                                                                <div className="relative z-0 w-full mb-5 group">
-                                                                    <input
-                                                                        {...register("vchtoken", {
-                                                                            required: {
-                                                                                value: true,
-                                                                                message: messages.vchtoken.required
-                                                                            },
-                                                                            pattern: {
-                                                                                value: patterns.vchtoken,
-                                                                                message: messages.vchtoken.pattern
-                                                                            }
-                                                                        })}
-                                                                        type="text"
-                                                                        name="vchtoken"
-                                                                        id="vchtoken"
-                                                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                                        placeholder=""
-                                                                        autoComplete="off"
-                                                                    />
-                                                                    <label
-                                                                        htmlFor="vchtoken"
-                                                                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                                                    >
-                                                                        Token de recuperación
-                                                                    </label>
-                                                                    {errors?.vchtoken && (
-                                                                        <Alert message={errors?.vchtoken.message} />
-                                                                    )}
-                                                                </div>
-                                                                <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
-                                                                    Validar token
-                                                                </Button>
-                                                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                                    ¿No tienes una cuenta? <Link href='/users/signup' className="text-sky-600 hover:underline dark:text-sky-500">Crear una cuenta</Link>
-                                                                </p>
-                                                            </form>
-                                                        </div>
-                                                    </div>
+        <section className="bg-gray-50 dark:bg-gray-900">
+            <PerfectScrollbar>
+                <div className="h-[100vh]">
+                    {isLoading ? (
+                        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                            <Spinner />
+                        </div>
+                    ) : (
+                        <>
+                            {!isTokenValid ? (
+                                <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                                        <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                                            <div>
+                                                <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                                                    Validar token
+                                                </h2>
+                                                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                    Recibiste un correo electrónico con un token, ingrésalo a continuación.
+                                                </p>
+                                            </div>
+                                            <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
+                                                <div>
+                                                    <InputOTP
+                                                        maxLength={8}
+                                                        onChange={(value) => {
+                                                            setValue("vchtoken", value); // Actualiza el valor en react-hook-form
+                                                            trigger("vchtoken"); // Desencadena validación
+                                                        }}
+                                                    >
+                                                        <InputOTPGroup
+                                                            className="flex justify-center space-x-2 items-center"
+                                                        >
+                                                            {[...Array(8)].map((_, index) => (
+                                                                <InputOTPSlot
+                                                                    key={index}
+                                                                    index={index}
+                                                                    className="w-10 h-10 text-center border rounded-md dark:border-gray-700"
+                                                                />
+                                                            ))}
+                                                        </InputOTPGroup>
+                                                    </InputOTP>
+                                                    {errors.vchtoken && (
+                                                        <Alert message={errors.vchtoken.message} />
+                                                    )}
                                                 </div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
-                                                    <Form token={token} />
-                                                </div>
-                                            </>)
-                                    }
-                                </>
-                            )
-                        }
-                        <Footer />
-                    </div>
-                </PerfectScrollbar>
-            </section >
-        </>
+                                                <Button type="submit" color="primary" variant="solid" className="font-normal w-full">
+                                                    Validar token
+                                                </Button>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                    ¿No tienes una cuenta? <Link href='/users/signup' className="text-sky-600 hover:underline dark:text-sky-500">Crear una cuenta</Link>
+                                                </p>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                                    <Form token={token} />
+                                </div>
+                            )}
+                        </>
+                    )}
+                    <Footer />
+                </div>
+            </PerfectScrollbar>
+        </section>
     );
 };
 
