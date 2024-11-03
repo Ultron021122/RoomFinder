@@ -26,6 +26,11 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'ui-avatars.com',
                 port: '',
+            },
+            {
+                protocol: 'https',
+                hostname: 'images.pexels.com',
+                port: '',
             }
         ],
     },
@@ -38,9 +43,9 @@ const nextConfig = {
             },
         ];
     },
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
+    // eslint: {
+    //     ignoreDuringBuilds: true,
+    // },
 };
 
 export default nextConfig;

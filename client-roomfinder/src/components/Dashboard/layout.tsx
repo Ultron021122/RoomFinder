@@ -25,8 +25,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const user = session?.user as UserProfile;
 
     const dropdownItems = [
-        { text: 'Profile', onClick: () => console.log('Profile clicked') },
-        { text: 'Settings', onClick: () => console.log('Settings clicked') },
+        { text: 'Perfil', onClick: () => console.log('Profile clicked') },
+        { text: 'Configuraciones', onClick: () => console.log('Settings clicked') },
         { text: 'Cerrar sesión ', onClick: () => signOut() },
     ];
 

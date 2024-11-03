@@ -1,6 +1,5 @@
 'use client';
 // Element: CardOwner
-import { useState, useEffect } from 'react';
 import CardContent from '@mui/material/CardContent';
 import { CardActionArea, CardActions, Rating, Card } from '@mui/material';
 import Image from 'next/image';
@@ -22,29 +21,7 @@ interface CardOwnerProps {
 }
 
 export const CardOwner = ({ id, title, description, value, imagenes }: CardOwnerProps) => {
-    const [darkMode, setDarkMode] = useState<boolean>(false);
-    const [isLoaded, setIsLoaded] = useState<boolean>(false);
-
     const route = useRouter();
-
-    // Dark Mode 
-    useEffect(() => {
-        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const setDarkModeFromMediaQuery = () => setDarkMode(darkModeMediaQuery.matches);
-
-        setDarkModeFromMediaQuery();
-        darkModeMediaQuery.addEventListener('change', setDarkModeFromMediaQuery);
-
-        setIsLoaded(true);
-
-        return () => {
-            darkModeMediaQuery.removeEventListener('change', setDarkModeFromMediaQuery);
-        };
-    }, []);
-
-    if (!isLoaded) {
-        return null;
-    }
 
     const listaImagenes = imagenes.map((imagen, index) =>
         <div key={index} className="relative min-w-full h-full" >
@@ -60,10 +37,14 @@ export const CardOwner = ({ id, title, description, value, imagenes }: CardOwner
 
     return (
         <Card
+            component={'article'}
             className="max-w-full rounded-md shadow-md dark:shadow-lg bg-white dark:bg-gray-800 rounded-t-[0.5rem]"
         >
             <Galeria imagenes={listaImagenes} />
-            <CardActionArea onClick={() => route.push(`/property/${id}`)}>
+            <CardActionArea
+                color='primary'
+                onClick={() => route.push(`/property/${id}`)}
+            >
                 <CardContent>
                     <h5 className="mt-1 text-lg font-semibold dark:text-white text-slate-900 md:text-2xl dark:sm:text-white">
                         {title}
@@ -72,7 +53,7 @@ export const CardOwner = ({ id, title, description, value, imagenes }: CardOwner
                         <dt className="sr-only">Reviews</dt>
                         <dd className="text-blue-600 flex items-center dark:text-blue-400">
                             <Star size={18} className="mr-1" />
-                            <span>{value} <span className="text-slate-400 font-normal">(128)</span></span>
+                            <p>{value} <span className="text-slate-400 font-normal">(128)</span></p>
                         </dd>
                         <dt className="sr-only">Location</dt>
                         <dd className="flex items-center text-gray-700 dark:text-gray-200">

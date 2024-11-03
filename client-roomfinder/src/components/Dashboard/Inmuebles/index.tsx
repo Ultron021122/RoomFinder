@@ -1,5 +1,6 @@
 import Image from "next/image";
 import CardElement from "@/components/GeneralComponents/CardElement";
+import TarjetaPropiedad from "@/components/GeneralComponents/Card";
 
 export default function Inmuebles (){
 
@@ -68,6 +69,20 @@ export default function Inmuebles (){
                     <h1 className="font-semibold text-white text-4xl">Mis Inmuebles en Renta</h1>
                 </div>
             </section>
+
+            <TarjetaPropiedad 
+                    id="1"
+                    titulo="Casa en Renta"
+                    descripcion="Casa acogedora ubicada en un vecindario tranquilo, cerca de la universidad y con buenos servicios. ¡Ideal para estudiantes!"
+                    precio={1200}
+                    imagen="https://images.pexels.com/photos/811587/pexels-photo-811587.jpeg?auto=compress&cs=tinysrgb&w=630&h=375&dpr=1"
+                    ubicacion="Calle 123, Colonia X, Ciudad Y"
+                    habitaciones={2}
+                    banos={5}
+                    superficie={120}
+                    tipo="Casa"
+            />
+
             {/* momentaneo */}
             <section className="my-12">
                 <div className="w-[95%] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"> {/* contenedor de propiedades */}

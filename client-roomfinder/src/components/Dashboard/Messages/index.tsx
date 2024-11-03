@@ -2,12 +2,14 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { RocketIcon, MessageSquareText } from "lucide-react";
+import { RocketIcon, MessageSquareText, Search } from "lucide-react";
 import { User, UserList, UserProfile } from "@/utils/interfaces";
 import axios from "axios";
 import { Avatar, Badge, Spinner } from "@nextui-org/react";
 import MessageComponent from "./messages";
 import { shortName } from "@/utils/functions";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
 
 
 export default function MessageMainComponent() {
@@ -57,50 +59,77 @@ export default function MessageMainComponent() {
   return (
     <div>
       <section className="h-[calc(100vh-150px)] flex flex-col bg-white dark:bg-gray-950">
-        <div className="flex flex-col md:flex-row h-full">
+        <div className="flex flex-col md:flex-row h-full max-w-8xl border rounded-lg overflow-hidden border-stroke bg-white shadow-md dark:bg-gray-950">
           {/* Users Box */}
-          <div className="w-full md:w-1/4 border-r border-gray-300 dark:border-gray-900 overflow-y-auto custom-scrollbar">
-            <div className="p-4 flex items-center justify-between border-b border-gray-300 dark:border-gray-900">
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-300">Chats</h4>
+          <div className="w-full md:w-1/3 border-r overflow-y-auto custom-scrollbar">
+            <div className="p-4 flex items-center justify-between border-b">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-300">
+                Chats
+              </h4>
               <div className="p-2 rounded-full bg-primary-500 text-white hover:bg-primary-600">
                 <MessageSquareText size={22} />
               </div>
             </div>
-            {isLoading ? (
-              <div className="flex items-center h-12 justify-center">
-                <Spinner />
+            {/* Busqueda de usuarios */}
+            <div className="p-4 border-b">
+              <div className="relative">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar chat"
+                  //value={busqueda}
+                  //onChange={(e) => setBusqueda(e.target.value)}
+                  className="pl-8"
+                />
               </div>
-            ) : !users ? (
-              <div className="flex items-center p-4">
-                <p className="p-4 text-gray-500 dark:text-gray-300">No hay chats disponibles.</p>
-              </div>
-            ) : (
-              <div>
-                {users.data.map((user) => (
-                  <div
-                    key={user.usuarioid}
-                    onClick={() => handleUserClick(user)}
-                    className="flex items-center p-4 cursor-pointer text-gray-900 dark:text-gray-300 hover:text-white bg-gray-200 dark:bg-gray-950 hover:bg-primary-500"
-                  >
-                    <Badge content="" color={user.bnstatus == true ? "success" : "danger" } shape="circle" placement="bottom-right">
-                      <Avatar
-                        radius="full"
-                        src={user.vchimage}
-                      />
-                    </Badge>
-                    <div className="flex flex-col ml-3">
-                      <p className="text-sm font-semibold">
-                        {user.vchname + ' ' + user.vchpaternalsurname}
-                      </p>
-                      <span className="text-xs text-gray-400">{user.bnstatus == true ? 'Activo' : 'Inactivo'}</span>
+            </div>
+            {/* Lista de usuarios */}
+            <ScrollArea className="h-[calc(100vh-300px)]">
+              {isLoading ? (
+                <div className="flex items-center h-12 justify-center">
+                  <Spinner />
+                </div>
+              ) : !users ? (
+                <div className="flex items-center p-4">
+                  <p className="p-4 text-gray-500 dark:text-gray-300">No hay chats disponibles.</p>
+                </div>
+              ) : (
+                <div>
+                  {users.data.map((user) => (
+                    <div
+                      key={user.usuarioid}
+                      onClick={() => handleUserClick(user)}
+                      className="flex items-center p-4 cursor-pointer hover:bg-muted"
+                    >
+                      <Badge
+                        content=""
+                        color={user.bnstatus == true ? "success" : "danger"}
+                        shape="circle"
+                        placement="bottom-right"
+                      >
+                        <Avatar
+                          radius="full"
+                          src={user.vchimage}
+                        />
+                      </Badge>
+                      <div className="flex-1 min-w-0 ml-4">
+                        <h3 className="text-sm font-semibold truncate">
+                          {user.vchname + ' ' + user.vchpaternalsurname}
+                        </h3>
+                        {/* Change for last message */}
+                        <p className="text-sm text-muted-foreground truncate">{user.bnstatus == true ? 'Activo' : 'Inactivo'}</p>
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        20:00pm
+                        {/* {usuario.horaUltimoMensaje.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} */}
+                      </span>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
           </div>
           {/* Other Box */}
-          <div className={`w-full md:w-3/4 flex flex-col ${selectedUser ? '' : 'items-center justify-center'}`}>
+          <div className={`w-full md:w-2/3 flex flex-col ${selectedUser ? '' : 'items-center justify-center'}`}>
             {selectedUser ? (
               <MessageComponent userID={selectedUser} name={name} image={imageUser} nameUser={nameUser} bnstatus className='w-full' onBack={() => setSelectedUser(null)} />
             ) : (

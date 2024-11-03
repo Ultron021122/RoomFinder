@@ -57,7 +57,7 @@ function ImageUploader() {
         return inmueble.fotos.map((imagen, index) => {
             const imagenURL = URL.createObjectURL(imagen);
             return (
-                <div key={index} className="relative group w-full h-0 pb-[100%]"> {/* Proporción 1:1 */}
+                <div key={index} className="relative group aspect-video"> {/* Proporción 1:1 */}
                     <Image
                         src={imagenURL}
                         alt={`preview de imagen ${index}`}
