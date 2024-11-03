@@ -217,6 +217,7 @@ export const messages = {
         required: "El campo Token es requerido",
         pattern: "No es un token válido",
         min: 'El token debe ser de 8 caracteres',
+        max: 'El token debe ser de 8 caracteres'
     },
 }
 

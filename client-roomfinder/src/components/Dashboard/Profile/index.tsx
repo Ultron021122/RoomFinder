@@ -11,6 +11,7 @@ import { useDisclosure } from "@nextui-org/react";
 import ImageModal from "./ImageModal";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import UserProfileComponent from "./profile";
 
 const Profile = () => {
     const { data: session } = useSession();
@@ -62,10 +63,9 @@ const Profile = () => {
                 <div className="mx-auto overflow-hidden rounded-sm shadow-md">
                     <div className="relative z-20 h-32 md:h-64">
                         <Image
-                            width={1920}
-                            height={1080}
                             src={coverImage}
                             alt="profile cover"
+                            fill
                             className="absolute inset-0 h-full w-full max-h-64 rounded-tl-xsm rounded-tr-xsm object-cover object-center"
                             priority
                         />
@@ -85,7 +85,7 @@ const Profile = () => {
                         <div className="relative z-30 mx-auto -mt-24 w-full h-full max-h-32 max-w-32 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-h-44 sm:max-w-44 sm:p-3">
                             <div className="relative drop-shadow">
                                 <Image
-                                    src={profileImage}
+                                    src={profileImage || "/images/default-profile.jpg"}
                                     width={160}
                                     height={160}
                                     style={{
@@ -159,7 +159,7 @@ const Profile = () => {
                                 </h4>
                                 <div className="flex items-center justify-center gap-[14px]">
                                     <Link
-                                        href="#"
+                                        href="/"
                                         className="hover:text-primary text-gray-400"
                                         aria-label="social-icon"
                                     >
@@ -309,6 +309,7 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
+            {/* <UserProfileComponent /> */}
             <ImageModal isOpen={isOpen} onClose={onOpenChange} />
         </div>
     );

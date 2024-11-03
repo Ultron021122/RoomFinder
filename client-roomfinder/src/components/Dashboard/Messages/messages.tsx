@@ -2,14 +2,19 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeftIcon, SendIcon } from "lucide-react";
+import { ArrowLeft, ArrowLeftIcon, SendIcon } from "lucide-react";
 import io from "socket.io-client";
 import TimeAgo from "javascript-time-ago";
 import es from "javascript-time-ago/locale/es";
 import { Message, UserProfile } from "@/utils/interfaces";
 import axios from "axios";
 import Image from "next/image";
-import { Avatar, Badge } from "@nextui-org/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+// import { Avatar, Badge } from "@nextui-org/react";
 
 TimeAgo.addDefaultLocale(es);
 
@@ -38,12 +43,30 @@ export default function MessageComponent({
   const [message, setMessage] = useState("");
   const [chatID, setChatID] = useState<number | null>(null);
   const hasFetched = useRef(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null); // Nueva referencia para el scroll
-
   const timeAgo = new TimeAgo("es-ES");
 
   const { data: session } = useSession();
   const user = session?.user as UserProfile;
+  const scrollAreaRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [conversations])
+
+  const scrollToBottom = () => {
+    if (scrollAreaRef.current) {
+      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]')
+      if (scrollContainer) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight
+      }
+    }
+  }
+
+  // useEffect(() => {
+  //   if (scrollAreaRef.current) {
+  //     scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+  //   }
+  // }, [conversations])
 
   // Conectar al servidor cuando el usuario está autenticado
   useEffect(() => {
@@ -60,10 +83,12 @@ export default function MessageComponent({
       }
 
       socket.on("receiveMessages", (data) => {
+        scrollAreaRef.current?.scrollIntoView({ behavior: "smooth" });
         setConversations((prev) => [...prev, ...data]);
       });
 
       socket.on("receiveMessage", (newMessage) => {
+        scrollAreaRef.current?.scrollIntoView({ behavior: "smooth" });
         setConversations((prev) => [...prev, newMessage]);
       });
 
@@ -111,120 +136,72 @@ export default function MessageComponent({
     }
   };
 
-  // Efecto para hacer scroll hacia abajo cuando cambian las conversaciones
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [conversations]);
-
   return (
-    <div>
-      <section className={`h-[calc(100vh-150px)] flex flex-col bg-gray-100 dark:bg-gray-900 ${className}`}>
-        <div className="h-full w-full flex flex-col">
-          <div className="flex items-center justify-between p-4 border-b border-gray-300 bg-white dark:bg-gray-950 dark:border-gray-900">
-            <div className="flex items-center">
-              <div className="md:hidden cursor-pointer" onClick={onBack}>
-                <ArrowLeftIcon size={20} className="text-gray-500 dark:text-gray-300 mr-2 hover:text-gray-700 dark:hover:text-gray-100" />
+    <section className="h-[calc(100vh-150px)] ">
+      <div className="h-full w-full flex flex-col">
+        <CardHeader className="border-b">
+          <div className="flex items-center justify-start">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="mr-2 md:hidden"
+              onClick={onBack}
+            >
+              <ArrowLeft size={20} />
+            </Button>
+            <Avatar className="w-10 h-10 mr-4">
+              <AvatarImage src={image} />
+              <AvatarFallback>{nameUser === '' ? 'U' : nameUser}</AvatarFallback>
+            </Avatar>
+            <CardTitle>{`${nameUser !== undefined ? nameUser : 'Selecciona un chat'}`}</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="flex-1 overflow-y-auto ">
+          <ScrollArea className="h-full pr-4" ref={scrollAreaRef}>
+            {conversations.length === 0 ? (
+              <div className="flex items-center justify-center h-full">
+                <p className="p-4 text-gray-500 dark:text-gray-300 text-center text-sm">No hay mensajes en esta conversación.</p>
               </div>
-              <Badge content="" color={bnstatus == true ? "success" : "danger"} shape="circle" placement="bottom-right">
-                <Avatar
-                  radius="full"
-                  src={image}
-                />
-              </Badge>
-              <p className="ml-2 text-sm sm:text-base font-semibold dark:text-neutral-50">
-                {nameUser}
-              </p>
-            </div>
-          </div>
-          <div className="flex-1 overflow-y-auto custom-scrollbar">
-            <div>
-              {conversations.length === 0 ? (
-                <div className="flex items-center justify-center h-full">
-                  <p className="p-4 text-gray-500 dark:text-gray-300 text-center text-sm">No hay mensajes en esta conversación.</p>
-                </div>
-              ) : (
-                conversations.map((msg, index) => (
-                  <div key={`${msg.usuarioid}-${index}`} className="flex flex-col mt-5 px-3">
-                    {msg.usuarioid === user?.usuarioid ? (
-                      <div className="flex justify-end items-center mb-2">
-                        <div className="max-w-full sm:max-w-[calc(80%-40px)] text-right">
-                          <p
-                            className="text-xs dark:text-gray-100 font-semibold">
-                            Tú
-                          </p>
-                          <div
-                            className="py-2 px-3 max-w-max bg-blue-400 rounded-bl-lg rounded-br-lg rounded-tl-lg text-white text-sm shadow-md">
-                            <p>{msg.vchcontenido}</p>
-                          </div>
-                          <span className="text-xs dark:text-gray-300">
-                            {timeAgo.format(new Date(msg.created_at))}
-                          </span>
-                        </div>
-                        <Image
-                          width={100}
-                          height={100}
-                          src={user?.vchimage}
-                          alt="avatar"
-                          className="object-cover h-10 w-10 rounded-full ml-2 border-2 border-white"
-                        />
+            ) : (
+              conversations.map((msg, index) => (
+                <div
+                  key={`${msg.usuarioid}-${index}`}
+                  className={`flex mb-4 ${msg.usuarioid === user?.usuarioid ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div className={`max-w-full sm:max-w-[calc(80%)] flex ${msg.usuarioid === user?.usuarioid ? 'flex-row-reverse' : 'flex-row'} items-start`}>
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={msg.usuarioid === user?.usuarioid ? user?.vchimage : image} />
+                      <AvatarFallback>{msg.usuarioid === user?.usuarioid ? 'U' : 'N'}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className={`mx-2 ${msg.usuarioid === user?.usuarioid ? 'bg-blue-400 text-primary-foreground' : 'bg-muted'} rounded-lg p-2`}>
+                        <p className="text-sm">{msg.vchcontenido}</p>
                       </div>
-                    ) : (
-                      <div className="flex justify-start items-center mb-2">
-                        <Image
-                          width={100}
-                          height={100}
-                          src={image}
-                          className="object-cover h-10 w-10 rounded-full mr-2 border-2 border-white"
-                          alt="avatar"
-                        />
-                        <div className="max-w-full sm:max-w-[calc(80%)] text-left">
-                          <p
-                            className="text-xs dark:text-gray-100 font-semibold">
-                            {name}
-                          </p>
-                          <div
-                            className="py-2 px-3 max-w-max bg-green-600 rounded-bl-lg rounded-tr-lg rounded-br-lg text-white text-sm shadow-md"
-                          >
-                            <p>{msg.vchcontenido}</p>
-                          </div>
-                          <span className="text-xs dark:text-gray-300">
-                            {timeAgo.format(new Date(msg.created_at))}
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                      <p className="px-2 text-xs text-muted-foreground mt-1">
+                        {timeAgo.format(new Date(msg.created_at))}
+                      </p>
+                    </div>
                   </div>
-                ))
-              )}
-              {/* Este div es la referencia para el scroll */}
-              <div ref={messagesEndRef} />
-            </div>
-          </div>
-          <form onSubmit={sendMessage} className="flex justify-between items-center p-4 dark:bg-gray-950 border-t border-gray-800">
-            <input
+                </div>
+              ))
+            )}
+          </ScrollArea>
+        </CardContent>
+        <div className="p-4 border-t">
+          <form onSubmit={sendMessage} className="flex dark:bg-gray-950 border-gray-800">
+            <Input
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Escribe tu mensaje..."
-              className="flex-1 p-2 border text-sm dark:text-neutral-50 border-gray-300 dark:border-gray-700 dark:bg-gray-600 rounded-lg"
+              placeholder="Escribe un mensaje..."
+              className="flex-grow mr-2 "
             />
-            <button type="submit" className="ml-2 p-2 bg-green-500 text-white rounded-lg">
+            <Button type="submit" className="ml-2 p-2 bg-green-500 text-white rounded-lg">
               <SendIcon size={20} />
-            </button>
+            </Button>
           </form>
         </div>
-      </section>
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .custom-scrollbar {
-          -ms-overflow-style: none; /* IE and Edge */
-          scrollbar-width: none; /* Firefox */
-        }
-      `}</style>
-    </div>
+      </div>
+    </section>
   );
 }
