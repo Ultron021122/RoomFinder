@@ -1,5 +1,4 @@
-import { SlashIcon } from "@radix-ui/react-icons"
-
+import { SlashIcon } from "@radix-ui/react-icons";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -7,7 +6,7 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@/components/ui/breadcrumb";
 import MessageMainComponent from "@/components/Dashboard/Messages";
 import { Metadata } from "next";
 
@@ -15,7 +14,7 @@ export const metadata: Metadata = {
     title: 'Mensajes',
 };
 
-export function BreadcrumbWithCustomSeparator({pageName}: {pageName: string}) {
+function BreadcrumbWithCustomSeparator({ pageName }: { pageName: string }) {
     return (
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center px-2 sm:justify-between">
             <h2 className="text-sm md:text-base lg:text-xl font-semibold text-black dark:text-white">
@@ -35,21 +34,20 @@ export function BreadcrumbWithCustomSeparator({pageName}: {pageName: string}) {
                 </BreadcrumbList>
             </Breadcrumb>
         </div>
-    )
+    );
 }
 
 export default function Messages() {
     return (
         <div className="h-full max-w-screen-2xl mx-auto">
+            <BreadcrumbWithCustomSeparator pageName="Mensajes" />
             <div className="mx-auto">
-                <BreadcrumbWithCustomSeparator pageName="Mensajes" />
-                <div className="mx-auto">
-                    <MessageMainComponent />
-                </div>
+                <MessageMainComponent />
             </div>
         </div>
     );
 }
+
 
 
 
