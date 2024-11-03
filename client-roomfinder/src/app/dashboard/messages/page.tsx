@@ -15,22 +15,6 @@ export const metadata: Metadata = {
     title: 'Mensajes',
 };
 
-export default function Messages() {
-    return (
-        <div className="h-full max-w-screen-2xl mx-auto">
-            <div className="mx-auto">
-                <BreadcrumbWithCustomSeparator pageName="Mensajes" />
-                <div className="mx-auto">
-                    <MessageMainComponent />
-                </div>
-            </div>
-        </div>
-    );
-}
-
-
-
-
 export function BreadcrumbWithCustomSeparator({pageName}: {pageName: string}) {
     return (
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center px-2 sm:justify-between">
@@ -53,3 +37,20 @@ export function BreadcrumbWithCustomSeparator({pageName}: {pageName: string}) {
         </div>
     )
 }
+
+export default function Messages() {
+    return (
+        <div className="h-full max-w-screen-2xl mx-auto">
+            <div className="mx-auto">
+                <BreadcrumbWithCustomSeparator pageName="Mensajes" />
+                <div className="mx-auto">
+                    <MessageMainComponent />
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
+
+
