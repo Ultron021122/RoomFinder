@@ -31,7 +31,6 @@ export const VerifyComponent = ({ usuarioid, token }: { usuarioid: number, token
             try {
                 const response = await axios.get(`/api/users/verify/${usuarioid}/${token}`);
                 setIsLoading(false);
-                console.log('Verificacion front:', response.data)
                 if (response.status === 200) {
                     toast.success(response.data.message.message, {
                         position: "bottom-center",

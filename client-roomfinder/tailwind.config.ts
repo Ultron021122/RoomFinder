@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 import { nextui } from "@nextui-org/react";
 
 const config: Config = {
-	darkMode: "selector",
+	darkMode: "class",
 	content: [
 		"./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
 		"./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -60,10 +60,20 @@ const config: Config = {
     				'4': 'hsl(var(--chart-4))',
     				'5': 'hsl(var(--chart-5))'
     			},
-				danger: {
-					DEFAULT: 'hsl(var(--danger))',
-					foreground: 'hsl(var(--danger-foreground))'
-				},
+    			danger: {
+    				DEFAULT: 'hsl(var(--danger))',
+    				foreground: 'hsl(var(--danger-foreground))'
+    			},
+    			sidebar: {
+    				DEFAULT: 'hsl(var(--sidebar-background))',
+    				foreground: 'hsl(var(--sidebar-foreground))',
+    				primary: 'hsl(var(--sidebar-primary))',
+    				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+    				accent: 'hsl(var(--sidebar-accent))',
+    				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+    				border: 'hsl(var(--sidebar-border))',
+    				ring: 'hsl(var(--sidebar-ring))'
+    			}
     		},
     		keyframes: {
     			'caret-blink': {
