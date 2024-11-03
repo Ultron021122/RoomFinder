@@ -15,6 +15,8 @@ import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Form from "./form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+// Utilidades
+import { messages } from "@/utils/constants";
 
 interface RecoverUser {
     vchtoken: string;
@@ -45,12 +47,14 @@ function RecoverComponent() {
         }
     }, [errorSystem]);
 
-    const onSubmit = async () => {
+    const onSubmit = async (recoverUser: RecoverUser) => {
         setIsLoading(true);
         setErrorSystem(null);
 
+        console.log(token);
+
         const dataToken: RecoverUser = {
-            vchtoken: token // Usar el valor del OTP
+            vchtoken: recoverUser.vchtoken // Usar el valor del OTP
         };
 
         try {
@@ -105,7 +109,7 @@ function RecoverComponent() {
                         <>
                             {!isTokenValid ? (
                                 <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
-                                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-800">
                                         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                             <div>
                                                 <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -119,6 +123,20 @@ function RecoverComponent() {
                                                 <div>
                                                     <InputOTP
                                                         maxLength={8}
+                                                        {...register("vchtoken", {
+                                                            required: {
+                                                                value: true,
+                                                                message: messages.vchtoken.required
+                                                            },
+                                                            minLength: {
+                                                                value: 8,
+                                                                message: messages.vchtoken.min
+                                                            },
+                                                            maxLength: {
+                                                                value: 8,
+                                                                message: messages.vchtoken.max
+                                                            },
+                                                        })}
                                                         onChange={(value) => {
                                                             setValue("vchtoken", value); // Actualiza el valor en react-hook-form
                                                             trigger("vchtoken"); // Desencadena validación
