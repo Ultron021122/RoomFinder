@@ -65,7 +65,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <AppBar
                     component="nav"
                     position="static"
-                    className=" text-black dark:text-white bg-white border-b border-gray-220 dark:bg-gray-900 dark:border-gray-900"
+                    className="w-full text-black dark:text-white bg-white border-b border-gray-220 dark:bg-gray-900 dark:border-gray-900"
                     sx={{
                         bgcolor: (theme) => theme.palette.background.paper,
                         color: (theme) => theme.palette.text.primary,
