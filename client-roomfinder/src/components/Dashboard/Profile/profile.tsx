@@ -17,13 +17,15 @@ import L from 'leaflet';
 import { useSession } from 'next-auth/react'
 import { UserProfile } from '@/utils/interfaces'
 import axios from 'axios'
+import { useDisclosure } from '@nextui-org/react'
+import ImageModal from './ImageModal'
 
 // Corregir el problema de los íconos de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
 });
 
 export default function UserProfileComponent() {
@@ -52,7 +54,23 @@ export default function UserProfileComponent() {
     type Ubicacion = [number, number] | null;
 
     const [ubicacionActual, setUbicacionActual] = useState<Ubicacion>(null);
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+    useEffect(() => {
+        const fetchImageUrls = async () => {
+            if (user) {
+                try {
+                    const response = await axios.get(`/api/users/images/${user.usuarioid}`);
+                    setCoverImage(response.data.data.vchcoverimage);
+                    setProfileImage(response.data.data.vchimage);
+                } catch (error) {
+                    console.error("Error al cargar las imágenes:", error);
+                }
+            }
+        };
+
+        fetchImageUrls();
+    }, [user]);
 
     useEffect(() => {
         const fetchImageUrls = async () => {
@@ -82,11 +100,11 @@ export default function UserProfileComponent() {
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         const { name, value } = e.target;
         setUsuario(prevState => ({
-          ...prevState,
-          [name]: value,
+            ...prevState,
+            [name]: value,
         }));
-      };
-      
+    };
+
 
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, tipo: string) => {
@@ -101,7 +119,6 @@ export default function UserProfileComponent() {
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
         console.log('Datos actualizados:', usuario)
         setEditando(false)
         toast.success('Perfil actualizado con éxito!', {
@@ -116,11 +133,11 @@ export default function UserProfileComponent() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-r p-4">
-            <Card className="max-w-4xl mx-auto">
+        <div className="min-h-screen bg-gradient-to-r p-4"> {/*bg-gradient-to-r*/}
+            <Card className="max-w-7xl mx-auto bg-gray-300 dark:bg-gray-950">
                 <div className="relative h-48 rounded-t-lg overflow-hidden">
                     <Image
-                        src={usuario.imagenFondo}
+                        src={coverImage}
                         alt="Fondo de perfil"
                         fill
                         priority
@@ -130,17 +147,22 @@ export default function UserProfileComponent() {
                         <Camera className="h-6 w-6" />
                         <input
                             id="fondo"
-                            type="file"
+                            type="button"
                             className="hidden"
-                            onChange={(e) => handleImageUpload(e, 'imagenFondo')}
-                            accept="image/*"
+                            onClick={onOpen}
+                            // onChange={(e) => handleImageUpload(e, 'imagenFondo')}
+                            // accept="image/*"
                         />
                     </label>
                 </div>
                 <CardHeader className="relative">
                     <div className="absolute -top-16 left-4">
                         <Avatar className="h-32 w-32 border-4 border-white">
-                            <AvatarImage src={usuario.fotoPerfil} alt={usuario.nombre} />
+                            <AvatarImage
+                                src={profileImage}
+                                alt={usuario.nombre}
+                                className="object-cover w-full h-full rounded-full"
+                            />
                             <AvatarFallback>{usuario.nombre.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <label htmlFor="perfil" className="absolute bottom-0 right-0 bg-primary text-primary-foreground p-2 rounded-full cursor-pointer">
@@ -161,6 +183,7 @@ export default function UserProfileComponent() {
                     </Button>
                 </CardHeader>
                 <CardContent>
+                    {/* <Image src='/utils/logoW.png' alt="Fondo de perfil" width={1000} height={1000} /> */}
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
@@ -312,6 +335,7 @@ export default function UserProfileComponent() {
                 </CardContent>
             </Card>
             <ToastContainer />
+            <ImageModal isOpen={isOpen} onClose={onOpenChange} />
         </div>
     )
 }

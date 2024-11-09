@@ -59,7 +59,6 @@ const Profile = () => {
     return (
         <div className="h-full max-w-screen-2xl mx-auto">
             <div className="mx-auto">
-                <Breadcrumb pageName="Profile" />
                 <div className="mx-auto overflow-hidden rounded-sm shadow-md">
                     <div className="relative z-20 h-32 md:h-64">
                         <Image
@@ -82,10 +81,12 @@ const Profile = () => {
                         </div>
                     </div>
                     <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-[44px]">
-                        <div className="relative z-30 mx-auto -mt-24 w-full h-full max-h-32 max-w-32 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-h-44 sm:max-w-44 sm:p-3">
+                        <div
+                            className="relative z-30 mx-auto -mt-24 w-full h-full max-h-32 max-w-32 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-h-44 sm:max-w-44 sm:p-3"
+                        >
                             <div className="relative drop-shadow">
                                 <Image
-                                    src={profileImage || "/images/default-profile.jpg"}
+                                    src={profileImage}
                                     width={160}
                                     height={160}
                                     style={{
@@ -309,7 +310,7 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-            {/* <UserProfileComponent /> */}
+            <UserProfileComponent />
             <ImageModal isOpen={isOpen} onClose={onOpenChange} />
         </div>
     );
