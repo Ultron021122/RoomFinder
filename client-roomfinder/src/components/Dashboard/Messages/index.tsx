@@ -20,7 +20,7 @@ export default function MessageMainComponent() {
   const [imageUser, setImageUser] = useState<string>('');
   const [nameUser, setNameUser] = useState<string>('');
   const [name, setName] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorSystem, setErrorSystem] = useState<string | null>(null);
 
   useEffect(() => {
@@ -56,9 +56,14 @@ export default function MessageMainComponent() {
     setNameUser(user.vchname + ' ' + user.vchpaternalsurname + ' ' + user.vchmaternalsurname);
   }
 
+  const filteredUsers = users ? users.data.filter(user =>
+    user.vchname.toLowerCase().includes(name.toLowerCase()) ||
+    (user.vchpaternalsurname + ' ' + user.vchmaternalsurname).toLowerCase().includes(name.toLowerCase())
+  ) : [];
+
   return (
     <div>
-      <section className="h-[calc(100vh-150px)] flex flex-col bg-white dark:bg-gray-950">
+      <section className="h-[calc(100vh-150px)] flex flex-col">
         <div className="flex flex-col md:flex-row h-full max-w-8xl border rounded-lg overflow-hidden border-stroke bg-white shadow-md dark:bg-gray-950">
           {/* Users Box */}
           <div className="w-full md:w-1/3 border-r overflow-y-auto custom-scrollbar">
@@ -76,8 +81,8 @@ export default function MessageMainComponent() {
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Buscar chat"
-                  //value={busqueda}
-                  //onChange={(e) => setBusqueda(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="pl-8"
                 />
               </div>
@@ -90,11 +95,15 @@ export default function MessageMainComponent() {
                 </div>
               ) : !users ? (
                 <div className="flex items-center p-4">
-                  <p className="p-4 text-gray-500 dark:text-gray-300">No hay chats disponibles.</p>
+                  <p className="p-4 text-sm text-gray-500 dark:text-gray-300">No hay chats disponibles.</p>
+                </div>
+              ) : filteredUsers.length === 0 ? (
+                <div className="flex items-center justify-center p-4">
+                  <p className="p-4 text-sm text-gray-500 dark:text-gray-300">No se encontraron resultados.</p>
                 </div>
               ) : (
                 <div>
-                  {users.data.map((user) => (
+                  {filteredUsers.map((user) => (
                     <div
                       key={user.usuarioid}
                       onClick={() => handleUserClick(user)}
