@@ -58,7 +58,7 @@ const Profile = () => {
 
     return (
         <div className="h-full max-w-screen-2xl mx-auto">
-            <div className="mx-auto">
+            {/* <div className="mx-auto">
                 <div className="mx-auto overflow-hidden rounded-sm shadow-md">
                     <div className="relative z-20 h-32 md:h-64">
                         <Image
@@ -86,7 +86,7 @@ const Profile = () => {
                         >
                             <div className="relative drop-shadow">
                                 <Image
-                                    src={profileImage}
+                                    src={profileImage || "/inmueble.jpg"}
                                     width={160}
                                     height={160}
                                     style={{
@@ -309,8 +309,8 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-            <UserProfileComponent />
+            </div> */}
+            {/* <UserProfileComponent /> */}
             <ImageModal isOpen={isOpen} onClose={onOpenChange} />
         </div>
     );

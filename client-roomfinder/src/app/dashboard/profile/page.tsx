@@ -9,6 +9,13 @@ import {
 import Profile from "@/components/Dashboard/Profile";
 import { SlashIcon } from "@radix-ui/react-icons";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Perfil',
+};
+
+
 function BreadcrumbWithCustomSeparator({ pageName }: { pageName: string }) {
   return (
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center px-2 sm:justify-between">
