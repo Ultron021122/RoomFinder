@@ -116,7 +116,7 @@ const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose }) => 
             className="dark:bg-gray-900"
         >
             <ModalContent>
-                <ModalHeader className="flex flex-col gap-1 text-neutral-900 dark:text-neutral-100">Fondo de perfil</ModalHeader>
+                <ModalHeader className="flex flex-col gap-1 font-semibold text-neutral-900 dark:text-neutral-100">Fondo de perfil</ModalHeader>
                 <ModalBody>
                     <div
                         {...getRootProps({ className: 'dropzone' })}
@@ -140,7 +140,7 @@ const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose }) => 
                                     <span className="text-gray-600 dark:text-gray-200">Sube una imagen</span>
                                     <p className="pl-1">o arrastra y suelta</p>
                                 </div>
-                                <p className="text-xs leading-5 text-blue-600">PNG, JPG, GIF hasta 10MB</p>
+                                <p className="text-xs leading-5 text-blue-400">PNG, JPG, GIF hasta 10MB</p>
                             </div>
                         )}
                     </div>
