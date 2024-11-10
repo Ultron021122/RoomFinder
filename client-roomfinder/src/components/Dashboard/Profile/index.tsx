@@ -36,25 +36,6 @@ const Profile = () => {
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const roleName = rolesMapping[user?.roleid] || 'Desconocido';
-    const [coverImage, setCoverImage] = useState<string>("");
-    const [profileImage, setProfileImage] = useState<string>("");
-
-    useEffect(() => {
-        const fetchImageUrls = async () => {
-            if (user) {
-                try {
-                    const response = await axios.get(`/api/users/images/${user.usuarioid}`);
-                    setCoverImage(response.data.data.vchcoverimage);
-                    setProfileImage(response.data.data.vchimage);
-                } catch (error) {
-                    console.error("Error al cargar las imágenes:", error);
-                }
-            }
-        };
-
-        fetchImageUrls();
-    }, [user]);
-
 
     return (
         <div className="h-full max-w-screen-2xl mx-auto">
@@ -310,7 +291,7 @@ const Profile = () => {
                     </div>
                 </div>
             </div> */}
-            {/* <UserProfileComponent /> */}
+            <UserProfileComponent />
             <ImageModal isOpen={isOpen} onClose={onOpenChange} />
         </div>
     );

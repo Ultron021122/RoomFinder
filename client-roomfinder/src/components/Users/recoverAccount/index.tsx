@@ -17,6 +17,7 @@ import Form from "./form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 // Utilidades
 import { messages } from "@/utils/constants";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 
 interface RecoverUser {
     vchtoken: string;
@@ -123,6 +124,7 @@ function RecoverComponent() {
                                                 <div>
                                                     <InputOTP
                                                         maxLength={8}
+                                                        pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
                                                         {...register("vchtoken", {
                                                             required: {
                                                                 value: true,
@@ -136,6 +138,10 @@ function RecoverComponent() {
                                                                 value: 8,
                                                                 message: messages.vchtoken.max
                                                             },
+                                                            pattern: {
+                                                                value: /^[a-zA-Z0-9]+$/, // Acepta letras y números
+                                                                message: messages.vchtoken.pattern
+                                                            }
                                                         })}
                                                         onChange={(value) => {
                                                             setValue("vchtoken", value); // Actualiza el valor en react-hook-form

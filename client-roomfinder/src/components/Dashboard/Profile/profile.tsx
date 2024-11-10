@@ -72,22 +72,6 @@ export default function UserProfileComponent() {
         fetchImageUrls();
     }, [user]);
 
-    useEffect(() => {
-        const fetchImageUrls = async () => {
-            if (user) {
-                try {
-                    const response = await axios.get(`/api/users/images/${user.usuarioid}`);
-                    setCoverImage(response.data.data.vchcoverimage);
-                    setProfileImage(response.data.data.vchimage);
-                } catch (error) {
-                    console.error("Error al cargar las imágenes:", error);
-                }
-            }
-        };
-
-        fetchImageUrls();
-    }, [user]);
-
 
     useEffect(() => {
         if ("geolocation" in navigator) {
