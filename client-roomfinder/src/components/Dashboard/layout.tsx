@@ -10,7 +10,8 @@ import { rolesMapping } from "@/utils/constants";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 /* Iconos */
-import { GraduationCapIcon, Home, LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal, MoreVerticalIcon } from "lucide-react";
+import { GraduationCapIcon, LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal, MoreVerticalIcon } from "lucide-react";
+import { HomeIcon } from "@radix-ui/react-icons"
 import { UserProfile } from "@/utils/interfaces";
 import Link from "next/link";
 import useSidebarStore from "@/stores/useSideStore";
@@ -102,7 +103,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             onClickSidebar={handleSidebarItemClick}
                         />
                         <SidebarItem
-                            icon={<Home size={22} />}
+                            icon={<HomeIcon className="w-[22px] h-[22px]"/>}
                             text="Inmuebles"
                             url="/dashboard/inmuebles"
                             onClickSidebar={handleSidebarItemClick}

@@ -1,29 +1,18 @@
-'use client';
-import Inmuebles from "@/components/Dashboard/Inmuebles";
-import AppInmuebles from '@/components/App/Inmuebles';
-import { useSession } from 'next-auth/react';
-import { rolesMapping, role } from "@/utils/constants";
-import { UserProfile } from "@/utils/interfaces";
+import Inmuebles from '@/components/Dashboard/Inmuebles';
+import { BreadcrumbWithCustomSeparator } from '@/components/GeneralComponents/Breadcrumbs';
+import { Metadata } from "next";
 
-export default function InmueblesPage() {
-    const { data: session } = useSession();
-    const user = session?.user as UserProfile;
-    const roleName = rolesMapping[user?.roleid] || 'Desconocido';
+export const metadata: Metadata = {
+    title: 'Inmuebless',
+};
 
-    const renderComponent = () => {
-        switch (roleName) {
-            case role[0].vchname:
-                return <AppInmuebles />;
-            case role[1].vchname:
-                return <Inmuebles />;
-            default:
-                return <Inmuebles />; // Default component if no role matches
-        }
-    };
-
+export default function DashboardHome() {
     return (
-        <div>
-            {renderComponent()}
+        <div className="h-full max-w-screen-2xl mx-auto">
+            <BreadcrumbWithCustomSeparator pageName="Inmuebles" />
+            <div className="mx-auto">
+                <Inmuebles />
+            </div>
         </div>
     );
 }

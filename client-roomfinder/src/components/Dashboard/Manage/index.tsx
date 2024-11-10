@@ -3,7 +3,7 @@ import AdminUsuarios from "./adminUsers";
 
 export default function ManageComponent() {
   return (
-    <div className="">
+    <div className="overflow-hidden">
       <AdminUsuarios />
     </div>
   );

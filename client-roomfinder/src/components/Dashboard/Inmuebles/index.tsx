@@ -1,8 +1,9 @@
 import Image from "next/image";
 import CardElement from "@/components/GeneralComponents/CardElement";
 import TarjetaPropiedad from "@/components/GeneralComponents/Card";
+import Header from "./Header";
 
-export default function Inmuebles (){
+export default function Inmuebles() {
 
     /* Obtener inmuebles del arrendador */
 
@@ -10,13 +11,13 @@ export default function Inmuebles (){
     const inmuebles = [
         {
             imagenes: [
-                {url: '/inmueble.jpg', id:1},
-                {url : '/background/interior1.jpg', id:2},
-                {url : '/background/interior2.jpg', id:3},
-                {url : '/background/interior3.jpg', id:4},
-                {url : '/background/interior4.jpg', id:5},
+                { url: '/inmueble.jpg', id: 1 },
+                { url: '/background/interior1.jpg', id: 2 },
+                { url: '/background/interior2.jpg', id: 3 },
+                { url: '/background/interior3.jpg', id: 4 },
+                { url: '/background/interior4.jpg', id: 5 },
             ],
-            tipo:'Casa',
+            tipo: 'Casa',
             dormitorios: 2,
             baths: 5,
             ocupantes: 6,
@@ -26,13 +27,13 @@ export default function Inmuebles (){
 
         {
             imagenes: [
-                {url: '/inmueble2.jpg', id:1},
-                {url : '/background/interior1.jpg', id:2},
-                {url : '/background/interior2.jpg', id:3},
-                {url : '/background/interior3.jpg', id:4},
-                {url : '/background/interior4.jpg', id:5},
+                { url: '/inmueble2.jpg', id: 1 },
+                { url: '/background/interior1.jpg', id: 2 },
+                { url: '/background/interior2.jpg', id: 3 },
+                { url: '/background/interior3.jpg', id: 4 },
+                { url: '/background/interior4.jpg', id: 5 },
             ],
-            tipo:'Departamento',
+            tipo: 'Departamento',
             dormitorios: 1,
             baths: 1,
             ocupantes: 2,
@@ -42,56 +43,69 @@ export default function Inmuebles (){
 
         {
             imagenes: [
-                {url: '/inmueble3.jpg', id:1},
-                {url : '/background/interior1.jpg', id:2},
-                {url : '/background/interior2.jpg', id:3},
-                {url : '/background/interior3.jpg', id:4},
-                {url : '/background/interior4.jpg', id:5},
+                { url: '/inmueble3.jpg', id: 1 },
+                { url: '/background/interior1.jpg', id: 2 },
+                { url: '/background/interior2.jpg', id: 3 },
+                { url: '/background/interior3.jpg', id: 4 },
+                { url: '/background/interior4.jpg', id: 5 },
             ],
-            tipo:'Cuarto',
+            tipo: 'Cuarto',
             dormitorios: 1,
             baths: 1,
             ocupantes: 6,
             costo: 2200,
-            descripcion: 'Casa acogedora ubicada en un vecindario tranquilo, cerca de la universidad y con buenos servicios. ¡Ideal para estudiantes!'}
+            descripcion: 'Casa acogedora ubicada en un vecindario tranquilo, cerca de la universidad y con buenos servicios. ¡Ideal para estudiantes!'
+        }
     ]
 
-    return(
+    return (
         <>
-            <section className="relative h-72">
-                <Image
-                    src={'/background/fondo-6.jpg'}
-                    alt='RoomFinder background image'
-                    fill
-                    className="object-cover w-full h-full"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <h1 className="font-semibold text-white text-4xl">Mis Inmuebles en Renta</h1>
-                </div>
-            </section>
-
-            <TarjetaPropiedad 
-                    id="1"
-                    titulo="Casa en Renta"
-                    descripcion="Casa acogedora ubicada en un vecindario tranquilo, cerca de la universidad y con buenos servicios. ¡Ideal para estudiantes!"
-                    precio={1200}
-                    imagen="https://images.pexels.com/photos/811587/pexels-photo-811587.jpeg?auto=compress&cs=tinysrgb&w=630&h=375&dpr=1"
-                    ubicacion="Calle 123, Colonia X, Ciudad Y"
-                    habitaciones={2}
-                    banos={5}
-                    superficie={120}
-                    tipo="Casa"
-            />
-
+            <Header />
             {/* momentaneo */}
             <section className="my-12">
                 <div className="w-[95%] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"> {/* contenedor de propiedades */}
-                    <CardElement inmueble={inmuebles[0]}/>
-                    <CardElement inmueble={inmuebles[1]}/>
-                    <CardElement inmueble={inmuebles[2]}/>
-                    <CardElement inmueble={inmuebles[0]}/>
-                    <CardElement inmueble={inmuebles[1]}/>
-                    <CardElement inmueble={inmuebles[2]}/>
+                    <TarjetaPropiedad
+                        id="1"
+                        titulo="Casa en Renta"
+                        descripcion="Casa acogedora ubicada en un vecindario tranquilo, cerca de la universidad y con buenos servicios. ¡Ideal para estudiantes!"
+                        precio={1200}
+                        imagen="https://images.pexels.com/photos/811587/pexels-photo-811587.jpeg?auto=compress&cs=tinysrgb&w=630&h=375&dpr=1"
+                        ubicacion="Calle 123, Colonia X, Ciudad Y"
+                        habitaciones={2}
+                        banos={5}
+                        superficie={120}
+                        tipo="Casa"
+                    />
+                    <TarjetaPropiedad
+                        id="1"
+                        titulo="Casa en Renta"
+                        descripcion="Casa acogedora ubicada en un vecindario tranquilo, cerca de la universidad y con buenos servicios. ¡Ideal para estudiantes!"
+                        precio={1200}
+                        imagen="https://images.pexels.com/photos/811587/pexels-photo-811587.jpeg?auto=compress&cs=tinysrgb&w=630&h=375&dpr=1"
+                        ubicacion="Calle 123, Colonia X, Ciudad Y"
+                        habitaciones={2}
+                        banos={5}
+                        superficie={120}
+                        tipo="Casa"
+                    />
+                    <TarjetaPropiedad
+                        id="1"
+                        titulo="Casa en Renta"
+                        descripcion="Casa acogedora ubicada en un vecindario tranquilo, cerca de la universidad y con buenos servicios. ¡Ideal para estudiantes!"
+                        precio={1200}
+                        imagen="https://images.pexels.com/photos/811587/pexels-photo-811587.jpeg?auto=compress&cs=tinysrgb&w=630&h=375&dpr=1"
+                        ubicacion="Calle 123, Colonia X, Ciudad Y"
+                        habitaciones={2}
+                        banos={5}
+                        superficie={120}
+                        tipo="Casa"
+                    />
+                    <CardElement inmueble={inmuebles[0]} />
+                    <CardElement inmueble={inmuebles[1]} />
+                    <CardElement inmueble={inmuebles[2]} />
+                    <CardElement inmueble={inmuebles[0]} />
+                    <CardElement inmueble={inmuebles[1]} />
+                    <CardElement inmueble={inmuebles[2]} />
                 </div>
             </section>
         </>

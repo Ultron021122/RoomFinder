@@ -13,6 +13,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Search, Edit, Trash2, UserPlus, ChevronLeft, ChevronRight } from 'lucide-react'
 
+
 // Definimos la interfaz para los usuarios
 interface Usuario {
   id: number;
@@ -101,8 +102,8 @@ export default function AdminUsuarios() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-r p-2 md:p-8">
-      <Card className="w-full max-w-6xl mx-auto">
+    <div className="bg-gradient-to-r p-2 md:p-8">
+      <Card className="overflow-hidden w-full max-w-8xl mx-auto bg-gray-300 dark:bg-gray-950">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Administración de Usuarios</CardTitle>
         </CardHeader>

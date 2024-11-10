@@ -1,3 +1,4 @@
+'use client';
 import Image from "next/image";
 import CardElement from "@/components/GeneralComponents/CardElement";
 import Header from "@/components/Dashboard/Inmuebles/Header";
