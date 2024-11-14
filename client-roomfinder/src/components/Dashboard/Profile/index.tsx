@@ -29,9 +29,8 @@ const Profile = () => {
     };
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const roleName = rolesMapping[user?.roleid] || 'Desconocido';
 
-    const DynamicMap = dynamic(() => import("./profile"), { ssr: true, loading: () => <Spinner /> });
+    const DynamicMap = dynamic(() => import("./profile"), { ssr: false, loading: () => <Spinner /> });
 
     return (
         <div className="h-full max-w-screen-2xl mx-auto">
