@@ -168,27 +168,23 @@ function Login() {
                                                 <Alert message={errors?.vchpassword.message} />
                                             )}
                                         </div>
-                                        <div className="flex items-center justify-between">
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        size="small"
-                                                        defaultChecked
-                                                        sx={{
-                                                            color: "#075985",
-                                                            '&.Mui-checked': {
-                                                                color: "#0284c7",
-                                                            },
-                                                        }}
-                                                    />
-                                                }
-                                                label="Recuerdame"
-                                                className="text-sm font-medium text-gray-400 dark:text-gray-300"
-                                                disableTypography
-                                            />
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-start">
+                                                <div className="flex items-center h-5">
+                                                    <input id="newsletter" aria-describedby="newsletter" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
+                                                </div>
+                                                <div className="ml-3 text-sm">
+                                                    <label
+                                                        htmlFor="newsletter"
+                                                        className="font-light text-gray-500 dark:text-gray-300"
+                                                    >
+                                                        Recuerdame
+                                                    </label>
+                                                </div>
+                                            </div>
                                             <Link
                                                 href="/users/recover"
-                                                className="text-xs font-medium text-sky-600 hover:underline dark:text-sky-500"
+                                                className="text-xs font-light text-sky-600 hover:underline dark:text-sky-500"
                                             >
                                                 ¿Has olvidado tú contraseña?
                                             </Link>

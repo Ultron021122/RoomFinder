@@ -815,11 +815,30 @@ const Registrar = () => {
                                             </div>
                                             {watch("roleid") === 1 && renderStudent()}
                                             {watch("roleid") === 2 && renderLessor()}
+                                            <div className="flex items-start">
+                                                <div className="flex items-center h-5">
+                                                    <input id="newsletter" aria-describedby="newsletter" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
+                                                </div>
+                                                <div className="ml-3 text-sm">
+                                                    <label
+                                                        htmlFor="newsletter"
+                                                        className="font-light text-gray-500 dark:text-gray-300"
+                                                    >
+                                                        Acepto los
+                                                        <Link
+                                                            className="ml-1 text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                                            href="#"
+                                                        >
+                                                            Terminos y Condiciones
+                                                        </Link>
+                                                    </label>
+                                                </div>
+                                            </div>
                                             <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
                                                 Registrar
                                             </Button>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                ¿Ya tienes una cuenta? <Link href='/users/login' className="text-sky-600 hover:underline dark:text-sky-500">Ingresar</Link>
+                                                ¿Ya tienes una cuenta? <Link href='/users/login' className="text-primary-600 hover:underline dark:text-primary-500">Ingresar</Link>
                                             </p>
                                         </form>
                                     </div>
