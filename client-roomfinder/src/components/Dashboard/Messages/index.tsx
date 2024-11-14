@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { RocketIcon, MessageSquareText, Search } from "lucide-react";
+import { RocketIcon, MessageSquareText, Search, Mail } from "lucide-react";
 import { User, UserList, UserProfile } from "@/utils/interfaces";
 import axios from "axios";
 import { Avatar, Badge, Spinner } from "@nextui-org/react";
@@ -10,6 +10,7 @@ import MessageComponent from "./messages";
 import { shortName } from "@/utils/functions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 
 export default function MessageMainComponent() {
@@ -71,8 +72,8 @@ export default function MessageMainComponent() {
               <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-300">
                 Chats
               </h4>
-              <div className="p-2 rounded-full bg-primary-500 text-white hover:bg-primary-600">
-                <MessageSquareText size={22} />
+              <div className="p-2 rounded-lg bg-primary-500 text-white hover:bg-primary-600">
+                <Mail size={22} />
               </div>
             </div>
             {/* Busqueda de usuarios */}
@@ -143,7 +144,20 @@ export default function MessageMainComponent() {
               <MessageComponent userID={selectedUser} name={name} image={imageUser} nameUser={nameUser} bnstatus className='w-full' onBack={() => setSelectedUser(null)} />
             ) : (
               <div className={`w-full flex-col items-center justify-center h-full overflow-y-auto custom-scrollbar md:flex hidden`}>
-                <RocketIcon size={64} className="text-gray-500 dark:text-gray-300" />
+                {/* <RocketIcon size={64} className="text-gray-500 dark:text-gray-300" /> */}
+                <div className="max-w-lg w-full space-y-8 text-center">
+                  <div className="space-y-4">
+                    <div className="relative w-72 h-64 mx-auto">
+                      <Image
+                        src="/utils/logoIconT.png"
+                        alt="Ilustración de búsqueda"
+                        fill
+                        className='absolute inset-0 object-cover w-full h-full'
+                        priority
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div>
                   <p className="p-4 text-gray-400">Únete a una nueva conversación.</p>
                 </div>

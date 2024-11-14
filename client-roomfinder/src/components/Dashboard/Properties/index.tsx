@@ -40,23 +40,23 @@ interface PropertyData {
     intzip: number;
     vchcountry: string;
     // Property services
-    /*
-    bnwaterincluded: boolean;
-    bnelectricityincluded: boolean;
-    bninternetincluded: boolean;
-    bngasincluded: boolean;
-    bnheatingincluded: boolean;
-    bnaireconditioningincluded: boolean;
-    bnlaundryincluded: boolean;
-    bnparkingincluded: boolean;
-    bncleaningincluded: boolean;
-    bncabletvincluded: boolean;
-    // Property images
-    // Additional features
-    decarea: number;
-    fldistanceuniversity: number;
-    vchadditionalfeatures: string;
-    */
+    // /*
+    // bnwaterincluded: boolean;
+    // bnelectricityincluded: boolean;
+    // bninternetincluded: boolean;
+    // bngasincluded: boolean;
+    // bnheatingincluded: boolean;
+    // bnaireconditioningincluded: boolean;
+    // bnlaundryincluded: boolean;
+    // bnparkingincluded: boolean;
+    // bncleaningincluded: boolean;
+    // bncabletvincluded: boolean;
+    // // Property images
+    // // Additional features
+    // decarea: number;
+    // fldistanceuniversity: number;
+    // vchadditionalfeatures: string;
+    // */
 }
 
 const MultiStepForm: React.FC = () => {
@@ -100,7 +100,6 @@ const MultiStepForm: React.FC = () => {
     return (
         <div className="h-full max-w-screen-2xl mx-auto bg-zinc-200 dark:bg-gray-900">
             <div className="mx-auto">
-                <Breadcrumb pageName="Propiedades" />
                 <div className="grid grid-cols-1 gap-9 sm:grid-cols-3">
                     <div className='gap-9 sm:col-span-2'>
                         <Progress size="sm" aria-label="Loading..." value={(step / 4) * 100} />

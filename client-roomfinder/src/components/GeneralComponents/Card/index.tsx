@@ -37,11 +37,11 @@ export default function TarjetaPropiedad({
     }
 
     return (
-        <Card className="w-full max-w-sm overflow-hidden">
+        <Card className="w-full mx-auto max-w-sm overflow-hidden bg-gray-950">
             <CardHeader className="p-0">
                 <div className="relative h-48 w-full">
                     <Image
-                        src="https://images.pexels.com/photos/811587/pexels-photo-811587.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                        src="/background/interior1.jpg"
                         alt={titulo}
                         fill
                         className='absolute inset-0 object-cover w-full h-full'
@@ -73,7 +73,7 @@ export default function TarjetaPropiedad({
                     </div>
                 </div>
             </CardContent>
-            <CardFooter className="flex justify-between items-center p-4 bg-muted">
+            <CardFooter className="flex justify-between items-center p-4 bg-muted bg-gray-800">
                 <div className="text-2xl font-bold">
                     {formatPrecio(precio)}
                     {precio !== null && precio !== undefined && <span className="text-sm font-normal">/mes</span>}
