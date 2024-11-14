@@ -288,6 +288,7 @@ export default function FormularioPropiedad() {
                                             items={selectedServices.map(s => s.id)}
                                             strategy={verticalListSortingStrategy}
                                         >
+                                            
                                             <div className="bg-gray-100 p-4 rounded-md w-full">
                                                 {selectedServices.map((service) => (
                                                     <SortableItem

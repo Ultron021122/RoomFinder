@@ -1,14 +1,15 @@
-"use client";
+'use client';
 import FloatingBox from "@/components/Map/Square";
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
+import { Spinner } from "@nextui-org/react";
 import { Menu, Search, Undo2, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const DynamicMap = dynamic(() => import("@/components/Map"), { ssr: false });
+const DynamicMap = dynamic(() => import("@/components/Map"), { ssr: false, loading: () => <Spinner /> });
 
-export default function Template() {
+export default function Map() {
   const [selectedUniversity, setSelectedUniversity] = useState<string>("");
   const [selectedTypeProperty, setSelectedTypeProperty] = useState<string>("");
   const [isBoxVisible, setIsBoxVisible] = useState(false);

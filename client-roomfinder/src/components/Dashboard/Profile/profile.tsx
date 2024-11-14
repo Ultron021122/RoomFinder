@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button"
@@ -12,23 +10,23 @@ import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Camera, Pencil, MapPin, Book, Briefcase, Calendar } from 'lucide-react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import L from 'leaflet';
-import { useSession } from 'next-auth/react'
 import { UserProfile } from '@/utils/interfaces'
 import axios from 'axios'
-import { useDisclosure } from '@nextui-org/react'
+import { Spinner, useDisclosure } from '@nextui-org/react'
 import ImageModal from './ImageModal'
 
-// Corregir el problema de los íconos de Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon-2x.png',
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
-});
+// Estilos de leaflet
+import "leaflet/dist/leaflet.css";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
+import "leaflet-defaulticon-compatibility";
+import { universityIcon } from '@/components/Map'
 
-export default function UserProfileComponent() {
+interface UserProfileComponentProps {
+    userData: UserProfile;
+}
+
+
+const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData }) => {
     const [coverImage, setCoverImage] = useState<string>("");
     const [profileImage, setProfileImage] = useState<string>("");
 
@@ -47,9 +45,6 @@ export default function UserProfileComponent() {
         ubicacion: [40.4165, -3.7026], // Coordenadas de Madrid
     })
 
-    const { data: session } = useSession();
-    const user = session?.user as UserProfile;
-
     const [editando, setEditando] = useState(false)
     type Ubicacion = [number, number] | null;
 
@@ -58,9 +53,9 @@ export default function UserProfileComponent() {
 
     useEffect(() => {
         const fetchImageUrls = async () => {
-            if (user) {
+            if (userData) {
                 try {
-                    const response = await axios.get(`/api/users/images/${user.usuarioid}`);
+                    const response = await axios.get(`/api/users/images/${userData.usuarioid}`);
                     setCoverImage(response.data.data.vchcoverimage);
                     setProfileImage(response.data.data.vchimage);
                 } catch (error) {
@@ -70,7 +65,7 @@ export default function UserProfileComponent() {
         };
 
         fetchImageUrls();
-    }, [user]);
+    }, [userData]);
 
 
     useEffect(() => {
@@ -118,7 +113,7 @@ export default function UserProfileComponent() {
 
     return (
         <div className="min-h-screen bg-gradient-to-r p-4"> {/*bg-gradient-to-r*/}
-            <Card className="max-w-7xl mx-auto bg-gray-300 dark:bg-gray-950">
+            <Card className="max-w-7xl mx-auto bg-gray-300 dark:bg-gray-950 border-gray-300 dark:border-gray-950">
                 <div className="relative h-48 rounded-t-lg overflow-hidden">
                     <Image
                         src={coverImage}
@@ -134,14 +129,14 @@ export default function UserProfileComponent() {
                             type="button"
                             className="hidden"
                             onClick={onOpen}
-                            // onChange={(e) => handleImageUpload(e, 'imagenFondo')}
-                            // accept="image/*"
+                        // onChange={(e) => handleImageUpload(e, 'imagenFondo')}
+                        // accept="image/*"
                         />
                     </label>
                 </div>
                 <CardHeader className="relative">
                     <div className="absolute -top-16 left-4">
-                        <Avatar className="h-32 w-32 border-4 border-white">
+                        <Avatar className="h-32 w-32 border-4 border-gray-300">
                             <AvatarImage
                                 src={profileImage}
                                 alt={usuario.nombre}
@@ -160,8 +155,8 @@ export default function UserProfileComponent() {
                             />
                         </label>
                     </div>
-                    <CardTitle className="text-2xl font-bold pt-12">{usuario.nombre}</CardTitle>
-                    <Button variant="outline" size="sm" className="absolute top-4 right-4" onClick={() => setEditando(!editando)}>
+                    <CardTitle className="text-2xl font-bold pt-12">{userData.vchname + ' ' + userData.vchmaternalsurname + ' ' + userData.vchpaternalsurname}</CardTitle>
+                    <Button variant="outline" size="sm" className="absolute top-4 border-gray-400 dark:border-gray-900 right-4 bg-gray-300 hover:bg-gray-400 text-black dark:bg-gray-900 dark:hover:bg-gray-800 dark:text-white" onClick={() => setEditando(!editando)}>
                         <Pencil className="h-4 w-4 mr-2" />
                         {editando ? 'Cancelar' : 'Editar Perfil'}
                     </Button>
@@ -171,21 +166,23 @@ export default function UserProfileComponent() {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <Label htmlFor="nombre">Nombre</Label>
+                                <Label htmlFor="nombre">Nombre completo</Label>
                                 <Input
                                     id="nombre"
                                     name="nombre"
+                                    className='border-gray-400 dark:border-gray-800'
                                     value={usuario.nombre}
                                     onChange={handleChange}
                                     disabled={!editando}
                                 />
                             </div>
                             <div>
-                                <Label htmlFor="email">Email</Label>
+                                <Label htmlFor="email">Correo electronico</Label>
                                 <Input
                                     id="email"
                                     name="email"
                                     type="email"
+                                    className='border-gray-400 dark:border-gray-800'
                                     value={usuario.email}
                                     onChange={handleChange}
                                     disabled={!editando}
@@ -196,6 +193,7 @@ export default function UserProfileComponent() {
                                 <Input
                                     id="telefono"
                                     name="telefono"
+                                    className='border-gray-400 dark:border-gray-800'
                                     value={usuario.telefono}
                                     onChange={handleChange}
                                     disabled={!editando}
@@ -207,6 +205,7 @@ export default function UserProfileComponent() {
                                     id="fechaNacimiento"
                                     name="fechaNacimiento"
                                     type="date"
+                                    className='border-gray-400 dark:border-gray-800'
                                     value={usuario.fechaNacimiento}
                                     onChange={handleChange}
                                     disabled={!editando}
@@ -217,6 +216,7 @@ export default function UserProfileComponent() {
                                 <Input
                                     id="universidad"
                                     name="universidad"
+                                    className='border-gray-400 dark:border-gray-800'
                                     value={usuario.universidad}
                                     onChange={handleChange}
                                     disabled={!editando}
@@ -227,6 +227,7 @@ export default function UserProfileComponent() {
                                 <Input
                                     id="carrera"
                                     name="carrera"
+                                    className='border-gray-400 dark:border-gray-800'
                                     value={usuario.carrera}
                                     onChange={handleChange}
                                     disabled={!editando}
@@ -238,6 +239,7 @@ export default function UserProfileComponent() {
                             <Textarea
                                 id="bio"
                                 name="bio"
+                                className='border-gray-400 dark:border-gray-800'
                                 value={usuario.bio}
                                 onChange={handleChange}
                                 disabled={!editando}
@@ -249,6 +251,7 @@ export default function UserProfileComponent() {
                             <Textarea
                                 id="experienciaLaboral"
                                 name="experienciaLaboral"
+                                className='border-gray-400 dark:border-gray-800'
                                 value={usuario.experienciaLaboral}
                                 onChange={handleChange}
                                 disabled={!editando}
@@ -259,7 +262,7 @@ export default function UserProfileComponent() {
                             <Label>Intereses</Label>
                             <div className="flex flex-wrap gap-2 mt-2">
                                 {usuario.intereses.map((interes, index) => (
-                                    <span key={index} className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm">
+                                    <span key={index} className="bg-primary-400 text-primary-foreground px-3 py-1 rounded-full text-xs">
                                         {interes}
                                     </span>
                                 ))}
@@ -272,50 +275,55 @@ export default function UserProfileComponent() {
                         )}
                     </form>
 
-                    <div className="mt-6">
-                        <h3 className="text-lg font-semibold mb-2">Información Adicional</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="flex items-center">
-                                <MapPin className="h-5 w-5 mr-2 text-primary" />
-                                <span>Madrid, España</span>
-                            </div>
-                            <div className="flex items-center">
-                                <Book className="h-5 w-5 mr-2 text-primary" />
-                                <span>{usuario.carrera}</span>
-                            </div>
-                            <div className="flex items-center">
-                                <Briefcase className="h-5 w-5 mr-2 text-primary" />
-                                <span>Estudiante</span>
-                            </div>
-                            <div className="flex items-center">
-                                <Calendar className="h-5 w-5 mr-2 text-primary" />
-                                <span>{new Date(usuario.fechaNacimiento).toLocaleDateString()}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-6">
-                        <h3 className="text-lg font-semibold mb-2">Ubicación Actual</h3>
-                        <div className="h-64 rounded-lg overflow-hidden">
-                            {ubicacionActual ? (
-                                <MapContainer center={ubicacionActual} zoom={13} style={{ height: '100%', width: '100%' }}>
-                                    <TileLayer
-                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                    />
-                                    <Marker position={ubicacionActual}>
-                                        <Popup>
-                                            Tu ubicación actual
-                                        </Popup>
-                                    </Marker>
-                                </MapContainer>
-                            ) : (
-                                <div className="h-full flex items-center justify-center bg-gray-100">
-                                    <p>Cargando mapa...</p>
+                    <section className='grid grid-cols-1 md:grid-cols-2'>
+                        <div className="mt-6">
+                            <h3 className="text-lg font-semibold mb-2">Información Adicional</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex items-center">
+                                    <MapPin className="h-5 w-5 mr-2 text-primary-300" />
+                                    <span className='text-sm text-primary-foreground'>Madrid, España</span>
                                 </div>
-                            )}
+                                <div className="flex items-center">
+                                    <Book className="h-5 w-5 mr-2 text-primary-300" />
+                                    <span className='text-sm text-primary-foreground'>{usuario.carrera}</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <Briefcase className="h-5 w-5 mr-2 text-primary-300" />
+                                    <span className='text-sm text-primary-foreground'>Estudiante</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <Calendar className="h-5 w-5 mr-2 text-primary-300" />
+                                    <span className='text-sm text-primary-foreground'>{new Date(usuario.fechaNacimiento).toLocaleDateString()}</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+
+                        <div className="mt-6">
+                            <h3 className="text-lg font-semibold mb-2">Ubicación Actual</h3>
+                            <div className="h-64 rounded-lg overflow-hidden">
+                                {ubicacionActual ? (
+                                    <MapContainer center={ubicacionActual} zoom={13} style={{ height: '100%', width: '100%' }} zoomControl={false}>
+                                        <TileLayer
+                                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                        />
+                                        <Marker
+                                            position={ubicacionActual}
+                                            icon={universityIcon}
+                                        >
+                                            <Popup>
+                                                Tu ubicación actual
+                                            </Popup>
+                                        </Marker>
+                                    </MapContainer>
+                                ) : (
+                                    <div className="h-full flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+                                        <Spinner />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </section>
                 </CardContent>
             </Card>
             <ToastContainer />
@@ -323,3 +331,5 @@ export default function UserProfileComponent() {
         </div>
     )
 }
+
+export default UserProfileComponent

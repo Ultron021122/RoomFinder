@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { RocketIcon, MessageSquareText, Search } from "lucide-react";
+import { RocketIcon, MessageSquareText, Search, Mail } from "lucide-react";
 import { User, UserList, UserProfile } from "@/utils/interfaces";
 import axios from "axios";
 import { Avatar, Badge, Spinner } from "@nextui-org/react";
@@ -72,8 +72,8 @@ export default function MessageMainComponent() {
               <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-300">
                 Chats
               </h4>
-              <div className="p-2 rounded-full bg-primary-500 text-white hover:bg-primary-600">
-                <MessageSquareText size={22} />
+              <div className="p-2 rounded-lg bg-primary-500 text-white hover:bg-primary-600">
+                <Mail size={22} />
               </div>
             </div>
             {/* Busqueda de usuarios */}
