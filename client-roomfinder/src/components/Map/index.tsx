@@ -14,12 +14,12 @@ import Image from 'next/image';
 import { MapPin, Star } from 'lucide-react';
 
 // Icons personalizados
-const customIcon = new Icon({
+export const customIcon = new Icon({
     iconUrl: "/images/property.png",
     iconSize: [52, 52]
 });
 
-const universityIcon = new Icon({
+export const universityIcon = new Icon({
     iconUrl: "/images/universidad1.png",
     iconSize: [52, 52]
 });
@@ -69,18 +69,9 @@ export default function Map({ position, zoom, name, typeProperty }: MapData) {
         console.log('Tipo de propiedad:', typeProperty);
     }, [typeProperty]);
 
-    // Renderiza el mapa
-    // .map-width {
-    //     height: 100vh;
-    //     min-width: 100vw;
-    //     position: relative;
-    //     z-index: -20;
-    //     float: left;
-    // }
-
     return (
         <div>
-            <MapContainer center={position} zoom={zoom} className="h-screen w-screen max-w-screen-2xl relative -z-20 float-left" zoomControl={false}>
+            <MapContainer center={position} zoom={zoom} className="h-screen w-screen max-w-screen-2xl z-10 relative float-left" zoomControl={false}>
                 <SetMapRef />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

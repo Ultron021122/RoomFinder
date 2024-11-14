@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import Template from './template';
+import Map from './map';
 
 export const metadata: Metadata = {
     title: "Propiedades",
@@ -8,6 +8,8 @@ export const metadata: Metadata = {
 export default function Propiedades() {
 
     return (
-        <Template />
+        <div className='h-[100vh]'>
+            <Map />
+        </div>
     );
 }
