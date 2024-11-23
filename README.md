@@ -1,5 +1,6 @@
-<img src="client-roomfinder/public/utils/logo-dark.png" alt="Logo de la aplicación" width="300" />
 <div align="center">
+
+<img src="client-roomfinder/public/utils/logo-dark.png" alt="Logo de la aplicación" width="300" />
 
 ## Proyecto Modular
 
