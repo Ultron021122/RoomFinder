@@ -1,3 +1,4 @@
+<img src="client-roomfinder/public/utils/logo-dark.png" alt="Logo de la aplicación" width="300" />
 # RoomFinder - Proyecto modular
 > [!NOTE]
 > Este proyecto esta distribuido por modulos.

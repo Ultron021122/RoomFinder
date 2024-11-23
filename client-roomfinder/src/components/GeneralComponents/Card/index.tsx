@@ -44,6 +44,7 @@ export default function TarjetaPropiedad({
                         src="/background/interior1.jpg"
                         alt={titulo}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className='absolute inset-0 object-cover w-full h-full'
                     />
                     <Badge className="absolute top-2 right-2 bg-primary text-primary-foreground">

@@ -116,7 +116,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
             <Card className="max-w-7xl mx-auto bg-gray-300 dark:bg-gray-950 border-gray-300 dark:border-gray-950">
                 <div className="relative h-48 rounded-t-lg overflow-hidden">
                     <Image
-                        src={coverImage}
+                        src={coverImage || '/background/fondo-1.jpg'}
                         alt="Fondo de perfil"
                         fill
                         priority
@@ -171,7 +171,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                     id="nombre"
                                     name="nombre"
                                     className='border-gray-400 dark:border-gray-800'
-                                    value={usuario.nombre}
+                                    value={userData.vchname + ' ' + userData.vchmaternalsurname + ' ' + userData.vchpaternalsurname}
                                     onChange={handleChange}
                                     disabled={!editando}
                                 />
@@ -183,7 +183,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                     name="email"
                                     type="email"
                                     className='border-gray-400 dark:border-gray-800'
-                                    value={usuario.email}
+                                    value={userData.vchemail}
                                     onChange={handleChange}
                                     disabled={!editando}
                                 />
@@ -206,7 +206,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                     name="fechaNacimiento"
                                     type="date"
                                     className='border-gray-400 dark:border-gray-800'
-                                    value={usuario.fechaNacimiento}
+                                    value={userData.dtbirthdate.substring(0, 10)}
                                     onChange={handleChange}
                                     disabled={!editando}
                                 />
@@ -246,7 +246,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                 rows={4}
                             />
                         </div>
-                        <div>
+                        {/* <div>
                             <Label htmlFor="experienciaLaboral">Experiencia Laboral</Label>
                             <Textarea
                                 id="experienciaLaboral"
@@ -257,7 +257,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                 disabled={!editando}
                                 rows={3}
                             />
-                        </div>
+                        </div> */}
                         <div>
                             <Label>Intereses</Label>
                             <div className="flex flex-wrap gap-2 mt-2">
@@ -289,7 +289,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                 </div>
                                 <div className="flex items-center">
                                     <Briefcase className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm text-primary-foreground'>Estudiante</span>
+                                    <span className='text-sm text-primary-foreground'>{userData.roleid === 1 ? 'Estudiante' : 'Arrendador'}</span>
                                 </div>
                                 <div className="flex items-center">
                                     <Calendar className="h-5 w-5 mr-2 text-primary-300" />
