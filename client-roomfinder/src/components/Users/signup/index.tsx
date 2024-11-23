@@ -204,7 +204,7 @@ const Registrar = () => {
                     )}
                 </div>
                 <div>
-                    <FormControl
+                    {/* <FormControl
                         className="w-full mb-2"
                         variant="standard"
                         sx={{
@@ -300,7 +300,7 @@ const Registrar = () => {
                         {errors?.vchuniversity && (
                             <Alert message={errors?.vchuniversity.message} />
                         )}
-                    </FormControl>
+                    </FormControl> */}
                 </div>
             </div>
         );
@@ -704,7 +704,7 @@ const Registrar = () => {
                                                         id="type-user-label"
                                                         className="peer-focus:font-medium text-sm peer-focus:text-sm"
                                                         sx={{
-                                                            color: darkMode === true ? '#9ca3af' : '#6b7280',
+                                                            // color: darkMode === true ? '#9ca3af' : '#6b7280',
                                                             fontSize: '0.875rem',
                                                             lineHeight: '1.25rem',
                                                         }}

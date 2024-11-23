@@ -23,10 +23,24 @@ function Navbar({
                 <div className="max-w-screen-2xl p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center justify-center h-auto">
-                            <GraduationCapIcon size={32} className="mr-2 text-neutral-900 dark:text-white" />
+                            {/* <GraduationCapIcon size={32} className="mr-2 text-neutral-900 dark:text-white" />
                             <h1 className="dark:text-gray-100 dark:hover:text-white text-2xl font-semibold">
                                 RoomFinder
-                            </h1>
+                            </h1> */}
+                            <Image
+                                src="/utils/logo-light.png" // Imagen para modo claro
+                                alt="RoomFinder"
+                                width={162}
+                                height={32}
+                                className="dark:hidden" // Ocultar en modo oscuro
+                            />
+                            <Image
+                                src="/utils/logo-dark.png" // Imagen para modo oscuro
+                                alt="RoomFinder"
+                                width={162}
+                                height={32}
+                                className="hidden dark:block" // Ocultar en modo claro
+                            />
                         </Link>
                         <div className="md:hidden flex gap-3">
                             {session ? (
