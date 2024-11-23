@@ -1,10 +1,10 @@
 import Layout from "@/components/layout";
 import Footer from '@/components/Footer';
-import { propertiesHome } from "@/utils/constants";
-import MasonryImageList from "@/components/Imagelist";
+import { itemDataImage, propertiesHome } from "@/utils/constants";
 import { CardOwner } from "./Card";
 import Banner from "./Banner";
 import MainBanner from "./MainBanner";
+import BlurFade from "@/components/ui/blur-fade";
 
 export default function HomeComponent() {
     return (
@@ -43,7 +43,7 @@ export default function HomeComponent() {
                         <h3 className="max-w-7xl mx-auto dark:text-gray-100 text-2xl md:text-3xl xl:text-4xl tracking-tighter font-bold leading-none my-10">
                             Galeria de Imagenes
                         </h3>
-                        <MasonryImageList className="max-w-6xl mx-auto" />
+                        <BlurFadeDemo />
                     </div>
                 </section>
                 <Footer />
@@ -51,3 +51,21 @@ export default function HomeComponent() {
         </Layout >
     );
 };
+
+export function BlurFadeDemo() {
+  return (
+    <section id="photos" className="max-w-6xl mx-auto">
+      <div className="columns-2 gap-4 sm:columns-3">
+        {itemDataImage.map((item, index) => (
+          <BlurFade key={index} delay={0.25 + 1 * 0.05} inView>
+            <img
+              className="mb-4 size-full rounded-lg object-contain"
+              src={item.img}
+              alt={`Random stock image ${item.title}`}
+            />
+          </BlurFade>
+        ))}
+      </div>
+    </section>
+  );
+}
