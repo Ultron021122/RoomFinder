@@ -6,6 +6,8 @@ import { Button, Link as LinkUI } from "@nextui-org/react";
 import DropdownUser from "./dropdown";
 import { GraduationCapIcon } from "lucide-react";
 import { ModeToggle } from "../mode-toggle";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useTheme } from "next-themes";
 
 function Navbar({
     isOpen,
@@ -16,10 +18,15 @@ function Navbar({
 }) {
     const { data: session } = useSession();
     const pathname = usePathname();
+    const { theme, setTheme } = useTheme()
+
+    const handleThemeChange = (value: string) => {
+        setTheme(value); // Cambiar al tema seleccionado
+    };
 
     return (
         <>
-            <nav className="w-screen max-w-screen-2xl bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-900 absolute top-0 z-50">
+            <nav className="w-screen max-w-screen-2xl bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-800 md:dark:border-gray-900 absolute top-0 z-50">
                 <div className="max-w-screen-2xl p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center justify-center h-auto">
@@ -121,8 +128,18 @@ function Navbar({
                                             Arrendadores
                                         </Link>
                                     </li>
-                                    <li className="block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800">
-                                        <ModeToggle />
+                                    {/* Falta por terminar */}
+                                    <li className="block mt-2 py-2 text-gray-900 dark:text-gray-100 rounded dark:hover:bg-gray-800">
+                                        <Select onValueChange={handleThemeChange} value={theme}>
+                                            <SelectTrigger className="hover:border-gray-200 shadow-none dark:hover:border-gray-800">
+                                                <SelectValue placeholder="Theme" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-blue-400">
+                                                <SelectItem value="light">Light</SelectItem>
+                                                <SelectItem value="dark">Dark</SelectItem>
+                                                <SelectItem value="system">System</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </li>
                                 </ul>
                             </div>
