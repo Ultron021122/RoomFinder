@@ -57,6 +57,7 @@ export default function Header() {
                         height={432}
                         src="https://res.cloudinary.com/dal8aivch/image/upload/v1726123951/resources/zwkpszsuzphalw4ge38l.jpg"
                         className="w-[28rem] max-w-none rounded-xl bg-gray-900 shadow-xl ring-1 ring-gray-400/10 sm:w-[44rem]"
+                        priority
                     />
                 </div>
             </div>

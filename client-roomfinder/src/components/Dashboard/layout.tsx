@@ -16,6 +16,7 @@ import { UserProfile } from "@/utils/interfaces";
 import Link from "next/link";
 import useSidebarStore from "@/stores/useSideStore";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -26,9 +27,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const user = session?.user as UserProfile;
 
     const dropdownItems = [
-        { text: 'Perfil', onClick: () => console.log('Profile clicked') },
-        { text: 'Configuraciones', onClick: () => console.log('Settings clicked') },
-        { text: 'Cerrar sesión ', onClick: () => signOut() },
+        { text: 'Perfil', onClick: () => router.push('/dashboard/profile'), color: 'primary' },
+        { text: 'Configuraciones', onClick: () => router.push('/dashboard/settings'), color: 'primary' },
+        { text: 'Cerrar sesión ', onClick: () => signOut(), color: 'error' },
     ];
 
     // Update the window width state
@@ -84,10 +85,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             <MenuIcon />
                         </IconButton>
                         <Link href="/" className="flex items-center">
-                            <GraduationCapIcon size={32} />
+                            <Image
+                                src="/utils/4.png"
+                                alt="RoomFinder"
+                                //fill
+                                width={162}
+                                height={32}
+                                className=''
+                            />
+                            {/* <GraduationCapIcon size={32} />
                             <h1 className="ml-2 font-sans dark:text-gray-100 dark:hover:text-white text-2xl font-semibold">
                                 RoomFinder
-                            </h1>
+                            </h1> */}
                         </Link>
                     </Toolbar>
                 </AppBar>
@@ -103,7 +112,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             onClickSidebar={handleSidebarItemClick}
                         />
                         <SidebarItem
-                            icon={<HomeIcon className="w-[22px] h-[22px]"/>}
+                            icon={<HomeIcon className="w-[22px] h-[22px]" />}
                             text="Inmuebles"
                             url="/dashboard/inmuebles"
                             onClickSidebar={handleSidebarItemClick}

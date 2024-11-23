@@ -13,7 +13,7 @@ export async function POST(req, res) {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }
         });
-        console.log('chats:', response.data);
+        //console.log('chats:', response.data);
         return NextResponse.json(
             { message: 'Chat creado correctamente', data: response.data },
             { status: response.status }

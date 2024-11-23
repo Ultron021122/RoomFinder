@@ -53,7 +53,7 @@ export default function MessageMainComponent() {
   const handleUserClick = (user: User) => {
     setSelectedUser(user.usuarioid);
     setImageUser(user.vchimage);
-    setName(user.vchname);
+    //setName(user.vchname);
     setNameUser(user.vchname + ' ' + user.vchpaternalsurname + ' ' + user.vchmaternalsurname);
   }
 
@@ -152,6 +152,7 @@ export default function MessageMainComponent() {
                         src="/utils/logoIconT.png"
                         alt="Ilustración de búsqueda"
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className='absolute inset-0 object-cover w-full h-full'
                         priority
                       />
