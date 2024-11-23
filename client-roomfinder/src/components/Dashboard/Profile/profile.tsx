@@ -113,7 +113,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
 
     return (
         <div className="min-h-screen bg-gradient-to-r p-4"> {/*bg-gradient-to-r*/}
-            <Card className="max-w-7xl mx-auto bg-gray-300 dark:bg-gray-950 border-gray-300 dark:border-gray-950">
+            <Card className="max-w-7xl mx-auto bg-gray-100 dark:bg-gray-950 border-gray-100 dark:border-gray-950">
                 <div className="relative h-48 rounded-t-lg overflow-hidden">
                     <Image
                         src={coverImage || '/background/fondo-1.jpg'}
@@ -281,19 +281,19 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="flex items-center">
                                     <MapPin className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm text-primary-foreground'>Madrid, España</span>
+                                    <span className='text-sm dark:text-primary-foreground'>Madrid, España</span>
                                 </div>
                                 <div className="flex items-center">
                                     <Book className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm text-primary-foreground'>{usuario.carrera}</span>
+                                    <span className='text-sm dark:text-primary-foreground'>{usuario.carrera}</span>
                                 </div>
                                 <div className="flex items-center">
                                     <Briefcase className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm text-primary-foreground'>{userData.roleid === 1 ? 'Estudiante' : 'Arrendador'}</span>
+                                    <span className='text-sm dark:text-primary-foreground'>{userData.roleid === 1 ? 'Estudiante' : 'Arrendador'}</span>
                                 </div>
                                 <div className="flex items-center">
                                     <Calendar className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm text-primary-foreground'>{new Date(usuario.fechaNacimiento).toLocaleDateString()}</span>
+                                    <span className='text-sm dark:text-primary-foreground'>{new Date(usuario.fechaNacimiento).toLocaleDateString()}</span>
                                 </div>
                             </div>
                         </div>
