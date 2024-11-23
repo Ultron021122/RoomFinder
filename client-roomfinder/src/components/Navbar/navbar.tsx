@@ -35,7 +35,7 @@ function Navbar({
                                 RoomFinder
                             </h1> */}
                             <Image
-                                src="/utils/logo-light.png" // Imagen para modo claro
+                                src="/utils/5.png" // Imagen para modo claro
                                 alt="RoomFinder"
                                 width={162}
                                 height={32}
