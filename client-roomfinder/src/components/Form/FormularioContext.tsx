@@ -6,6 +6,7 @@ export interface InterfaceUbicacion {
     pais:string;
     direccion:string;
     estado:string;
+    calle?:string;
     codigoPostal:number;
     ciudad_municipio:string;
     numExt?:string;

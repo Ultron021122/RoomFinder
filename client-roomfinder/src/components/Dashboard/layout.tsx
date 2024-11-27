@@ -86,7 +86,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         </IconButton>
                         <Link href="/" className="flex items-center">
                             <Image
-                                src="/utils/logo-light.png" // Imagen para modo claro
+                                src="/utils/5.png" // Imagen para modo claro
                                 alt="RoomFinder"
                                 width={162}
                                 height={32}
