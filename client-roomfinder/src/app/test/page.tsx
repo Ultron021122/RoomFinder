@@ -1,34 +1,29 @@
-'use client';
+import { Metadata } from 'next';
 
-import { useState, useEffect, useRef } from 'react'
-import { useLoadScript } from '@react-google-maps/api'
-import { MapContainer, TileLayer, Marker } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import L from 'leaflet'
-import { Spinner } from '@nextui-org/react'
-import { InterfaceUbicacion, useFormulario } from '@/components/Form/FormularioContext'
-import Mapa from "./Mapa";
+export const metadata: Metadata = {
+    title: 'Test',
+};
 
-export default function Ubicacion() {
+export default function Arrendadores() {
     return (
-        <div className="pb-8">
-            <div className='mb-12 text-center'>
-                <h2 className="font-semibold text-base sm:text-xl md:text-2xl text-neutral-900 dark:text-gray-100">
-                    Selecciona la ubicación del inmueble
-                </h2>
-                <p
-                    className="text-sm mb-8 text-neutral-800 dark:text-gray-400"
-                >
-                    Es necesario que indiques donde se ubica el inmueble para que los alumnos conozcan su ubicación
-                </p>
-            </div>
-            <Mapa />
-            {/* <MapaDireccion /> */}
+        <div>
+            <p>Test</p>
         </div>
     );
 }
 
-// Corrige el problema de los iconos de Leaflet en Next.js
+
+// 'use client'
+
+// import { useState, useEffect, useRef } from 'react'
+// import { useLoadScript } from '@react-google-maps/api'
+// import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+// import 'leaflet/dist/leaflet.css'
+// import L from 'leaflet'
+// import { Spinner } from '@nextui-org/react'
+// import { InterfaceUbicacion } from '@/components/Form/FormularioContext'
+
+// // Corrige el problema de los iconos de Leaflet en Next.js
 // const icon = L.icon({
 //   iconUrl: '/marker-icon.png',
 //   iconRetinaUrl: '/marker-icon-2x.png',
@@ -47,9 +42,8 @@ export default function Ubicacion() {
 //   lng: number;
 // }
 
-// export function MapaDireccion() {
+// export default function MapaDireccion() {
 //   const [address, setAddress] = useState<string>('')
-//   const { setInmueble } = useFormulario();
 //   const [coordinates, setCoordinates] = useState<Coordinates>({ lat: 19.4326, lng: -99.1332 }) // Ciudad de México por defecto
 //   const [addressComponents, setAddressComponents] = useState<any>(null) // Para almacenar los componentes de la dirección
 //   const autocompleteRef = useRef<HTMLInputElement | null>(null)
@@ -96,7 +90,7 @@ export default function Ubicacion() {
 
 //           const ubicacion: InterfaceUbicacion = {
 //             calle: components.route,
-//             numExt: components.streetNumber,
+//             numInt: components.streetNumber,
 //             pais: components.country,
 //             direccion: place.formatted_address || '',
 //             estado: components.state,
@@ -107,8 +101,7 @@ export default function Ubicacion() {
 //           };
 
 //           console.log(ubicacion)
-//           // Almacenar datos en el contexto
-//           setInmueble({ ubicacion: ubicacion });
+
 //           setAddressComponents(ubicacion)
 //         }
 //       })
