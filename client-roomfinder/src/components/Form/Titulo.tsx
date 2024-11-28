@@ -22,7 +22,7 @@ export default function AddProperty() {
     return (
         <div>
             <h2 className="font-semibold text-center text-base sm:text-xl md:text-2xl mb-8 text-neutral-900 dark:text-gray-100">
-                Agrega un título a tu inmueble
+                Detalles del inmueble
             </h2>
             <ImageTextEditor
                 src={imagen}
