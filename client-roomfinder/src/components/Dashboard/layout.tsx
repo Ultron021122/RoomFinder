@@ -97,7 +97,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 alt="RoomFinder"
                                 width={162}
                                 height={32}
-                                className="hidden dark:block" // Ocultar en modo claro
+                                className="hidden dark:block w-40 h-auto" // Ocultar en modo claro
                             />
                             {/* <GraduationCapIcon size={32} />
                             <h1 className="ml-2 font-sans dark:text-gray-100 dark:hover:text-white text-2xl font-semibold">

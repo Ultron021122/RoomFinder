@@ -4,7 +4,7 @@ import { useFormulario } from './FormularioContext';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import { Images, X } from 'lucide-react';
-import { toast, Bounce, Slide } from "react-toastify";
+import { toast, Bounce } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 function ImageUploader() {
@@ -15,7 +15,7 @@ function ImageUploader() {
         // Verifica cuántas imágenes se pueden añadir sin exceder el límite
         if (prev.length + acceptedFiles.length > 8) {
             toast.error("Solo se permiten 8 imagenes como maximo", {
-                position: "top-right",
+                position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -62,7 +62,8 @@ function ImageUploader() {
                         src={imagenURL}
                         alt={`preview de imagen ${index}`}
                         fill
-                        objectFit="cover" // Asegura que la imagen cubra el contenedor
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className='absolute inset-0 object-cover w-full h-full'
                     />
                     <button
                         className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full border border-solid border-white bg-transparent text-white hover:bg-gray-600"
