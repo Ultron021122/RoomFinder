@@ -4,7 +4,7 @@ export const metadata: Metadata = {
     title: 'Test',
 };
 
-export default function Arrendadores() {
+export default function testComponents() {
     return (
         <div>
             <p>Test</p>
