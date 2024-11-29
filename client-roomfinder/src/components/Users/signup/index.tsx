@@ -204,7 +204,7 @@ const Registrar = () => {
                     )}
                 </div>
                 <div>
-                    {/* <FormControl
+                    <FormControl
                         className="w-full mb-2"
                         variant="standard"
                         sx={{
@@ -300,7 +300,7 @@ const Registrar = () => {
                         {errors?.vchuniversity && (
                             <Alert message={errors?.vchuniversity.message} />
                         )}
-                    </FormControl> */}
+                    </FormControl>
                 </div>
             </div>
         );

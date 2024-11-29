@@ -1,9 +1,11 @@
 {
   "author": {
-    "name": "Sebastián Martínez López"
+    "name": "Sebastián Martínez López",
+    "email": "marvelsml25@gmail.com",
+    "url": "https://github.com/Ultron021122"
   },
-  "name": "auth-user",
-  "version": "0.1.0",
+  "name": "frontend-roomfinder",
+  "version": "4.1.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
