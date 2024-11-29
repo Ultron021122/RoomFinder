@@ -71,7 +71,8 @@ export default function Map() {
             sx={{
               position: 'absolute',
               bottom: 16,
-              right: 16
+              right: 16,
+              zIndex: 20,
             }}
             icon={
               <SpeedDialIcon
