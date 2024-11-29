@@ -58,139 +58,139 @@ export default function ConfirmarUbicacion() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mx-auto px-8 py-4">
                 {/* Campos de la ubicación */}
                 {/* Dirección */}
-                <div className="relative col-span-1 md:col-span-2 z-0 w-full mb-5 group">
+                <div>
+                    <label
+                        htmlFor="direccion"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        Dirección de la propiedad
+                    </label>
                     <input
                         type="text"
-                        name="direccion"
                         id="direccion"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        name="direccion"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                         placeholder=""
                         autoComplete="off"
                         disabled={true}
                         value={direccion}
                     />
-                    <label
-                        htmlFor="direccion"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                        Dirección
-                    </label>
                 </div>
                 {/* Pais */}
-                <div className="relative z-0 w-full mb-5 group">
+                <div>
+                    <label
+                        htmlFor="pais"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        País
+                    </label>
                     <input
                         type="text"
-                        name="pais"
                         id="pais"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        name="pais"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                         placeholder=""
                         autoComplete="off"
                         disabled={true}
                         value={pais}
                     />
-                    <label
-                        htmlFor="pais"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                        País
-                    </label>
                 </div>
                 {/* Estado */}
-                <div className="relative z-0 w-full mb-5 group">
+                <div>
+                    <label
+                        htmlFor="estado"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        Estado
+                    </label>
                     <input
                         type="text"
-                        name="estado"
                         id="estado"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        name="estado"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                         placeholder=""
                         autoComplete="off"
                         disabled={true}
                         value={estado}
                     />
-                    <label
-                        htmlFor="estado"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                        Estado
-                    </label>
                 </div>
                 {/* Ciudad / Municipio */}
-                <div className="relative z-0 w-full mb-5 group">
+                <div>
+                    <label
+                        htmlFor="ciudad"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        Ciudad / Municipio
+                    </label>
                     <input
                         type="text"
-                        name="ciudad"
                         id="ciudad"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        name="ciudad"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                         placeholder=""
                         autoComplete="off"
                         disabled={true}
                         value={ciudad_municipio}
                     />
-                    <label
-                        htmlFor="ciudad"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                        Ciudad / municipio
-                    </label>
                 </div>
                 {/* Código Postal */}
-                <div className="relative z-0 w-full mb-5 group">
+                <div>
+                    <label
+                        htmlFor="codigoPostal"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        Codigo Postal
+                    </label>
                     <input
-                        type="number"
-                        name="codigoPostal"
+                        type="text"
                         id="codigoPostal"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        name="codigoPostal"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                         placeholder=""
                         autoComplete="off"
                         disabled={true}
                         value={codigoPostal}
                     />
-                    <label
-                        htmlFor="codigoPostal"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                        Código Postal
-                    </label>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 w-full">
+                {/* Número exterior y interior */}
+                <div className="grid gap-2 grid-cols-1 md:grid-cols-2 w-full">
                     {/* Número exterior */}
-                    <div className="relative z-0 w-full mb-5 group pr-2">
+                    <div className="mb-5">
+                        <label
+                            htmlFor="numExt"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                            Número exterior
+                        </label>
                         <input
                             type="text"
-                            name="numExt"
                             id="numExt"
-                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            name="numExt"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             placeholder=""
                             autoComplete="off"
                             value={numExt}
                             onChange={(e) => handleInput('numExt', e.target.value)}
                         />
-                        <label
-                            htmlFor="numExt"
-                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                        >
-                            Núm.Ext
-                            <span className="ml-2 text-red-500">*</span>
-                        </label>
                     </div>
                     {/* Número interior */}
-                    <div className="relative z-0 w-full mb-5 group">
+                    <div className="mb-5">
+                        <label
+                            htmlFor="numInt"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                            Número interior
+                        </label>
                         <input
                             type="text"
-                            name="numInt"
                             id="numInt"
-                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            name="numInt"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             placeholder=""
                             autoComplete="off"
                             value={numInt}
                             onChange={(e) => handleInput('numInt', e.target.value)}
                         />
-                        <label
-                            htmlFor="numInt"
-                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                        >
-                            Núm.Int
-                        </label>
                     </div>
                 </div>
                 <input
@@ -206,6 +206,7 @@ export default function ConfirmarUbicacion() {
                     value={longitud}
                 />
             </div>
+
             <DynamicMap
                 position={[latitud, longitud]}
                 zoom={16}

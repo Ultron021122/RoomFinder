@@ -13,7 +13,7 @@ export default function Ubicacion() {
         <div className="pb-8">
             <div className='mb-12 text-center'>
                 <h2 className="font-semibold text-base sm:text-xl md:text-2xl text-neutral-900 dark:text-gray-100">
-                    Selecciona la ubicación del inmueble
+                    Establece la ubicación del inmueble
                 </h2>
                 <p
                     className="text-sm mb-8 text-neutral-800 dark:text-gray-400"
