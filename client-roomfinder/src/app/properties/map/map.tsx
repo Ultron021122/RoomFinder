@@ -65,7 +65,7 @@ export default function Map() {
 
       {/* Botón flotante para abrir el FloatingBox */}
       {!isBoxVisible && (
-        <div className="fixed bottom-5 right-5">
+        <div className="fixed z-50 bottom-5 right-5">
           <SpeedDial
             ariaLabel="SpeedDial basic example"
             sx={{
