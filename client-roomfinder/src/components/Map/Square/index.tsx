@@ -55,7 +55,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
         return () => {
             darkModeMediaQuery.removeEventListener('change', setDarkModeFromMediaQuery);
         };
-    }, []);
+    }, [darkMode]);
 
     if (!isLoaded) {
         return null;
@@ -102,7 +102,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                 />
                 <button onClick={onClose} className='absolute top-2 left-[calc(50vw-28px)] rounded-lg bg-gray-400 dark:bg-gray-600 h-2 w-14'>
                 </button>
-                <Typography className='text-base sm:text-lg font-medium text-gray-900 dark:text-white ml-2 mb-2'>Búsqueda de inmueble</Typography>
+                <Typography className='text-base sm:text-lg font-medium text-white ml-2 mb-2'>Búsqueda de inmueble</Typography>
                 <PerfectScrollbar>
                     <div className='w-full h-[25vh] p-2'>
                         <div className="flex flex-col">

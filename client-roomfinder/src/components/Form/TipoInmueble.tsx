@@ -5,17 +5,17 @@ import { Card, CardFooter} from "@nextui-org/react";
 import Image from "next/image";
 
 const tiposInmueble = [
-    { content: 'Casa', img: '/utils/tipoPropiedad.jpg' },
-    { content: 'Habitación', img: '/utils/tipoPropiedad2.jpg' },
-    { content: 'Departamento', img: '/utils/tipoPropiedad3.jpg' }
+    { id: 1, content: 'Casa', img: '/utils/tipoPropiedad.jpg' },
+    { id: 2, content: 'Habitación', img: '/utils/tipoPropiedad2.jpg' },
+    { id: 3, content: 'Departamento', img: '/utils/tipoPropiedad3.jpg' }
 ]
 
 export default function TipoInmueble() {
     const { inmueble, setInmueble, reiniciarValores } = useFormulario();
 
-    const handleSelect = (tipo: string) => {
+    const handleSelect = (tipo: number) => {
 
-        if (inmueble.tipoInmueble.trim() !== '') {
+        if (inmueble.tipoInmueble) {
             reiniciarValores();
         }
 
@@ -37,7 +37,7 @@ export default function TipoInmueble() {
                     tiposInmueble.map((data, index) =>
                         <div
                             key={index}
-                            onClick={() => handleSelect(data.content)}
+                            onClick={() => handleSelect(data.id)}
                         >
                             <Card
                                 isFooterBlurred
@@ -54,9 +54,9 @@ export default function TipoInmueble() {
                                     />
                                 </div>
                                 <CardFooter
-                                    className={`justify-center bg-black/20 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10 ${inmueble.tipoInmueble === data.content ? 'bg-[#007aff]' : ''}`}
+                                    className={`justify-center bg-black/20 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10 ${inmueble.tipoInmueble === data.id ? 'bg-[#007aff]' : ''}`}
                                 >
-                                    <p className={`text-center text-sm ${inmueble.tipoInmueble === data.content ? 'text-white' : 'text-white/80'}`}>
+                                    <p className={`text-center text-sm ${inmueble.tipoInmueble === data.id ? 'text-white' : 'text-white/80'}`}>
                                         {data.content}
                                     </p>
                                 </CardFooter>
