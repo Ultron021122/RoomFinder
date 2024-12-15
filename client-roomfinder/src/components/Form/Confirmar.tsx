@@ -6,7 +6,11 @@ import Input from "../GeneralComponents/Input";
 import { inputVacio } from "./Wizar";
 import { Chip, Spinner } from "@nextui-org/react";
 import dynamic from "next/dynamic";
-import { MapPin, Star } from "lucide-react";
+import { Bath, Bed, Car, MapPin, Star, Users } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
+import { Badge } from "../ui/badge";
+import { useRef } from "react";
+import Autoplay from "embla-carousel-autoplay"
 
 const DynamicMap = dynamic(() => import("@/components/Form/Map"),
     {
@@ -15,30 +19,28 @@ const DynamicMap = dynamic(() => import("@/components/Form/Map"),
     });
 
 function getIcon(inmueble: string) {
-    const iconos: Record<string, string> = {
-        'Casa': '/icon/house.svg',
-        'Cuarto': '/icon/room.svg',
-        'Departamento': '/icon/building.svg',
-        'Limpieza': '/icon/cleaning.png',
-        'Gas': '/icon/gas.png',
-        'Luz': '/icon/power.png',
-        'TV cable': '/icon/television.png',
-        'Agua': '/icon/water-tap.png',
-        'Wifi': '/icon/wifi.png',
-        'Boiler': '/icon/boiler.png',
-        'Lavadora': '/icon/washing-machine.png',
-        'Estacionamiento': '/icon/parking.png',
-        'Cocina': '/icon/kitchen.png',
-        'Refrigerador': '/icon/fridge.png',
-        'Comedor': '/icon/chair.png',
-        'Patio': '/icon/fence.png',
-        'Sala de estar': '/icon/sofa.png',
-        'Área de lavado': '/icon/area-lavado.png',
-        'Aire acondicionado': '/icon/ac.png'
-    }
+    const iconos: Record<string, { icon: string, serviceName: string }> = {
+        'bnCleaningIncluded': { icon: '/icon/cleaning.png', serviceName: 'Limpieza' },
+        "bnGasIncluded": { icon: '/icon/gas.png', serviceName: 'Gas' },
+        "bnElectricityIncluded": { icon: '/icon/power.png', serviceName: 'Electricidad' },
+        "bnCableTVIncluded": { icon: '/icon/television.png', serviceName: 'TV por cable' },
+        "bnWaterIncluded": { icon: '/icon/water-tap.png', serviceName: 'Agua' },
+        "bnInternetIncluded": { icon: '/icon/wifi.png', serviceName: 'Internet' },
+        "bnHeatingIncluded": { icon: '/icon/boiler.png', serviceName: 'Calefacción' },
+        "bnWashingMachineIncluded": { icon: '/icon/washing-machine.png', serviceName: 'Lavadora' },
+        "bnParkingIncluded": { icon: '/icon/parking.png', serviceName: 'Estacionamiento' },
+        "bnKitchen": { icon: '/icon/kitchen.png', serviceName: 'Cocina' },
+        "bnCoolerIncluded": { icon: '/icon/fridge.png', serviceName: 'Refrigerador' },
+        "bnDiningRoom": { icon: '/icon/chair.png', serviceName: 'Comedor' },
+        "bnGardenIncluded": { icon: '/icon/fence.png', serviceName: 'Jardín' },
+        "bnLivingRoom": { icon: '/icon/sofa.png', serviceName: 'Sala de estar' },
+        "bnWashingArea": { icon: '/icon/area-lavado.png', serviceName: 'Área de lavado' },
+        "bnAirConditioningIncluded": { icon: '/icon/ac.png', serviceName: 'Aire acondicionado' }
+    };
 
-    return iconos[inmueble];
+    return iconos[inmueble] || { icon: '', serviceName: 'Servicio no encontrado' };
 }
+
 
 export default function Confirmar() {
     const { inmueble } = useFormulario();
@@ -46,7 +48,6 @@ export default function Confirmar() {
     const {
         tipoInmueble,
         servicios,
-        amenidades,
         numRecamaras,
         numCamas,
         numBanos,
@@ -72,9 +73,33 @@ export default function Confirmar() {
         longitud
     } = ubicacion;
 
+    const {
+        bnWaterIncluded,
+        bnElectricityIncluded,
+        bnInternetIncluded,
+        bnGasIncluded,
+        bnHeatingIncluded,
+        bnAirConditioningIncluded,
+        bnLaundryIncluded,
+        bnParkingIncluded,
+        bnCleaningIncluded,
+        bnCableTVIncluded,
+        bnWashingMachineIncluded,
+        bnKitchen,
+        bnLivingRoom,
+        bnDiningRoom,
+        bnCoolerIncluded,
+        bnGardenIncluded,
+        bnWashingArea,
+    } = servicios;
+
     const Imagen1 = URL.createObjectURL(fotos[0]);
     const Imagen2 = URL.createObjectURL(fotos[1]);
     const Imagen3 = URL.createObjectURL(fotos[2]);
+
+    const plugin = useRef(
+        Autoplay({ delay: 2000, stopOnInteraction: true })
+    )
 
     return (
         <section className="w-full mx-auto p-2">
@@ -102,30 +127,43 @@ export default function Confirmar() {
                     </p>
                 </div>
                 {/* Imágenes */}
-                <div className="grid gap-4 col-start-1 col-end-3 row-start-1 sm:mb-6 sm:grid-cols-4 lg:gap-6 lg:col-start-2 lg:row-end-6 lg:row-span-6 lg:mb-0">
+                <div className="grid gap-2 col-start-1 col-end-3 row-start-1 sm:mb-6 lg:gap-6 lg:col-start-2 lg:row-end-6 lg:row-span-6 lg:mb-0">
                     <Image
                         width={800}
                         height={800}
                         src={Imagen1}
                         alt=""
-                        className="w-full h-60 object-cover rounded-lg sm:h-52 sm:col-span-2 lg:col-span-full"
+                        className="w-full lg:h-96 xl:h-72 object-cover rounded-lg sm:h-52 md:col-span-full lg:col-span-full"
                     />
-                    <Image
-                        width={800}
-                        height={800}
-                        src={Imagen2}
-                        alt=""
-                        className="hidden w-full h-52 object-cover rounded-lg sm:block sm:col-span-2 md:col-span-1 lg:row-start-2 lg:col-span-2 lg:h-32"
-                    />
-                    <Image
-                        width={800}
-                        height={800}
-                        src={Imagen3}
-                        alt=""
-                        className="hidden w-full h-52 object-cover rounded-lg md:block lg:row-start-2 lg:col-span-2 lg:h-32"
-                    />
+                    <div className="px-9">
+                        <Carousel
+                            className="hidden w-full max-w-md mx-auto lg:block lg:col-span-full"
+                            plugins={[plugin.current]}
+                            onMouseEnter={plugin.current.stop}
+                            onMouseLeave={plugin.current.reset}
+                        >
+                            <CarouselContent>
+                                {fotos.map((foto, index) => {
+                                    const url = URL.createObjectURL(foto);
+                                    return (
+                                        <CarouselItem className="basis-1/2" key={index}>
+                                            <Image
+                                                src={url}
+                                                alt={`Imagen del inmueble ${index + 1}`}
+                                                width={400}
+                                                height={300}
+                                                className="rounded-lg object-cover"
+                                            />
+                                        </CarouselItem>
+                                    );
+                                })}
+                            </CarouselContent>
+                            <CarouselPrevious />
+                            <CarouselNext />
+                        </Carousel>
+                    </div>
                 </div>
-                <dl className="mt-4 text-xs font-medium flex items-center row-start-2 sm:mt-1 sm:row-start-3 md:mt-2.5 lg:row-start-2">
+                <dl className="mt-4 text-xs font-medium flex items-center row-start-2 sm:mt-1 md:row-start-3 md:mt-2.5 lg:row-start-2">
                     <dt className="sr-only">Reviews</dt>
                     <dd className="text-indigo-600 flex items-center dark:text-indigo-400">
                         <Star size={18} className="mr-1" />
@@ -140,24 +178,45 @@ export default function Confirmar() {
                         {ciudad_municipio}, {estado}
                     </dd>
                 </dl>
-                <div className="mt-4 col-start-1 row-start-3 self-center sm:mt-0 sm:col-start-2 sm:row-start-2 sm:row-span-2 lg:mt-6 lg:col-start-1 lg:row-start-3 lg:row-end-4">
+                <div className="mt-4 col-start-1 row-start-3 self-center lg:mt-6 lg:col-start-1 lg:row-start-3 lg:row-end-4">
                     <Chip color="primary" variant="flat" size="sm" radius="sm">
-                        {`Tipo ${tipoInmueble}`}
+                        {`Tipo ${tipoInmueble === 1 ? 'Casa' : tipoInmueble === 2 ? 'Habitación' : 'Departamento'}`}
                     </Chip>
                 </div>
                 <p
-                    className="mt-4 text-sm leading-6 col-start-1 sm:col-span-2 lg:mt-6 lg:row-start-4 lg:col-span-1 dark:text-slate-400"
+                    className="mt-4 text-sm leading-6 col-start-1 lg:mt-6 lg:row-start-4 lg:col-span-1 dark:text-slate-400"
                 >
                     {descripcion}
                 </p>
+                <div className="mt-4 col-start-1 row-start-4 self-center lg:mt-6 lg:col-start-1 lg:row-start-5">
+                    <h3 className="text-lg font-semibold">Detalles del inmueble</h3>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                        <Badge variant="secondary" className="flex items-center">
+                            <Bed className="mr-1 h-4 w-4" />
+                            {numRecamaras} recamara(s)
+                        </Badge>
+                        <Badge variant="secondary" className="flex items-center">
+                            <Bath className="mr-1 h-4 w-4" />
+                            {numBanos} baño(s)
+                        </Badge>
+                        <Badge variant="secondary" className="flex items-center">
+                            <Users className="mr-1 h-4 w-4" />
+                            {numHuespedes} huéspedes
+                        </Badge>
+                        <Badge variant="secondary" className="flex items-center">
+                            <Car className="mr-1 h-4 w-4" />
+                            {capEstacionamiento} estacionamiento(s)
+                        </Badge>
+                    </div>
+                </div>
             </div>
             <div className="my-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="my-5 p-2">
                         <DynamicMap
                             position={[latitud, longitud]}
-                            zoom={16}
-                            style="rounded-md p-2 w-[400px] h-[400px] w-full"
+                            zoom={14}
+                            style="rounded-md p-2 w-[400px] h-[300px] w-full"
                         />
                     </div>
                     <div>
@@ -307,226 +366,49 @@ export default function Confirmar() {
                         </div>
                     </div>
                 </div>
-                <h3
-                    className="font-semibold text-sm sm:text-base my-5 text-blue-600 dark:text-blue-400">
-                    Servicios y amenidades
-                </h3>
-                <div>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
-                        {/* contenedor de servicios */}
-                        {
-                            servicios.map((servicio, index) => {
-                                const icono = getIcon(servicio);
-                                return (
-                                    <div
-                                        key={index}
-                                        className="rounded-md text-center text-xs px-5 py-3 flex flex-col items-center text-neutral-900 bg-gray-200 dark:text-gray-200 dark:border dark:border-gray-300 dark:bg-transparent"
-                                    >
-                                        <Image
-                                            src={icono}
-                                            width={30}
-                                            height={30}
-                                            alt={`Icono de ${servicio}`}
-                                            className="filter dark:invert"
-                                        />
-                                        {servicio}
-                                    </div>
-                                );
-                            })
-                        }
-                        {
-                            amenidades.map((amenidad, index) => {
-                                const icono = getIcon(amenidad);
-                                return (
-                                    <div
-                                        key={index}
-                                        className="rounded-md text-center text-xs px-5 py-3 flex flex-col items-center text-neutral-900 bg-gray-200 dark:text-gray-200 dark:border dark:border-gray-300 dark:bg-transparent"
-                                    >
-                                        <Image
-                                            src={icono}
-                                            width={30}
-                                            height={30}
-                                            alt={`Icono de ${amenidad}`}
-                                            className="filter dark:invert"
-                                        />
-                                        {amenidad}
-                                    </div>
-                                );
-                            })
-                        }
-                    </div>
-                </div>
-            </div>
-            <div className="my-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                    <h3
-                        className="font-semibold text-sm sm:text-base my-3 text-blue-600 dark:text-blue-400">
-                        Información general del inmueble
-                    </h3>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mx-auto">
-                        {/* Beds */}
-                        <div className="w-full border dark:border-gray-200 p-3 mt-3 flex justify-between rounded-md">
-                            <div className="flex items-center">
-                                <div className="p-3 bg-blue-500 dark:bg-blue-400 rounded-full">
-                                    <Image
-                                        src={'/icon/beds.png'}
-                                        width={30}
-                                        height={30}
-                                        alt={`Icono de camas`}
-                                        className="filter dark:invert"
-                                    />
-                                </div>
-                                <div className="ms-2 text-blue-500">
-                                    <h3
-                                        className="font-semibold text-sm sm:text-base">
-                                        Camas
-                                    </h3>
-                                    <p className="text-xs text-neutral-800 dark:text-neutral-200">
-                                        {`Cantidad: (${numCamas})`}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Parking */}
-                        <div className="w-full border dark:border-gray-200 p-3 mt-3 flex justify-between rounded-md">
-                            <div className="flex items-center">
-                                <div className="p-3 bg-blue-500 dark:bg-blue-400 rounded-full">
-                                    <Image
-                                        src={'/icon/parking.png'}
-                                        width={30}
-                                        height={30}
-                                        alt={`Icono de estacionamiento`}
-                                        className="filter dark:invert"
-                                    />
-                                </div>
-                                <div className="ms-2 text-blue-500">
-                                    <h3
-                                        className="font-semibold text-sm sm:text-base">
-                                        Estacionamiento
-                                    </h3>
-                                    <p className="text-xs text-neutral-800 dark:text-neutral-200">
-                                        {
-                                            amenidades.includes('Estacionamiento') ?
-                                                `Capacidad: (${capEstacionamiento})` :
-                                                'No cuenta con estacionamiento'
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <h3 className="font-semibold text-sm sm:text-base my-5 text-blue-600 dark:text-blue-400">
+                            Servicios y amenidades
+                        </h3>
+                        <div>
+                            {/* Contenedor de servicios */}
+                            <ul className="mt-2 list-disc list-inside">
+                                {
+                                    // Aquí recorremos los servicios y mostramos el ícono y nombre de cada uno
+                                    Object.entries(servicios).map(([key, value], index) => {
+                                        // Solo mostramos los servicios que están habilitados (true)
+                                        if (value) {
+                                            const servicio = getIcon(key); // Obtener el ícono según el servicio
+                                            return (
+                                                <li key={index} className="text-sm text-muted-foreground flex items-center space-x-2 mb-2">
+                                                    <Image
+                                                        src={servicio.icon}
+                                                        width={20}
+                                                        height={20}
+                                                        alt={`Icono de ${key}`}
+                                                        className="filter dark:invert"
+                                                    />
+                                                    <span>
+                                                        {servicio.serviceName}
+                                                    </span>
+                                                </li>
+                                            );
                                         }
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Huespedes */}
-                        <div className="w-full border dark:border-gray-200 p-3 mt-3 flex justify-between rounded-md">
-                            <div className="flex items-center">
-                                <div className="p-3 bg-blue-500 dark:bg-blue-400 rounded-full">
-                                    <Image
-                                        src={'/icon/people.png'}
-                                        width={30}
-                                        height={30}
-                                        alt={`Icono de huespedes`}
-                                        className="filter dark:invert"
-                                    />
-                                </div>
-                                <div className="ms-2 text-blue-500">
-                                    <h3
-                                        className="font-semibold text-sm sm:text-base">
-                                        Huespedes
-                                    </h3>
-                                    <p className="text-xs text-neutral-800 dark:text-neutral-200">
-                                        {`Cantidad: (${numHuespedes})`}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Bedroom */}
-                        <div className="w-full border dark:border-gray-200 p-3 mt-3 flex justify-between rounded-md">
-                            <div className="flex items-center">
-                                <div className="p-3 bg-blue-500 dark:bg-blue-400 rounded-full">
-                                    <Image
-                                        src={'/icon/bedroom-furniture.png'}
-                                        width={30}
-                                        height={30}
-                                        alt={`Icono de recámara`}
-                                        className="filter dark:invert"
-                                    />
-                                </div>
-                                <div className="ms-2 text-blue-500">
-                                    <h3
-                                        className="font-semibold text-sm sm:text-base">
-                                        Recámaras
-                                    </h3>
-                                    <p className="text-xs text-neutral-800 dark:text-neutral-200">
-                                        {`Cantidad: (${numRecamaras})`}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Bathroom */}
-                        <div className="w-full border dark:border-gray-200 p-3 mt-3 flex justify-between rounded-md">
-                            <div className="flex items-center">
-                                <div className="p-3 bg-blue-500 dark:bg-blue-400 rounded-full">
-                                    <Image
-                                        src={'/icon/bathroom-cabinet.png'}
-                                        width={30}
-                                        height={30}
-                                        alt={`Icono de baño`}
-                                        className="filter dark:invert"
-                                    />
-                                </div>
-                                <div className="ms-2 text-blue-500">
-                                    <h3
-                                        className="font-semibold text-sm sm:text-base">
-                                        Baños
-                                    </h3>
-                                    <p className="text-xs text-neutral-800 dark:text-neutral-200">
-                                        {`Cantidad: (${numBanos})`}
-                                    </p>
-                                </div>
-                            </div>
+                                        return null;
+                                    })
+                                }
+                            </ul>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <h3
-                        className="font-semibold text-sm sm:text-base my-3 text-blue-600 dark:text-blue-400">
-                        Restricciones
-                    </h3>
-                    <div className="flex flex-wrap gap-4">
-                        {
-                            reglas.map((regla, index) =>
-                                <Chip
-                                    key={index}
-                                    color="primary"
-                                    variant="flat"
-                                >
-                                    {regla}
-                                </Chip>
-                            )
-                        }
+                    <div>
+                        <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 my-5">Reglas</h3>
+                        <ul className="mt-2 list-disc list-inside">
+                            {reglas.map((regla, index) => (
+                                <li key={index} className="text-sm text-muted-foreground">{regla}</li>
+                            ))}
+                        </ul>
                     </div>
-                </div>
-            </div>
-            <div className="my-5">
-                <h3
-                    className="font-semibold text-sm sm:text-base my-5 text-blue-600 dark:text-blue-400">
-                    Fotografías del inmueble
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2">
-                    {
-                        fotos.map((imagen, index) => {
-                            const url = URL.createObjectURL(imagen);
-                            return (
-                                <div key={index} className="relative group w-full h-0 pb-[100%]">
-                                    <Image
-                                        src={url}
-                                        alt={`Imagen de inmueble ${index}`}
-                                        layout="fill"
-                                        objectFit="cover"
-                                        className="rounded-lg"
-                                    />
-                                </div>
-                            );
-                        })
-                    }
                 </div>
             </div>
         </section >

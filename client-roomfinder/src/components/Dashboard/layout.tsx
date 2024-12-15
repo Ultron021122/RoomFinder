@@ -90,7 +90,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 alt="RoomFinder"
                                 width={162}
                                 height={32}
-                                className="dark:hidden" // Ocultar en modo oscuro
+                                className="dark:hidden w-40 h-auto" // Ocultar en modo oscuro
                             />
                             <Image
                                 src="/utils/logo-dark.png" // Imagen para modo oscuro

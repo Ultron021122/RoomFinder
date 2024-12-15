@@ -6,6 +6,7 @@ export default function Publish() {
     return (
         <div>
             <Form />
+            {/* <PropertyForm /> */}
         </div>
     );
 }

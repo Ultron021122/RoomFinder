@@ -100,7 +100,7 @@ function Login() {
     }, [status, router]);
 
     return (
-        <section className="bg-gray-50 dark:bg-gray-900">
+        <section className="dark:bg-gray-900">
             <PerfectScrollbar>
                 <div className="h-[100vh]">
                     {isLoading ?

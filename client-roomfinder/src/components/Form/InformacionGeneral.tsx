@@ -42,7 +42,7 @@ export default function InformacionGeneral() {
                 </p>
             </div>
             <div className="flex flex-col gap-4">
-                {inmueble.tipoInmueble === 'Casa' && (
+                {inmueble.tipoInmueble === 1 && (
                     <div className="space-y-3 md:space-y-4">
                         <PropertyModifier content="Recámaras" min={Casa.recamaras.min} max={Casa.recamaras.max} />
                         <PropertyModifier content="Camas" min={Casa.camas.min} max={Casa.camas.max} />
@@ -51,14 +51,14 @@ export default function InformacionGeneral() {
                     </div>
                 )}
 
-                {inmueble.tipoInmueble === 'Habitación' && (
+                {inmueble.tipoInmueble === 2 && (
                     <div>
                         <PropertyModifier content="Huéspedes (capacidad)" min={Habitacion.huespedes.min} max={Habitacion.huespedes.max} />
                         <PropertyModifier content="Camas" min={Habitacion.camas.min} max={Habitacion.camas.max} />
                     </div>
                 )}
 
-                {inmueble.tipoInmueble === 'Departamento' && (
+                {inmueble.tipoInmueble === 3 && (
                     <div>
                         <PropertyModifier content="Recámaras" min={Departamento.recamaras.min} max={Departamento.recamaras.max} />
                         <PropertyModifier content="Camas" min={Departamento.camas.min} max={Departamento.camas.max} />
@@ -68,7 +68,7 @@ export default function InformacionGeneral() {
                 )}
 
                 {
-                    inmueble.amenidades.includes('Estacionamiento') &&
+                    inmueble.servicios.bnParkingIncluded &&
                     <PropertyModifier
                         content="Capacidad del estacionamiento"
                         min={Estacionamiento.min}
