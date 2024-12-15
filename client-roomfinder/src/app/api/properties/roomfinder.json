@@ -1,0 +1,71 @@
+{
+    "tipoInmueble": 2,
+    "servicios": {
+        "bnWaterIncluded": true,
+        "bnElectricityIncluded": true,
+        "bnInternetIncluded": false,
+        "bnGasIncluded": false,
+        "bnHeatingIncluded": false,
+        "bnAirConditioningIncluded": true,
+        "bnLaundryIncluded": false,
+        "bnParkingIncluded": false,
+        "bnCleaningIncluded": false,
+        "bnCableTVIncluded": true,
+        "bnWashingMachineIncluded": false,
+        "bnKitchen": true,
+        "bnLivingRoom": false,
+        "bnDiningRoom": true,
+        "bnCoolerIncluded": true,
+        "bnGardenIncluded": false,
+        "bnWashingArea": true
+    },
+    "numRecamaras": 0,
+    "numCamas": 1,
+    "numBanos": 0,
+    "numHuespedes": 1,
+    "capEstacionamiento": 0,
+    "fotos": [
+        {
+            "path": "fondo-1.jpg"
+        },
+        {
+            "path": "fondo-2.jpg"
+        },
+        {
+            "path": "fondo-4.jpg"
+        },
+        {
+            "path": "fondo-6.jpg"
+        },
+        {
+            "path": "fondo-7.jpg"
+        },
+        {
+            "path": "interior1.jpg"
+        },
+        {
+            "path": "interior2.jpg"
+        }
+    ],
+    "ubicacion": {
+        "calle": "Calle Montealbán",
+        "numExt": "95",
+        "pais": "México",
+        "direccion": "C. Montealbán 95, Cd Aztlán, 45402 Tonalá, Jal., México",
+        "estado": "Jalisco",
+        "codigoPostal": "45402",
+        "ciudad_municipio": "Tonalá",
+        "latitud": 20.6146494,
+        "longitud": -103.2664041
+    },
+    "titulo": "Terreno Comercial Plaza Central",
+    "descripcion": "El  terreno tiene una extensión de 10.000 m², ubicado en la zona comercial más dinámica de la ciudad. La propiedad está destinada a la construcción de centros comerciales, oficinas y apartamentos de lujo. Se encuentra en una intersección clave con excelente acceso a vías principales. El terreno está completamente nivelado y tiene todos los permisos legales en orden para su desarrollo. Se incluye una evaluación reciente que confirma su alta valorización",
+    "reglas": [
+        "erddfdfdfdfdfdfdfdfdfdfdfdfdfdf",
+        "dffffffffffffffffffffffffff",
+        "dffffffffffsdddddddddddddddd",
+        "dsfffffffffffffffffffffffffffff"
+    ],
+    "precio": 874154544545,
+    "lessorId": 2
+}

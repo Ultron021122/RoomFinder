@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import { useFormulario } from "./FormularioContext";
+import { ServicesAmenities, useFormulario } from "./FormularioContext";
 import clsx from 'clsx';
 
 export const ImageElementStyles = {
@@ -11,60 +11,43 @@ export const ImageElementStyles = {
 }
 
 const ServiciosData = [
-    { icon: '/icon/cleaning.png', content: 'Limpieza' },
-    { icon: '/icon/gas.png', content: 'Gas' },
-    { icon: '/icon/power.png', content: 'Luz' },
-    { icon: '/icon/television.png', content: 'TV cable' },
-    { icon: '/icon/water-tap.png', content: 'Agua' },
-    { icon: '/icon/wifi.png', content: 'Wifi' },
-    { icon: '/icon/boiler.png', content: 'Boiler' }
+    { id: 1, icon: '/icon/cleaning.png', content: 'Limpieza', variable: 'bnCleaningIncluded' },
+    { id: 2, icon: '/icon/gas.png', content: 'Gas', variable: "bnGasIncluded" },
+    { id: 3, icon: '/icon/power.png', content: 'Luz', variable: "bnElectricityIncluded" },
+    { id: 4, icon: '/icon/television.png', content: 'TV cable', variable: "bnCableTVIncluded" },
+    { id: 5, icon: '/icon/water-tap.png', content: 'Agua', variable: "bnWaterIncluded" },
+    { id: 6, icon: '/icon/wifi.png', content: 'Wifi', variable: "bnInternetIncluded" },
+    { id: 7, icon: '/icon/boiler.png', content: 'Boiler', variable: "bnHeatingIncluded" }
 ];
 
 const AmenidadesData = [
-    { icon: '/icon/washing-machine.png', content: 'Lavadora' },
-    { icon: '/icon/parking.png', content: 'Estacionamiento' },
-    { icon: '/icon/kitchen.png', content: 'Cocina' },
-    { icon: '/icon/fridge.png', content: 'Refrigerador' },
-    { icon: '/icon/chair.png', content: 'Comedor' },
-    { icon: '/icon/fence.png', content: 'Patio' },
-    { icon: '/icon/sofa.png', content: 'Sala de estar' },
-    { icon: '/icon/area-lavado.png', content: 'Área de lavado' },
-    { icon: '/icon/ac.png', content: 'Aire acondicionado' }
-]
+    { id: 8, icon: '/icon/washing-machine.png', content: 'Lavadora', variable: "bnWashingMachineIncluded" },
+    { id: 9, icon: '/icon/parking.png', content: 'Estacionamiento', variable: "bnParkingIncluded" },
+    { id: 10, icon: '/icon/kitchen.png', content: 'Cocina', variable: "bnKitchen" },
+    { id: 11, icon: '/icon/fridge.png', content: 'Refrigerador', variable: "bnCoolerIncluded" },
+    { id: 12, icon: '/icon/chair.png', content: 'Comedor', variable: "bnDiningRoom" },
+    { id: 13, icon: '/icon/fence.png', content: 'Patio', variable: "bnGardenIncluded" },
+    { id: 14, icon: '/icon/sofa.png', content: 'Sala de estar', variable: "bnLivingRoom" },
+    { id: 15, icon: '/icon/area-lavado.png', content: 'Área de lavado', variable: "bnWashingArea" },
+    { id: 16, icon: '/icon/ac.png', content: 'Aire acondicionado', variable: "bnAirConditioningIncluded" }
+];
 
 export default function ServiciosAmenidades() {
     const { inmueble, setInmueble } = useFormulario();
 
-    const handleServicio = (servicio: string) => {
-        const serviciosActuales = inmueble.servicios;
-        let nuevosServicios: string[] = [];
+    const handleServicio = (variable: keyof ServicesAmenities) => {
+        // Actualizamos los servicios con el cambio
+        const nuevosServicios = { ...inmueble.servicios };
+        nuevosServicios[variable] = !nuevosServicios[variable]; // Cambia el valor de true a false y viceversa
+        setInmueble({ servicios: nuevosServicios });
+    };
 
-        if (serviciosActuales.includes(servicio)) {
-            nuevosServicios = serviciosActuales.filter((s) => {
-                return s !== servicio;
-            })
-        } else {
-            nuevosServicios = [...serviciosActuales, servicio];
-        }
-
-        setInmueble({ servicios: nuevosServicios })
-    }
-
-    const handleAmenidad = (amenidad: string) => {
-
-        const amenidadesAct = inmueble.amenidades;
-        let nuevasAmenidades: string[] = []
-
-        if (amenidadesAct.includes(amenidad)) {
-            nuevasAmenidades = amenidadesAct.filter(a => {
-                return a !== amenidad;
-            });
-        } else {
-            nuevasAmenidades = [...amenidadesAct, amenidad];
-        }
-
-        setInmueble({ amenidades: nuevasAmenidades })
-    }
+    const handleAmenidad = (variable: keyof ServicesAmenities) => {
+        // Actualizamos las amenidades con el cambio
+        const nuevasAmenidades = { ...inmueble.servicios }; // Usamos `inmueble.servicios` porque `amenidades` ya es un objeto
+        nuevasAmenidades[variable] = !nuevasAmenidades[variable];
+        setInmueble({ servicios: nuevasAmenidades }); // Se actualiza el estado con la nueva configuración
+    };
 
     return (
         <div className="h-full">
@@ -78,15 +61,15 @@ export default function ServiciosAmenidades() {
                         ServiciosData.map((data, index) =>
                             <div
                                 key={index}
-                                onClick={() => handleServicio(data.content)}
-                                className={`rounded-md text-center text-xs md:text-sm px-5 py-3 flex flex-col items-center ${inmueble.servicios.includes(data.content) ? 'bg-blue-500 text-white' : 'text-neutral-900 bg-gray-200 dark:text-gray-200 dark:bg-gray-600'}`}
+                                onClick={() => handleServicio(data.variable as keyof ServicesAmenities)} // Aseguramos que el tipo sea keyof ServicesAmenities
+                                className={`rounded-md text-center text-xs md:text-sm px-5 py-3 flex flex-col items-center ${inmueble.servicios[data.variable as keyof ServicesAmenities] ? 'bg-blue-500 text-white' : 'text-neutral-900 bg-gray-200 dark:text-gray-200 dark:bg-gray-600'}`}
                             >
                                 <Image
                                     src={data.icon}
                                     width={40}
                                     height={40}
                                     alt={`Icono de ${data.content}`}
-                                    className={`filter dark:invert ${inmueble.servicios.includes(data.content) ? 'invert' : ''}`}
+                                    className={`filter dark:invert ${inmueble.servicios[data.variable as keyof ServicesAmenities] ? 'invert' : ''}`}
                                 />
                                 {data.content}
                             </div>
@@ -103,15 +86,15 @@ export default function ServiciosAmenidades() {
                         AmenidadesData.map((data, index) =>
                             <div
                                 key={index}
-                                onClick={() => handleAmenidad(data.content)}
-                                className={`rounded-md text-xs text-center md:text-sm px-5 py-3 flex flex-col items-center ${inmueble.amenidades.includes(data.content) ? 'bg-blue-500 text-white' : 'text-neutral-900 bg-gray-200 dark:text-gray-200 dark:bg-gray-600'}`}
+                                onClick={() => handleAmenidad(data.variable as keyof ServicesAmenities)} // Aseguramos que el tipo sea keyof ServicesAmenities
+                                className={`rounded-md text-xs text-center md:text-sm px-5 py-3 flex flex-col items-center ${inmueble.servicios[data.variable as keyof ServicesAmenities] ? 'bg-blue-500 text-white' : 'text-neutral-900 bg-gray-200 dark:text-gray-200 dark:bg-gray-600'}`}
                             >
                                 <Image
                                     src={data.icon}
                                     width={40}
                                     height={40}
                                     alt={`Icono de ${data.content}`}
-                                    className={`filter dark:invert ${inmueble.amenidades.includes(data.content) ? 'invert' : ''}`}
+                                    className={`filter dark:invert ${inmueble.servicios[data.variable as keyof ServicesAmenities] ? 'invert' : ''}`}
                                 />
                                 {data.content}
                             </div>

@@ -222,7 +222,7 @@ const Registrar = () => {
                     >
                         <InputLabel
                             id="university-label"
-                            className="peer-focus:font-medium text-sm peer-focus:text-sm"
+                            className="peer-focus:font-medium text-sm peer-focus:text-sm dark:text-gray-400"
                             sx={{
                                 color: darkMode === true ? '#9ca3af' : '#6b7280',
                                 fontSize: '0.875rem',
@@ -246,12 +246,11 @@ const Registrar = () => {
                                     labelId="university-label"
                                     id="vchuniversity"
                                     label="Universidad"
-                                    className="text-sm"
+                                    className="text-sm dark:text-white"
                                     sx={{
                                         fontSize: '0.875rem',
                                         lineHeight: '1.25rem',
                                         fontStyle: 'normal',
-                                        color: darkMode ? "white" : "#111827",
                                         '.MuiSvgIcon-root ': {
                                             fill: darkMode ? "white !important" : "#111827 !important",
                                         }
@@ -259,11 +258,11 @@ const Registrar = () => {
                                     MenuProps={{
                                         PaperProps: {
                                             sx: {
-                                                backgroundColor: darkMode ? "#374151" : "#f3f4f6",
-                                                color: darkMode ? "#fff" : "#111827",
+                                                backgroundColor: "#4b5563",
+                                                color: "#f9fafb", // Tailwind dark mode classes
                                                 height: '200px',
                                             },
-                                        },
+                                        }
                                     }}
                                     {...field}
                                 >
@@ -272,12 +271,13 @@ const Registrar = () => {
                                             <MenuItem
                                                 value={universidad.name}
                                                 key={index}
+                                                className="text-white"
                                                 sx={{
                                                     fontSize: '0.875rem',
                                                     lineHeight: '1.25rem',
                                                     '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
                                                     '&.Mui-selected:hover': {
-                                                        backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                        background: "bg-gray-700 dark:bg-gray-800",
                                                         color: darkMode ? '#3b82f6' : '#fff',
                                                     }, // Style when selected and hovered
                                                     '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
@@ -290,11 +290,7 @@ const Registrar = () => {
                                 </Select>
                             )}
                         />
-                        <FormHelperText
-                            sx={{
-                                color: darkMode ? '#d1d5db' : '#4b5563',
-                            }}
-                        >
+                        <FormHelperText className="dark:text-gray-400">
                             Selecciona una universidad
                         </FormHelperText>
                         {errors?.vchuniversity && (
@@ -470,7 +466,7 @@ const Registrar = () => {
 
     return (
         <div>
-            <section className="bg-gray-50 dark:bg-gray-900">
+            <section className=" dark:bg-gray-900">
                 <PerfectScrollbar>
                     {isLoading ?
                         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
@@ -701,10 +697,10 @@ const Registrar = () => {
                                                     }}
                                                 >
                                                     <InputLabel
-                                                        id="type-user-label"
-                                                        className="peer-focus:font-medium text-sm peer-focus:text-sm"
+                                                        id="university-label"
+                                                        className="peer-focus:font-medium text-sm peer-focus:text-sm dark:text-gray-400"
                                                         sx={{
-                                                            // color: darkMode === true ? '#9ca3af' : '#6b7280',
+                                                            color: darkMode === true ? '#9ca3af' : '#6b7280',
                                                             fontSize: '0.875rem',
                                                             lineHeight: '1.25rem',
                                                         }}
@@ -726,12 +722,11 @@ const Registrar = () => {
                                                                 labelId="type-user-label"
                                                                 id="roleid"
                                                                 label="Tipo de usuario"
-                                                                className="text-sm"
+                                                                className="text-sm dark:text-white"
                                                                 sx={{
                                                                     fontSize: '0.875rem',
                                                                     lineHeight: '1.25rem',
                                                                     fontStyle: 'normal',
-                                                                    color: darkMode ? "white" : "#111827",
                                                                     '.MuiSvgIcon-root ': {
                                                                         fill: darkMode ? "white !important" : "#111827 !important",
                                                                     }
@@ -739,8 +734,9 @@ const Registrar = () => {
                                                                 MenuProps={{
                                                                     PaperProps: {
                                                                         sx: {
-                                                                            backgroundColor: darkMode ? "#374151" : "#f3f4f6",
-                                                                            color: darkMode ? "#fff" : "#111827",
+                                                                            backgroundColor: "#4b5563",
+                                                                            color: "#f9fafb", // Tailwind dark mode classes
+                                                                            // height: '200px',
                                                                             maxHeight: '200px',
                                                                         },
                                                                     },
@@ -752,12 +748,13 @@ const Registrar = () => {
                                                                         <MenuItem
                                                                             value={rol.roleid}
                                                                             key={index}
+                                                                            className="text-white"
                                                                             sx={{
                                                                                 fontSize: '0.875rem',
                                                                                 lineHeight: '1.25rem',
                                                                                 '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
                                                                                 '&.Mui-selected:hover': {
-                                                                                    backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                                                    background: "bg-gray-700 dark:bg-gray-800",
                                                                                     color: darkMode ? '#3b82f6' : '#fff',
                                                                                 }, // Style when selected and hovered
                                                                                 '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
@@ -770,11 +767,7 @@ const Registrar = () => {
                                                             </Select>
                                                         )}
                                                     />
-                                                    <FormHelperText
-                                                        sx={{
-                                                            color: darkMode ? '#d1d5db' : '#4b5563',
-                                                        }}
-                                                    >
+                                                    <FormHelperText className="dark:text-gray-400">
                                                         Selecciona un tipo de usuario
                                                     </FormHelperText>
                                                     {errors?.roleid && (

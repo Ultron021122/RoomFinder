@@ -1,4 +1,5 @@
 import FormularioPropiedad from "@/components/Dashboard/help";
+import { PropertyForm } from "@/components/Form/Prueba";
 import { BreadcrumbWithCustomSeparator } from "@/components/GeneralComponents/Breadcrumbs";
 
 function Help() {
@@ -9,7 +10,8 @@ function Help() {
         <div className="mx-auto">
           <BreadcrumbWithCustomSeparator pageName="Ayuda" />
           <div className="mx-auto">
-            <FormularioPropiedad />
+            {/* <FormularioPropiedad /> */}
+            <PropertyForm />
           </div>
         </div>
       </div>

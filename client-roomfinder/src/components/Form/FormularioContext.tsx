@@ -3,24 +3,43 @@ import React, { createContext, useContext, useState } from 'react';
 // Define la interfaz para el estado del formulario
 
 export interface InterfaceUbicacion {
-    pais:string;
-    direccion:string;
-    estado:string;
-    calle?:string;
-    codigoPostal:number;
-    ciudad_municipio:string;
-    numExt?:string;
-    numInt?:string;
-    latitud:number;
-    longitud:number;
-    [key : string] : any
+    pais: string;
+    direccion: string;
+    estado: string;
+    calle?: string;
+    codigoPostal: number;
+    ciudad_municipio: string;
+    numExt?: string;
+    numInt?: string;
+    latitud: number;
+    longitud: number;
+    [key: string]: any
+}
+
+export interface ServicesAmenities {
+    bnWaterIncluded?: boolean;
+    bnElectricityIncluded?: boolean;
+    bnInternetIncluded?: boolean;
+    bnGasIncluded?: boolean;
+    bnHeatingIncluded?: boolean;
+    bnAirConditioningIncluded?: boolean;
+    bnLaundryIncluded?: boolean;
+    bnParkingIncluded?: boolean;
+    bnCleaningIncluded?: boolean;
+    bnCableTVIncluded?: boolean;
+    bnWashingMachineIncluded?: boolean;
+    bnKitchen?: boolean;
+    bnLivingRoom?: boolean;
+    bnDiningRoom?: boolean;
+    bnCoolerIncluded?: boolean;
+    bnGardenIncluded?: boolean;
+    bnWashingArea?: boolean;
 }
 
 export interface Inmueble {
     lessorId?: number;
-    tipoInmueble: string;
-    servicios: string[];
-    amenidades: string[];
+    tipoInmueble: number;
+    servicios: ServicesAmenities;
     numRecamaras: number;
     numCamas: number;
     numBanos: number;
@@ -28,15 +47,15 @@ export interface Inmueble {
     capEstacionamiento: number,
     fotos: File[];
     ubicacion: InterfaceUbicacion;
-    titulo:string;//
+    titulo: string;//
     descripcion: string;//
     reglas: string[];//
     precio: number;
-    [key : string]: any
+    [key: string]: any
 }
 
 // valores por defecto para el inmueble
-const valoresDefectoUbicacion : InterfaceUbicacion = {
+const valoresDefectoUbicacion: InterfaceUbicacion = {
     pais: '',
     direccion: '',
     estado: '',
@@ -46,10 +65,30 @@ const valoresDefectoUbicacion : InterfaceUbicacion = {
     longitud: 0,
 }
 
-const valoresDefectoInmueble : Inmueble = {
-    tipoInmueble: '',
-    servicios: [],
-    amenidades: [],
+// valores por defecto para el inmueble
+const valoresDefectoServiciosAmenidades: ServicesAmenities = {
+    bnWaterIncluded: false,
+    bnElectricityIncluded: false,
+    bnInternetIncluded: false,
+    bnGasIncluded: false,
+    bnHeatingIncluded: false,
+    bnAirConditioningIncluded: false,
+    bnLaundryIncluded: false,
+    bnParkingIncluded: false,
+    bnCleaningIncluded: false,
+    bnCableTVIncluded: false,
+    bnWashingMachineIncluded: false,
+    bnKitchen: false,
+    bnLivingRoom: false,
+    bnDiningRoom: false,
+    bnCoolerIncluded: false,
+    bnGardenIncluded: false,
+    bnWashingArea: false
+}
+
+const valoresDefectoInmueble: Inmueble = {
+    tipoInmueble: 1,
+    servicios: valoresDefectoServiciosAmenidades,
     numRecamaras: 0,
     numCamas: 0,
     numBanos: 0,
@@ -57,7 +96,7 @@ const valoresDefectoInmueble : Inmueble = {
     capEstacionamiento: 0,
     fotos: [],
     ubicacion: valoresDefectoUbicacion,
-    titulo:'',
+    titulo: '',
     descripcion: '',
     reglas: [],
     precio: 0,
