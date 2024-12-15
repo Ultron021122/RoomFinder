@@ -45,7 +45,7 @@ export default function PropertyModifier({ content, min, max }: { content: strin
                 <button
                     onClick={decrementar}
                     className={clsx(
-                        'absolute flex justify-center items-center w-[35px] h-[35px] rounded-full border border-solid border-gray-500 text-gray-500',
+                        'absolute flex justify-center items-center w-[35px] h-[35px] rounded-full border border-solid border-gray-500 text-gray-500 dark:border-gray-200 dark:text-gray-200',
                         {
                             'hover:cursor-not-allowed border-zinc-300 text-zinc-300': inmueble[propiedad] === min
                         }
@@ -60,9 +60,9 @@ export default function PropertyModifier({ content, min, max }: { content: strin
                 <button
                     onClick={incrementar}
                     className={clsx(
-                        `${estBtn} right-0`,
+                        `${estBtn} right-0 border border-solid border-gray-500 text-gray-500 dark:border-gray-200 dark:text-gray-200`,
                         {
-                            'hover:cursor-not-allowed border-zinc-300 text-zinc-300 ': inmueble[propiedad] === max
+                            'hover:cursor-not-allowed border-zinc-300 text-zinc-300': inmueble[propiedad] === max
                         }
                     )}
                 >

@@ -19,14 +19,14 @@ const ImageTextEditor = React.memo(({ nombre, tipo, descripcion, placeholder, va
     }
 
     return (
-        <div className="mb-5 grid grid-cols-1 md:grid-cols-2 gap-3 min-h-96 md:min-h-60">
+        <div className="mb-5 grid grid-cols-1 lg:grid-cols-2 gap-3 min-h-96 md:min-h-60">
             <div className="relative w-full min-h-40 md:h-full" >
                 <Image
                     width={800}
                     height={600}
                     src={src}
                     alt={`Imagen de inmueble`}
-                    className='absolute inset-0 object-cover w-full h-full'
+                    className='absolute inset-0 object-cover w-full h-full rounded-md'
                 />
             </div>
             <div className='flex flex-col items-center justify-center mx-auto'>
@@ -63,7 +63,7 @@ const ImageTextEditor = React.memo(({ nombre, tipo, descripcion, placeholder, va
                         </>
                     ) :
                     <textarea
-                        className='p-1 text-gray-800 dark:text-gray-300 placeholder:italic bg-transparent text-xs rounded-md w-full h-20 shadow-sm border border-gray-200 dark:border-gray-600 focus:ring-1 focus:ring-blue-500 focus:outline-none'
+                        className='p-1 text-gray-800 dark:text-gray-300 placeholder:italic bg-transparent text-xs rounded-md w-full min-h-24 shadow-sm border border-gray-200 dark:border-gray-600 focus:ring-1 focus:ring-blue-500 focus:outline-none'
                         placeholder={placeholder}
                         onChange={handleChange}
                         value={value}
