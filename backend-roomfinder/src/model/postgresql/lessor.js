@@ -42,7 +42,7 @@ export class LessorsModel extends UsersModel {
 
     static async create({ input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, vchcoverimage, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
             const result = await UsersModel.create({ input })
             if (result === false) return false;
             const usuarioid = result.usuarioid
@@ -57,7 +57,7 @@ export class LessorsModel extends UsersModel {
                     [usuarioid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate]
                 )
 
-                return new LessorsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, created_at, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate })
+                return new LessorsModel({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, roleid, vchcoverimage, created_at, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate })
             } finally {
                 client.release();
             }

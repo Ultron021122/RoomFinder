@@ -39,6 +39,7 @@ function Navbar({
                                 alt="RoomFinder"
                                 width={162}
                                 height={32}
+                                priority
                                 className="dark:hidden" // Ocultar en modo oscuro
                             />
                             <Image
@@ -46,6 +47,7 @@ function Navbar({
                                 alt="RoomFinder"
                                 width={162}
                                 height={32}
+                                priority
                                 className="hidden dark:block" // Ocultar en modo claro
                             />
                         </Link>

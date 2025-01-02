@@ -4,20 +4,19 @@ import { deleteImage, uploadImage } from "../cloudinary";
 
 export async function POST(req, res) {
     const {
-        lessor_id,
+        lessorId, // ID del lessor
         tipoInmueble,
         servicios,
-        amenidades,
         numRecamaras,
         numCamas,
         numBanos,
         numHuespedes,
         capEstacionamiento,
         fotos, // Array de fotos
-        ubicacion,
+        ubicacion, // Objeto con la ubicación
         titulo,
         descripcion,
-        reglas,
+        reglas, // Array de reglas
         precio
     } = await req.json();
 
@@ -28,7 +27,7 @@ export async function POST(req, res) {
     try {
         for (const foto of fotos) {
             const imageUrl = await uploadImage(
-                foto.path, // Asegúrate de que el path sea la ruta correcta de la imagen
+                foto, // Asegúrate de que el path sea la ruta correcta de la imagen
                 'properties', // Nombre de la carpeta en la que se va a almacenar los archivos
                 {
                     transformation: [
@@ -38,7 +37,7 @@ export async function POST(req, res) {
                     ]
                 }
             );
-            imageUrls.push(imageUrl.secure_url); // Almacena la URL
+            imageUrls.push(imageUrl); // Almacena la URL
         }
     } catch (error) {
         return NextResponse.json(
@@ -46,34 +45,67 @@ export async function POST(req, res) {
             { status: 503 }
         );
     }
+    // Take a look at the imageUrls array to upload the secure_url to the database
+    const secureUrls = imageUrls.map(imageUrl => imageUrl.secure_url);
 
     // Realizar la solicitud POST para guardar la información
     try {
         const response = await axios.post(`${process.env.REST_URL}/properties/`, {
-            type_house: tipoInmueble.toLowerCase(),
-            lessor_id: lessorId || 1, // Cambiar por el ID del lessor actual
-            country: ubicacion.pais,
-            street: ubicacion.direccion,
-            state: ubicacion.estado,
-            zip: ubicacion.codigoPostal,
-            municipality: ubicacion.ciudad_municipio,
-            num_ext: ubicacion.numExt,
-            num_int: ubicacion?.numInt,
-            lat: ubicacion.latitud,
-            lng: ubicacion.longitud,
-            title: titulo,
-            description: descripcion,
-            availability: 0,
-            price: precio,
-            rules: reglas,
-            servicios,
-            amenidades,
-            numRecamaras,
-            numCamas,
-            numBanos,
-            numHuespedes,
-            capEstacionamiento,
-            fotos: imageUrls, // Actualiza con las URLs de las imágenes
+            lessorid: lessorId, // Cambiar por el ID del lessor actual
+            propertytypeid: tipoInmueble,
+            vchtitle: titulo,
+            vchdescription: descripcion,
+            bnavailability: false,
+            intnumberrooms: numRecamaras,
+            intnumberbeds: numCamas,
+            intnumberbathrooms: numBanos,
+            intmaxoccupancy: numHuespedes,
+            objservices: {
+                intAccountParking: capEstacionamiento,
+                bnWaterIncluded: servicios.bnWaterIncluded,
+                bnElectricityIncluded: servicios.bnElectricityIncluded,
+                bnInternetIncluded: servicios.bnInternetIncluded,
+                bnGasIncluded: servicios.bnGasIncluded,
+                bnHeatingIncluded: servicios.bnHeatingIncluded,
+                bnAirConditioningIncluded: servicios.bnAirConditioningIncluded,
+                bnLaundryIncluded: servicios.bnLaundryIncluded,
+                bnParkingIncluded: servicios.bnParkingIncluded,
+                bnCleaningIncluded: servicios.bnCleaningIncluded,
+                bnCableTVIncluded: servicios.bnCableTVIncluded,
+                bnWashingMachineIncluded: servicios.bnWashingMachineIncluded,
+                bnKitchen: servicios.bnKitchen,
+                bnLivingRoom: servicios.bnLivingRoom,
+                bnDiningRoom: servicios.bnDiningRoom,
+                bnCoolerIncluded: servicios.bnCoolerIncluded,
+                bnGardenIncluded: servicios.bnGardenIncluded,
+                bnWashingArea: servicios.bnWashingArea,
+                //bnStudyZone: servicios.bnStudyZone,
+            },
+            objphotos: secureUrls, // Actualiza con las URLs de las imágenes
+            objlocation: {
+                street: ubicacion.calle,
+                zip: ubicacion.codigoPostal,
+                address: ubicacion.direccion,
+                suburb: ubicacion.colonia,
+                municipality: ubicacion.ciudad_municipio,
+                state: ubicacion.estado,
+                country: ubicacion.pais,
+                num_ext: ubicacion.numExt,
+                num_int: ubicacion.numInt,
+                lat: ubicacion.latitud,
+                lng: ubicacion.longitud,
+            },
+            decrentalcost: precio,
+            vchpropertyrules: reglas,
+            decpropertyrating: 0,
+            vchbuildingsecurity: '',
+            vchtransportationaccess: '',
+            intmincontractduration: 1,
+            intmaxcontractduration: 2,
+            bnfurnished: false,
+            vchfurnituretype: '',
+            bnStudyZone: false,
+            dtavailabilitydate: new Date().toISOString(),
         }, {
             headers: {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
@@ -94,15 +126,17 @@ export async function POST(req, res) {
         );
 
     } catch (error) {
-        console.error(error);
+        //console.error(error);
+        console.log(error.response.data.error);
         // Limpiar las imágenes subidas si es necesario
-        for (const imageUrl of imageUrls) {
-            const publicId = imageUrl.split('/').pop().split('.')[0]; // Obtener el public_id de la URL
+        const publicIds = imageUrls.map(imageUrl => imageUrl.public_id);
+        publicIds.forEach(async publicId => {
             await deleteImage(publicId);
-        }
+        });
+
         return NextResponse.json(
-            { message: 'Error al guardar la propiedad' },
-            { status: 503 }
+            { message: error.response.data.message },
+            { status: error.response.status }
         );
     }
 }

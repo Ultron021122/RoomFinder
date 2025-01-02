@@ -6,7 +6,8 @@ export interface InterfaceUbicacion {
     pais: string;
     direccion: string;
     estado: string;
-    calle?: string;
+    calle: string;
+    colonia: string;
     codigoPostal: number;
     ciudad_municipio: string;
     numExt?: string;
@@ -45,7 +46,7 @@ export interface Inmueble {
     numBanos: number;
     numHuespedes: number;
     capEstacionamiento: number,
-    fotos: File[];
+    fotos: string[];
     ubicacion: InterfaceUbicacion;
     titulo: string;//
     descripcion: string;//
@@ -59,6 +60,8 @@ const valoresDefectoUbicacion: InterfaceUbicacion = {
     pais: '',
     direccion: '',
     estado: '',
+    calle: '',
+    colonia: '',
     codigoPostal: -1,
     ciudad_municipio: '',
     latitud: 0,
