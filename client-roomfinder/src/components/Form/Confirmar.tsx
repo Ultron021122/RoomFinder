@@ -73,29 +73,7 @@ export default function Confirmar() {
         longitud
     } = ubicacion;
 
-    const {
-        bnWaterIncluded,
-        bnElectricityIncluded,
-        bnInternetIncluded,
-        bnGasIncluded,
-        bnHeatingIncluded,
-        bnAirConditioningIncluded,
-        bnLaundryIncluded,
-        bnParkingIncluded,
-        bnCleaningIncluded,
-        bnCableTVIncluded,
-        bnWashingMachineIncluded,
-        bnKitchen,
-        bnLivingRoom,
-        bnDiningRoom,
-        bnCoolerIncluded,
-        bnGardenIncluded,
-        bnWashingArea,
-    } = servicios;
-
-    const Imagen1 = URL.createObjectURL(fotos[0]);
-    const Imagen2 = URL.createObjectURL(fotos[1]);
-    const Imagen3 = URL.createObjectURL(fotos[2]);
+    const Imagen1 = fotos[0];
 
     const plugin = useRef(
         Autoplay({ delay: 2000, stopOnInteraction: true })
@@ -103,7 +81,7 @@ export default function Confirmar() {
 
     return (
         <section className="w-full mx-auto p-2">
-            <div className='mb-12 text-center'>
+            <div className='mb-12'>
                 <h2 className="font-semibold text-base sm:text-xl md:text-2xl text-neutral-900 dark:text-gray-100">
                     Confirmar los datos del inmueble
                 </h2>
@@ -114,7 +92,7 @@ export default function Confirmar() {
                 </p>
             </div>
             <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-5xl lg:gap-x-20 lg:grid-cols-2">
-                <div className="relative p-3 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t from-black/75 via-black/0 sm:bg-none sm:row-start-2 sm:p-0 lg:row-start-1">
+                <div className="relative p-3 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t from-black/75 via-black/0 sm:bg-none sm:row-start-2 sm:p-0 lg:row-start-1 lg:col-start-1 lg:col-end-3">
                     <h1
                         className="mt-1 text-lg font-semibold text-white sm:text-slate-900 md:text-2xl dark:sm:text-white"
                     >
@@ -144,7 +122,7 @@ export default function Confirmar() {
                         >
                             <CarouselContent>
                                 {fotos.map((foto, index) => {
-                                    const url = URL.createObjectURL(foto);
+                                    const url = foto;
                                     return (
                                         <CarouselItem className="basis-1/2" key={index}>
                                             <Image
@@ -165,16 +143,16 @@ export default function Confirmar() {
                 </div>
                 <dl className="mt-4 text-xs font-medium flex items-center row-start-2 sm:mt-1 md:row-start-3 md:mt-2.5 lg:row-start-2">
                     <dt className="sr-only">Reviews</dt>
-                    <dd className="text-indigo-600 flex items-center dark:text-indigo-400">
+                    <dd className="text-blue-500 flex items-center dark:text-blue-400">
                         <Star size={18} className="mr-1" />
-                        <span>0.0 <span className="text-slate-400 font-normal">(0)</span></span>
+                        <span>1.0 <span className="text-slate-400 font-normal">(0)</span></span>
                     </dd>
                     <dt className="sr-only">Location</dt>
                     <dd className="flex items-center text-neutral-700 dark:text-neutral-200">
                         <svg width="2" height="2" aria-hidden="true" fill="currentColor" className="mx-3 text-slate-300">
                             <circle cx="1" cy="1" r="1" />
                         </svg>
-                        <MapPin size={18} className="mr-1" />
+                        <MapPin size={18} className="mr-1 text-blue-500" />
                         {ciudad_municipio}, {estado}
                     </dd>
                 </dl>
@@ -191,19 +169,19 @@ export default function Confirmar() {
                 <div className="mt-4 col-start-1 row-start-4 self-center lg:mt-6 lg:col-start-1 lg:row-start-5">
                     <h3 className="text-lg font-semibold">Detalles del inmueble</h3>
                     <div className="flex flex-wrap gap-2 mt-2">
-                        <Badge variant="secondary" className="flex items-center">
+                        <Badge variant="outline" className="flex items-center">
                             <Bed className="mr-1 h-4 w-4" />
                             {numRecamaras} recamara(s)
                         </Badge>
-                        <Badge variant="secondary" className="flex items-center">
+                        <Badge variant="outline" className="flex items-center">
                             <Bath className="mr-1 h-4 w-4" />
                             {numBanos} baño(s)
                         </Badge>
-                        <Badge variant="secondary" className="flex items-center">
+                        <Badge variant="outline" className="flex items-center">
                             <Users className="mr-1 h-4 w-4" />
                             {numHuespedes} huéspedes
                         </Badge>
-                        <Badge variant="secondary" className="flex items-center">
+                        <Badge variant="outline" className="flex items-center">
                             <Car className="mr-1 h-4 w-4" />
                             {capEstacionamiento} estacionamiento(s)
                         </Badge>
@@ -211,6 +189,50 @@ export default function Confirmar() {
                 </div>
             </div>
             <div className="my-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="p-4">
+                        <h3 className="font-semibold text-sm sm:text-base my-5 text-blue-600 dark:text-blue-400">
+                            Servicios y amenidades
+                        </h3>
+                        <div>
+                            {/* Contenedor de servicios */}
+                            <ul className="mt-2 list-disc list-inside">
+                                {
+                                    // Aquí recorremos los servicios y mostramos el ícono y nombre de cada uno
+                                    Object.entries(servicios).map(([key, value], index) => {
+                                        // Solo mostramos los servicios que están habilitados (true)
+                                        if (value) {
+                                            const servicio = getIcon(key); // Obtener el ícono según el servicio
+                                            return (
+                                                <li key={index} className="text-sm text-muted-foreground flex items-center space-x-2 mb-2">
+                                                    <Image
+                                                        src={servicio.icon}
+                                                        width={20}
+                                                        height={20}
+                                                        alt={`Icono de ${key}`}
+                                                        className="filter dark:invert"
+                                                    />
+                                                    <span>
+                                                        {servicio.serviceName}
+                                                    </span>
+                                                </li>
+                                            );
+                                        }
+                                        return null;
+                                    })
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 my-5">Reglas</h3>
+                        <ul className="mt-2 list-disc list-inside">
+                            {reglas.map((regla, index) => (
+                                <li key={index} className="text-sm text-muted-foreground">{regla}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="my-5 p-2">
                         <DynamicMap
@@ -364,50 +386,6 @@ export default function Confirmar() {
                                 }
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                        <h3 className="font-semibold text-sm sm:text-base my-5 text-blue-600 dark:text-blue-400">
-                            Servicios y amenidades
-                        </h3>
-                        <div>
-                            {/* Contenedor de servicios */}
-                            <ul className="mt-2 list-disc list-inside">
-                                {
-                                    // Aquí recorremos los servicios y mostramos el ícono y nombre de cada uno
-                                    Object.entries(servicios).map(([key, value], index) => {
-                                        // Solo mostramos los servicios que están habilitados (true)
-                                        if (value) {
-                                            const servicio = getIcon(key); // Obtener el ícono según el servicio
-                                            return (
-                                                <li key={index} className="text-sm text-muted-foreground flex items-center space-x-2 mb-2">
-                                                    <Image
-                                                        src={servicio.icon}
-                                                        width={20}
-                                                        height={20}
-                                                        alt={`Icono de ${key}`}
-                                                        className="filter dark:invert"
-                                                    />
-                                                    <span>
-                                                        {servicio.serviceName}
-                                                    </span>
-                                                </li>
-                                            );
-                                        }
-                                        return null;
-                                    })
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 my-5">Reglas</h3>
-                        <ul className="mt-2 list-disc list-inside">
-                            {reglas.map((regla, index) => (
-                                <li key={index} className="text-sm text-muted-foreground">{regla}</li>
-                            ))}
-                        </ul>
                     </div>
                 </div>
             </div>

@@ -72,6 +72,8 @@ export default function MapaDireccion() {
               acc.country = component.long_name
             } else if (types.includes('postal_code')) {
               acc.zipCode = component.long_name
+            } else if (types.includes('sublocality')) {
+              acc.sublocality = component.long_name
             }
             return acc
           }, {})
@@ -82,6 +84,7 @@ export default function MapaDireccion() {
             pais: components.country,
             direccion: place.formatted_address || '',
             estado: components.state,
+            colonia: components.sublocality,
             codigoPostal: components.zipCode,
             ciudad_municipio: components.city,
             latitud: place.geometry.location.lat(),
@@ -125,18 +128,6 @@ export default function MapaDireccion() {
           />
         </div>
       </div>
-
-      {/* Mostrar los componentes de la dirección */}
-      {/* {addressComponents && (
-          <div className="space-y-2">
-            <p><strong>Calle:</strong> {addressComponents.calle} {addressComponents.numInt}</p>
-            <p><strong>Ciudad:</strong> {addressComponents.ciudad_municipio}</p>
-            <p><strong>Estado:</strong> {addressComponents.estado}</p>
-            <p><strong>País:</strong> {addressComponents.pais}</p>
-            <p><strong>Código Postal:</strong> {addressComponents.codigoPostal}</p>
-          </div>
-        )} */}
-
       <div className="h-[400px]">
         <MapContainer
           center={[coordinates.lat, coordinates.lng]}

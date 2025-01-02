@@ -23,7 +23,7 @@ export async function POST(req, res) {
         console.error(error);
         return NextResponse.json(
             { message: 'Server error'},
-            { status: 503 }
+            { status: error.response.status }
         );
     }
 }
