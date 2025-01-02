@@ -77,6 +77,7 @@ const Registrar = () => {
             setIsLoading(true);
             setErrorSystem(null);
 
+            console.log(userInfo.vchimage);
             if (userInfo.roleid === 1) {
                 const data = userInfo as StudentInfo;
                 try {

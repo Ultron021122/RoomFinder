@@ -2,7 +2,7 @@
 
 import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { Progress } from "@nextui-org/react";
+import { Progress, Spinner } from "@nextui-org/react";
 import { useFormulario, Inmueble } from "./FormularioContext";
 import { useEffect, useState } from "react";
 import TipoInmueble from "./TipoInmueble";
@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { UserProfile } from "@/utils/interfaces";
 import { Button } from "../ui/button";
+import axios from "axios";
 
 const esNumero = (valor?: string): boolean => valor !== undefined && /^[0-9]+$/.test(valor);
 export const inputVacio = (input?: string): boolean => !input;
@@ -42,11 +43,18 @@ type FuncionValidacion = (inmueble: Inmueble) => boolean | string;
 const validaciones: Record<number, FuncionValidacion> = {
     1: ({ tipoInmueble }) => validacionGeneral(tipoInmueble, 'Selecciona una opción para continuar'),
     // 2: ({ servicios }) => (servicios) ? true : 'Selecciona al menos un servicio',
-    2: ({ servicios }) => {
+    2: ({ fotos }) => (fotos.length >= 5 && fotos.length <= 8) ? true : 'Sube entre 5 y 8 fotos',
+    3: ({ titulo, descripcion, precio }) => {
+        if (titulo.length <= 10) return 'El título es muy corto';
+        if (descripcion.length <= 20) return 'La descripción es muy corta';
+        if (precio <= 0) return 'El precio debe ser mayor que 0';
+        return true;
+    },
+    4: ({ servicios }) => {
         const serviciosActivos = Object.values(servicios).filter(value => value === true).length;
         return serviciosActivos > 0 ? true : 'Selecciona al menos un servicio o amenidad';
     },
-    3: ({ tipoInmueble, numRecamaras, numCamas, numBanos, numHuespedes, capEstacionamiento, servicios }) => {
+    5: ({ tipoInmueble, numRecamaras, numCamas, numBanos, numHuespedes, capEstacionamiento, servicios }) => {
         const esValido = {
             1: numRecamaras > 0 && numCamas > 0 && numBanos > 0 && numHuespedes > 0,
             2: numHuespedes > 0 && numCamas > 0,
@@ -59,17 +67,14 @@ const validaciones: Record<number, FuncionValidacion> = {
 
         return esValido ? true : 'Llene todos los campos para continuar';
     },
-
-    4: ({ fotos }) => (fotos.length >= 5 && fotos.length <= 8) ? true : 'Sube entre 5 y 8 fotos',
-
-    5: ({ ubicacion }) => {
+    6: ({ ubicacion }) => {
         const { pais, direccion, estado, codigoPostal, ciudad_municipio, latitud, longitud } = ubicacion;
         return (pais && direccion && estado && codigoPostal !== -1 && ciudad_municipio && latitud && longitud)
             ? true
             : 'Ingresa la dirección de tu inmueble';
     },
 
-    6: ({ ubicacion: { numExt, numInt } }) => {
+    7: ({ ubicacion: { numExt, numInt } }) => {
         const validNumExt = validacionGeneral(numExt, 'El número exterior es obligatorio');
         if (validNumExt !== true) return validNumExt;
 
@@ -79,15 +84,6 @@ const validaciones: Record<number, FuncionValidacion> = {
         if (numInt && !esNumero(numInt)) return 'El número interior ingresado no es válido';
         return true;
     },
-
-    7: ({ titulo, descripcion, precio }) => {
-        if (titulo.length <= 10) return 'El título es muy corto';
-        if (descripcion.length <= 20) return 'La descripción es muy corta';
-        if (precio <= 0) return 'El precio debe ser mayor que 0';
-        if (!esNumero(precio.toString())) return 'El valor ingresado no es válido';
-        return true;
-    },
-
     8: ({ reglas }) => {
         if (reglas.length < NUM_MIN_RESTRICCIONES) {
             return `Agrega al menos ${NUM_MIN_RESTRICCIONES} restricciones`;
@@ -146,12 +142,11 @@ export default function Wizar() {
         }
     }, [errorSystem]);
 
-    const handleClick = () => {
+    const handleClick = async () => {
+        setInmueble({lessorId: user.usuarioid, ...inmueble});
         if (actual < 9) return siguiente();
-        setInmueble({ lessorId: user.usuarioid });
         console.log('Inmueble a enviar:', inmueble);
         // Enviar formulario
-        /*
         const submit = async () => {
             setIsLoading(true);
             setErrorSystem(null);
@@ -159,6 +154,7 @@ export default function Wizar() {
             try {
                 const response = await axios.post('/api/properties', inmueble);
                 setIsLoading(false);
+                console.log('Response:', response.data);
                 if (response.status === 201) {
                     toast.success(response.data.message.message, {
                         position: "top-right",
@@ -172,7 +168,7 @@ export default function Wizar() {
                         style: { fontSize: '0.9rem' },
                         transition: Slide,
                     });
-                    router.push('/dashboard/');
+                    //router.push('/dashboard/');
                 } else {
                     setErrorSystem(response.data.message);
                 }
@@ -182,8 +178,7 @@ export default function Wizar() {
                 setIsLoading(false);
             }
         };
-        submit();
-        */
+        await submit();
     };
 
     const anterior = () => setActual(prev => prev - 1);
@@ -191,7 +186,7 @@ export default function Wizar() {
     return (
         <div className="w-full">
             <PerfectScrollbar>
-                <div className="h-[100vh] flex flex-col gap-9">
+                <div className="h-[100vh] flex flex-col gap-9 p-2">
                     {/* <!-- Sign In Form --> */}
                     <div className="rounded-sm border border-gray-300 bg-white shadow-default dark:border-gray-900 dark:bg-gray-950">
                         <div className="border-b border-gray-300 px-[26px] py-4 dark:border-gray-900">
@@ -199,14 +194,22 @@ export default function Wizar() {
                                 Agregar propiedad
                             </h3>
                         </div>
+                        {
+                            isLoading && (
+                                <div className="flex items-center justify-center h-96">
+                                    <Spinner color="primary" />
+                                </div>
+                            )
+                        }
+                        {/* <!-- Form --> */}
                         <div className="w-full md:w-3/4 px-3 md:px-0 mt-8 mx-auto h-auto overflow-hidden overflow-y-auto">
                             {actual === 1 && <TipoInmueble />}
-                            {actual === 2 && <ServiciosAmenidades />}
-                            {actual === 3 && <InformacionGeneral />}
-                            {actual === 4 && <Fotos />}
-                            {actual === 5 && <Ubicacion />}
-                            {actual === 6 && <ConfirmarUbicacion />}
-                            {actual === 7 && <AddProperty />}
+                            {actual === 2 && <Fotos />}
+                            {actual === 3 && <AddProperty />}
+                            {actual === 4 && <ServiciosAmenidades />}
+                            {actual === 5 && <InformacionGeneral />}
+                            {actual === 6 && <Ubicacion />}
+                            {actual === 7 && <ConfirmarUbicacion />}
                             {actual === 8 && <Restricciones />}
                             {actual === 9 && <Confirmar />}
                         </div>

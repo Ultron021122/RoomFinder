@@ -16,7 +16,7 @@ export async function GET(request, { params }) {
     } catch (error) {
         return NextResponse.json(
             { message: 'Server error' },
-            { status: 503 }
+            { status: error.response.status }
         );
     }
 }
