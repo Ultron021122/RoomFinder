@@ -2,15 +2,16 @@ import { validateProperty, validatePartialProperty } from '../schemas/property.j
 
 export class PropertyController {
     constructor({ propertieModel }) {
-        this.propertieModel = propertieModel
+        this.propertieModel = propertieModel;
     }
 
     getAll = async (req, res, next) => {
-        await this.propertieModel.getAll()
-            .then(properties => {
-                return res.json(properties);
-            })
-            .catch(next);
+        try {
+            const properties = await this.propertieModel.getAll()
+            return res.json(properties);
+        } catch (err) {
+            next(err);
+        }
     }
 
     getById = async (req, res, next) => {
@@ -25,7 +26,7 @@ export class PropertyController {
 
     create = async (req, res, next) => {
         const result = validateProperty(req.body)
-        console.log('Input:', req.body)
+        //console.log('Input:', req.body)
         if (result.error) {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
