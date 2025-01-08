@@ -48,69 +48,73 @@ export async function POST(req, res) {
     // Take a look at the imageUrls array to upload the secure_url to the database
     const secureUrls = imageUrls.map(imageUrl => imageUrl.secure_url);
 
+    // Preparar el objeto para enviar como JSON
+    const propertyData = {
+        lessorid: lessorId, // Cambiar por el ID del lessor actual
+        propertytypeid: tipoInmueble,
+        vchtitle: titulo,
+        vchdescription: descripcion,
+        bnavailability: false,
+        intnumberrooms: numRecamaras,
+        intnumberbeds: numCamas,
+        intnumberbathrooms: numBanos,
+        intmaxoccupancy: numHuespedes,
+        objservices: {
+            intAccountParking: capEstacionamiento,
+            bnWaterIncluded: servicios.bnWaterIncluded,
+            bnElectricityIncluded: servicios.bnElectricityIncluded,
+            bnInternetIncluded: servicios.bnInternetIncluded,
+            bnGasIncluded: servicios.bnGasIncluded,
+            bnHeatingIncluded: servicios.bnHeatingIncluded,
+            bnAirConditioningIncluded: servicios.bnAirConditioningIncluded,
+            bnLaundryIncluded: servicios.bnLaundryIncluded,
+            bnParkingIncluded: servicios.bnParkingIncluded,
+            bnCleaningIncluded: servicios.bnCleaningIncluded,
+            bnCableTVIncluded: servicios.bnCableTVIncluded,
+            bnWashingMachineIncluded: servicios.bnWashingMachineIncluded,
+            bnKitchen: servicios.bnKitchen,
+            bnLivingRoom: servicios.bnLivingRoom,
+            bnDiningRoom: servicios.bnDiningRoom,
+            bnCoolerIncluded: servicios.bnCoolerIncluded,
+            bnGardenIncluded: servicios.bnGardenIncluded,
+            bnWashingArea: servicios.bnWashingArea,
+        },
+        objphotos: secureUrls, // Actualiza con las URLs de las imágenes
+        objlocation: {
+            street: ubicacion.calle,
+            zip: ubicacion.codigoPostal,
+            address: ubicacion.direccion,
+            suburb: ubicacion.colonia,
+            municipality: ubicacion.ciudad_municipio,
+            state: ubicacion.estado,
+            country: ubicacion.pais,
+            num_ext: ubicacion.numExt,
+            num_int: ubicacion.numInt,
+            lat: ubicacion.latitud,
+            lng: ubicacion.longitud,
+        },
+        decrentalcost: precio,
+        vchpropertyrules: reglas,
+        decpropertyrating: 0,
+        vchbuildingsecurity: '',
+        vchtransportationaccess: '',
+        intmincontractduration: 1,
+        intmaxcontractduration: 2,
+        bnfurnished: false,
+        vchfurnituretype: '',
+        bnStudyZone: false,
+        dtavailabilitydate: new Date().toISOString(),
+    };
+
     // Realizar la solicitud POST para guardar la información
     try {
-        const response = await axios.post(`${process.env.REST_URL}/properties/`, {
-            lessorid: lessorId, // Cambiar por el ID del lessor actual
-            propertytypeid: tipoInmueble,
-            vchtitle: titulo,
-            vchdescription: descripcion,
-            bnavailability: false,
-            intnumberrooms: numRecamaras,
-            intnumberbeds: numCamas,
-            intnumberbathrooms: numBanos,
-            intmaxoccupancy: numHuespedes,
-            objservices: {
-                intAccountParking: capEstacionamiento,
-                bnWaterIncluded: servicios.bnWaterIncluded,
-                bnElectricityIncluded: servicios.bnElectricityIncluded,
-                bnInternetIncluded: servicios.bnInternetIncluded,
-                bnGasIncluded: servicios.bnGasIncluded,
-                bnHeatingIncluded: servicios.bnHeatingIncluded,
-                bnAirConditioningIncluded: servicios.bnAirConditioningIncluded,
-                bnLaundryIncluded: servicios.bnLaundryIncluded,
-                bnParkingIncluded: servicios.bnParkingIncluded,
-                bnCleaningIncluded: servicios.bnCleaningIncluded,
-                bnCableTVIncluded: servicios.bnCableTVIncluded,
-                bnWashingMachineIncluded: servicios.bnWashingMachineIncluded,
-                bnKitchen: servicios.bnKitchen,
-                bnLivingRoom: servicios.bnLivingRoom,
-                bnDiningRoom: servicios.bnDiningRoom,
-                bnCoolerIncluded: servicios.bnCoolerIncluded,
-                bnGardenIncluded: servicios.bnGardenIncluded,
-                bnWashingArea: servicios.bnWashingArea,
-                //bnStudyZone: servicios.bnStudyZone,
-            },
-            objphotos: secureUrls, // Actualiza con las URLs de las imágenes
-            objlocation: {
-                street: ubicacion.calle,
-                zip: ubicacion.codigoPostal,
-                address: ubicacion.direccion,
-                suburb: ubicacion.colonia,
-                municipality: ubicacion.ciudad_municipio,
-                state: ubicacion.estado,
-                country: ubicacion.pais,
-                num_ext: ubicacion.numExt,
-                num_int: ubicacion.numInt,
-                lat: ubicacion.latitud,
-                lng: ubicacion.longitud,
-            },
-            decrentalcost: precio,
-            vchpropertyrules: reglas,
-            decpropertyrating: 0,
-            vchbuildingsecurity: '',
-            vchtransportationaccess: '',
-            intmincontractduration: 1,
-            intmaxcontractduration: 2,
-            bnfurnished: false,
-            vchfurnituretype: '',
-            bnStudyZone: false,
-            dtavailabilitydate: new Date().toISOString(),
-        }, {
-            headers: {
-                Authorization: `Bearer ${process.env.REST_SECRET}`
-            }
-        });
+        const response = await axios.post(`${process.env.REST_URL}/properties/`,
+            propertyData,
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.REST_SECRET}`
+                }
+            });
 
         const statusMessageMap = {
             201: { message: 'Propiedad creada correctamente', data: response.data },
