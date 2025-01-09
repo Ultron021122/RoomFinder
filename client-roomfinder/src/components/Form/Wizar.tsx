@@ -168,7 +168,7 @@ export default function Wizar() {
                         style: { fontSize: '0.9rem' },
                         transition: Slide,
                     });
-                    //router.push('/dashboard/');
+                    router.push('/dashboard/');
                 } else {
                     setErrorSystem(response.data.message);
                 }
