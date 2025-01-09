@@ -2,6 +2,27 @@ import axios from "axios";
 import { NextResponse } from "next/server";
 import { deleteImage, uploadImage } from "../cloudinary";
 
+export async function GET() {
+    try {
+        const response = await axios.get(`${process.env.REST_URL}/properties`, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
+        console.log(response.data);
+        return NextResponse.json(
+            { data: response.data },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json(
+            { message: error.response.data.message },
+            { status: error.response.status || 503 }
+        );
+    }
+}
+
 export async function POST(req, res) {
     const {
         lessorId, // ID del lessor

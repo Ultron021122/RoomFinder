@@ -44,7 +44,7 @@ export default function AddProperty() {
                 <h2 className="font-semibold text-sm sm:text-lg md:text-xl text-neutral-900 dark:text-gray-100">
                     Precio por mes
                 </h2>
-                <p className="text-xs italic mb-2 text-neutral-800 dark:text-gray-400">
+                <p className="text-xs italic mb-5 text-neutral-800 dark:text-gray-400">
                     ¿Cuánto cuesta rentar tu inmueble por mes?
                 </p>
                 <div className="relative col-span-1 md:col-span-2 z-0 w-full mb-5 group">
