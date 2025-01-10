@@ -141,6 +141,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                         onClickSidebar={handleSidebarItemClick}
                                     />
                                     <SidebarItem
+                                        icon={<Folder size={22} />}
+                                        text="Propiedades"
+                                        url="/dashboard/properties"
+                                        onClickSidebar={handleSidebarItemClick}
+                                    />
+                                    <SidebarItem
                                         icon={<AddHomeOutlinedIcon style={{ fontSize: 22 }} />}
                                         text="Publicar"
                                         url="/dashboard/publish"
