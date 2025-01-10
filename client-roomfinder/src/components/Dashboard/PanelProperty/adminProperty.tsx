@@ -9,11 +9,12 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { Search, Edit, Trash2, UserPlus, ChevronLeft, ChevronRight } from 'lucide-react'
+import { toast, ToastContainer, Bounce, Slide } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import { Search, Edit, Trash2, UserPlus, ChevronLeft, ChevronRight, Home } from 'lucide-react'
 import axios from 'axios'
-
+import { format, set } from 'date-fns'
+import { Spinner, Tab } from '@nextui-org/react'
 
 // Definimos la interfaz para las propiedades
 interface Property {
@@ -77,6 +78,8 @@ export default function AdminProperties() {
     const [dialogoAbierto, setDialogoAbierto] = useState<boolean>(false)
     const [paginaActual, setPaginaActual] = useState<number>(1)
     const [propiedadesPorPagina] = useState<number>(10)
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [errorSystem, setErrorSystem] = useState<string | null>(null);
 
     const filtrarProperties = () => {
         return properties.filter(property =>
@@ -85,14 +88,36 @@ export default function AdminProperties() {
         );
     };
 
+    // Errores
+    useEffect(() => {
+        if (errorSystem) {
+            toast.error(errorSystem, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        }
+    }, [errorSystem]);
+
     useEffect(() => {
         const fetchProperties = async () => {
+
+            setIsLoading(true);
+            setErrorSystem(null);
             try {
                 const response = await axios.get(`/api/properties`);
                 setProperties(response.data.data);
-                console.log("Propiedades cargadas:", response.data.data);
-            } catch (error) {
-                console.error("Error al cargar las propiedades:", error);
+                setIsLoading(false);
+            } catch (Error: any) {
+                setErrorSystem(Error.response?.data.message);
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchProperties();
@@ -154,7 +179,7 @@ export default function AdminProperties() {
                 </CardHeader>
                 <CardContent>
                     <div className="flex justify-between items-center mb-6">
-                        <div className="relative w-64">
+                        <div className="relative w-48 md:w-64">
                             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
                                 placeholder="Buscar propiedades..."
@@ -163,9 +188,9 @@ export default function AdminProperties() {
                                 className="pl-8"
                             />
                         </div>
-                        <Button>
-                            <UserPlus className="mr-2 h-4 w-4" />
-                            Agregar Propiedad
+                        <Button className='flex flex-row items-center justify-center md:justify-start'>
+                            <UserPlus className="mr-2 h-5 w-5 md:h-4 md:w-4" />
+                            <span className='hidden md:inline'>Agregar Propiedad</span>
                         </Button>
                     </div>
                     <Table>
@@ -179,29 +204,39 @@ export default function AdminProperties() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {obtenerPropiedadesPaginados().map((propiedad) => (
-                                <TableRow key={propiedad.propertyid}>
-                                    <TableCell>{propiedad.vchtitle}</TableCell>
-                                    <TableCell>{propiedad.decrentalcost}</TableCell>
-                                    <TableCell>
-                                        <Badge
-                                            variant={propiedad.bnavailability === true ? 'default' : 'secondary'}
-                                        //propiedad.bnavailability === 'Inactivo' ? 'secondary' : 'outline'}
-                                        >
-                                            {propiedad.bnavailability === true ? 'Disponible' : 'No Disponible'}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>{propiedad.created_at}</TableCell>
-                                    <TableCell>
-                                        <Button variant="ghost" size="sm" onClick={() => handleEditarUsuario(propiedad)}>
-                                            <Edit className="h-4 w-4" />
-                                        </Button>
-                                        <Button variant="ghost" size="sm" onClick={() => handleEliminarUsuario(propiedad.propertyid)}>
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
+                            {isLoading ?
+                                <TableRow>
+                                    <TableCell colSpan={5}>
+                                        <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto h-[40vh] lg:py-0'>
+                                            <Spinner />
+                                        </div>
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                                :
+                                obtenerPropiedadesPaginados().map((propiedad) => (
+                                    <TableRow key={propiedad.propertyid}>
+                                        <TableCell>{propiedad.vchtitle}</TableCell>
+                                        <TableCell>{propiedad.decrentalcost}</TableCell>
+                                        <TableCell>
+                                            <Badge
+                                                variant={propiedad.bnavailability === true ? 'default' : 'secondary'}
+                                            //propiedad.bnavailability === 'Inactivo' ? 'secondary' : 'outline'}
+                                            >
+                                                {propiedad.bnavailability === true ? 'Disponible' : 'No Disponible'}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell>{format(propiedad.created_at, 'yyyy-MM-dd HH:mm:ss')}</TableCell>
+                                        <TableCell>
+                                            <Button variant="ghost" size="sm" onClick={() => handleEditarUsuario(propiedad)}>
+                                                <Edit className="h-4 w-4" />
+                                            </Button>
+                                            <Button variant="ghost" size="sm" onClick={() => handleEliminarUsuario(propiedad.propertyid)}>
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            }
                         </TableBody>
                     </Table>
                     <div className="flex items-center justify-between mt-4">
