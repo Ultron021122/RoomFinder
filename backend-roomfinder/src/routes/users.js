@@ -139,7 +139,7 @@ export const createUsersRouter = ({ userModel }) => {
         },
         userController.getById
     ])
-        /**
+    /**
      * @swagger
      * /api/users/images/{id}:
      *  get:

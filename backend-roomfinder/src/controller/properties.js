@@ -19,9 +19,18 @@ export class PropertyController {
         await this.propertieModel.getById({ id })
             .then(propertie => {
                 if (propertie) return res.json(propertie)
-                return res.status(404).json({ message: 'User not found' })
+                return res.status(404).json({ message: 'Property not found' })
             })
             .catch(next);
+    }
+
+    getTypeProperties = async (req, res, next) => {
+        try {
+            const typeProperties = await this.propertieModel.getTypeProperties()
+            return res.json(typeProperties);
+        } catch (err) {
+            next(err);
+        }
     }
 
     create = async (req, res, next) => {
