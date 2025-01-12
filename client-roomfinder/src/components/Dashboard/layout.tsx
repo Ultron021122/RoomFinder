@@ -66,7 +66,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="flex flex-col h-[100vh]">
                 <AppBar
                     component="nav"
-                    position="static"
+                    position="fixed"
                     className="w-full max-w-full text-black dark:text-white bg-white border-b border-gray-220 dark:bg-gray-900 dark:border-gray-900"
                     sx={{
                         bgcolor: (theme) => theme.palette.background.paper,
@@ -74,7 +74,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         zIndex: (theme) => theme.zIndex.drawer + 1
                     }}
                 >
-                    <Toolbar variant="regular">
+                    <Toolbar
+                        variant="regular"
+                        className="max-w-screen-2xl w-[1536px] mx-auto"
+                    >
                         <IconButton
                             edge="start"
                             color="inherit"
@@ -107,7 +110,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </Toolbar>
                 </AppBar>
                 <div
-                    className="flex flex-1"
+                    className="flex flex-1 mt-16"
                 >
                     {/* Sidebar */}
                     <Sidebar expanded={expanded}>
