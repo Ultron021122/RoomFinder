@@ -14,6 +14,7 @@ import { createStudentsRouter } from './routes/students.js'
 import { createMessagesRouter } from './routes/messages.js'
 import { createChatsRouter } from './routes/chats.js'
 import { createRecoveryPassRouter } from './routes/recoverypass.js'
+import { createTypePropertyRouter } from './routes/typeproperty.js'
 // Importar el modelo de la base de datos
 // PostgreSQL
 import { UsersModel } from './model/postgresql/user.js'
@@ -23,6 +24,7 @@ import { StudentsModel } from './model/postgresql/student.js'
 import { MessagesModel } from './model/postgresql/messages.js'
 import { ChatsModel } from './model/postgresql/chats.js'
 import { RecoveryPassModel } from './model/postgresql/recoverypass.js'
+import { PropertyTypeModel } from './model/postgresql/typeproperty.js'
 import { verificarJWT } from './auth.js'
 //MySQL 
 // import { UsersModel } from './model/mysql/user.js'
@@ -51,6 +53,7 @@ app.use('/api/', apiLimiter);
 
 app.use('/api/users', verificarJWT, createUsersRouter({ userModel: UsersModel }))
 app.use('/api/properties', verificarJWT, createPropertiesRouter({ propertieModel: PropertiesModel }))
+app.use('/api/typeproperty', verificarJWT, createTypePropertyRouter({ typePropertyModel: PropertyTypeModel }))
 app.use('/api/lessors', verificarJWT, createLessorsRouter({ lessorModel: LessorsModel }))
 app.use('/api/students', verificarJWT, createStudentsRouter({ studentModel: StudentsModel }))
 app.use('/api/messages', verificarJWT, createMessagesRouter({ messageModel: MessagesModel }))

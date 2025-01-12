@@ -1,5 +1,6 @@
 import { Database } from "./database.js";
 import { LessorsModel } from './lessor.js'
+import { PropertyTypeModel } from "./typeproperty.js";
 
 export class PropertiesModel {
 

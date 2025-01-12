@@ -14,6 +14,7 @@ export const createPropertiesRouter = ({ propertieModel }) => {
      */
     
     propertiesRouter.get('/', propertyController.getAll)
+
     propertiesRouter.get('/:id', [
         param('id').isInt().withMessage('id must be an integer'),
         (req, res, next) => {
@@ -25,7 +26,9 @@ export const createPropertiesRouter = ({ propertieModel }) => {
         },
         propertyController.getById
     ])
+
     propertiesRouter.post('/', propertyController.create)
+
     propertiesRouter.delete('/:id', [
         param('id').isInt().withMessage('id must be an integer'),
         (req, res, next) => {

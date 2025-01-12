@@ -18,6 +18,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Checkbox, FormControlLabel } from "@mui/material";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 function Login() {
     const { status } = useSession();
@@ -169,18 +171,15 @@ function Login() {
                                             )}
                                         </div>
                                         <div className="flex items-start justify-between">
-                                            <div className="flex items-start">
-                                                <div className="flex items-center h-5">
-                                                    <input id="newsletter" aria-describedby="newsletter" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
-                                                </div>
-                                                <div className="ml-3 text-sm">
-                                                    <label
-                                                        htmlFor="newsletter"
-                                                        className="font-light text-gray-500 dark:text-gray-300"
-                                                    >
-                                                        Recuerdame
-                                                    </label>
-                                                </div>
+                                            <div className="flex items-center space-x-2">
+                                                <Input
+                                                    id="bnavailability"
+                                                    type="checkbox"
+                                                    className='form-checkbox h-4 w-4 text-blue-600'
+                                                    // checked={propertyEdit.bnavailability}
+                                                    // onChange={(e) => setPropertyEdit({ ...propertyEdit, bnavailability: e.target.checked })}
+                                                />
+                                                <Label htmlFor="bnavailability">Recuerdame</Label>
                                             </div>
                                             <Link
                                                 href="/users/recover"

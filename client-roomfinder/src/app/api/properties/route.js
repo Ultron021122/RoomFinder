@@ -9,7 +9,7 @@ export async function GET() {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }
         });
-        console.log(response.data);
+
         return NextResponse.json(
             { data: response.data },
             { status: 200 }

@@ -20,7 +20,6 @@ export async function POST(req, res) {
         );
 
     } catch (error) {
-        console.error(error);
         return NextResponse.json(
             { message: 'Server error'},
             { status: error.response.status }

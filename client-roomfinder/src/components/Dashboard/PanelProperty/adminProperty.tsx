@@ -15,13 +15,15 @@ import { Search, Edit, Trash2, UserPlus, ChevronLeft, ChevronRight, Home } from 
 import axios from 'axios'
 import { format, set } from 'date-fns'
 import { Spinner, Tab } from '@nextui-org/react'
+import { HomeIcon } from '@radix-ui/react-icons'
+import { Textarea } from '@/components/ui/textarea'
 
 // Definimos la interfaz para las propiedades
 interface Property {
     lessorid: number;
     vchtitle: string;
     propertyid: number;
-    propertytypeid: number;
+    propertytypeid: number | string;
     bnavailability: boolean;
     intnumberrooms: number;
     intnumberbeds: number;
@@ -71,10 +73,17 @@ interface Property {
     created_at: string;
 }
 
+// Definimos la interfaz para los tipos de propiedades
+interface PropertyType {
+    propertytypeid: number;
+    vchtypename: string;
+}
+
 export default function AdminProperties() {
     const [properties, setProperties] = useState<Property[]>([]);
     const [busqueda, setBusqueda] = useState<string>('')
     const [propertyEdit, setPropertyEdit] = useState<Property | null>(null)
+    const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([])
     const [dialogoAbierto, setDialogoAbierto] = useState<boolean>(false)
     const [paginaActual, setPaginaActual] = useState<number>(1)
     const [propiedadesPorPagina] = useState<number>(10)
@@ -123,6 +132,17 @@ export default function AdminProperties() {
         fetchProperties();
     }, []);
 
+    useEffect(() => {
+        const fetchTypesProperties = async () => {
+            try {
+                const response = await axios.get(`/api/typeproperty`);
+                setPropertyTypes(response.data.data);
+            } catch (Error: any) {
+                setErrorSystem(Error.response?.data.message);
+            }
+        };
+        fetchTypesProperties();
+    }, []);
 
     const propiedadesFiltrados = filtrarProperties()
     const totalPaginas = Math.ceil(propiedadesFiltrados.length / propiedadesPorPagina)
@@ -144,6 +164,7 @@ export default function AdminProperties() {
 
     const handleGuardarCambios = () => {
         if (propertyEdit) {
+            console.log(propertyEdit)
             setProperties(properties.map(u => u.propertyid === propertyEdit.propertyid ? propertyEdit : u))
             setDialogoAbierto(false)
             toast.success('Propiedad actualizada con éxito', {
@@ -157,7 +178,7 @@ export default function AdminProperties() {
         }
     }
 
-    const handleEliminarUsuario = (id: number) => {
+    const handleEliminarPropietario = (id: number) => {
         if (window.confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
             setProperties(properties.filter(u => u.propertyid !== id))
             toast.success('Propiedad eliminada con éxito', {
@@ -189,7 +210,7 @@ export default function AdminProperties() {
                             />
                         </div>
                         <Button className='flex flex-row items-center justify-center md:justify-start'>
-                            <UserPlus className="mr-2 h-5 w-5 md:h-4 md:w-4" />
+                            <HomeIcon className="mr-2 h-5 w-5 md:h-4 md:w-4" />
                             <span className='hidden md:inline'>Agregar Propiedad</span>
                         </Button>
                     </div>
@@ -217,9 +238,9 @@ export default function AdminProperties() {
                                     <TableRow key={propiedad.propertyid}>
                                         <TableCell>{propiedad.vchtitle}</TableCell>
                                         <TableCell>{propiedad.decrentalcost}</TableCell>
-                                        <TableCell>
+                                        <TableCell className="justify-center items-center">
                                             <Badge
-                                                variant={propiedad.bnavailability === true ? 'default' : 'secondary'}
+                                                variant={propiedad.bnavailability === true ? 'default' : 'outline'}
                                             //propiedad.bnavailability === 'Inactivo' ? 'secondary' : 'outline'}
                                             >
                                                 {propiedad.bnavailability === true ? 'Disponible' : 'No Disponible'}
@@ -230,7 +251,7 @@ export default function AdminProperties() {
                                             <Button variant="ghost" size="sm" onClick={() => handleEditarUsuario(propiedad)}>
                                                 <Edit className="h-4 w-4" />
                                             </Button>
-                                            <Button variant="ghost" size="sm" onClick={() => handleEliminarUsuario(propiedad.propertyid)}>
+                                            <Button variant="ghost" size="sm" onClick={() => handleEliminarPropietario(propiedad.propertyid)}>
                                                 <Trash2 className="h-4 w-4" />
                                             </Button>
                                         </TableCell>
@@ -278,16 +299,29 @@ export default function AdminProperties() {
             <Dialog open={dialogoAbierto} onOpenChange={setDialogoAbierto}>
                 <DialogContent aria-describedby="modal-description" className="w-96">
                     <DialogHeader>
-                        <DialogTitle>Editar Usuario</DialogTitle>
+                        <DialogTitle>Editar Propiedad</DialogTitle>
                     </DialogHeader>
                     {propertyEdit && (
-                        <form onSubmit={(e) => { e.preventDefault(); handleGuardarCambios(); }} className="space-y-4">
+                        <form
+                            onSubmit={(e) => { e.preventDefault(); handleGuardarCambios(); }}
+                            className="space-y-4"
+                        >
                             <div>
                                 <Label htmlFor="vchtitle">Titulo</Label>
                                 <Input
                                     id="vchtitle"
                                     value={propertyEdit.vchtitle}
                                     onChange={(e) => setPropertyEdit({ ...propertyEdit, vchtitle: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="vchdescription">Descripción</Label>
+                                <Textarea
+                                    id="vchdescription"
+                                    placeholder='Descripción de la propiedad'
+                                    className='h-24'
+                                    value={propertyEdit.vchdescription}
+                                    onChange={(e) => setPropertyEdit({ ...propertyEdit, vchdescription: e.target.value })}
                                 />
                             </div>
                             <div>
@@ -308,6 +342,37 @@ export default function AdminProperties() {
                                     onChange={(e) => setPropertyEdit({ ...propertyEdit, bnavailability: e.target.checked })}
                                 />
                                 <Label htmlFor="bnavailability">Disponibilidad</Label>
+                            </div>
+                            <div>
+                                <Label htmlFor="tipo">Tipo de inmueble</Label>
+                                <Select
+                                    value={(propertyEdit.propertytypeid) as string}
+                                    onValueChange={(e) => setPropertyEdit({ ...propertyEdit, propertytypeid: e as string })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Selecciona el tipo de usuario" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {
+                                            propertyTypes.map((type) => (
+                                                <SelectItem key={type.propertytypeid} value={type.propertytypeid.toString()}>
+                                                    {type.vchtypename}
+                                                </SelectItem>
+                                            ))
+                                        }
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Input
+                                    id="intnumberrooms"
+                                    type='number'
+                                    value={propertyEdit.intnumberrooms as number}
+                                    onChange={(e) => setPropertyEdit({ ...propertyEdit, intnumberrooms: parseInt(e.target.value) })}
+                                />
+                                <Label htmlFor="bnavailability">
+                                    Número de habitaciones
+                                </Label>
                             </div>
                             {/* <div>
                                 <Label htmlFor="tipo">Tipo</Label>
@@ -340,7 +405,19 @@ export default function AdminProperties() {
                                     </SelectContent>
                                 </Select>
                             </div> */}
-                            <Button type="submit">Guardar Cambios</Button>
+                            <Button
+                                type="submit"
+                            // onClick={handleGuardarCambios}
+                            >
+                                Guardar Cambios
+                            </Button>
+                            {/* <Button
+                                type='button'
+                                variant="outline" 
+                                onClick={() => setDialogoAbierto(false)}
+                            >
+                                Cancelar
+                            </Button> */}
                         </form>
                     )}
                 </DialogContent>
