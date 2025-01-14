@@ -17,6 +17,8 @@ import { format, set } from 'date-fns'
 import { Spinner, Tab } from '@nextui-org/react'
 import { HomeIcon } from '@radix-ui/react-icons'
 import { Textarea } from '@/components/ui/textarea'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 
 // Definimos la interfaz para las propiedades
 interface Property {
@@ -178,19 +180,37 @@ export default function AdminProperties() {
         }
     }
 
-    const handleEliminarPropietario = (id: number) => {
-        if (window.confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
-            setProperties(properties.filter(u => u.propertyid !== id))
-            toast.success('Propiedad eliminada con éxito', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            })
+    const handleEliminarPropietario = async (id: number) => {
+        setIsLoading(true);
+        setErrorSystem(null);
+        setProperties(properties.filter(u => u.propertyid !== id));
+        try {
+            const response = await axios.delete(`/api/properties/${id}`);
+            setIsLoading(false);
+            console.log(response)
+            if (response.status === 200) {
+                setProperties(properties.filter(u => u.propertyid !== id));
+                toast.success(response.data.message.message, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    style: { fontSize: '0.9rem' },
+                    transition: Slide,
+                });
+            } else {
+                setErrorSystem(response.data.message);
+            }
+        } catch (Error: any) {
+            setErrorSystem(Error.response?.data.message || Error.response.request.statusText);
+        } finally {
+            setIsLoading(false);
         }
-    }
+    };
 
     return (
         <div className="bg-gradient-to-r p-2 md:p-8">
@@ -251,9 +271,31 @@ export default function AdminProperties() {
                                             <Button variant="ghost" size="sm" onClick={() => handleEditarUsuario(propiedad)}>
                                                 <Edit className="h-4 w-4" />
                                             </Button>
-                                            <Button variant="ghost" size="sm" onClick={() => handleEliminarPropietario(propiedad.propertyid)}>
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant="ghost" size="sm">
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>
+                                                            ¿Estás seguro de eliminar esta propiedad?
+                                                        </AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            Esta acción no se puede deshacer. Esta propiedad será eliminada permanentemente.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                        <AlertDialogAction
+                                                            onClick={() => handleEliminarPropietario(propiedad.propertyid)}
+                                                        >
+                                                            Continuar
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
                                         </TableCell>
                                     </TableRow>
                                 ))
@@ -296,85 +338,96 @@ export default function AdminProperties() {
                 </CardContent>
             </Card>
 
-            <Dialog open={dialogoAbierto} onOpenChange={setDialogoAbierto}>
-                <DialogContent aria-describedby="modal-description" className="w-96">
+            <Dialog
+                open={dialogoAbierto}
+                onOpenChange={setDialogoAbierto}
+            >
+                <DialogContent
+                    aria-describedby="modal-description"
+                    className="w-96"
+                >
                     <DialogHeader>
                         <DialogTitle>Editar Propiedad</DialogTitle>
                     </DialogHeader>
-                    {propertyEdit && (
-                        <form
-                            onSubmit={(e) => { e.preventDefault(); handleGuardarCambios(); }}
-                            className="space-y-4"
-                        >
-                            <div>
-                                <Label htmlFor="vchtitle">Titulo</Label>
-                                <Input
-                                    id="vchtitle"
-                                    value={propertyEdit.vchtitle}
-                                    onChange={(e) => setPropertyEdit({ ...propertyEdit, vchtitle: e.target.value })}
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="vchdescription">Descripción</Label>
-                                <Textarea
-                                    id="vchdescription"
-                                    placeholder='Descripción de la propiedad'
-                                    className='h-24'
-                                    value={propertyEdit.vchdescription}
-                                    onChange={(e) => setPropertyEdit({ ...propertyEdit, vchdescription: e.target.value })}
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="decrentalcost">Costo</Label>
-                                <Input
-                                    id="decrentalcost"
-                                    type="text"
-                                    value={propertyEdit.decrentalcost}
-                                    onChange={(e) => setPropertyEdit({ ...propertyEdit, decrentalcost: e.target.value })}
-                                />
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <Input
-                                    id="bnavailability"
-                                    type="checkbox"
-                                    className='form-checkbox h-4 w-4 text-blue-600'
-                                    checked={propertyEdit.bnavailability}
-                                    onChange={(e) => setPropertyEdit({ ...propertyEdit, bnavailability: e.target.checked })}
-                                />
-                                <Label htmlFor="bnavailability">Disponibilidad</Label>
-                            </div>
-                            <div>
-                                <Label htmlFor="tipo">Tipo de inmueble</Label>
-                                <Select
-                                    value={(propertyEdit.propertytypeid) as string}
-                                    onValueChange={(e) => setPropertyEdit({ ...propertyEdit, propertytypeid: e as string })}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecciona el tipo de usuario" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {
-                                            propertyTypes.map((type) => (
-                                                <SelectItem key={type.propertytypeid} value={type.propertytypeid.toString()}>
-                                                    {type.vchtypename}
-                                                </SelectItem>
-                                            ))
-                                        }
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <Input
-                                    id="intnumberrooms"
-                                    type='number'
-                                    value={propertyEdit.intnumberrooms as number}
-                                    onChange={(e) => setPropertyEdit({ ...propertyEdit, intnumberrooms: parseInt(e.target.value) })}
-                                />
-                                <Label htmlFor="bnavailability">
-                                    Número de habitaciones
-                                </Label>
-                            </div>
-                            {/* <div>
+                    <ScrollArea className="min-h-28">
+                        {propertyEdit && (
+                            <form
+                                onSubmit={(e) => { e.preventDefault(); handleGuardarCambios(); }}
+                                className="space-y-4"
+                            >
+                                <div>
+                                    <Label htmlFor="vchtitle">Titulo</Label>
+                                    <Input
+                                        id="vchtitle"
+                                        value={propertyEdit.vchtitle}
+                                        onChange={(e) => setPropertyEdit({ ...propertyEdit, vchtitle: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="vchdescription">Descripción</Label>
+                                    <Textarea
+                                        id="vchdescription"
+                                        placeholder='Descripción de la propiedad'
+                                        className='h-24'
+                                        value={propertyEdit.vchdescription}
+                                        onChange={(e) => setPropertyEdit({ ...propertyEdit, vchdescription: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="decrentalcost">Costo</Label>
+                                    <Input
+                                        id="decrentalcost"
+                                        type="text"
+                                        value={propertyEdit.decrentalcost}
+                                        onChange={(e) => setPropertyEdit({ ...propertyEdit, decrentalcost: e.target.value })}
+                                    />
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Input
+                                        id="bnavailability"
+                                        type="checkbox"
+                                        className='form-checkbox h-4 w-4 text-blue-600'
+                                        checked={propertyEdit.bnavailability}
+                                        onChange={(e) => setPropertyEdit({ ...propertyEdit, bnavailability: e.target.checked })}
+                                    />
+                                    <Label htmlFor="bnavailability">Disponibilidad</Label>
+                                </div>
+                                <div>
+                                    <Label htmlFor="tipo">Tipo de inmueble</Label>
+                                    <Select
+                                        value={propertyEdit.propertytypeid.toString()}
+                                        onValueChange={(e) => setPropertyEdit({ ...propertyEdit, propertytypeid: e as string })}
+                                        defaultValue={propertyEdit.propertytypeid.toString()}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecciona el tipo de usuario" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {
+                                                propertyTypes.map((type) => (
+                                                    <SelectItem
+                                                        key={type.propertytypeid}
+                                                        value={type.propertytypeid.toString()}
+                                                    >
+                                                        {type.vchtypename}
+                                                    </SelectItem>
+                                                ))
+                                            }
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Input
+                                        id="intnumberrooms"
+                                        type='number'
+                                        value={propertyEdit.intnumberrooms as number}
+                                        onChange={(e) => setPropertyEdit({ ...propertyEdit, intnumberrooms: parseInt(e.target.value) })}
+                                    />
+                                    <Label htmlFor="bnavailability">
+                                        Número de habitaciones
+                                    </Label>
+                                </div>
+                                {/* <div>
                                 <Label htmlFor="tipo">Tipo</Label>
                                 <Select
                                     value={usuarioEditando.tipo}
@@ -389,7 +442,7 @@ export default function AdminProperties() {
                                     </SelectContent>
                                 </Select>
                             </div> */}
-                            {/* <div>
+                                {/* <div>
                                 <Label htmlFor="estado">Estado</Label>
                                 <Select
                                     value={usuarioEditando.estado}
@@ -405,25 +458,24 @@ export default function AdminProperties() {
                                     </SelectContent>
                                 </Select>
                             </div> */}
-                            <Button
-                                type="submit"
-                            // onClick={handleGuardarCambios}
-                            >
-                                Guardar Cambios
-                            </Button>
-                            {/* <Button
+                                <Button
+                                    type="submit"
+                                // onClick={handleGuardarCambios}
+                                >
+                                    Guardar Cambios
+                                </Button>
+                                {/* <Button
                                 type='button'
                                 variant="outline" 
                                 onClick={() => setDialogoAbierto(false)}
                             >
                                 Cancelar
                             </Button> */}
-                        </form>
-                    )}
+                            </form>
+                        )}
+                    </ScrollArea>
                 </DialogContent>
             </Dialog>
-
-            <ToastContainer />
         </div>
     )
 }
