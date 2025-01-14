@@ -154,7 +154,6 @@ export default function Wizar() {
             try {
                 const response = await axios.post('/api/properties', inmueble);
                 setIsLoading(false);
-                console.log('Response:', response.data);
                 if (response.status === 201) {
                     toast.success(response.data.message.message, {
                         position: "top-right",
