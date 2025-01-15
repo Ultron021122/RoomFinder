@@ -67,7 +67,7 @@ export class RecoveryPassModel {
 
     // Función para generar un código único
     static async generateUniqueCode() {
-        return uuidv4().toUpperCase().slice(0, 8); // Ajusta la longitud según sea necesario
+        return uuidv4().toUpperCase().slice(0, 8); // Se ajusta la longitud según sea necesario
     }
 
     // Función para insertar un código único y manejar duplicados

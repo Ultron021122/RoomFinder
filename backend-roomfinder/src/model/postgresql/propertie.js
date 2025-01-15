@@ -1,6 +1,5 @@
 import { Database } from "./database.js";
 import { LessorsModel } from './lessor.js'
-import { PropertyTypeModel } from "./typeproperty.js";
 
 export class PropertiesModel {
 
@@ -8,16 +7,11 @@ export class PropertiesModel {
         intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate,
         intmincontractduration, intmaxcontractduration, decpropertyrating,
         bnstudyzone, vchbuildingsecurity, vchtransportationaccess,
-        bnwaterincluded, bnelectricityincluded,
-        bninternetincluded, bngasincluded,
-        bnheatingincluded, bnairconditioningincluded,
-        bnlaundryincluded, bnparkingincluded,
-        bncleaningincluded, bncabletvincluded,
-        bnwashingmachineincluded, bnkitchen, bnlivingroom,
-        bndiningroom, bncoolerincluded, bngardenincluded, bnwashingarea,
-        intaccountparking,
-        objphotos,
-        vchexteriornumber, vchinteriornumber, vchstreet,
+        bnwaterincluded, bnelectricityincluded, bninternetincluded, bngasincluded,
+        bnheatingincluded, bnairconditioningincluded, bnlaundryincluded, bnparkingincluded,
+        bncleaningincluded, bncabletvincluded, bnwashingmachineincluded, bnkitchen, bnlivingroom,
+        bndiningroom, bncoolerincluded, bngardenincluded, bnwashingarea, intaccountparking,
+        objphotos, vchexteriornumber, vchinteriornumber, vchstreet,
         vchaddresscomplement, vchneighborhood, vchmunicipality,
         vchstateprovince, intzip, vchcountry, lat, lng,
         vchpropertyrules, vchdescription, created_at }) {
@@ -42,8 +36,7 @@ export class PropertiesModel {
         this.vchtransportationaccess = vchtransportationaccess;
         this.vchpropertyrules = vchpropertyrules;
         this.vchdescription = vchdescription;
-        // this.objservices = objservices;
-        this.bnwaterincluded = bnwaterincluded;
+        this.bnwaterincluded = bnwaterincluded; // Objetos de servicios
         this.bnelectricityincluded = bnelectricityincluded;
         this.bninternetincluded = bninternetincluded;
         this.bngasincluded = bngasincluded;
@@ -62,8 +55,7 @@ export class PropertiesModel {
         this.bnwashingarea = bnwashingarea;
         this.intaccountparking = intaccountparking;
         this.objphotos = objphotos;
-        // this.objlocation = objlocation;
-        this.vchexteriornumber = vchexteriornumber;
+        this.vchexteriornumber = vchexteriornumber; // Objetos de dirección
         this.vchinteriornumber = vchinteriornumber;
         this.vchstreet = vchstreet;
         this.vchaddresscomplement = vchaddresscomplement;
@@ -168,67 +160,17 @@ export class PropertiesModel {
 
     static async update({ id, input }) {
         try {
-            const { vchtitle, intnumberrooms, intnumberbathrooms, intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate, intmincontractduration,
-                intmaxcontractduration, decpropertyrating, bnstudyzone, vchbuildingsecurity, vchtransportationaccess, vchpropertyrules, vchdescription } = input
-
             const property = await this.getById({ id })
             if (property === null) return false;
 
-            const updateColumns = Object.entries({
-                vchtitle,
-                intnumberrooms,
-                intnumberbathrooms,
-                intmaxoccupacy,
-                bnfurnished,
-                vchfurnituretype,
-                decrentalcost,
-                dtavailabilitydate,
-                intmincontractduration,
-                intmaxcontractduration,
-                decpropertyrating,
-                bnstudyzone,
-                vchbuildingsecurity,
-                vchtransportationaccess,
-                vchpropertyrules,
-                vchdescription
-            })
-                .filter(([key, value]) => value !== undefined)
-                .map(([key, value]) => {
-                    return `${key} ? $${Object.keys(input).indexOf(key) + 1}`;
-                })
-                .join(', ');
-
-            const updateValues = Object.value({
-                vchtitle,
-                intnumberrooms,
-                intnumberbathrooms,
-                intmaxoccupacy,
-                bnfurnished,
-                vchfurnituretype,
-                decrentalcost,
-                dtavailabilitydate,
-                intmincontractduration,
-                intmaxcontractduration,
-                decpropertyrating,
-                bnstudyzone,
-                vchbuildingsecurity,
-                vchtransportationaccess,
-                vchpropertyrules,
-                vchdescription
-            })
-                .filter(value => value !== undefined);
-
-            if (updateValues.length !== 0) {
-                const db = new Database();
-                const client = await db.pool.connect();
-                try {
-                    await client.query(
-                        `UPDATE "Usuario"."Propiedades" SET ${updateColumns} WHERE propertyid = $${updateValues.length + 1};`,
-                        [...updateValues, id]
-                    );
-                } finally {
-                    client.release();
-                }
+            const db = new Database();
+            const client = await db.pool.connect();
+            try {
+                await client.query(
+                    'CALL "Usuario"."prSetProperty"($1, $2)', [input, null]
+                );
+            } finally {
+                client.release();
             }
 
             return await this.getById({ id })

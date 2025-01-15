@@ -19,72 +19,13 @@ import { HomeIcon } from '@radix-ui/react-icons'
 import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { Properties, PropertyType } from '@/utils/interfaces'
 
-// Definimos la interfaz para las propiedades
-interface Property {
-    lessorid: number;
-    vchtitle: string;
-    propertyid: number;
-    propertytypeid: number | string;
-    bnavailability: boolean;
-    intnumberrooms: number;
-    intnumberbeds: number;
-    intnumberbathrooms: number;
-    bnfurnished: boolean;
-    vchfurnituretype: string;
-    decrentalcost: string;
-    dtavailabilitydate: string;
-    intmincontractduration: number;
-    intmaxcontractduration: number;
-    decpropertyrating: string;
-    bnstudyzone: boolean;
-    vchbuildingsecurity: string;
-    vchtransportationaccess: string;
-    vchpropertyrules: string;
-    vchdescription: string;
-    bnwaterincluded: boolean;
-    bnelectricityincluded: boolean;
-    bninternetincluded: boolean;
-    bngasincluded: boolean;
-    bnheatingincluded: boolean;
-    bnairconditioningincluded: boolean;
-    bnlaundryincluded: boolean;
-    bnparkingincluded: boolean;
-    bncleaningincluded: boolean;
-    bncabletvincluded: boolean;
-    bnwashingmachineincluded: boolean;
-    bnkitchen: boolean;
-    bnlivingroom: boolean;
-    bndiningroom: boolean;
-    bncoolerincluded: boolean;
-    bngardenincluded: boolean;
-    bnwashingarea: boolean;
-    intaccountparking: number;
-    objphotos: string[];
-    vchexteriornumber: string;
-    vchinteriornumber: string | null;
-    vchstreet: string;
-    vchaddresscomplement: string;
-    vchneighborhood: string;
-    vchmunicipality: string;
-    vchstateprovince: string;
-    intzip: number;
-    vchcountry: string;
-    lat: number;
-    lng: number;
-    created_at: string;
-}
-
-// Definimos la interfaz para los tipos de propiedades
-interface PropertyType {
-    propertytypeid: number;
-    vchtypename: string;
-}
 
 export default function AdminProperties() {
-    const [properties, setProperties] = useState<Property[]>([]);
+    const [properties, setProperties] = useState<Properties[]>([]);
     const [busqueda, setBusqueda] = useState<string>('')
-    const [propertyEdit, setPropertyEdit] = useState<Property | null>(null)
+    const [propertyEdit, setPropertyEdit] = useState<Properties | null>(null)
     const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([])
     const [dialogoAbierto, setDialogoAbierto] = useState<boolean>(false)
     const [paginaActual, setPaginaActual] = useState<number>(1)
@@ -159,7 +100,7 @@ export default function AdminProperties() {
         setPaginaActual(1)
     }, [busqueda])
 
-    const handleEditarUsuario = (propiedad: Property) => {
+    const handleEditarUsuario = (propiedad: Properties) => {
         setPropertyEdit(propiedad);
         setDialogoAbierto(true)
     }
