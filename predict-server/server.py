@@ -19,9 +19,9 @@ def predict():
     prediction = model.predict(features)
     return jsonify({'prediction': prediction[0]})
 
-@app.route('/predict', methods=['GET'])
-def predict():
-    return jsonify({'prediction': 'Hello World!'})
+@app.route('/', methods=['GET'])
+def message():
+    return jsonify({'message': 'Construyendo un modelo de regresión lineal con Scikit-learn y Flask'})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
