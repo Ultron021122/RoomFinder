@@ -66,7 +66,7 @@ export class PropertyController {
         const { id } = req.params
         await this.propertieModel.update({ id, input: result.data })
             .then(updateProperty => {
-                if (updateProperty === false) return res.status(409).json({ message: 'Property already exists' })
+                // if (updateProperty === false) return res.status(409).json({ message: 'Property already exists' })
                 if (!updateProperty) return res.status(404).json({ message: 'Property not found' })
                 return res.json(updateProperty)
             })
