@@ -954,3 +954,82 @@ export interface Message {
      */
     created_at: Date;
 }
+
+
+export interface Properties {
+    lessorid: number;
+    vchtitle: string;
+    propertyid: number;
+    propertytypeid: number | string;
+    bnavailability: boolean;
+    intnumberrooms: number;
+    intnumberbeds: number;
+    intnumberbathrooms: number;
+    bnfurnished: boolean;
+    vchfurnituretype: string;
+    decrentalcost: string;
+    dtavailabilitydate: string;
+    intmincontractduration: number;
+    intmaxcontractduration: number;
+    decpropertyrating: string;
+    bnstudyzone: boolean;
+    vchbuildingsecurity: string;
+    vchtransportationaccess: string;
+    vchpropertyrules: string;
+    vchdescription: string;
+    bnwaterincluded: boolean;
+    bnelectricityincluded: boolean;
+    bninternetincluded: boolean;
+    bngasincluded: boolean;
+    bnheatingincluded: boolean;
+    bnairconditioningincluded: boolean;
+    bnlaundryincluded: boolean;
+    bnparkingincluded: boolean;
+    bncleaningincluded: boolean;
+    bncabletvincluded: boolean;
+    bnwashingmachineincluded: boolean;
+    bnkitchen: boolean;
+    bnlivingroom: boolean;
+    bndiningroom: boolean;
+    bncoolerincluded: boolean;
+    bngardenincluded: boolean;
+    bnwashingarea: boolean;
+    intaccountparking: number;
+    objphotos: Photos[];
+    vchexteriornumber: string;
+    vchinteriornumber: string | null;
+    vchstreet: string;
+    vchaddresscomplement: string;
+    vchneighborhood: string;
+    vchmunicipality: string;
+    vchstateprovince: string;
+    intzip: number;
+    vchcountry: string;
+    lat: number;
+    lng: number;
+    created_at: string;
+}
+
+export interface PropertyType {
+    propertytypeid: number;
+    vchtypename: string;
+}
+
+/**
+ * Interface to manage the photos data
+ * @interface 
+ */
+export interface Photos {
+    /**
+     * Image id
+     * @example
+     * id: 1
+     */
+    photoid: number;
+    /**
+     * Image url
+     * @example
+     * url: 'https://example.com/image.jpg'
+     */
+    url: string;
+}

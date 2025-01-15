@@ -1,17 +1,18 @@
 import { useMap } from 'react-leaflet/hooks';
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Icon, divIcon, point, Map as Mapa, Marker as LeafletMarker } from "leaflet";
 // Datos de las propiedades y universidades
-import { MapData } from '@/utils/interfaces';
-import { universities, properties } from "@/utils/constants";
+import { MapData, Properties } from '@/utils/interfaces';
+import { universities } from "@/utils/constants";
 // Estilos de leaflet
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
 import Image from 'next/image';
 import { MapPin, Star } from 'lucide-react';
+import axios from 'axios';
 
 // Icons personalizados
 export const customIcon = new Icon({
@@ -33,7 +34,10 @@ const createClusterCustomIcon = function (cluster: any) {
     });
 };
 
+
+
 export default function Map({ position, zoom, name, typeProperty }: MapData) {
+    const [properties, setProperties] = useState<Properties[]>([]);
     const mapRef = useRef<Mapa | null>(null);
     const markerRefs = useRef<Record<string, React.RefObject<LeafletMarker>>>({});
 
@@ -68,6 +72,26 @@ export default function Map({ position, zoom, name, typeProperty }: MapData) {
     useEffect(() => {
         console.log('Tipo de propiedad:', typeProperty);
     }, [typeProperty]);
+
+    useEffect(() => {
+        const fetchProperties = async () => {
+
+            // setIsLoading(true);
+            // setErrorSystem(null);
+            try {
+                const response = await axios.get(`/api/properties`);
+                setProperties(response.data.data);
+                console.log(response.data.data);
+                // setIsLoading(false);
+            } catch (Error: any) {
+                // setErrorSystem(Error.response?.data.message);
+                console.error(Error);
+            } finally {
+                // setIsLoading(false);
+            }
+        };
+        fetchProperties();
+    }, []);
 
     return (
         <div>
@@ -124,7 +148,7 @@ export default function Map({ position, zoom, name, typeProperty }: MapData) {
                     iconCreateFunction={createClusterCustomIcon}
                 >
                     {properties.map((propertie, index) => (
-                        <Marker position={propertie.geocode} icon={customIcon} key={index}>
+                        <Marker position={[propertie.lat, propertie.lng]} icon={customIcon} key={index}>
                             <Popup>
                                 <div className="popup-content font-sans">
                                     <h3 className="mt-1 text-base font-semibold text-white sm:text-slate-900 md:text-xl">{propertie.vchtitle}</h3>
@@ -151,20 +175,20 @@ export default function Map({ position, zoom, name, typeProperty }: MapData) {
                                             <Image
                                                 width={800}
                                                 height={800}
-                                                src={propertie.imagenesUrl[0].url}
-                                                alt={`Imagen ${propertie.imagenesUrl[0].id}`}
+                                                src={propertie.objphotos[0].url}
+                                                alt={`Imagen ${propertie.objphotos[0].photoid}`}
                                                 className="w-40 h-auto object-cover rounded-lg sm:w-60 sm:col-span-2 lg:col-span-full" />
                                             <Image
                                                 width={800}
                                                 height={800}
-                                                src={propertie.imagenesUrl[1].url}
-                                                alt={`Imagen ${propertie.imagenesUrl[1].id}`}
+                                                src={propertie.objphotos[1].url}
+                                                alt={`Imagen ${propertie.objphotos[1].photoid}`}
                                                 className="hidden h-auto w-20 object-cover rounded-lg sm:block sm:col-span-2 md:col-span-1 lg:row-start-2 lg:col-span-2 lg:w-28" />
                                             <Image
                                                 width={800}
                                                 height={800}
-                                                src={propertie.imagenesUrl[2].url}
-                                                alt={`Imagen ${propertie.imagenesUrl[2].id}`}
+                                                src={propertie.objphotos[2].url}
+                                                alt={`Imagen ${propertie.objphotos[2].photoid}`}
                                                 className="hidden h-auto w-20 object-cover rounded-lg md:block lg:row-start-2 lg:col-span-2 lg:w-28" />
                                         </div>
                                     )}
