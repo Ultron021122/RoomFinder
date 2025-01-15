@@ -24,15 +24,15 @@ app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 
 io.on("connection", (socket) => {
-  console.log("A user has connected! " + socket.id);
+  // console.log("A user has connected! " + socket.id);
 
   socket.on('join', (chatid) => {
-    console.log('User joined the chat:', chatid);
+    // console.log('User joined the chat:', chatid);
     socket.join(chatid);
   });
 
   socket.on('message', async (data) => {
-    console.log('', data);
+    // console.log('', data);
     const { chatid, usuarioid, vchcontenido, created_at } = data;
 
     try {
