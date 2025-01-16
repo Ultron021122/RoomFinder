@@ -69,9 +69,9 @@ export default function Map({ position, zoom, name, typeProperty }: MapData) {
         }
     }, [name]);
 
-    useEffect(() => {
-        console.log('Tipo de propiedad:', typeProperty);
-    }, [typeProperty]);
+    // useEffect(() => {
+    //     console.log('Tipo de propiedad:', typeProperty);
+    // }, [typeProperty]);
 
     useEffect(() => {
         const fetchProperties = async () => {
@@ -151,23 +151,26 @@ export default function Map({ position, zoom, name, typeProperty }: MapData) {
                         <Marker position={[propertie.lat, propertie.lng]} icon={customIcon} key={index}>
                             <Popup>
                                 <div className="popup-content font-sans">
-                                    <h3 className="mt-1 text-base font-semibold text-white sm:text-slate-900 md:text-xl">{propertie.vchtitle}</h3>
-                                    <dl className="mt-4 text-xs font-medium flex items-center row-start-2 sm:mt-1 sm:row-start-3 md:mt-2.5 lg:row-start-2">
+                                    <h3 className="mt-1 text-lg font-semibold text-white dark:text-slate-900 md:text-xl">{propertie.vchtitle}</h3>
+                                    <dl className="mt-4 text-xs font-medium sm:mt-1 sm:row-start-3 md:mt-2.5 lg:row-start-2">
                                         <dt className="sr-only">Reviews</dt>
                                         <dd className="text-blue-600 flex items-center">
                                             <Star size={18} className="mr-1" />
-                                            <span>{propertie.decpropertyrating} <span className="text-slate-600 font-normal">(128)</span></span>
+                                            <span>
+                                                {propertie.decpropertyrating}
+                                                {/* <span className="text-slate-600 font-normal">(128)</span> */}
+                                            </span>
                                         </dd>
                                         <dt className="sr-only">Location</dt>
-                                        <dd className="flex items-center text-neutral-700">
-                                            <svg width="2" height="2" aria-hidden="true" fill="currentColor" className="mx-3 text-slate-300">
+                                        <dd className="flex items-center text-neutral-700 mt-1">
+                                            <svg width="2" height="2" aria-hidden="true" fill="currentColor" className="text-slate-300">
                                                 <circle cx="1" cy="1" r="1" />
                                             </svg>
                                             <MapPin size={18} className="mr-1" />
-                                            Collingwood, Ontario
+                                            <span>{propertie.vchaddresscomplement}</span>
                                         </dd>
                                     </dl>
-                                    <p className="mt-2 text-xs leading-6 col-start-1 sm:col-span-2 lg:row-start-4 lg:col-span-1">
+                                    <p className="mt-1 text-xs leading-4 col-start-1 sm:col-span-2 lg:row-start-4 lg:col-span-1">
                                         {propertie.vchdescription}
                                     </p>
                                     {propertie && (
@@ -177,19 +180,19 @@ export default function Map({ position, zoom, name, typeProperty }: MapData) {
                                                 height={800}
                                                 src={propertie.objphotos[0].url}
                                                 alt={`Imagen ${propertie.objphotos[0].photoid}`}
-                                                className="w-40 h-auto object-cover rounded-lg sm:w-60 sm:col-span-2 lg:col-span-full" />
+                                                className="w-full h-auto object-cover rounded-lg sm:col-span-2 lg:col-span-full" />
                                             <Image
                                                 width={800}
                                                 height={800}
                                                 src={propertie.objphotos[1].url}
                                                 alt={`Imagen ${propertie.objphotos[1].photoid}`}
-                                                className="hidden h-auto w-20 object-cover rounded-lg sm:block sm:col-span-2 md:col-span-1 lg:row-start-2 lg:col-span-2 lg:w-28" />
+                                                className="hidden h-auto w-full object-cover rounded-lg sm:block sm:col-span-2 md:col-span-1 lg:row-start-2 lg:col-span-2" />
                                             <Image
                                                 width={800}
                                                 height={800}
                                                 src={propertie.objphotos[2].url}
                                                 alt={`Imagen ${propertie.objphotos[2].photoid}`}
-                                                className="hidden h-auto w-20 object-cover rounded-lg md:block lg:row-start-2 lg:col-span-2 lg:w-28" />
+                                                className="hidden h-auto w-full object-cover rounded-lg md:block lg:row-start-2 lg:col-span-2" />
                                         </div>
                                     )}
                                     <a
