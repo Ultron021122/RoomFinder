@@ -2,19 +2,20 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowLeftIcon, SendIcon } from "lucide-react";
+import { ArrowLeft, SendIcon, SmileIcon } from "lucide-react";
 import io from "socket.io-client";
 import TimeAgo from "javascript-time-ago";
 import es from "javascript-time-ago/locale/es";
 import { Message, UserProfile } from "@/utils/interfaces";
 import axios from "axios";
-import Image from "next/image";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-// import { Avatar, Badge } from "@nextui-org/react";
+import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { HoverCard, HoverCardTrigger } from "@radix-ui/react-hover-card";
+import { HoverCardContent } from "@/components/ui/hover-card";
 
 TimeAgo.addDefaultLocale(es);
 
@@ -42,33 +43,27 @@ export default function MessageComponent({
   const [conversations, setConversations] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [chatID, setChatID] = useState<number | null>(null);
-  const hasFetched = useRef(false);
-  const timeAgo = new TimeAgo("es-ES");
+  const [showEmojis, setShowEmojis] = useState(false); // Estado para mostrar el selector de emojis
+  const emojiList = ["😊", "😂", "😍", "😢", "😎", "👍"]; // Lista de emojis disponibles
 
   const { data: session } = useSession();
   const user = session?.user as UserProfile;
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const timeAgo = new TimeAgo("es-ES");
 
   useEffect(() => {
-    scrollToBottom()
-  }, [conversations])
+    scrollToBottom();
+  }, [conversations]);
 
   const scrollToBottom = () => {
     if (scrollAreaRef.current) {
-      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]')
+      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
       if (scrollContainer) {
-        scrollContainer.scrollTop = scrollContainer.scrollHeight
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
       }
     }
-  }
+  };
 
-  // useEffect(() => {
-  //   if (scrollAreaRef.current) {
-  //     scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
-  //   }
-  // }, [conversations])
-
-  // Conectar al servidor cuando el usuario está autenticado
   useEffect(() => {
     if (user) {
       socket.auth = {
@@ -83,12 +78,10 @@ export default function MessageComponent({
       }
 
       socket.on("receiveMessages", (data) => {
-        scrollAreaRef.current?.scrollIntoView({ behavior: "smooth" });
         setConversations((prev) => [...prev, ...data]);
       });
 
       socket.on("receiveMessage", (newMessage) => {
-        scrollAreaRef.current?.scrollIntoView({ behavior: "smooth" });
         setConversations((prev) => [...prev, newMessage]);
       });
 
@@ -106,12 +99,10 @@ export default function MessageComponent({
         try {
           const response = await axios.post('/api/chats', {
             usuario1id: user?.usuarioid,
-            usuario2id: userID
+            usuario2id: userID,
           });
-          console.log(response.data);
           setChatID(response.data.data.chatid);
           setConversations([]); // Limpiar las conversaciones al cambiar de usuario
-          hasFetched.current = true; // Permitir la recuperación de mensajes
         } catch (error) {
           console.error("Error fetching messages:", error);
         }
@@ -120,7 +111,6 @@ export default function MessageComponent({
       fetchMessages();
     }
   }, [userID, user]);
-
 
   const sendMessage = (event: React.FormEvent) => {
     event.preventDefault();
@@ -136,24 +126,24 @@ export default function MessageComponent({
     }
   };
 
+  const handleEmojiClick = (emoji: string) => {
+    setMessage((prevMessage) => prevMessage + emoji); // Agregar el emoji al mensaje
+    setShowEmojis(false); // Cerrar el selector de emojis
+  };
+
   return (
     <section className="h-[calc(100vh-150px)] ">
       <div className="h-full w-full flex flex-col">
         <CardHeader className="border-b">
           <div className="flex items-center justify-start">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="mr-2 md:hidden"
-              onClick={onBack}
-            >
+            <Button variant="ghost" size="icon" className="mr-2 md:hidden" onClick={onBack}>
               <ArrowLeft size={20} />
             </Button>
             <Avatar className="w-10 h-10 mr-4">
               <AvatarImage src={image} />
               <AvatarFallback>{nameUser === '' ? 'U' : nameUser}</AvatarFallback>
             </Avatar>
-            <CardTitle>{`${nameUser !== undefined ? nameUser : 'Selecciona un chat'}`}</CardTitle>
+            <CardTitle>{nameUser !== undefined ? nameUser : 'Selecciona un chat'}</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="flex-1 overflow-y-auto ">
@@ -164,10 +154,7 @@ export default function MessageComponent({
               </div>
             ) : (
               conversations.map((msg, index) => (
-                <div
-                  key={`${msg.usuarioid}-${index}`}
-                  className={`flex mb-4 ${msg.usuarioid === user?.usuarioid ? 'justify-end' : 'justify-start'}`}
-                >
+                <div key={`${msg.usuarioid}-${index}`} className={`flex mb-4 ${msg.usuarioid === user?.usuarioid ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-full sm:max-w-[calc(80%)] flex ${msg.usuarioid === user?.usuarioid ? 'flex-row-reverse' : 'flex-row'} items-start`}>
                     <Avatar className="w-8 h-8">
                       <AvatarImage src={msg.usuarioid === user?.usuarioid ? user?.vchimage : image} />
@@ -187,8 +174,28 @@ export default function MessageComponent({
             )}
           </ScrollArea>
         </CardContent>
-        <div className="p-4 border-t">
+        <div className="p-4 border-t relative"> {/* Cambié esto para poder posicionar el selector de emoticones flotante */}
           <form onSubmit={sendMessage} className="flex dark:bg-gray-950 border-gray-800">
+            {/* <Button type="button" onClick={() => setShowEmojis(!showEmojis)} className="mr-2">
+              <SmileIcon size={20} />
+            </Button> */}
+            <HoverCard>
+              <HoverCardTrigger className="dark:bg-blue-500 bg-blue-400 p-2 rounded-lg mr-2">
+                <SmileIcon size={18} />
+              </HoverCardTrigger>
+              <HoverCardContent>
+                {emojiList.map((emoji) => (
+                  <button
+                    key={emoji}
+                    onClick={() => handleEmojiClick(emoji)}
+                    className="text-2xl p-1"
+                    type="button"
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </HoverCardContent>
+            </HoverCard>
             <Input
               type="text"
               value={message}
@@ -200,6 +207,19 @@ export default function MessageComponent({
               <SendIcon size={20} />
             </Button>
           </form>
+          {/* {showEmojis && (
+            // <div className="absolute bottom-[50px] left-0 right-0 bg-white border p-2 rounded-lg flex justify-start">
+            //   {emojiList.map((emoji) => (
+            //     <button
+            //       key={emoji}
+            //       onClick={() => handleEmojiClick(emoji)}
+            //       className="text-2xl p-1"
+            //     >
+            //       {emoji}
+            //     </button>
+            //   ))}
+            // </div>
+          )} */}
         </div>
       </div>
     </section>

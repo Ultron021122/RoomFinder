@@ -975,7 +975,7 @@ export interface Properties {
     bnstudyzone: boolean;
     vchbuildingsecurity: string;
     vchtransportationaccess: string;
-    vchpropertyrules: string;
+    vchpropertyrules: string[];
     vchdescription: string;
     bnwaterincluded: boolean;
     bnelectricityincluded: boolean;
