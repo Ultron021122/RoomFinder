@@ -143,7 +143,7 @@ export default function Wizar() {
     }, [errorSystem]);
 
     const handleClick = async () => {
-        setInmueble({lessorId: user.usuarioid, ...inmueble});
+        setInmueble({ lessorId: user.usuarioid, ...inmueble });
         if (actual < 9) return siguiente();
         console.log('Inmueble a enviar:', inmueble);
         // Enviar formulario
@@ -167,7 +167,7 @@ export default function Wizar() {
                         style: { fontSize: '0.9rem' },
                         transition: Slide,
                     });
-                    router.push('/dashboard/');
+                    router.push('/dashboard/properties');
                 } else {
                     setErrorSystem(response.data.message);
                 }
@@ -194,55 +194,56 @@ export default function Wizar() {
                             </h3>
                         </div>
                         {
-                            isLoading && (
+                            isLoading ? (
                                 <div className="flex items-center justify-center h-96">
                                     <Spinner color="primary" />
                                 </div>
-                            )
-                        }
-                        {/* <!-- Form --> */}
-                        <div className="w-full md:w-3/4 px-3 md:px-0 mt-8 mx-auto h-auto overflow-hidden overflow-y-auto">
-                            {actual === 1 && <TipoInmueble />}
-                            {actual === 2 && <Fotos />}
-                            {actual === 3 && <AddProperty />}
-                            {actual === 4 && <ServiciosAmenidades />}
-                            {actual === 5 && <InformacionGeneral />}
-                            {actual === 6 && <Ubicacion />}
-                            {actual === 7 && <ConfirmarUbicacion />}
-                            {actual === 8 && <Restricciones />}
-                            {actual === 9 && <Confirmar />}
-                        </div>
-                        <div className="w-full md:w-3/4 px-3 md:px-0 mx-auto pt-5 pb-10">
-                            <Progress
-                                size="sm"
-                                aria-label="Loading..."
-                                classNames={{
-                                    label: "font-medium text-default-700 dark:text-gray-200",
-                                    value: "text-gray-700 dark:text-gray-200",
-                                }}
-                                value={(actual / 9) * 100}
-                                label={`Paso ${actual} de 9`}
-                                showValueLabel={true}
-                            />
-                            <div className="flex justify-between mt-5 mb-10">
-                                <Button
-                                    onClick={anterior}
-                                    style={{
-                                        backgroundColor: actual === 1 ? '#64748b' : '#1e293b',
-                                        color: actual === 1 ? '#fff' : '#fff',
-                                    }}
-                                    disabled={actual === 1}
-                                >
-                                    Anterior
-                                </Button>
-                                <Button
-                                    color={actual < 9 ? 'primary' : 'success'}
-                                    onClick={handleClick}
-                                >
-                                    {actual < 9 ? "Siguiente" : "Enviar"}
-                                </Button>
-                            </div>
-                        </div>
+                            ) : (
+                                <>
+                                    <div className="w-full md:w-3/4 px-3 md:px-0 mt-8 mx-auto h-auto overflow-hidden overflow-y-auto">
+                                        {actual === 1 && <TipoInmueble />}
+                                        {actual === 2 && <Fotos />}
+                                        {actual === 3 && <AddProperty />}
+                                        {actual === 4 && <ServiciosAmenidades />}
+                                        {actual === 5 && <InformacionGeneral />}
+                                        {actual === 6 && <Ubicacion />}
+                                        {actual === 7 && <ConfirmarUbicacion />}
+                                        {actual === 8 && <Restricciones />}
+                                        {actual === 9 && <Confirmar />}
+                                    </div>
+                                    <div className="w-full md:w-3/4 px-3 md:px-0 mx-auto pt-5 pb-10">
+                                        <Progress
+                                            size="sm"
+                                            aria-label="Loading..."
+                                            classNames={{
+                                                label: "font-medium text-default-700 dark:text-gray-200",
+                                                value: "text-gray-700 dark:text-gray-200",
+                                            }}
+                                            value={(actual / 9) * 100}
+                                            label={`Paso ${actual} de 9`}
+                                            showValueLabel={true}
+                                        />
+                                        <div className="flex justify-between mt-5 mb-10">
+                                            <Button
+                                                onClick={anterior}
+                                                style={{
+                                                    backgroundColor: actual === 1 ? '#64748b' : '#1e293b',
+                                                    color: actual === 1 ? '#fff' : '#fff',
+                                                }}
+                                                disabled={actual === 1}
+                                            >
+                                                Anterior
+                                            </Button>
+                                            <Button
+                                                color={actual < 9 ? 'primary' : 'success'}
+                                                onClick={handleClick}
+                                            >
+                                                {actual < 9 ? "Siguiente" : "Enviar"}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                     </div>
                 </div>
             </PerfectScrollbar >
