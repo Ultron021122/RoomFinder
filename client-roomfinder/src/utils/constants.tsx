@@ -799,3 +799,61 @@ export const users = [
         email: "mia.robinson@example.com",
     },
 ];
+
+export const comments = [
+    {
+        objuser: {
+            vchname: "Juan Pérez",
+            vchphoto: "https://randomuser.me/api/portraits/men/1.jpg",
+        },
+        vchcomment: "Esta propiedad es increíble, definitivamente la recomendaría a mis amigos. El lugar tiene una vista espectacular y la atención fue excelente.",
+    },
+    {
+        objuser: {
+            vchname: "María González",
+            vchphoto: "https://randomuser.me/api/portraits/women/2.jpg",
+        },
+        vchcomment: "Un lugar muy acogedor. Me encantó todo, desde la decoración hasta la tranquilidad del entorno. ¡Volveré pronto!",
+    },
+    {
+        objuser: {
+            vchname: "Carlos Martínez",
+            vchphoto: "https://randomuser.me/api/portraits/men/3.jpg",
+        },
+        vchcomment: "Excelente ubicación, cerca de todo. Las instalaciones son de primera calidad y todo estaba muy limpio. Muy recomendable.",
+    },
+    {
+        objuser: {
+            vchname: "Laura Fernández",
+            vchphoto: "https://randomuser.me/api/portraits/women/4.jpg",
+        },
+        vchcomment: "El servicio fue increíble y las vistas desde la propiedad son impresionantes. Definitivamente una experiencia de 5 estrellas.",
+    },
+];
+
+export const reviews = [
+    {
+        id: 1,
+        author: "María García",
+        avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+        date: "15 de mayo, 2023",
+        rating: 5,
+        comment: "¡Excelente propiedad! La ubicación es perfecta y las instalaciones son de primera clase. Definitivamente volveré."
+    },
+    {
+        id: 2,
+        author: "Juan Pérez",
+        avatar: "https://randomuser.me/api/portraits/women/2.jpg",
+        date: "3 de abril, 2023",
+        rating: 4,
+        comment: "Muy buena experiencia en general. La propiedad estaba limpia y bien mantenida. Solo un pequeño problema con el aire acondicionado, pero se solucionó rápidamente."
+    },
+    {
+        id: 3,
+        author: "Ana Martínez",
+        avatar: "/placeholder.svg?text=AM",
+        date: "20 de marzo, 2023",
+        rating: 5,
+        comment: "¡Increíble! La vista desde el balcón es espectacular y la atención del anfitrión fue excelente. Altamente recomendado."
+    }
+];
