@@ -972,6 +972,7 @@ export interface Properties {
     intmincontractduration: number;
     intmaxcontractduration: number;
     decpropertyrating: string;
+    intmaxoccupancy: number;
     bnstudyzone: boolean;
     vchbuildingsecurity: string;
     vchtransportationaccess: string;

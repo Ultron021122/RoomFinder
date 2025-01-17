@@ -18,13 +18,13 @@ const NotFound = () => {
           <div className="max-w-lg w-full space-y-8 text-center">
             <div className="space-y-4">
               <div className="relative w-64 h-64 mx-auto">
-                <Image
+                {/* <Image
                   src="/utils/404.svg"
                   alt="Ilustración de búsqueda"
                   fill
                   className='absolute inset-0 object-cover w-full h-full'
                   priority
-                />
+                /> */}
               </div>
               <h1 className="text-6xl font-extrabold text-gray-900 dark:text-gray-100">404</h1>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Página no encontrada</h2>
