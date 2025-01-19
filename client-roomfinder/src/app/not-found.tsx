@@ -3,8 +3,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
-import { Home, Search, ArrowLeft } from 'lucide-react'
+import { Search, ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation';
+import { HomeIcon } from '@radix-ui/react-icons';
 
 const NotFound = () => {
     const router = useRouter();
@@ -14,7 +15,7 @@ const NotFound = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-100 dark:from-gray-900 to-purple-100 dark:to-gray-900 flex items-center justify-center px-4">
+        <div className="min-h-screen flex items-center justify-center px-4">
           <div className="max-w-lg w-full space-y-8 text-center">
             <div className="space-y-4">
               <div className="relative w-64 h-64 mx-auto">
@@ -36,7 +37,7 @@ const NotFound = () => {
             <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 justify-center">
               <Button asChild className="flex items-center justify-center">
                 <Link href="/">
-                  <Home className="mr-2 h-4 w-4" />
+                  <HomeIcon className="mr-2 h-5 w-5" />
                   Volver al inicio
                 </Link>
               </Button>

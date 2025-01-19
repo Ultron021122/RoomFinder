@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Footer() {
     return (
-        <footer className="bg-white mt-12 border-t border-gray-200 shadow dark:bg-gray-950 dark:border-gray-900">
+        <footer className="mt-12 border-t border-gray-200 shadow dark:border-gray-900">
             <div className="w-full mx-auto max-w-screen-2xl p-4 md:flex md:items-center md:justify-between">
                 <span className="text-sm text-neutral-950 sm:text-center dark:text-gray-300 dark:hover:text-white">© 2024 <Link href="/" className="hover:underline">RoomFinder™</Link>. Todos Los Derechos Reservados.
                 </span>
