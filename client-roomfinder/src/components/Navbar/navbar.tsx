@@ -30,20 +30,16 @@ function Navbar({
                 <div className="max-w-screen-2xl p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center justify-center h-auto">
-                            {/* <GraduationCapIcon size={32} className="mr-2 text-neutral-900 dark:text-white" />
-                            <h1 className="dark:text-gray-100 dark:hover:text-white text-2xl font-semibold">
-                                RoomFinder
-                            </h1> */}
                             <Image
-                                src="/utils/5.png" // Imagen para modo claro
+                                src="/utils/rf6.png" // Imagen para modo claro
                                 alt="RoomFinder"
                                 width={162}
                                 height={32}
                                 priority
-                                className="dark:hidden" // Ocultar en modo oscuro
+                                className="dark:hidden filter drop-shadow-2xl" // Ocultar en modo oscuro
                             />
                             <Image
-                                src="/utils/logo-dark.png" // Imagen para modo oscuro
+                                src="/utils/rf3.png" // Imagen para modo oscuro
                                 alt="RoomFinder"
                                 width={162}
                                 height={32}
@@ -86,7 +82,7 @@ function Navbar({
                                         Inicio
                                     </Link>
                                     <Link href="/properties/map" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties/map' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                        Mapa de propiedades
+                                        Mapa
                                     </Link>
                                     <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                         Arrendadores
@@ -122,7 +118,7 @@ function Navbar({
                                     </li>
                                     <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800 ${pathname === '/properties/map' ? 'dark:bg-gray-800' : ''}`}>
                                         <Link href="/properties/map" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties/map' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                            Mapa de propiedades
+                                            Mapa
                                         </Link>
                                     </li>
                                     <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800 ${pathname === '/arrendadores' ? 'dark:bg-gray-800' : ''}`}>
@@ -131,15 +127,18 @@ function Navbar({
                                         </Link>
                                     </li>
                                     {/* Falta por terminar */}
-                                    <li className="block mt-2 py-2 text-gray-900 dark:text-gray-100 rounded dark:hover:bg-gray-800">
-                                        <Select onValueChange={handleThemeChange} value={theme}>
-                                            <SelectTrigger className="hover:border-gray-200 shadow-none dark:hover:border-gray-800">
+                                    <li className="block mt-2">
+                                        <Select
+                                            onValueChange={handleThemeChange}
+                                            value={theme}
+                                        >
+                                            <SelectTrigger className="bg-none border-none shadow-none">
                                                 <SelectValue placeholder="Theme" />
                                             </SelectTrigger>
-                                            <SelectContent className="bg-blue-400">
-                                                <SelectItem value="light">Light</SelectItem>
-                                                <SelectItem value="dark">Dark</SelectItem>
-                                                <SelectItem value="system">System</SelectItem>
+                                            <SelectContent className="bg-gray-400">
+                                                <SelectItem value="light">Claro</SelectItem>
+                                                <SelectItem value="dark">Oscuro</SelectItem>
+                                                <SelectItem value="system">Sistema</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </li>

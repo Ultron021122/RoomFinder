@@ -14,11 +14,13 @@ import { Button } from "@/components/ui/button";
 import { toast, ToastContainer, Bounce, Slide } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { Spinner } from '@nextui-org/react';
+import { ImageOverlay } from './image-overlay';
+
 
 export default function PropertyComponent({ id }: { id: string }) {
     const [property, setProperty] = useState<Properties>();
     const [showPayment, setShowPayment] = useState(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
 
     // Errores
@@ -73,7 +75,7 @@ export default function PropertyComponent({ id }: { id: string }) {
                 <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto h-[40vh] lg:py-0'>
                     <Spinner />
                 </div>
-            ) : (
+            ) : property ? (
                 <>
                     <main className="py-6 px-4 sm:p-6 md:py-10 md:px-8">
                         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-x-20 lg:grid-cols-2">
@@ -82,13 +84,16 @@ export default function PropertyComponent({ id }: { id: string }) {
                                 <p className="text-sm leading-4 font-medium text-white sm:text-slate-500 dark:sm:text-slate-400">Propiedad</p>
                             </div>
                             <div className="grid gap-4 col-start-1 col-end-3 row-start-1 sm:mb-6 sm:grid-cols-4 lg:gap-6 lg:col-start-2 lg:row-end-6 lg:row-span-6 lg:mb-0">
-                                <Image
-                                    width={800}
-                                    height={800}
-                                    src={property?.objphotos[0].url || '/images/placeholder.webp'}
-                                    alt={`Imagen ${property?.objphotos[0].photoid}`}
-                                    className="w-full h-60 object-cover rounded-lg sm:h-52 sm:col-span-2 lg:col-span-full"
-                                />
+                                <div className="relative sm:h-52 sm:col-span-2 lg:col-span-full">
+                                    <Image
+                                        width={800}
+                                        height={800}
+                                        src={property?.objphotos[0].url || '/images/placeholder.webp'}
+                                        alt={`Imagen ${property?.objphotos[0].photoid}`}
+                                        className="w-full h-60 object-cover rounded-lg sm:h-52 sm:col-span-2 lg:col-span-full"
+                                    />
+                                    {property?.objphotos && <ImageOverlay images={property?.objphotos} />}
+                                </div>
                                 <Image
                                     width={800}
                                     height={800}
@@ -134,8 +139,8 @@ export default function PropertyComponent({ id }: { id: string }) {
                         </div>
                     </main>
 
-                    <div className='pb-5 max-w-4xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-x-14 lg:grid-cols-2'>
-                        <Card className="mb-6 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-900">
+                    <div className='pb-5 max-w-4xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-x-14 lg:grid-cols-2 border-2 border-gray-200 dark:border-gray-400 rounded-lg p-2'>
+                        <Card className="mb-6 bg-transparent border-none">
                             <CardHeader>
                                 <CardTitle>Características y Amenidades</CardTitle>
                             </CardHeader>
@@ -195,7 +200,14 @@ export default function PropertyComponent({ id }: { id: string }) {
                         <PropertyReviews reviews={reviews} />
                     </div>
                 </>
+            ) : (
+                <div className="flex justify-center items-center h-1/2">
+                    <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                        No se encontró la propiedad
+                    </h4>
+                </div>
             )}
         </>
     );
 }
+

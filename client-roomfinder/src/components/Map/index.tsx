@@ -151,7 +151,7 @@ export default function Map({ position, zoom, name, typeProperty }: MapData) {
                         <Marker position={[propertie.lat, propertie.lng]} icon={customIcon} key={index}>
                             <Popup>
                                 <div className="popup-content font-sans">
-                                    <h3 className="mt-1 text-lg font-semibold text-white dark:text-slate-900 md:text-xl">{propertie.vchtitle}</h3>
+                                    <h3 className="mt-1 text-lg font-semibold text-slate-900 md:text-xl">{propertie.vchtitle}</h3>
                                     <dl className="mt-4 text-xs font-medium sm:mt-1 sm:row-start-3 md:mt-2.5 lg:row-start-2">
                                         <dt className="sr-only">Reviews</dt>
                                         <dd className="text-blue-600 flex items-center">
