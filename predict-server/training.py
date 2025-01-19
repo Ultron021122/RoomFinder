@@ -1,7 +1,9 @@
-# train_model.py
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import StandardScaler
 import joblib
 
 # Datos de ejemplo
@@ -20,12 +22,27 @@ df = pd.DataFrame(data)
 X = df[['num_habitaciones', 'num_banos', 'metros_cuadrados', 'estacionamiento']]
 y = df['costo']
 
+# Escalar las características
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Dividir los datos en entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
 # Crear el modelo de regresión lineal
 model = LinearRegression()
 
 # Entrenar el modelo
-model.fit(X, y)
+model.fit(X_train, y_train)
 
-# Guardar el modelo en un archivo
+# Predecir con los datos de prueba
+y_pred = model.predict(X_test)
+
+# Evaluar el modelo
+mse = mean_squared_error(y_test, y_pred)
+print(f"Error cuadrático medio: {mse}")
+
+# Guardar el modelo y el escalador en archivos
 joblib.dump(model, 'linear_regression_model.pkl')
-print("Modelo guardado en 'linear_regression_model.pkl'")
+joblib.dump(scaler, 'scaler.pkl')
+print("Modelo y escalador guardados en 'linear_regression_model.pkl' y 'scaler.pkl'")

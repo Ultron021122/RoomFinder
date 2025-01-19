@@ -1,7 +1,8 @@
 'use client';
 
-import { Undo2 } from "lucide-react";
+import { ArrowLeft, Undo2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function BackButton({ className }: { className: string }) {
     const router = useRouter();
@@ -12,14 +13,14 @@ export default function BackButton({ className }: { className: string }) {
 
     return (
         <div className={className}>
-            <button
-                type="button"
+            <Button
+                variant="link"
+                className="text-gray-600 hover:text-gray-900 dark:hover:text-gray-100"
                 onClick={handleBack}
-                className="text-sm leading-6 font-medium rounded-lg text-black bg-white border dark:shadow-md dark:shadow-gray-900 border-gray-200 dark:border-gray-700 dark:text-white dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 px-3 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-700 me-2 mb-2"
             >
-                <Undo2 size={20} className="mr-1" />
+                <ArrowLeft className="mr-2 h-4 w-4" />
                 Regresar
-            </button>
+            </Button>
         </div>
     );
 }
@@ -36,7 +37,7 @@ export function RouteButton({ className, children, route }: { className?: string
     return (
         <button
             type="button"
-            onClick={() => {route ? handleRoute() : null}}
+            onClick={() => { route ? handleRoute() : null }}
             className={clases}>
             {children}
         </button>
