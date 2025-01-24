@@ -1,4 +1,4 @@
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, user } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, user, Spinner } from "@nextui-org/react";
 import { useDropzone } from 'react-dropzone';
 import { useEffect, useState } from 'react';
 import Image from "next/image";
@@ -69,7 +69,7 @@ const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose }) => 
                     usuarioid: user.usuarioid,
                     vchcoverimage: selectedImage,
                 })
-                console.log('response', response);
+
                 setIsLoading(false);
                 if (response.status === 200) {
                     toast.success(response.data.message.message, {
@@ -117,42 +117,51 @@ const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose }) => 
         >
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1 font-semibold text-neutral-900 dark:text-neutral-100">Fondo de perfil</ModalHeader>
-                <ModalBody>
-                    <div
-                        {...getRootProps({ className: 'dropzone' })}
-                        className="border-2 border-dashed border-gray-300 p-4 rounded-lg text-center cursor-pointer"
-                    >
-                        <input {...getInputProps()} />
-                        {selectedImage ? (
-                            <div className="mt-4">
-                                <Image
-                                    width={300}
-                                    height={300}
-                                    src={selectedImage as string}
-                                    alt="Selected"
-                                    className="w-full max-h-96 rounded-md"
-                                />
-                            </div>
-                        ) : (
-                            <div className="text-center flex flex-col items-center justify-center">
-                                <ImageIcon size={48} className="text-gray-600 dark:text-gray-200" />
-                                <div className="mt-4 flex text-sm leading-6 text-gray-600 dark:text-gray-200">
-                                    <span className="text-gray-600 dark:text-gray-200">Sube una imagen</span>
-                                    <p className="pl-1">o arrastra y suelta</p>
+                {
+                    isLoading ? (
+                        <div className="flex items-center justify-center h-80">
+                            <Spinner color="primary" />
+                        </div>
+                    ) : (
+                        <>
+                            <ModalBody>
+                                <div
+                                    {...getRootProps({ className: 'dropzone' })}
+                                    className="border-2 border-dashed border-gray-300 p-4 rounded-lg text-center cursor-pointer"
+                                >
+                                    <input {...getInputProps()} />
+                                    {selectedImage ? (
+                                        <div className="mt-4">
+                                            <Image
+                                                width={300}
+                                                height={300}
+                                                src={selectedImage as string}
+                                                alt="Selected"
+                                                className="w-full max-h-96 rounded-md"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="text-center flex flex-col items-center justify-center">
+                                            <ImageIcon size={48} className="text-gray-600 dark:text-gray-200" />
+                                            <div className="mt-4 flex text-sm leading-6 text-gray-600 dark:text-gray-200">
+                                                <span className="text-gray-600 dark:text-gray-200">Sube una imagen</span>
+                                                <p className="pl-1">o arrastra y suelta</p>
+                                            </div>
+                                            <p className="text-xs leading-5 text-blue-400">PNG, JPG, GIF hasta 10MB</p>
+                                        </div>
+                                    )}
                                 </div>
-                                <p className="text-xs leading-5 text-blue-400">PNG, JPG, GIF hasta 10MB</p>
-                            </div>
-                        )}
-                    </div>
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="danger" variant="flat" onPress={onClose}>
-                        Cerrar
-                    </Button>
-                    <Button color="primary" onPress={handleImageUpload}>
-                        Guardar
-                    </Button>
-                </ModalFooter>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="danger" variant="flat" onPress={onClose}>
+                                    Cerrar
+                                </Button>
+                                <Button color="primary" onPress={handleImageUpload}>
+                                    Guardar
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
             </ModalContent>
         </Modal >
     );

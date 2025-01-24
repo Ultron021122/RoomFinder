@@ -36,6 +36,17 @@ export const createLessorsRouter = ({ lessorModel }) => {
         },
         lessorController.getById
     ])
+    lessorsRouter.get('/chat/:id', [
+        param('id').isInt().withMessage('id must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        lessorController.getByChat
+    ])
     lessorsRouter.post('/', lessorController.create)
     lessorsRouter.delete('/:id', [
         param('id').isInt().withMessage('id must be an integer'),
