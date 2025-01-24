@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { RocketIcon, MessageSquareText, Search, Mail } from "lucide-react";
-import { User, UserList, UserProfile } from "@/utils/interfaces";
+import { User, User2, UserList, UserProfile } from "@/utils/interfaces";
 import axios from "axios";
 import { Avatar, Badge, Spinner } from "@nextui-org/react";
 import MessageComponent from "./messages";
@@ -11,6 +11,10 @@ import { shortName } from "@/utils/functions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import TimeAgo from "javascript-time-ago";
+import es from "javascript-time-ago/locale/es";
+
+TimeAgo.addDefaultLocale(es);
 
 
 export default function MessageMainComponent() {
@@ -23,6 +27,7 @@ export default function MessageMainComponent() {
   const [name, setName] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorSystem, setErrorSystem] = useState<string | null>(null);
+  const timeAgo = new TimeAgo("es-ES");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -31,9 +36,9 @@ export default function MessageMainComponent() {
         setIsLoading(true);
         setErrorSystem(null);
 
-        let route = user.roleid === 1 ? '/api/users/lessor' : '/api/users/student';
+        let route = (user.roleid === 1 ? '/api/chats/students/' : '/api/chats/lessors/') + user.usuarioid;
         const response = await axios.get<UserList>(route);
-
+        console.log(response)
         if (response.status === 200) {
           setUsers(response.data);
         } else {
@@ -50,11 +55,11 @@ export default function MessageMainComponent() {
   }, [user?.roleid]); // Cambié las dependencias aquí
 
 
-  const handleUserClick = (user: User) => {
-    setSelectedUser(user.usuarioid);
-    setImageUser(user.vchimage);
+  const handleUserClick = (user: User2) => {
+    setSelectedUser(user.usuarioid2);
+    setImageUser(user.vchimage2);
     //setName(user.vchname);
-    setNameUser(user.vchname + ' ' + user.vchpaternalsurname + ' ' + user.vchmaternalsurname);
+    setNameUser(user.vchname2 + ' ' + user.vchpaternalsurname2 + ' ' + user.vchmaternalsurname2);
   }
 
   const filteredUsers = users ? users.data.filter(user =>
@@ -104,9 +109,9 @@ export default function MessageMainComponent() {
                 </div>
               ) : (
                 <div>
-                  {filteredUsers.map((user) => (
+                  {filteredUsers.map((user, index) => (
                     <div
-                      key={user.usuarioid}
+                      key={user.usuarioid2}
                       onClick={() => handleUserClick(user)}
                       className="flex items-center p-4 cursor-pointer hover:bg-muted"
                     >
@@ -118,19 +123,19 @@ export default function MessageMainComponent() {
                       >
                         <Avatar
                           radius="full"
-                          src={user.vchimage}
+                          src={user.vchimage2}
                         />
                       </Badge>
                       <div className="flex-1 min-w-0 ml-4">
                         <h3 className="text-sm font-semibold truncate">
-                          {user.vchname + ' ' + user.vchpaternalsurname}
+                          {user.vchname2 + ' ' + user.vchpaternalsurname2}
                         </h3>
                         {/* Change for last message */}
-                        <p className="text-sm text-muted-foreground truncate">{user.bnstatus == true ? 'Activo' : 'Inactivo'}</p>
+                        {/* <p className="text-sm text-muted-foreground truncate">{user.bnstatus2 == true ? 'Activo' : 'Inactivo'}</p> */}
+                        <p className="text-sm text-muted-foreground truncate">{user.vchcontenido}</p>
                       </div>
                       <span className="text-xs text-muted-foreground">
-                        20:00pm
-                        {/* {usuario.horaUltimoMensaje.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} */}
+                        {user.dtmessage && timeAgo.format(new Date(user.dtmessage))}
                       </span>
                     </div>
                   ))}

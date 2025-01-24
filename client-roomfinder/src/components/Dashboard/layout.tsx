@@ -89,17 +89,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         </IconButton>
                         <Link href="/" className="flex items-center">
                             <Image
-                                src="/utils/5.png" // Imagen para modo claro
+                                src="/utils/rf6.png" // Imagen para modo claro
                                 alt="RoomFinder"
                                 width={162}
                                 height={32}
+                                priority
                                 className="dark:hidden w-40 h-auto" // Ocultar en modo oscuro
                             />
                             <Image
-                                src="/utils/logo-dark.png" // Imagen para modo oscuro
+                                src="/utils/rf3.png" // Imagen para modo oscuro
                                 alt="RoomFinder"
                                 width={162}
                                 height={32}
+                                priority
                                 className="hidden dark:block w-40 h-auto" // Ocultar en modo claro
                             />
                             {/* <GraduationCapIcon size={32} />

@@ -28,6 +28,16 @@ export class StudentController {
             .catch(next); // Pass the error to the error handler
     }
 
+    getByChat = async (req, res, next) => {
+        const { id } = req.params
+        await this.studentModel.getByChat({ id })
+            .then(student => {
+                if (student) return res.json(student)
+                return res.status(404).json({ message: 'Registry not found' })
+            })
+            .catch(next); // Pass the error to the error handler
+    }
+
     create = async (req, res, next) => {
         const result = validateStudent(req.body)
         if (result.error) {
