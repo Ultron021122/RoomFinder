@@ -28,6 +28,15 @@ export class LessorController {
             .catch(next);
     }
 
+    getByChat = async (req, res, next) => {
+        const { id } = req.params
+        await this.lessorModel.getByChat({ id })
+            .then(lessor => {
+                if (lessor) return res.json(lessor)
+                return res.status(404).json({ message: 'Registry not found'})
+            })
+    }
+
     create = async (req, res, next) => {
         const result = validateLessor(req.body)
         if (result.error) {
@@ -42,14 +51,14 @@ export class LessorController {
         try {
             const newLessor = await this.lessorModel.create({ input: result.data });
             if (newLessor === false) return res.status(409).json({ message: 'Email already exists' });
-            
+
             const token = await this.EmailService.generarTokenVerification();
             // Save token in database and send email
             await UsersModel.saveToken({ verify: { usuarioid: newLessor.usuarioid, vchtoken: token } })
             await this.EmailService.sendEmailVerificate(newLessor.usuarioid, newLessor.vchname, newLessor.vchemail, token);
 
             return res.status(201).json(newLessor);
-        } catch(err) {
+        } catch (err) {
             next(err)
         }
     }
