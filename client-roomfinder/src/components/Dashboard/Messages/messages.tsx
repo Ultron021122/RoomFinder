@@ -44,7 +44,7 @@ export default function MessageComponent({
   const [message, setMessage] = useState("");
   const [chatID, setChatID] = useState<number | null>(null);
   const [showEmojis, setShowEmojis] = useState(false); // Estado para mostrar el selector de emojis
-  const emojiList = ["😊", "😂", "😍", "😢", "😎", "👍"]; // Lista de emojis disponibles
+  const emojiList = ["😊", "😂", "😍", "😢", "😎", "👍", "🙌", "😒", "👻", "👽", "😈", "👿", "🤡", "🤠", "🤮", "🤢", "🤕", "😵", "🥵"]; // Lista de emojis disponibles
 
   const { data: session } = useSession();
   const user = session?.user as UserProfile;
@@ -154,7 +154,7 @@ export default function MessageComponent({
               </div>
             ) : (
               conversations.map((msg, index) => (
-                <div key={`${msg.usuarioid}-${index}`} className={`flex mb-4 ${msg.usuarioid === user?.usuarioid ? 'justify-end' : 'justify-start'}`}>
+                <div key={`${msg.usuarioid}-${index}`} className={`flex my-4 ${msg.usuarioid === user?.usuarioid ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-full sm:max-w-[calc(80%)] flex ${msg.usuarioid === user?.usuarioid ? 'flex-row-reverse' : 'flex-row'} items-start`}>
                     <Avatar className="w-8 h-8">
                       <AvatarImage src={msg.usuarioid === user?.usuarioid ? user?.vchimage : image} />
@@ -176,9 +176,6 @@ export default function MessageComponent({
         </CardContent>
         <div className="p-4 border-t relative"> {/* Cambié esto para poder posicionar el selector de emoticones flotante */}
           <form onSubmit={sendMessage} className="flex dark:bg-gray-950 border-gray-800">
-            {/* <Button type="button" onClick={() => setShowEmojis(!showEmojis)} className="mr-2">
-              <SmileIcon size={20} />
-            </Button> */}
             <HoverCard>
               <HoverCardTrigger className="dark:bg-blue-500 bg-blue-400 p-2 rounded-lg mr-2">
                 <SmileIcon size={18} />
@@ -207,19 +204,6 @@ export default function MessageComponent({
               <SendIcon size={20} />
             </Button>
           </form>
-          {/* {showEmojis && (
-            // <div className="absolute bottom-[50px] left-0 right-0 bg-white border p-2 rounded-lg flex justify-start">
-            //   {emojiList.map((emoji) => (
-            //     <button
-            //       key={emoji}
-            //       onClick={() => handleEmojiClick(emoji)}
-            //       className="text-2xl p-1"
-            //     >
-            //       {emoji}
-            //     </button>
-            //   ))}
-            // </div>
-          )} */}
         </div>
       </div>
     </section>

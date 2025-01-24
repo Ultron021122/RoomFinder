@@ -915,7 +915,7 @@ export interface UserList {
      * @example
      * data: [User]
      */
-    data: User[];
+    data: ChatUsers[];
 }
 
 /**
@@ -1033,4 +1033,371 @@ export interface Photos {
      * url: 'https://example.com/image.jpg'
      */
     url: string;
+}
+
+export interface ChatUsers {
+    /**
+     * ID del usuario
+     * @example 1
+     */
+    usuarioid: number;
+
+    /**
+     * Nombre del usuario
+     * @example "Sebastián"
+     */
+    vchname: string;
+
+    /**
+     * Apellido paterno del usuario
+     * @example "Martínez"
+     */
+    vchpaternalsurname: string;
+
+    /**
+     * Apellido materno del usuario
+     * @example "López"
+     */
+    vchmaternalsurname: string;
+
+    /**
+     * Correo electrónico del usuario
+     * @example "smldeveloper02@gmail.com"
+     */
+    vchemail: string;
+
+    /**
+     * Contraseña del usuario (hash)
+     * @example "$2b$10$4k1dM5488iBj6FzsNNmV0uUqOuOXrRyhY/Si.GZDtZm7g9QMf.HeW"
+     */
+    vchpassword: string;
+
+    /**
+     * User confirm password
+     * @example
+     * confirm_password: '****'
+     */
+    confirm_password: string;
+
+    /**
+     * Fecha de nacimiento del usuario
+     * @example "2006-12-31T06:00:00.000Z"
+     */
+    dtbirthdate: string;
+
+    /**
+     * Estado del usuario (activo/inactivo)
+     * @example true
+     */
+    bnstatus: boolean;
+
+    /**
+     * Verificación del usuario (verificado/no verificado)
+     * @example true
+     */
+    bnverified: boolean;
+
+    /**
+     * URL de la imagen del usuario
+     * @example "https://res.cloudinary.com/dal8aivch/image/upload/v1719809427/students/anvzbjybzttfigrojik4.jpg"
+     */
+    vchimage: string;
+
+    /**
+     * URL de la imagen de portada del usuario
+     * @example "https://res.cloudinary.com/dal8aivch/image/upload/v1731048985/users/tjkw3e6zxkjhqacr4fpm.jpg"
+     */
+    vchcoverimage: string;
+
+    /**
+     * ID del rol del usuario
+     * @example 1
+     */
+    roleid: number;
+
+    /**
+     * Fecha de creación del usuario
+     * @example "2024-09-12T04:25:49.293Z"
+     */
+    created_at: string;
+
+    /**
+     * Código de estudiante
+     * @example "220976438"
+     */
+    intcodestudent?: string;
+
+    /**
+     * Universidad del usuario
+     * @example "Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)"
+     */
+    vchuniversity?: string;
+
+    /**
+     * Student phone
+     * @example
+     * vchphone: '1234567890'
+    */
+    vchphone?: string;
+    /**
+     * Student street
+     * @example
+     * vchstreet: 'Calle 123'
+     */
+    vchstreet?: string;
+    /**
+     * Student zip
+     * @example
+     * intzip: 12345
+     */
+    intzip?: number;
+    /**
+     * Student suburb
+     * @example
+     * vchsuburb: 'Colonia'
+     */
+    vchsuburb?: string;
+    /**
+     * Student municipality
+     * @example
+     * vchmunicipality: 'Municipio'
+     */
+    vchmunicipality?: string;
+    /**
+     * Student state
+     * @example
+     * state: 'Jalisco'
+     */
+    vchstate?: string;
+
+    /**
+     * Código de estudiante
+     * @example "220976438"
+     */
+    intcodestudent2?: string;
+
+    /**
+     * Universidad del usuario
+     * @example "Centro Universitario de Ciencias Exactas e Ingenierías (CUCEI)"
+     */
+    vchuniversity2?: string;
+
+    /**
+     * Student phone
+     * @example
+     * vchphone: '1234567890'
+    */
+    vchphone2?: string;
+    /**
+     * Student street
+     * @example
+     * vchstreet: 'Calle 123'
+     */
+    vchstreet2?: string;
+    /**
+     * Student zip
+     * @example
+     * intzip: 12345
+     */
+    intzip2?: number;
+    /**
+     * Student suburb
+     * @example
+     * vchsuburb: 'Colonia'
+     */
+    vchsuburb2?: string;
+    /**
+     * Student municipality
+     * @example
+     * vchmunicipality: 'Municipio'
+     */
+    vchmunicipality2?: string;
+    /**
+     * Student state
+     * @example
+     * state: 'Jalisco'
+     */
+    vchstate2?: string;
+
+    /**
+     * ID del usuario 2
+     * @example 2
+     */
+    usuarioid2: number;
+
+    /**
+     * Nombre del usuario
+     * @example "Sebastián"
+     */
+    vchname2: string;
+
+    /**
+     * Apellido paterno del usuario
+     * @example "Martínez"
+     */
+    vchpaternalsurname2: string;
+
+    /**
+     * Apellido materno del usuario
+     * @example "López"
+     */
+    vchmaternalsurname2: string;
+
+    /**
+     * Correo electrónico del usuario
+     * @example "smldeveloper02@gmail.com"
+     */
+    vchemail2: string;
+
+    /**
+     * Contraseña del usuario (hash)
+     * @example "$2b$10$4k1dM5488iBj6FzsNNmV0uUqOuOXrRyhY/Si.GZDtZm7g9QMf.HeW"
+     */
+    vchpassword2: string;
+
+    /**
+     * Fecha de nacimiento del usuario
+     * @example "2006-12-31T06:00:00.000Z"
+     */
+    dtbirthdate2: string;
+
+    /**
+     * Estado del usuario (activo/inactivo)
+     * @example true
+     */
+    bnstatus2: boolean;
+
+    /**
+     * Verificación del usuario (verificado/no verificado)
+     * @example true
+     */
+    bnverified2: boolean;
+
+    /**
+     * URL de la imagen del usuario
+     * @example "https://res.cloudinary.com/dal8aivch/image/upload/v1719809427/students/anvzbjybzttfigrojik4.jpg"
+     */
+    vchimage2: string;
+
+    /**
+     * URL de la imagen de portada del usuario
+     * @example "https://res.cloudinary.com/dal8aivch/image/upload/v1731048985/users/tjkw3e6zxkjhqacr4fpm.jpg"
+     */
+    vchcoverimage2: string;
+
+    /**
+     * ID del rol del usuario
+     * @example 1
+     */
+    roleid2: number;
+
+    /**
+     * Fecha de creación del usuario
+     * @example "2024-09-12T04:25:49.293Z"
+     */
+    created_at2: string;
+
+    /**
+     * ID del mensaje
+     * @example 80
+     */
+    messageid: number;
+
+    /**
+     * ID del chat
+     * @example 2
+     */
+    chatid: number;
+
+    /**
+     * Contenido del mensaje
+     * @example "cvcv"
+     */
+    vchcontenido: string;
+
+    /**
+     * Fecha del mensaje
+     * @example "2024-09-27T11:17:55.862Z"
+     */
+    dtmessage: string;
+}
+
+export interface User2 {
+    /**
+ * ID del usuario 2
+ * @example 2
+ */
+    usuarioid2: number;
+
+    /**
+     * Nombre del usuario
+     * @example "Sebastián"
+     */
+    vchname2: string;
+
+    /**
+     * Apellido paterno del usuario
+     * @example "Martínez"
+     */
+    vchpaternalsurname2: string;
+
+    /**
+     * Apellido materno del usuario
+     * @example "López"
+     */
+    vchmaternalsurname2: string;
+
+    /**
+     * Correo electrónico del usuario
+     * @example "smldeveloper02@gmail.com"
+     */
+    vchemail2: string;
+
+    /**
+     * Contraseña del usuario (hash)
+     * @example "$2b$10$4k1dM5488iBj6FzsNNmV0uUqOuOXrRyhY/Si.GZDtZm7g9QMf.HeW"
+     */
+    vchpassword2: string;
+
+    /**
+     * Fecha de nacimiento del usuario
+     * @example "2006-12-31T06:00:00.000Z"
+     */
+    dtbirthdate2: string;
+
+    /**
+     * Estado del usuario (activo/inactivo)
+     * @example true
+     */
+    bnstatus2: boolean;
+
+    /**
+     * Verificación del usuario (verificado/no verificado)
+     * @example true
+     */
+    bnverified2: boolean;
+
+    /**
+     * URL de la imagen del usuario
+     * @example "https://res.cloudinary.com/dal8aivch/image/upload/v1719809427/students/anvzbjybzttfigrojik4.jpg"
+     */
+    vchimage2: string;
+
+    /**
+     * URL de la imagen de portada del usuario
+     * @example "https://res.cloudinary.com/dal8aivch/image/upload/v1731048985/users/tjkw3e6zxkjhqacr4fpm.jpg"
+     */
+    vchcoverimage2: string;
+
+    /**
+     * ID del rol del usuario
+     * @example 1
+     */
+    roleid2: number;
+
+    /**
+     * Fecha de creación del usuario
+     * @example "2024-09-12T04:25:49.293Z"
+     */
+    created_at2: string;
 }
