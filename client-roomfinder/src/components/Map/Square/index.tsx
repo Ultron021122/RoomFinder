@@ -14,20 +14,22 @@ interface FloatingBoxProps {
     onClose: () => void;
     onUniversityChange: (university: string) => void;
     onTypePropertyChange: (type_property: string) => void;
+    onRatingChange: (onRatingChange: number) => void;
     open: boolean;
     toggleDrawer: (newOpen: boolean) => () => void;
 }
 
-const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, onTypePropertyChange, open, toggleDrawer }) => {
+const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, onTypePropertyChange, onRatingChange, open, toggleDrawer }) => {
     const [type_property, setTypeProperty] = React.useState<string>(() => {
-        return localStorage.getItem('type_property') || "";
+        return localStorage.getItem('type_property') || "0";
     });
     const [university, setUniversity] = React.useState<string>(() => {
         return localStorage.getItem('university') || "";
     });
+    const [rating, setRating] = React.useState<number | null>(1);
+
     const [darkMode, setDarkMode] = React.useState<boolean>(false);
     const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
-    const [rating, setRating] = React.useState<number | null>(2.5);
 
     const handleChangeUniversity = (event: SelectChangeEvent) => {
         const newValue = event.target.value;
@@ -74,7 +76,8 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
             sx={{
                 '& .MuiDrawer-paper': {
                     backgroundColor: 'rgba(0, 0, 0, 0.0)',
-                    boxShadow: '0px -4px 4px rgba(0, 0, 0, 0.0)',          },
+                    boxShadow: '0px -4px 4px rgba(0, 0, 0, 0.0)',
+                },
             }}
         >
             <Box
@@ -232,7 +235,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                     }}
                                 >
                                     <MenuItem
-                                        value="Apartamento"
+                                        value="3"
                                         sx={{
                                             fontSize: '0.875rem',
                                             lineHeight: '1.25rem',
@@ -243,10 +246,10 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                             }, // Style when selected and hovered
                                             '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
                                         }}>
-                                        Apartamento
+                                        Departamento
                                     </MenuItem>
                                     <MenuItem
-                                        value="Casa"
+                                        value="1"
                                         sx={{
                                             fontSize: '0.875rem',
                                             lineHeight: '1.25rem',
@@ -260,7 +263,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                         Casa
                                     </MenuItem>
                                     <MenuItem
-                                        value="Habitación"
+                                        value="2"
                                         sx={{
                                             fontSize: '0.875rem',
                                             lineHeight: '1.25rem',
@@ -274,7 +277,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                         Habitación
                                     </MenuItem>
                                     <MenuItem
-                                        value="Todas"
+                                        value="0"
                                         sx={{
                                             fontSize: '0.875rem',
                                             lineHeight: '1.25rem',

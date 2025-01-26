@@ -19,7 +19,7 @@ import ImageModal from './ImageModal'
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
-import { universityIcon } from '@/components/Map'
+import { customIcon } from '@/components/Map'
 
 interface UserProfileComponentProps {
     userData: UserProfile;
@@ -309,7 +309,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                         />
                                         <Marker
                                             position={ubicacionActual}
-                                            icon={universityIcon}
+                                            icon={customIcon}
                                         >
                                             <Popup>
                                                 Tu ubicación actual
