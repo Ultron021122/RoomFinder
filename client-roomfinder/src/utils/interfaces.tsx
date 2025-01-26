@@ -257,6 +257,12 @@ export interface MapData {
      * typeProperty: 'Type property'
      */
     typeProperty: string;
+    /**
+     * Rating
+     * @example
+     * rating: 1.0
+     */
+    rating: number;
 }
 
 /**

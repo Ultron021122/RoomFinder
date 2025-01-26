@@ -12,6 +12,7 @@ const DynamicMap = dynamic(() => import("@/components/Map"), { ssr: false, loadi
 export default function Map() {
   const [selectedUniversity, setSelectedUniversity] = useState<string>("");
   const [selectedTypeProperty, setSelectedTypeProperty] = useState<string>("");
+  const [selectedRating, setSelectedRating] = useState<number>(1.0);
   const [isBoxVisible, setIsBoxVisible] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
@@ -49,6 +50,7 @@ export default function Map() {
           onClose={handleClose}
           onUniversityChange={setSelectedUniversity}
           onTypePropertyChange={setSelectedTypeProperty}
+          onRatingChange={setSelectedRating}
           open={isBoxVisible}
           toggleDrawer={(newOpen) => () => setIsBoxVisible(newOpen)}
         />
@@ -60,12 +62,13 @@ export default function Map() {
           zoom={16}
           name={selectedUniversity}
           typeProperty={selectedTypeProperty}
+          rating={selectedRating}
         />
       </div>
 
       {/* Botón flotante para abrir el FloatingBox */}
       {!isBoxVisible && (
-        <div className="fixed bottom-5 right-5">
+        <div className="fixed z-20 bottom-5 right-5">
           <SpeedDial
             ariaLabel="SpeedDial basic example"
             sx={{
