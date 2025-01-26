@@ -6,7 +6,7 @@ import Input from "../GeneralComponents/Input";
 import { inputVacio } from "./Wizar";
 import { Chip, Spinner } from "@nextui-org/react";
 import dynamic from "next/dynamic";
-import { Bath, Bed, Car, MapPin, Star, Users } from "lucide-react";
+import { Bath, Bed, Car, DoorClosed, DoorOpen, MapPin, Star, Text, Users } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
 import { Badge } from "../ui/badge";
 import { useRef } from "react";
@@ -234,157 +234,49 @@ export default function Confirmar() {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="my-5 p-2">
+                    <div className="mt-6 px-2">
                         <DynamicMap
                             position={[latitud, longitud]}
                             zoom={14}
                             style="rounded-md p-2 w-[400px] h-[300px] w-full"
                         />
                     </div>
-                    <div>
+                    <div className="mt-6 px-2">
                         <h3
-                            className="font-semibold text-sm sm:text-base my-5 text-blue-600 dark:text-blue-400">
-                            Ubicación
+                            className="font-semibold text-base sm:text-lg mb-2 text-blue-600 dark:text-blue-400">
+                            Ubicación propiedad
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mx-auto">
-                            {/* Campos de la ubicación */}
-                            {/* Dirección */}
-                            <div className="relative col-span-1 md:col-span-2 z-0 w-full mb-2 group">
-                                <input
-                                    type="text"
-                                    name="direccion"
-                                    id="direccion"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=""
-                                    autoComplete="off"
-                                    disabled={true}
-                                    value={direccion}
-                                />
-                                <label
-                                    htmlFor="direccion"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                >
-                                    Dirección
-                                </label>
+                            <div className="flex items-center">
+                                <MapPin className="h-5 w-5 mr-2 text-primary-300" />
+                                <span className="text-sm dark:text-primary-foreground">{direccion}</span>
                             </div>
-                            {/* Pais */}
-                            <div className="relative z-0 w-full mb-2 group">
-                                <input
-                                    type="text"
-                                    name="pais"
-                                    id="pais"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=""
-                                    autoComplete="off"
-                                    disabled={true}
-                                    value={pais}
-                                />
-                                <label
-                                    htmlFor="pais"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                >
-                                    País
-                                </label>
+                            <div className="flex items-center">
+                                <Text className="h-5 w-5 mr-2 text-primary-300" />
+                                <span className="text-sm dark:text-primary-foreground">{pais}</span>
                             </div>
-                            {/* Estado */}
-                            <div className="relative z-0 w-full mb-2 group">
-                                <input
-                                    type="text"
-                                    name="estado"
-                                    id="estado"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=""
-                                    autoComplete="off"
-                                    disabled={true}
-                                    value={estado}
-                                />
-                                <label
-                                    htmlFor="estado"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                >
-                                    Estado
-                                </label>
+                            <div className="flex items-center">
+                                <Text className="h-5 w-5 mr-2 text-primary-300" />
+                                <span className="text-sm dark:text-primary-foreground">{estado}</span>
                             </div>
-                            {/* Ciudad / Municipio */}
-                            <div className="relative z-0 w-full mb-2 group">
-                                <input
-                                    type="text"
-                                    name="ciudad"
-                                    id="ciudad"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=""
-                                    autoComplete="off"
-                                    disabled={true}
-                                    value={ciudad_municipio}
-                                />
-                                <label
-                                    htmlFor="ciudad"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                >
-                                    Ciudad / municipio
-                                </label>
+                            <div className="flex items-center">
+                                <Text className="h-5 w-5 mr-2 text-primary-300" />
+                                <span className="text-sm dark:text-primary-foreground">{ciudad_municipio}</span>
                             </div>
-                            {/* Código Postal */}
-                            <div className="relative z-0 w-full mb-2 group">
-                                <input
-                                    type="number"
-                                    name="codigoPostal"
-                                    id="codigoPostal"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=""
-                                    autoComplete="off"
-                                    disabled={true}
-                                    value={codigoPostal}
-                                />
-                                <label
-                                    htmlFor="codigoPostal"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                >
-                                    Código Postal
-                                </label>
+                            <div className="flex items-center">
+                                <Text className="h-5 w-5 mr-2 text-primary-300" />
+                                <span className="text-sm dark:text-primary-foreground">{codigoPostal}</span>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 w-full">
-                                {/* Número exterior */}
-                                <div className="relative z-0 w-full mb-5 group pr-2">
-                                    <input
-                                        type="text"
-                                        name="numExt"
-                                        id="numExt"
-                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        placeholder=""
-                                        autoComplete="off"
-                                        disabled={true}
-                                        value={numExt}
-                                    />
-                                    <label
-                                        htmlFor="numExt"
-                                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                    >
-                                        Núm.Ext
-                                    </label>
+                            <div className="flex items-center">
+                                <DoorClosed className="h-5 w-5 mr-2 text-primary-300" />
+                                <span className="text-sm dark:text-primary-foreground">{numExt}</span>
+                            </div>
+                            {!inputVacio(numInt) &&
+                                <div className="flex items-center">
+                                    <DoorOpen className="h-5 w-5 mr-2 text-primary-300" />
+                                    <span className="text-sm dark:text-primary-foreground">{numInt}</span>
                                 </div>
-                                {
-                                    !inputVacio(numInt) &&
-                                    <div className="relative z-0 w-full mb-5 group">
-                                        <input
-                                            type="text"
-                                            name="numInt"
-                                            id="numInt"
-                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                            placeholder=""
-                                            autoComplete="off"
-                                            disabled={true}
-                                            value={numInt}
-                                        />
-                                        <label
-                                            htmlFor="numInt"
-                                            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                        >
-                                            Núm.Int
-                                        </label>
-                                    </div>
-                                }
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
