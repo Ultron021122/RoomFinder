@@ -8,12 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Camera, Pencil, MapPin, Book, Briefcase, Calendar } from 'lucide-react'
+import { Camera, Pencil, MapPin, Book, Briefcase, LucideMapPinned, Calendar } from 'lucide-react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { UserProfile } from '@/utils/interfaces'
+import { LessorInfo, StudentInfo } from '@/utils/interfaces'
 import axios from 'axios'
 import { Spinner, useDisclosure } from '@nextui-org/react'
 import ImageModal from './ImageModal'
+import { ARRENDADOR, ESTUDIANTE, getUserType } from '@/utils/constants'
 
 // Estilos de leaflet
 import "leaflet/dist/leaflet.css";
@@ -22,14 +23,14 @@ import "leaflet-defaulticon-compatibility";
 import { universityIcon } from '@/components/Map'
 
 interface UserProfileComponentProps {
-    userData: UserProfile;
+    userData: LessorInfo | StudentInfo;
 }
-
 
 const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData }) => {
     const [coverImage, setCoverImage] = useState<string>("");
     const [profileImage, setProfileImage] = useState<string>("");
 
+    // información utilizada por defecto
     const [usuario, setUsuario] = useState({
         nombre: 'Ana García',
         email: 'ana.garcia@universidad.es',
@@ -51,10 +52,11 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
     const [ubicacionActual, setUbicacionActual] = useState<Ubicacion>(null);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+    // efecto que se lanza en caso de que el usuario modifique cualquiera de sus campos (incluyendo la imagen)
     useEffect(() => {
         const fetchImageUrls = async () => {
             if (userData) {
-                try {
+                try { // actualización de la imagen del usuario
                     const response = await axios.get(`/api/users/images/${userData.usuarioid}`);
                     setCoverImage(response.data.data.vchcoverimage);
                     setProfileImage(response.data.data.vchimage);
@@ -66,7 +68,6 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
 
         fetchImageUrls();
     }, [userData]);
-
 
     useEffect(() => {
         if ("geolocation" in navigator) {
@@ -83,8 +84,6 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
             [name]: value,
         }));
     };
-
-
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, tipo: string) => {
         const file = e.target.files?.[0]
@@ -110,6 +109,8 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
             progress: undefined,
         })
     }
+
+    console.log('componente renderizado!'); // eliminar esto
 
     return (
         <div className="min-h-screen bg-gradient-to-r p-4"> {/*bg-gradient-to-r*/}
@@ -171,7 +172,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                     id="nombre"
                                     name="nombre"
                                     className='border-gray-400 dark:border-gray-800'
-                                    value={userData.vchname + ' ' + userData.vchmaternalsurname + ' ' + userData.vchpaternalsurname}
+                                    defaultValue={userData.vchname + ' ' + userData.vchmaternalsurname + ' ' + userData.vchpaternalsurname}
                                     onChange={handleChange}
                                     disabled={!editando}
                                 />
@@ -185,20 +186,49 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                     className='border-gray-400 dark:border-gray-800'
                                     value={userData.vchemail}
                                     onChange={handleChange}
-                                    disabled={!editando}
+                                    disabled
                                 />
                             </div>
-                            <div>
-                                <Label htmlFor="telefono">Teléfono</Label>
-                                <Input
-                                    id="telefono"
-                                    name="telefono"
-                                    className='border-gray-400 dark:border-gray-800'
-                                    value={usuario.telefono}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                />
-                            </div>
+                            {
+                                getUserType(userData.roleid) === ARRENDADOR ? (
+                                    <div>
+                                        <Label htmlFor="telefono">Teléfono</Label>
+                                        <Input
+                                            id="telefono"
+                                            name="telefono"
+                                            className='border-gray-400 dark:border-gray-800'
+                                            defaultValue={userData.vchphone}
+                                            onChange={handleChange}
+                                            disabled={!editando}
+                                        />
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div>
+                                            <Label htmlFor="universidad">Universidad</Label>
+                                            <Input
+                                                id="universidad"
+                                                name="universidad"
+                                                className='border-gray-400 dark:border-gray-800'
+                                                value={userData.vchuniversity}
+                                                disabled
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="carrera">Carrera</Label>
+                                            <Input
+                                                id="carrera"
+                                                name="carrera"
+                                                className='border-gray-400 dark:border- gray-800'
+                                                value={usuario.carrera}
+                                                onChange={handleChange}
+                                                disabled
+                                            />
+                                        </div>
+                                    </>
+                                )
+                            }
+                            
                             <div>
                                 <Label htmlFor="fechaNacimiento">Fecha de Nacimiento</Label>
                                 <Input
@@ -206,68 +236,40 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                     name="fechaNacimiento"
                                     type="date"
                                     className='border-gray-400 dark:border-gray-800'
-                                    value={userData.dtbirthdate.substring(0, 10)}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="universidad">Universidad</Label>
-                                <Input
-                                    id="universidad"
-                                    name="universidad"
-                                    className='border-gray-400 dark:border-gray-800'
-                                    value={usuario.universidad}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="carrera">Carrera</Label>
-                                <Input
-                                    id="carrera"
-                                    name="carrera"
-                                    className='border-gray-400 dark:border-gray-800'
-                                    value={usuario.carrera}
+                                    defaultValue={userData.dtbirthdate.substring(0, 10)}
                                     onChange={handleChange}
                                     disabled={!editando}
                                 />
                             </div>
                         </div>
-                        <div>
-                            <Label htmlFor="bio">Biografía</Label>
-                            <Textarea
-                                id="bio"
-                                name="bio"
-                                className='border-gray-400 dark:border-gray-800'
-                                value={usuario.bio}
-                                onChange={handleChange}
-                                disabled={!editando}
-                                rows={4}
-                            />
-                        </div>
-                        {/* <div>
-                            <Label htmlFor="experienciaLaboral">Experiencia Laboral</Label>
-                            <Textarea
-                                id="experienciaLaboral"
-                                name="experienciaLaboral"
-                                className='border-gray-400 dark:border-gray-800'
-                                value={usuario.experienciaLaboral}
-                                onChange={handleChange}
-                                disabled={!editando}
-                                rows={3}
-                            />
-                        </div> */}
-                        <div>
-                            <Label>Intereses</Label>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                                {usuario.intereses.map((interes, index) => (
-                                    <span key={index} className="bg-primary-400 text-primary-foreground px-3 py-1 rounded-full text-xs">
-                                        {interes}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
+                        {
+                            getUserType(userData.roleid) === ESTUDIANTE && (
+                                <>
+                                <div>
+                                    <Label htmlFor="bio">Biografía</Label>
+                                    <Textarea
+                                        id="bio"
+                                        name="bio"
+                                        className='border-gray-400 dark:border-gray-800'
+                                        defaultValue={usuario.bio}
+                                        onChange={handleChange}
+                                        disabled={!editando}
+                                        rows={4}
+                                    />
+                                </div>
+                                <div>
+                                    <Label>Intereses</Label>
+                                    <div className="flex flex-wrap gap-2 mt-2">
+                                        {usuario.intereses.map((interes, index) => (
+                                            <span key={index} className="bg-primary-400 text-primary-foreground px-3 py-1 rounded-full text-xs">
+                                                {interes}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                                </>
+                            )
+                        }
                         {editando && (
                             <Button type="submit" className="w-full">
                                 Guardar Cambios
@@ -276,20 +278,25 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                     </form>
 
                     <section className='grid grid-cols-1 md:grid-cols-2'>
+                        {getUserType(userData.roleid) === ARRENDADOR && (
                         <div className="mt-6">
                             <h3 className="text-lg font-semibold mb-2">Información Adicional</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="flex items-center">
-                                    <MapPin className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm dark:text-primary-foreground'>Madrid, España</span>
+                                    <LucideMapPinned className="h-5 w-5 mr-2 text-primary-300" />
+                                    <span className='text-sm dark:text-primary-foreground'>{`${userData.vchmunicipality}, ${userData.vchstate}`}</span>
                                 </div>
                                 <div className="flex items-center">
                                     <Book className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm dark:text-primary-foreground'>{usuario.carrera}</span>
+                                    <span className='text-sm dark:text-primary-foreground'>{userData.intzip}</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <MapPin className="h-5 w-5 mr-2 text-primary-300" />
+                                    <span className='text-sm dark:text-primary-foreground'>{`${userData.vchstreet}, ${userData.vchsuburb}`}</span>
                                 </div>
                                 <div className="flex items-center">
                                     <Briefcase className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm dark:text-primary-foreground'>{userData.roleid === 1 ? 'Estudiante' : 'Arrendador'}</span>
+                                    <span className='text-sm dark:text-primary-foreground'>{getUserType(userData.roleid)}</span>
                                 </div>
                                 <div className="flex items-center">
                                     <Calendar className="h-5 w-5 mr-2 text-primary-300" />
@@ -297,6 +304,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                 </div>
                             </div>
                         </div>
+                        )}
 
                         <div className="mt-6">
                             <h3 className="text-lg font-semibold mb-2">Ubicación Actual</h3>

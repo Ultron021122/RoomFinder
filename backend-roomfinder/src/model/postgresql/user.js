@@ -199,20 +199,45 @@ export class UsersModel {
         try {
             const { vchemail, vchpassword } = input
 
+
             // Error Messages
             // 0 - The user does not exist
             // 1 - User not verified
             // 2 - Invalid credentials
 
-            const user = await this.getByEmail({ email: vchemail });
+            const user = await this.getByEmail({ email: vchemail }); // obtiene la información general del usuario * TABLA USUARIOS *
             if (!user) return 0;
             if (!user.bnverified) return 1; // Check if user is verified
             const validPassword = await bcrypt.compare(vchpassword, user.vchpassword)
             if (!validPassword) return 2;
 
+            /* información especifica del tipo de usuario */
+            const {roleid, usuarioid} = user;
+
+            const db = new Database();
+            const client = await db.pool.connect();
+            let userData;
+            try {
+                if(roleid === 1){ // estudiante
+                    const result = await client.query(
+                        `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Estudiantes" student ON us.usuarioid = student.usuarioid WHERE us.roleid = 1 AND us.usuarioid = $1;`,
+                        [usuarioid]
+                    );
+                    userData = result.rows[0];
+                }else{ // arrendador
+                    const result = await client.query(
+                        `SELECT * FROM "Usuario"."Usuario" us LEFT JOIN "Usuario"."Arrendadores" lessor ON us.usuarioid = lessor.usuarioid WHERE us.roleid = 2 AND us.usuarioid = $1;`,
+                        [usuarioid]
+                    );
+                    userData = result.rows[0];
+                }
+            } finally {
+                client.release();
+            }
+            
             const session = await this.session({ id: user.usuarioid })
 
-            return { ...user, sessionid: session };
+            return {...userData, sessionid: session };
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
