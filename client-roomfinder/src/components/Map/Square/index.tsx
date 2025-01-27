@@ -14,7 +14,7 @@ interface FloatingBoxProps {
     onClose: () => void;
     onUniversityChange: (university: string) => void;
     onTypePropertyChange: (type_property: string) => void;
-    onRatingChange: (onRatingChange: number) => void;
+    onRatingChange: (rating: number) => void;
     open: boolean;
     toggleDrawer: (newOpen: boolean) => () => void;
 }
@@ -26,7 +26,10 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
     const [university, setUniversity] = React.useState<string>(() => {
         return localStorage.getItem('university') || "";
     });
-    const [rating, setRating] = React.useState<number | null>(1);
+    const [rating, setRating] = React.useState<number | null>(() => {
+        const storedRating = localStorage.getItem('rating');
+        return storedRating ? parseFloat(storedRating) : 0;
+    });
 
     const [darkMode, setDarkMode] = React.useState<boolean>(false);
     const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
@@ -43,6 +46,14 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
         setTypeProperty(newValue);
         onTypePropertyChange(newValue);
         localStorage.setItem('type_property', newValue); // Guarda en localStorage
+    };
+
+    const handleRatingChange = (event: React.ChangeEvent<{}>, newValue: number | null) => {
+        if (newValue !== null) {
+            setRating(newValue);
+            onRatingChange(newValue);
+            localStorage.setItem('rating', newValue.toString()); // Guarda en localStorage
+        }
     };
 
     React.useEffect(() => {
@@ -81,7 +92,6 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
             }}
         >
             <Box
-                //bgcolor='#1f2937'
                 sx={{
                     backgroundColor: darkMode === true ? '#1f2937' : '#e5e7eb',
                     borderTopLeftRadius: 12,
@@ -90,8 +100,8 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                     px: 2,
                     pb: 2,
                     pt: 8,
-                    width: { xs: '100%', md: '80%', lg: '60%' }, // Ancho adaptativo
-                    mx: 'auto', // Centrar el componente
+                    width: { xs: '100%', md: '80%', lg: '60%' },
+                    mx: 'auto',
                 }}
             >
                 <Box
@@ -167,12 +177,12 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                             sx={{
                                                 fontSize: '0.875rem',
                                                 lineHeight: '1.25rem',
-                                                '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                                '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" },
                                                 '&.Mui-selected:hover': {
                                                     backgroundColor: darkMode ? '#111827' : "#6b7280",
                                                     color: darkMode ? '#3b82f6' : '#fff',
-                                                }, // Style when selected and hovered
-                                                '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                                },
+                                                '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" },
                                             }}>
                                             {universidad.name}
                                         </MenuItem>
@@ -235,16 +245,30 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                     }}
                                 >
                                     <MenuItem
+                                        value="0"
+                                        sx={{
+                                            fontSize: '0.875rem',
+                                            lineHeight: '1.25rem',
+                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" },
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: darkMode ? '#111827' : "#6b7280",
+                                                color: darkMode ? '#3b82f6' : '#fff',
+                                            },
+                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" },
+                                        }}>
+                                        Todos
+                                    </MenuItem>
+                                    <MenuItem
                                         value="3"
                                         sx={{
                                             fontSize: '0.875rem',
                                             lineHeight: '1.25rem',
-                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" },
                                             '&.Mui-selected:hover': {
                                                 backgroundColor: darkMode ? '#111827' : "#6b7280",
                                                 color: darkMode ? '#3b82f6' : '#fff',
-                                            }, // Style when selected and hovered
-                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                            },
+                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" },
                                         }}>
                                         Departamento
                                     </MenuItem>
@@ -253,12 +277,12 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                         sx={{
                                             fontSize: '0.875rem',
                                             lineHeight: '1.25rem',
-                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" },
                                             '&.Mui-selected:hover': {
                                                 backgroundColor: darkMode ? '#111827' : "#6b7280",
                                                 color: darkMode ? '#3b82f6' : '#fff',
-                                            }, // Style when selected and hovered
-                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                            },
+                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" },
                                         }}>
                                         Casa
                                     </MenuItem>
@@ -267,28 +291,14 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                         sx={{
                                             fontSize: '0.875rem',
                                             lineHeight: '1.25rem',
-                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" },
                                             '&.Mui-selected:hover': {
                                                 backgroundColor: darkMode ? '#111827' : "#6b7280",
                                                 color: darkMode ? '#3b82f6' : '#fff',
-                                            }, // Style when selected and hovered
-                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                            },
+                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" },
                                         }}>
                                         Habitación
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="0"
-                                        sx={{
-                                            fontSize: '0.875rem',
-                                            lineHeight: '1.25rem',
-                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
-                                            '&.Mui-selected:hover': {
-                                                backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                                color: darkMode ? '#3b82f6' : '#fff',
-                                            }, // Style when selected and hovered
-                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
-                                        }}>
-                                        Todas
                                     </MenuItem>
                                 </Select>
                                 <FormHelperText
@@ -300,7 +310,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                             </FormControl>
                             <Typography
                                 component="legend"
-                                className="peer-focus:font-medium text-sm peer-focus:text-sm"
+                                className="peer-focus:font-medium text-sm peer-focus:text-sm mt-2"
                                 sx={{
                                     color: darkMode ? '#d1d5db' : '#6b7280',
                                     fontSize: '0.875rem',
@@ -309,9 +319,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                             <Rating
                                 name="simple-controlled"
                                 value={rating}
-                                onChange={(event, newValue) => {
-                                    setRating(newValue);
-                                }}
+                                onChange={handleRatingChange}
                                 precision={0.5}
                                 sx={{
                                     color: darkMode ? '#3b82f6' : '#2563eb',
