@@ -1,12 +1,10 @@
 import { useMap } from 'react-leaflet/hooks';
 import React, { useEffect, useRef, useState } from "react";
 import MarkerClusterGroup from "react-leaflet-cluster";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, CircleMarker, Circle } from "react-leaflet";
 import { Icon, divIcon, point, Map as Mapa, Marker as LeafletMarker } from "leaflet";
-// Datos de las propiedades y universidades
 import { MapData, Properties } from '@/utils/interfaces';
 import { universities } from "@/utils/constants";
-// Estilos de leaflet
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
@@ -17,12 +15,12 @@ import { Spinner } from '@nextui-org/react';
 
 // Icons personalizados
 export const customIcon = new Icon({
-    iconUrl: "/images/property.png",
+    iconUrl: "/images/property2.png",
     iconSize: [52, 52]
 });
 
 export const universityIcon = new Icon({
-    iconUrl: "/images/universidad1.png",
+    iconUrl: "/images/universidad2.png",
     iconSize: [52, 52]
 });
 
@@ -35,15 +33,14 @@ const createClusterCustomIcon = function (cluster: any) {
     });
 };
 
-
-
 export default function Map({ position, zoom, name, typeProperty, rating }: MapData) {
     const [properties, setProperties] = useState<Properties[]>([]);
-    const [filterProperties, setFilterProperties] = useState<Properties[]>(properties);
+    const [filterProperties, setFilterProperties] = useState<Properties[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
     const mapRef = useRef<Mapa | null>(null);
     const markerRefs = useRef<Record<string, React.RefObject<LeafletMarker>>>({});
+    const [universityLocation, setUniversityLocation] = useState<[number, number] | null>(null);
 
     const SetMapRef = () => {
         const map = useMap();
@@ -51,18 +48,21 @@ export default function Map({ position, zoom, name, typeProperty, rating }: MapD
         return null;
     };
 
-    const getUniversityLocation = (name: string) => {
+    const getUniversityLocation = (name: string): [number, number] => {
         const filteredUniversities = universities.filter((universidad) => universidad.name === name);
         if (filteredUniversities.length > 0) {
             return filteredUniversities[0].geocode;
         }
         return position;
-    }
+    };
+
+    const Options = { color: '#60a5fa' };
 
     useEffect(() => {
         if (mapRef.current && name) {
-            const universityLocation = getUniversityLocation(name); // Obtén la ubicación de la universidad de alguna manera
-            mapRef.current.flyTo(universityLocation, zoom, { animate: true, duration: 3 }); // Mueve el mapa a la ubicación de la universidad
+            const location = getUniversityLocation(name);
+            setUniversityLocation(location);
+            mapRef.current.flyTo(location, zoom, { animate: true, duration: 3 });
 
             setTimeout(() => {
                 const markerRef = markerRefs.current[name];
@@ -73,38 +73,38 @@ export default function Map({ position, zoom, name, typeProperty, rating }: MapD
         }
     }, [name]);
 
-    // useEffect(() => {
-    //     console.log('Tipo de propiedad:', typeProperty);
-    // }, [typeProperty]);
-
     useEffect(() => {
         const fetchProperties = async () => {
+            setIsLoading(true);
             try {
                 const response = await axios.get(`/api/properties`);
                 setProperties(response.data.data);
                 setFilterProperties(response.data.data);
-            } catch (Error: any) {
-                // setErrorSystem(Error.response?.data.message);
-                console.log(Error);
+            } catch (Error) {
+                setErrorSystem("Error fetching properties");
             } finally {
-                // setIsLoading(false);
+                setIsLoading(false);
             }
         };
         fetchProperties();
     }, []);
 
     useEffect(() => {
-        setIsLoading(true);
         const typeId = parseInt(typeProperty, 10);
+        const minRating = rating;
 
-        if (isNaN(typeId) || typeId === 0) {
-            setFilterProperties(properties);
-        } else {
-            const filteredProperties = properties.filter(property => property.propertytypeid === typeId);
-            setFilterProperties(filteredProperties);
+        let filteredProperties = properties;
+
+        if (!isNaN(typeId) && typeId !== 0) {
+            filteredProperties = filteredProperties.filter(property => property.propertytypeid === typeId);
         }
-        setIsLoading(false);
-    }, [typeProperty, properties]);
+
+        if (!isNaN(minRating) && typeId !== 0) {
+            filteredProperties = filteredProperties.filter(property => property.decpropertyrating >= minRating);
+        }
+
+        setFilterProperties(filteredProperties);
+    }, [typeProperty, rating, properties]);
 
     return (
         <>
@@ -116,6 +116,18 @@ export default function Map({ position, zoom, name, typeProperty, rating }: MapD
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
+
+                        {universityLocation && (
+                            <Circle
+                                center={universityLocation}
+                                pathOptions={Options}
+                                radius={500}
+                            >
+                                <Popup>
+                                    <p>Este es el radio cercano a la universida. Es una distancia de 500 mtrs.</p>
+                                </Popup>
+                            </Circle>
+                        )}
 
                         <MarkerClusterGroup
                             chunkedLoading
@@ -173,7 +185,6 @@ export default function Map({ position, zoom, name, typeProperty, rating }: MapD
                                                     <Star size={18} className="mr-1" />
                                                     <span>
                                                         {propertie.decpropertyrating}
-                                                        {/* <span className="text-slate-600 font-normal">(128)</span> */}
                                                     </span>
                                                 </dd>
                                                 <dt className="sr-only">Location</dt>
@@ -224,11 +235,11 @@ export default function Map({ position, zoom, name, typeProperty, rating }: MapD
                         </MarkerClusterGroup>
                     </MapContainer>
                 </div>
-            ) :
+            ) : (
                 <div className='h-screen w-screen max-w-screen-2xl'>
                     <Spinner color='primary' />
                 </div>
-            }
+            )}
         </>
     );
 }
