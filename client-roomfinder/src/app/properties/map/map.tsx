@@ -12,7 +12,7 @@ const DynamicMap = dynamic(() => import("@/components/Map"), { ssr: false, loadi
 export default function Map() {
   const [selectedUniversity, setSelectedUniversity] = useState<string>("");
   const [selectedTypeProperty, setSelectedTypeProperty] = useState<string>("");
-  const [selectedRating, setSelectedRating] = useState<number>(1.0);
+  const [selectedRating, setSelectedRating] = useState<number>(0.0);
   const [isBoxVisible, setIsBoxVisible] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
