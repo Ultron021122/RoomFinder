@@ -857,3 +857,9 @@ export const reviews = [
         comment: "¡Increíble! La vista desde el balcón es espectacular y la atención del anfitrión fue excelente. Altamente recomendado."
     }
 ];
+
+export const ARRENDADOR = 'Arrendador';
+export const ESTUDIANTE = 'Estudiante';
+export const getUserType = (id : number) : string => {
+    return id === 1 ? ESTUDIANTE : ARRENDADOR;
+}
