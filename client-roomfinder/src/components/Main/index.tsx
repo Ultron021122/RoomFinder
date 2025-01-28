@@ -5,6 +5,7 @@ import { CardOwner } from "./Card";
 import Banner from "./Banner";
 import MainBanner from "./MainBanner";
 import BlurFade from "@/components/ui/blur-fade";
+import SectionProperty from "./properties";
 
 export default function HomeComponent() {
     return (
@@ -23,20 +24,7 @@ export default function HomeComponent() {
                                 Algunas de las propiedades más destacadas de Roomfinder.
                             </p>
                         </div>
-                        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                            {
-                                propertiesHome.map((property, index) => (
-                                    <CardOwner
-                                        key={index}
-                                        id={property.id}
-                                        title={property.title}
-                                        description={property.description}
-                                        imagenes={property.imagenesUrl}
-                                        value={property.value}
-                                    />
-                                ))
-                            }
-                        </div>
+                        <SectionProperty />
                     </div>
                     <Banner />
                     <div>
