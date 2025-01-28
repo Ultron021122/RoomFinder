@@ -6,30 +6,26 @@ import Image from 'next/image';
 import { Galeria } from '@/components/GeneralComponents/Galeria';
 import { useRouter } from 'next/navigation';
 import { MapPin, Star } from 'lucide-react';
+import { Photos, Properties } from '@/utils/interfaces';
 
-interface Imagen {
-    id: number,
-    url: string
-}
+// interface CardOwnerProps {
+//     id: number;
+//     title: string;
+//     description: string;
+//     value: number;
+//     imagenes: Photos[];
+// }
 
-interface CardOwnerProps {
-    id: number;
-    title: string;
-    description: string;
-    value: number;
-    imagenes: Imagen[];
-}
-
-export const CardOwner = ({ id, title, description, value, imagenes }: CardOwnerProps) => {
+export const CardOwner = (cardProps: Properties) => {
     const route = useRouter();
 
-    const listaImagenes = imagenes.map((imagen, index) =>
+    const listaImagenes = cardProps.objphotos.map((imagen, index) =>
         <div key={index} className="relative min-w-full h-full" >
             <Image
                 width={800}
                 height={600}
                 src={imagen.url}
-                alt={`Imagen de inmueble ${imagen.id}`}
+                alt={`Imagen de inmueble ${imagen.photoid}`}
                 className='absolute inset-0 object-cover w-full h-full'
             />
         </div>
@@ -43,17 +39,17 @@ export const CardOwner = ({ id, title, description, value, imagenes }: CardOwner
             <Galeria imagenes={listaImagenes} />
             <CardActionArea
                 color='primary'
-                onClick={() => route.push(`/property/${id}`)}
+                onClick={() => route.push(`/property/${cardProps.propertyid}`)}
             >
                 <CardContent>
                     <h5 className="mt-1 text-lg font-semibold dark:text-white text-slate-900 md:text-2xl dark:sm:text-white">
-                        {title}
+                        {cardProps.vchtitle}
                     </h5>
                     <dl className="mt-4 text-xs font-medium flex items-center row-start-2 sm:mt-1 sm:row-start-3 md:mt-2.5 lg:row-start-2">
                         <dt className="sr-only">Reviews</dt>
                         <dd className="text-blue-600 flex items-center dark:text-blue-400">
                             <Star size={18} className="mr-1" />
-                            <p>{value} <span className="text-slate-400 font-normal">(128)</span></p>
+                            <p>{cardProps.decpropertyrating}</p>
                         </dd>
                         <dt className="sr-only">Location</dt>
                         <dd className="flex items-center text-gray-700 dark:text-gray-200">
@@ -61,11 +57,11 @@ export const CardOwner = ({ id, title, description, value, imagenes }: CardOwner
                                 <circle cx="1" cy="1" r="1" />
                             </svg>
                             <MapPin size={18} className="mr-1" />
-                            Collingwood, Ontario
+                            {cardProps.vchaddresscomplement}
                         </dd>
                     </dl>
                     <p className={`mt-4 text-sm leading-6 col-start-1 sm:col-span-2 lg:row-start-4 lg:col-span-1 dark:text-slate-400`}>
-                        {description}
+                        {cardProps.vchdescription}
                     </p>
                 </CardContent>
                 <CardActions
