@@ -7,9 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function Signup() {
-    return (
-        <>
-            <Registrar />
-        </>
-    );
+    return ( <Registrar /> );
 };
