@@ -21,12 +21,16 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
 import { universityIcon } from '@/components/Map'
+import { useForm } from 'react-hook-form'
 
 interface UserProfileComponentProps {
     userData: LessorInfo | StudentInfo;
 }
 
 const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData }) => {
+    const {register, handleSubmit} = useForm<LessorInfo | StudentInfo>({
+        mode:'onSubmit'
+    });
     const [coverImage, setCoverImage] = useState<string>("");
     const [profileImage, setProfileImage] = useState<string>("");
 
@@ -66,8 +70,20 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
             }
         };
 
+        const getUserData = async () => {
+            if (userData) {
+                try {
+                    const response = await axios.get(`/api/users/images/${userData.usuarioid}`);
+                    setCoverImage(response.data.data.vchcoverimage);
+                    setProfileImage(response.data.data.vchimage);
+                } catch (error) {
+                    console.error("Error al cargar las imágenes:", error);
+                }
+            }
+        }
+
         fetchImageUrls();
-    }, [userData]);
+    }, [userData]);    
 
     useEffect(() => {
         if ("geolocation" in navigator) {
@@ -96,7 +112,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
         }
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = () => { // actualizar los datos en la base de datos
         console.log('Datos actualizados:', usuario)
         setEditando(false)
         toast.success('Perfil actualizado con éxito!', {
@@ -164,11 +180,12 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                 </CardHeader>
                 <CardContent>
                     {/* <Image src='/utils/logoW.png' alt="Fondo de perfil" width={1000} height={1000} /> */}
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <Label htmlFor="nombre">Nombre completo</Label>
                                 <Input
+                                    
                                     id="nombre"
                                     name="nombre"
                                     className='border-gray-400 dark:border-gray-800'
