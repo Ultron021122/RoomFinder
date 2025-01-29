@@ -16,7 +16,7 @@ export const SectionProperty = () => {
             setIsLoading(true);
             setErrorSystem(null);
             try {
-                const response = await axios.get(`/api/properties`);
+                const response = await axios.get(`/api/properties/feature`);
                 setProperties(response.data.data);
                 setIsLoading(false);
             } catch (Error: any) {
