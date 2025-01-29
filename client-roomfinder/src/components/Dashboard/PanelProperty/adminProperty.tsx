@@ -107,7 +107,6 @@ export default function AdminProperties() {
 
     const handleGuardarCambios = () => {
         if (propertyEdit) {
-            console.log(propertyEdit)
             setProperties(properties.map(u => u.propertyid === propertyEdit.propertyid ? propertyEdit : u))
             setDialogoAbierto(false)
             toast.success('Propiedad actualizada con éxito', {
@@ -128,7 +127,6 @@ export default function AdminProperties() {
         try {
             const response = await axios.delete(`/api/properties/${id}`);
             setIsLoading(false);
-            console.log(response)
             if (response.status === 200) {
                 setProperties(properties.filter(u => u.propertyid !== id));
                 toast.success(response.data.message.message, {

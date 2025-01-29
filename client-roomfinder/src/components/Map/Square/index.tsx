@@ -14,20 +14,25 @@ interface FloatingBoxProps {
     onClose: () => void;
     onUniversityChange: (university: string) => void;
     onTypePropertyChange: (type_property: string) => void;
+    onRatingChange: (rating: number) => void;
     open: boolean;
     toggleDrawer: (newOpen: boolean) => () => void;
 }
 
-const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, onTypePropertyChange, open, toggleDrawer }) => {
+const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, onTypePropertyChange, onRatingChange, open, toggleDrawer }) => {
     const [type_property, setTypeProperty] = React.useState<string>(() => {
-        return localStorage.getItem('type_property') || "";
+        return localStorage.getItem('type_property') || "0";
     });
     const [university, setUniversity] = React.useState<string>(() => {
         return localStorage.getItem('university') || "";
     });
+    const [rating, setRating] = React.useState<number | null>(() => {
+        const storedRating = localStorage.getItem('rating');
+        return storedRating ? parseFloat(storedRating) : 0;
+    });
+
     const [darkMode, setDarkMode] = React.useState<boolean>(false);
     const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
-    const [rating, setRating] = React.useState<number | null>(2.5);
 
     const handleChangeUniversity = (event: SelectChangeEvent) => {
         const newValue = event.target.value;
@@ -41,6 +46,14 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
         setTypeProperty(newValue);
         onTypePropertyChange(newValue);
         localStorage.setItem('type_property', newValue); // Guarda en localStorage
+    };
+
+    const handleRatingChange = (event: React.ChangeEvent<{}>, newValue: number | null) => {
+        if (newValue !== null) {
+            setRating(newValue);
+            onRatingChange(newValue);
+            localStorage.setItem('rating', newValue.toString()); // Guarda en localStorage
+        }
     };
 
     React.useEffect(() => {
@@ -74,21 +87,21 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
             sx={{
                 '& .MuiDrawer-paper': {
                     backgroundColor: 'rgba(0, 0, 0, 0.0)',
-                    boxShadow: '0px -4px 4px rgba(0, 0, 0, 0.0)',          },
+                    boxShadow: '0px -4px 4px rgba(0, 0, 0, 0.0)',
+                },
             }}
         >
             <Box
-                //bgcolor='#1f2937'
                 sx={{
-                    backgroundColor: darkMode === true ? '#1f2937' : '#e5e7eb',
+                    backgroundColor: '#1f2937',
                     borderTopLeftRadius: 12,
                     borderTopRightRadius: 12,
                     boxShadow: 4,
                     px: 2,
                     pb: 2,
                     pt: 8,
-                    width: { xs: '100%', md: '80%', lg: '60%' }, // Ancho adaptativo
-                    mx: 'auto', // Centrar el componente
+                    width: { xs: '100%', md: '80%', lg: '60%' },
+                    mx: 'auto',
                 }}
             >
                 <Box
@@ -111,21 +124,21 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                 className="w-full"
                                 sx={{
                                     '.MuiInput-underline:after': {
-                                        borderBottomColor: darkMode === true ? '#3b82f6' : '#2563eb',
+                                        borderBottomColor: '#3b82f6',
                                     },
                                     '.MuiInput-underline:before': {
-                                        borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                        borderBottomColor: '#4b5563',
                                         borderBottomWidth: '2px',
                                     },
                                     '.MuiInput-underline:hover:not(.Mui-disabled):before': {
-                                        borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                        borderBottomColor: '#4b5563',
                                     },
                                 }}>
                                 <InputLabel
                                     id="university"
                                     className="peer-focus:font-medium text-sm peer-focus:text-sm"
                                     sx={{
-                                        color: darkMode ? '#d1d5db' : '#6b7280',
+                                        color: '#d1d5db',
                                         fontSize: '0.875rem',
                                         lineHeight: '1.25rem',
                                     }}>
@@ -141,16 +154,16 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                         fontSize: '0.875rem',
                                         lineHeight: '1.25rem',
                                         fontStyle: 'normal',
-                                        color: darkMode ? "white" : "#111827",
+                                        color: "white",
                                         '.MuiSvgIcon-root ': {
-                                            fill: darkMode ? "white !important" : "#111827 !important",
+                                            fill: "white !important",
                                         }
                                     }}
                                     MenuProps={{
                                         PaperProps: {
                                             sx: {
-                                                backgroundColor: darkMode ? "#374151" : "#f3f4f6",
-                                                color: darkMode ? "#fff" : "#111827",
+                                                backgroundColor: "#374151",
+                                                color: "#fff",
                                                 height: 245,
                                                 scrollbarWidth: 'thin',
                                             },
@@ -164,12 +177,12 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                             sx={{
                                                 fontSize: '0.875rem',
                                                 lineHeight: '1.25rem',
-                                                '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                                '&.Mui-selected': { backgroundColor: '#1f2937' },
                                                 '&.Mui-selected:hover': {
-                                                    backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                                    color: darkMode ? '#3b82f6' : '#fff',
-                                                }, // Style when selected and hovered
-                                                '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                                    backgroundColor: '#111827',
+                                                    color: '#3b82f6',
+                                                },
+                                                '&:hover': { backgroundColor: '#374151' },
                                             }}>
                                             {universidad.name}
                                         </MenuItem>
@@ -177,7 +190,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                 </Select>
                                 <FormHelperText
                                     sx={{
-                                        color: darkMode ? '#d1d5db' : '#4b5563',
+                                        color: '#d1d5db',
                                     }}>
                                     Selecciona una universidad
                                 </FormHelperText>
@@ -187,21 +200,21 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                 className="w-full mt-2"
                                 sx={{
                                     '.MuiInput-underline:after': {
-                                        borderBottomColor: darkMode === true ? '#3b82f6' : '#2563eb',
+                                        borderBottomColor: '#3b82f6',
                                     },
                                     '.MuiInput-underline:before': {
-                                        borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                        borderBottomColor: '#4b5563',
                                         borderBottomWidth: '2px',
                                     },
                                     '.MuiInput-underline:hover:not(.Mui-disabled):before': {
-                                        borderBottomColor: darkMode === true ? '#4b5563' : '#d1d5db',
+                                        borderBottomColor: '#4b5563',
                                     },
                                 }}>
                                 <InputLabel
                                     id="type_property"
                                     className="peer-focus:font-medium text-sm peer-focus:text-sm"
                                     sx={{
-                                        color: darkMode ? '#d1d5db' : '#6b7280',
+                                        color: '#d1d5db',
                                         fontSize: '0.875rem',
                                         lineHeight: '1.25rem',
                                     }}>
@@ -216,102 +229,100 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ onClose, onUniversityChange, 
                                         fontSize: '0.875rem',
                                         lineHeight: '1.25rem',
                                         fontStyle: 'normal',
-                                        color: darkMode ? "white" : "#111827",
+                                        color: "white",
                                         '.MuiSvgIcon-root ': {
-                                            fill: darkMode ? "white !important" : "#111827 !important",
+                                            fill: "white !important",
                                         }
                                     }}
                                     MenuProps={{
                                         PaperProps: {
                                             sx: {
-                                                backgroundColor: darkMode ? "#374151" : "#f3f4f6",
-                                                color: darkMode ? "#fff" : "#111827",
+                                                backgroundColor: "#374151",
+                                                color: "#fff",
                                                 scrollbarWidth: 'thin',
                                             },
                                         },
                                     }}
                                 >
                                     <MenuItem
-                                        value="Apartamento"
+                                        value="0"
                                         sx={{
                                             fontSize: '0.875rem',
                                             lineHeight: '1.25rem',
-                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                            '&.Mui-selected': { backgroundColor: '#1f2937' },
                                             '&.Mui-selected:hover': {
-                                                backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                                color: darkMode ? '#3b82f6' : '#fff',
-                                            }, // Style when selected and hovered
-                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                                backgroundColor: '#111827',
+                                                color: '#3b82f6',
+                                            },
+                                            '&:hover': { backgroundColor: '#374151' },
                                         }}>
-                                        Apartamento
+                                        Todos
                                     </MenuItem>
                                     <MenuItem
-                                        value="Casa"
+                                        value="3"
                                         sx={{
                                             fontSize: '0.875rem',
                                             lineHeight: '1.25rem',
-                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                            '&.Mui-selected': { backgroundColor: '#1f2937' },
                                             '&.Mui-selected:hover': {
-                                                backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                                color: darkMode ? '#3b82f6' : '#fff',
-                                            }, // Style when selected and hovered
-                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                                backgroundColor: '#111827',
+                                                color: '#3b82f6',
+                                            },
+                                            '&:hover': { backgroundColor: '#374151' },
+                                        }}>
+                                        Departamento
+                                    </MenuItem>
+                                    <MenuItem
+                                        value="1"
+                                        sx={{
+                                            fontSize: '0.875rem',
+                                            lineHeight: '1.25rem',
+                                            '&.Mui-selected': { backgroundColor: '#1f2937'},
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: '#111827',
+                                                color: '#3b82f6',
+                                            },
+                                            '&:hover': { backgroundColor: '#374151' },
                                         }}>
                                         Casa
                                     </MenuItem>
                                     <MenuItem
-                                        value="Habitación"
+                                        value="2"
                                         sx={{
                                             fontSize: '0.875rem',
                                             lineHeight: '1.25rem',
-                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
+                                            '&.Mui-selected': { backgroundColor: '#1f2937' },
                                             '&.Mui-selected:hover': {
-                                                backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                                color: darkMode ? '#3b82f6' : '#fff',
-                                            }, // Style when selected and hovered
-                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
+                                                backgroundColor: '#111827',
+                                                color: '#3b82f6',
+                                            },
+                                            '&:hover': { backgroundColor: '#374151' },
                                         }}>
                                         Habitación
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="Todas"
-                                        sx={{
-                                            fontSize: '0.875rem',
-                                            lineHeight: '1.25rem',
-                                            '&.Mui-selected': { backgroundColor: darkMode ? '#1f2937' : "#9ca3af" }, // Style when selected
-                                            '&.Mui-selected:hover': {
-                                                backgroundColor: darkMode ? '#111827' : "#6b7280",
-                                                color: darkMode ? '#3b82f6' : '#fff',
-                                            }, // Style when selected and hovered
-                                            '&:hover': { backgroundColor: darkMode ? '#374151' : "#d1d5db" }, // Style when hovered
-                                        }}>
-                                        Todas
                                     </MenuItem>
                                 </Select>
                                 <FormHelperText
                                     sx={{
-                                        color: darkMode ? '#d1d5db' : '#4b5563',
+                                        color: '#d1d5db',
                                     }}>
                                     Selecciona un tipo de inmueble
                                 </FormHelperText>
                             </FormControl>
                             <Typography
                                 component="legend"
-                                className="peer-focus:font-medium text-sm peer-focus:text-sm"
+                                className="peer-focus:font-medium text-sm peer-focus:text-sm mt-2"
                                 sx={{
-                                    color: darkMode ? '#d1d5db' : '#6b7280',
+                                    color: '#d1d5db',
                                     fontSize: '0.875rem',
                                     lineHeight: '1.25rem',
                                 }}>Calificación</Typography>
                             <Rating
                                 name="simple-controlled"
                                 value={rating}
-                                onChange={(event, newValue) => {
-                                    setRating(newValue);
-                                }}
+                                onChange={handleRatingChange}
                                 precision={0.5}
                                 sx={{
-                                    color: darkMode ? '#3b82f6' : '#2563eb',
+                                    color: '#3b82f6',
                                     '& .MuiRating-iconFilled': {
                                         color: '#fbbf24',
                                     },

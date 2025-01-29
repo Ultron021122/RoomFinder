@@ -257,6 +257,12 @@ export interface MapData {
      * typeProperty: 'Type property'
      */
     typeProperty: string;
+    /**
+     * Rating
+     * @example
+     * rating: 1.0
+     */
+    rating: number;
 }
 
 /**
@@ -956,63 +962,337 @@ export interface Message {
 }
 
 
+/**
+ * Interface representing property details.
+ */
 export interface Properties {
+    /**
+     * ID of the lessor.
+     * @example 1
+     */
     lessorid: number;
+
+    /**
+     * Title of the property.
+     * @example "Beautiful Apartment"
+     */
     vchtitle: string;
+
+    /**
+     * ID of the property.
+     * @example 101
+     */
     propertyid: number;
+
+    /**
+     * Type ID of the property.
+     * @example 3
+     */
     propertytypeid: number | string;
+
+    /**
+     * Availability status of the property.
+     * @example true
+     */
     bnavailability: boolean;
+
+    /**
+     * Number of rooms in the property.
+     * @example 3
+     */
     intnumberrooms: number;
+
+    /**
+     * Number of beds in the property.
+     * @example 2
+     */
     intnumberbeds: number;
+
+    /**
+     * Number of bathrooms in the property.
+     * @example 2
+     */
     intnumberbathrooms: number;
+
+    /**
+     * Indicates if the property is furnished.
+     * @example true
+     */
     bnfurnished: boolean;
+
+    /**
+     * Type of furniture in the property.
+     * @example "Modern"
+     */
     vchfurnituretype: string;
+
+    /**
+     * Rental cost of the property.
+     * @example "1500.00"
+     */
     decrentalcost: string;
+
+    /**
+     * Availability date of the property.
+     * @example "2025-03-01"
+     */
     dtavailabilitydate: string;
+
+    /**
+     * Minimum contract duration in months.
+     * @example 6
+     */
     intmincontractduration: number;
+
+    /**
+     * Maximum contract duration in months.
+     * @example 24
+     */
     intmaxcontractduration: number;
-    decpropertyrating: string;
+
+    /**
+     * Rating of the property.
+     * @example 4.5
+     */
+    decpropertyrating: number;
+
+    /**
+     * Maximum occupancy of the property.
+     * @example 4
+     */
     intmaxoccupancy: number;
+
+    /**
+     * Indicates if the property has a study zone.
+     * @example true
+     */
     bnstudyzone: boolean;
+
+    /**
+     * Building security details.
+     * @example "24/7 Security"
+     */
     vchbuildingsecurity: string;
+
+    /**
+     * Transportation access details.
+     * @example "Near bus stop"
+     */
     vchtransportationaccess: string;
+
+    /**
+     * Property rules.
+     * @example ["No smoking", "No pets"]
+     */
     vchpropertyrules: string[];
+
+    /**
+     * Description of the property.
+     * @example "A cozy apartment in the city center."
+     */
     vchdescription: string;
+
+    /**
+     * Indicates if water is included.
+     * @example true
+     */
     bnwaterincluded: boolean;
+
+    /**
+     * Indicates if electricity is included.
+     * @example true
+     */
     bnelectricityincluded: boolean;
+
+    /**
+     * Indicates if internet is included.
+     * @example true
+     */
     bninternetincluded: boolean;
+
+    /**
+     * Indicates if gas is included.
+     * @example true
+     */
     bngasincluded: boolean;
+
+    /**
+     * Indicates if heating is included.
+     * @example true
+     */
     bnheatingincluded: boolean;
+
+    /**
+     * Indicates if air conditioning is included.
+     * @example true
+     */
     bnairconditioningincluded: boolean;
+
+    /**
+     * Indicates if laundry is included.
+     * @example true
+     */
     bnlaundryincluded: boolean;
+
+    /**
+     * Indicates if parking is included.
+     * @example true
+     */
     bnparkingincluded: boolean;
+
+    /**
+     * Indicates if cleaning services are included.
+     * @example true
+     */
     bncleaningincluded: boolean;
+
+    /**
+     * Indicates if cable TV is included.
+     * @example true
+     */
     bncabletvincluded: boolean;
+
+    /**
+     * Indicates if a washing machine is included.
+     * @example true
+     */
     bnwashingmachineincluded: boolean;
+
+    /**
+     * Indicates if the property has a kitchen.
+     * @example true
+     */
     bnkitchen: boolean;
+
+    /**
+     * Indicates if the property has a living room.
+     * @example true
+     */
     bnlivingroom: boolean;
+
+    /**
+     * Indicates if the property has a dining room.
+     * @example true
+     */
     bndiningroom: boolean;
+
+    /**
+     * Indicates if a cooler is included.
+     * @example true
+     */
     bncoolerincluded: boolean;
+
+    /**
+     * Indicates if a garden is included.
+     * @example true
+     */
     bngardenincluded: boolean;
+
+    /**
+     * Indicates if a washing area is included.
+     * @example true
+     */
     bnwashingarea: boolean;
+
+    /**
+     * Number of parking accounts.
+     * @example 2
+     */
     intaccountparking: number;
+
+    /**
+     * Photos of the property.
+     * @example [{ photoid: 1, url: "https://example.com/photo1.jpg" }]
+     */
     objphotos: Photos[];
+
+    /**
+     * Exterior number of the property.
+     * @example "1234"
+     */
     vchexteriornumber: string;
+
+    /**
+     * Interior number of the property (if applicable).
+     * @example "Apt 4B"
+     */
     vchinteriornumber: string | null;
+
+    /**
+     * Street name of the property.
+     * @example "Main St"
+     */
     vchstreet: string;
+
+    /**
+     * Address complement.
+     * @example "Near the park"
+     */
     vchaddresscomplement: string;
+
+    /**
+     * Neighborhood of the property.
+     * @example "Downtown"
+     */
     vchneighborhood: string;
+
+    /**
+     * Municipality of the property.
+     * @example "Springfield"
+     */
     vchmunicipality: string;
+
+    /**
+     * State or province of the property.
+     * @example "Illinois"
+     */
     vchstateprovince: string;
+
+    /**
+     * ZIP code of the property.
+     * @example 62704
+     */
     intzip: number;
+
+    /**
+     * Country of the property.
+     * @example "USA"
+     */
     vchcountry: string;
+
+    /**
+     * Latitude of the property.
+     * @example 39.7817
+     */
     lat: number;
+
+    /**
+     * Longitude of the property.
+     * @example -89.6501
+     */
     lng: number;
+
+    /**
+     * Creation date of the property record.
+     * @example "2025-01-01T12:00:00Z"
+     */
     created_at: string;
 }
 
+/**
+ * Interface representing property type details.
+ */
 export interface PropertyType {
+    /**
+     * ID of the property type.
+     * @example 1
+     */
     propertytypeid: number;
+
+    /**
+     * Name of the property type.
+     * @example "Apartment"
+     */
     vchtypename: string;
 }
 

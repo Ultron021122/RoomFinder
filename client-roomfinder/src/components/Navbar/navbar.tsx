@@ -31,20 +31,22 @@ function Navbar({
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center justify-center h-auto">
                             <Image
-                                src="/utils/rf6.png" // Imagen para modo claro
+                                src="/utils/rf6.png"
                                 alt="RoomFinder"
-                                width={162}
-                                height={32}
                                 priority
-                                className="dark:hidden filter drop-shadow-2xl" // Ocultar en modo oscuro
+                                width={128}
+                                height={32}
+                                sizes="100vw"
+                                className="h-auto dark:hidden filter drop-shadow-2xl"
                             />
                             <Image
-                                src="/utils/rf3.png" // Imagen para modo oscuro
+                                src="/utils/rf3.png"
                                 alt="RoomFinder"
-                                width={162}
-                                height={32}
                                 priority
-                                className="hidden dark:block" // Ocultar en modo claro
+                                width={128}
+                                height={32}
+                                sizes="100vw"
+                                className="h-auto hidden dark:block"
                             />
                         </Link>
                         <div className="md:hidden flex gap-3">
