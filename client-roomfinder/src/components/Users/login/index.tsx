@@ -45,7 +45,7 @@ function Login() {
                 vchpassword: data.vchpassword,
                 redirect: false
             });
-            console.log(`respuesta del servidor: ${JSON.stringify(response)}`) /* ELIMINAR */
+            
             if (response?.error) setErrorSystem(response.error as string);
 
             if (response?.ok) {
