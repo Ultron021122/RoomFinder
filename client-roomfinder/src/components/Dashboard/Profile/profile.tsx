@@ -20,8 +20,12 @@ import { ARRENDADOR, ESTUDIANTE, getUserType } from '@/utils/constants'
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
+<<<<<<< HEAD
 import { universityIcon } from '@/components/Map'
 import { useForm } from 'react-hook-form'
+=======
+import { customIcon } from '@/components/Map'
+>>>>>>> 0407f4c1e8eecbed1064d9f7babc48f577e5d216
 
 interface UserProfileComponentProps {
     userData: LessorInfo | StudentInfo;
@@ -334,7 +338,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                         />
                                         <Marker
                                             position={ubicacionActual}
-                                            icon={universityIcon}
+                                            icon={customIcon}
                                         >
                                             <Popup>
                                                 Tu ubicación actual

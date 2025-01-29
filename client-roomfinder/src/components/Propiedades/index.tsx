@@ -90,6 +90,7 @@ export default function PropertyComponent({ id }: { id: string }) {
                                         height={800}
                                         src={property?.objphotos[0].url || '/images/placeholder.webp'}
                                         alt={`Imagen ${property?.objphotos[0].photoid}`}
+                                        priority
                                         className="w-full h-60 object-cover rounded-lg sm:h-52 sm:col-span-2 lg:col-span-full"
                                     />
                                     {property?.objphotos && <ImageOverlay images={property?.objphotos} />}
@@ -139,7 +140,7 @@ export default function PropertyComponent({ id }: { id: string }) {
                         </div>
                     </main>
 
-                    <div className='pb-5 max-w-4xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-x-14 lg:grid-cols-2 border-2 border-gray-200 dark:border-gray-400 rounded-lg p-2'>
+                    <div className='pb-6 md:py-5 max-w-4xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-x-14 lg:grid-cols-2'>
                         <Card className="mb-6 bg-transparent border-none">
                             <CardHeader>
                                 <CardTitle>Características y Amenidades</CardTitle>

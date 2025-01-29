@@ -851,7 +851,8 @@ export const reviews = [
     {
         id: 3,
         author: "Ana Martínez",
-        avatar: "/placeholder.svg?text=AM",
+        // avatar: "/placeholder.svg?text=AM",
+        avatar: "https://randomuser.me/api/portraits/women/2.jpg",
         date: "20 de marzo, 2023",
         rating: 5,
         comment: "¡Increíble! La vista desde el balcón es espectacular y la atención del anfitrión fue excelente. Altamente recomendado."
