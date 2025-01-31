@@ -1,0 +1,16 @@
+.container {
+    max-width: 800px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .heading {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .text {
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
