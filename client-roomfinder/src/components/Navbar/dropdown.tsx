@@ -1,5 +1,5 @@
 "use client";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, User } from "@nextui-org/react";
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, User } from "@nextui-org/react";
 import Link from 'next/link';
 import { PlusIcon } from "./icon";
 import { useSession, signOut } from "next-auth/react";
@@ -30,7 +30,7 @@ const DropdownUser = () => {
             content: "dark:bg-gray-900 border dark:border-gray-800 rounded-md"
         }}>
             <DropdownTrigger>
-                <User
+                {/* <User
                     as="button"
                     avatarProps={{
                         isBordered: true,
@@ -46,6 +46,16 @@ const DropdownUser = () => {
                     classNames={{
                         wrapper: "hidden sm:inline-flex flex-col items-start",
                         name: "dark:text-gray-200",
+                    }}
+                /> */}
+                <Avatar
+                    isBordered
+                    as="button"
+                    className="transition-transform"
+                    src={user.vchimage}
+                    color="primary"
+                    classNames={{
+                        base: "ring-offset-gray-900 mr-1"
                     }}
                 />
             </DropdownTrigger>
