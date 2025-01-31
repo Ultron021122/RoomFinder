@@ -27,6 +27,8 @@ export const createPropertiesRouter = ({ propertieModel }) => {
         propertyController.getById
     ])
 
+    propertiesRouter.get('/top/featured', propertyController.getFeaturedProperties)
+
     propertiesRouter.post('/', propertyController.create)
 
     propertiesRouter.delete('/:id', [
