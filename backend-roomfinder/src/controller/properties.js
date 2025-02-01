@@ -33,6 +33,15 @@ export class PropertyController {
         }
     }
 
+    getFeaturedProperties = async (req, res, next) => {
+        try {
+            const featuredProperties = await this.propertieModel.getFeaturedProperties();
+            return res.json(featuredProperties);
+        } catch (err) {
+            next(err);
+        }
+    }
+
     create = async (req, res, next) => {
         const result = validateProperty(req.body)
         //console.log('Input:', req.body)

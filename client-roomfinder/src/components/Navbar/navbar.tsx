@@ -37,7 +37,7 @@ function Navbar({
                                 width={128}
                                 height={32}
                                 sizes="100vw"
-                                className="h-auto dark:hidden filter drop-shadow-2xl"
+                                className=" dark:hidden filter drop-shadow-2xl"
                             />
                             <Image
                                 src="/utils/rf3.png"
@@ -46,7 +46,7 @@ function Navbar({
                                 width={128}
                                 height={32}
                                 sizes="100vw"
-                                className="h-auto hidden dark:block"
+                                className="hidden dark:block"
                             />
                         </Link>
                         <div className="md:hidden flex gap-3">
@@ -113,18 +113,18 @@ function Navbar({
                         isOpen && (
                             <div className="md:hidden text-sm mt-2 transition-opacity">
                                 <ul>
-                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800 ${pathname === '/' ? 'dark:bg-gray-800' : ''}`}>
-                                        <Link href="/" className={`block lg:inline-block dark:hover:text-white ${pathname === '/' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-100 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/' ? 'dark:bg-gray-800' : ''}`}>
+                                        <Link href="/" className={`block lg:inline-block hover:text-black dark:hover:text-white ${pathname === '/' ? 'text-blue-900 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                             Inicio
                                         </Link>
                                     </li>
-                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800 ${pathname === '/properties/map' ? 'dark:bg-gray-800' : ''}`}>
-                                        <Link href="/properties/map" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties/map' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-100 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/properties/map' ? 'dark:bg-gray-800' : ''}`}>
+                                        <Link href="/properties/map" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties/map' ? 'text-blue-900 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                             Mapa
                                         </Link>
                                     </li>
-                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded dark:hover:bg-gray-800 ${pathname === '/arrendadores' ? 'dark:bg-gray-800' : ''}`}>
-                                        <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-100 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/arrendadores' ? 'dark:bg-gray-800' : ''}`}>
+                                        <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-900 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                             Arrendadores
                                         </Link>
                                     </li>
@@ -134,13 +134,13 @@ function Navbar({
                                             onValueChange={handleThemeChange}
                                             value={theme}
                                         >
-                                            <SelectTrigger className="bg-none border-none shadow-none">
+                                            <SelectTrigger className="bg-none border-none shadow-none bg-gray-200 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-700 focus:ring-0">
                                                 <SelectValue placeholder="Theme" />
                                             </SelectTrigger>
-                                            <SelectContent className="bg-gray-400">
-                                                <SelectItem value="light">Claro</SelectItem>
-                                                <SelectItem value="dark">Oscuro</SelectItem>
-                                                <SelectItem value="system">Sistema</SelectItem>
+                                            <SelectContent className="bg-gray-300 dark:bg-gray-800">
+                                                <SelectItem value="light" className="hover:bg-gray-100 dark:hover:bg-gray-700">Claro</SelectItem>
+                                                <SelectItem value="dark" className="hover:bg-gray-100 dark:hover:bg-gray-700">Oscuro</SelectItem>
+                                                <SelectItem value="system" className="hover:bg-gray-100 dark:hover:bg-gray-700">Sistema</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </li>

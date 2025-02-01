@@ -110,6 +110,19 @@ export class PropertiesModel {
         }
     }
 
+    static async getFeaturedProperties(){
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const properties = await client.query(
+                'SELECT vp.* FROM "Usuario"."vwPropertiesGet" as vp ORDER BY vp.decpropertyrating DESC LIMIT 6;'
+            );
+            return properties.rows.map((property) => new PropertiesModel(property));
+        } finally {
+            client.release();
+        }
+    }
+
     static async create({ input }) {
         try {
             const { lessorid } = input

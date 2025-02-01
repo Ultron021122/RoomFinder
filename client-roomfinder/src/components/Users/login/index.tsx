@@ -25,9 +25,10 @@ function Login() {
     const { status } = useSession();
     const router = useRouter();
 
-    const { register, handleSubmit, formState: { errors } } = useForm<UserInfo>({ mode: "onChange" });
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm<UserInfo>({ mode: "onChange" });
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
+    const [rememberMe, setRememberMe] = useState(false);
 
     // Función para enviar los datos del formulario
     const onSubmit = async (userInfo: UserInfo) => {
@@ -60,6 +61,16 @@ function Login() {
                     theme: "colored",
                     transition: Slide,
                 });
+
+                // Guardar en localStorage si "Recuérdame" está marcado
+                if (rememberMe) {
+                    localStorage.setItem('rememberMe', 'true');
+                    localStorage.setItem('vchemail', data.vchemail);
+                } else {
+                    localStorage.removeItem('rememberMe');
+                    localStorage.removeItem('vchemail');
+                }
+
                 return router.push("/dashboard");
             }
         } catch (Error: any) {
@@ -90,7 +101,8 @@ function Login() {
             });
         }
     }, [errorSystem]);
-    // Enfocar el input email al cargar la página
+
+    // Enfocar el input email al cargar la página y cargar datos de localStorage
     useEffect(() => {
         const input = document.getElementById('vchemail') as HTMLInputElement;
         if (input) {
@@ -100,7 +112,16 @@ function Login() {
         if (status === "authenticated") {
             router.push("/dashboard");
         }
-    }, [status, router]);
+
+        const rememberMe = localStorage.getItem('rememberMe') === 'true';
+        if (rememberMe) {
+            setRememberMe(true);
+            const vchemail = localStorage.getItem('vchemail');
+            if (vchemail) {
+                setValue('vchemail', vchemail);
+            }
+        }
+    }, [status, router, setValue]);
 
     return (
         <section className="dark:bg-gray-900">
@@ -174,22 +195,22 @@ function Login() {
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-center space-x-2">
                                                 <Input
-                                                    id="bnavailability"
+                                                    id="rememberMe"
                                                     type="checkbox"
                                                     className='form-checkbox h-4 w-4 text-blue-600'
-                                                    // checked={propertyEdit.bnavailability}
-                                                    // onChange={(e) => setPropertyEdit({ ...propertyEdit, bnavailability: e.target.checked })}
+                                                    checked={rememberMe}
+                                                    onChange={(e) => setRememberMe(e.target.checked)}
                                                 />
-                                                <Label htmlFor="bnavailability">Recuerdame</Label>
+                                                <Label htmlFor="rememberMe">Recuérdame</Label>
                                             </div>
                                             <Link
                                                 href="/users/recover"
                                                 className="text-xs font-light text-sky-600 hover:underline dark:text-sky-500"
                                             >
-                                                ¿Has olvidado tú contraseña?
+                                                ¿Has olvidado tu contraseña?
                                             </Link>
                                         </div>
-                                        <Button type="submit" color="primary" variant="solid" className="font-normal w-full ">
+                                        <Button type="submit" color="primary" variant="solid" className="font-normal w-full">
                                             Ingresar
                                         </Button>
                                         <p className="text-xs text-gray-500 dark:text-gray-400">
