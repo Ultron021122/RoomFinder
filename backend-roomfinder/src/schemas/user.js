@@ -21,7 +21,8 @@ const userSchema = z.object({
     bnverified: z.boolean(),
     vchimage: z.string().url(),
     vchcoverimage: z.string().url().optional(),
-    roleid: z.number()
+    roleid: z.number(),
+    vchbiography: z.string().optional()
 })
 
 export function validateUser(input) {

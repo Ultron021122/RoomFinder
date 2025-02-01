@@ -36,7 +36,9 @@ const lessorSchema = z.object({
     intzip: z.number().positive().int().min(10000).max(99999),
     vchsuburb: z.string(),
     vchmunicipality: z.string(),
-    vchstate: z.string()
+    vchstate: z.string(),
+    vchcoverimage: z.string().optional(),
+    vchbiography: z.string().optional()
 })
 
 export function validateLessor(input) {

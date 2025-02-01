@@ -1,4 +1,6 @@
 import { Spinner } from "@nextui-org/react";
+import { ESTUDIANTE, ARRENDADOR } from "./constants";
+import { messages } from "./constants";
 
 interface fullName {
     vchname: string;
@@ -30,6 +32,17 @@ export const shortName = ({ vchname = '', vchpaternalsurname = '', vchmaternalsu
         return `${vchname} ${vchpaternalsurname.substring(0, 1)}. ${vchmaternalsurname.substring(0, 1)}.`;
     }
     return `${vchname} ${vchpaternalsurname} ${vchmaternalsurname}`;
+}
+
+export const getUserType = (id : number) : string => {
+    return id === 1 ? ESTUDIANTE : ARRENDADOR;
+}
+
+export const validateDate = (value : string) => {
+    const fechaNacimiento = new Date(value);
+    const fechaActual = new Date();
+    const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+    return edad >= 18 || messages.dtbirthdate.age;
 }
 
 export default getFullName;
