@@ -16,7 +16,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // Utilidades
-import { messages, patterns, universities, roles, getUserType, ESTUDIANTE } from "@/utils/constants";
+import { messages, patterns, universities, roles, ESTUDIANTE } from "@/utils/constants";
+import { getUserType, validateDate } from "@/utils/functions";
 import { StudentInfo, LessorInfo } from "@/utils/interfaces";
 import Footer from "@/components/Footer";
 import { Alert } from '@/utils/alert';
@@ -785,12 +786,7 @@ const Registrar = () => {
                                                             message: messages.dtbirthdate.required
                                                         },
                                                         valueAsDate: true,
-                                                        validate: (value) => {
-                                                            const fechaNacimiento = new Date(value);
-                                                            const fechaActual = new Date();
-                                                            const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
-                                                            return edad >= 18 || messages.dtbirthdate.age;
-                                                        },
+                                                        validate: (value) => validateDate(value),
                                                     })}
                                                     type="date"
                                                     name="dtbirthdate"

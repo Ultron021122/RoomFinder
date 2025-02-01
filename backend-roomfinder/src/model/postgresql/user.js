@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt'
 
 export class UsersModel {
 
-    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, created_at }) {
+    constructor({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, created_at, vchbiography }) {
         this.usuarioid = usuarioid;
         this.vchname = vchname;
         this.vchpaternalsurname = vchpaternalsurname;
@@ -19,6 +19,7 @@ export class UsersModel {
         this.vchcoverimage = vchcoverimage;
         this.roleid = roleid;
         this.created_at = created_at;
+        this.vchbiography = vchbiography;
     }
 
     static async getAll() {
@@ -95,7 +96,7 @@ export class UsersModel {
             const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, vchimage, roleid } = input
             const validate = await this.getByEmail({ email: vchemail });
             if (validate) return false;
-
+            
             const db = new Database();
             const client = await db.pool.connect();
             try {
@@ -134,46 +135,21 @@ export class UsersModel {
         }
     }
 
-    static async update({ id, input }) {
+    static async update({ id, userData }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid } = input
-            const validate = vchemail ? await this.getByEmail({ email: vchemail }) : null;
-            if (validate) return false;
+            const { dtbirthdate } = userData
             const user = await this.getById({ id })
             if (!user) return null;
 
-            const updateColumns = Object.entries({
-                vchname,
-                vchpaternalsurname,
-                vchmaternalsurname,
-                vchemail,
-                vchpassword,
-                dtbirthdate,
-                bnstatus,
-                bnverified,
-                vchimage,
-                vchcoverimage,
-                roleid
-            })
+            const birthdate = new Date(dtbirthdate);
+            const updateColumns = Object.entries({...userData, ['dtbirthdate'] : birthdate})
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
-                    return `${key} = $${Object.keys(input).indexOf(key) + 1}`; // Increment position by 1
+                    return `${key} = $${Object.keys(userData).indexOf(key) + 1}`; // Increment position by 1
                 })
                 .join(', ');
 
-            const updateValues = Object.values({
-                vchname,
-                vchpaternalsurname,
-                vchmaternalsurname,
-                vchemail,
-                vchpassword,
-                dtbirthdate,
-                bnstatus,
-                bnverified,
-                vchimage,
-                vchcoverimage,
-                roleid
-            })
+            const updateValues = Object.values({...userData, ['dtbirthdate'] : birthdate})
                 .filter(value => value !== undefined);
 
             if (updateValues.length !== 0) {

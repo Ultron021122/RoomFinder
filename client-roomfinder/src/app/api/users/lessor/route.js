@@ -2,27 +2,9 @@ import { NextResponse } from 'next/server';
 import { deleteImage, uploadImage } from '../../cloudinary';
 import axios from 'axios';
 
-export async function GET() {
-    try {
-        const response = await axios.get(`${process.env.REST_URL}/lessors/`, {
-            headers: {
-                Authorization: `Bearer ${process.env.REST_SECRET}`
-            }
-        });
-        return NextResponse.json(
-            { data: response.data },
-            { status: 200 }
-        );
-    } catch (error) {
-        return NextResponse.json(
-            { message: error.message },
-            { status: 503 }
-        );
-    }
-}
-
 export async function POST(req, res) {
-    const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, confirm_password, bnstatus, dtbirthdate, vchimage, roleid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = await req.json();
+
+    const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, confirm_password, bnstatus, dtbirthdate, vchimage, roleid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate, vchbiography } = await req.json();
     let imageUrl;
     try {
         imageUrl = await uploadImage(
@@ -60,7 +42,8 @@ export async function POST(req, res) {
             intzip,
             vchsuburb,
             vchmunicipality,
-            vchstate
+            vchstate,
+            vchbiography
         }, {
             headers: {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
@@ -84,6 +67,71 @@ export async function POST(req, res) {
         if (imageUrl && imageUrl.public_id) {
             await deleteImage(imageUrl.public_id);
         }
+        return NextResponse.json(
+            { message: error.message },
+            { status: 503 }
+        );
+    }
+}
+
+export async function PATCH(req) {
+
+    const {
+        vchname,
+        vchpaternalsurname,
+        vchmaternalsurname,
+        vchemail,
+        vchpassword,
+        dtbirthdate,
+        bnstatus,
+        bnverified,
+        vchimage,
+        vchcoverimage,
+        roleid,
+        vchbiography,
+        vchphone,
+        vchstreet,
+        intzip,
+        vchsuburb,
+        vchmunicipality,
+        vchstate,
+        usuarioid
+    } = await req.json();
+
+    try{
+        const response = await axios.patch(`${process.env.REST_URL}/lessors/${usuarioid}`, {
+            vchname,
+            vchpaternalsurname,
+            vchmaternalsurname,
+            vchemail,
+            vchpassword,
+            dtbirthdate,
+            bnstatus,
+            bnverified,
+            vchimage,
+            vchcoverimage,
+            roleid,
+            vchbiography,
+            vchphone,
+            vchstreet,
+            intzip,
+            vchsuburb,
+            vchmunicipality,
+            vchstate
+        }, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        })
+        
+        const message = "Usuario actualizado correctamente";
+
+        return NextResponse.json(
+            { message },
+            { status: response.status }
+        );
+
+    }catch(error){
         return NextResponse.json(
             { message: error.message },
             { status: 503 }

@@ -57,8 +57,13 @@ export const messages = {
     vchuniversity: {
         required: "Universad es requerida"
     },
+    vchmajor: {
+        required: "La carrera es obligatoria",
+        min: "Número de caracteres mínimo no alcanzado"
+    },
     vchphone: {
         required: "Teléfono es requerido",
+        length: "Este campo debe contener 10 dígitos"
     },
     intzip: {
         required: "Código postal es requerido",
@@ -77,6 +82,11 @@ export const messages = {
     vchstate: {
         required: "El campo Estado es requerido",
     },
+    vchbiography: {
+        min: "La biografía debe contener mínimo 50 caracteres",
+        max: "Número de caracteres excedido. Máximo 255"
+    }
+    ,
     folder: {
         required: "El campo Carpeta es requerido",
     },
@@ -861,6 +871,3 @@ export const reviews = [
 
 export const ARRENDADOR = 'Arrendador';
 export const ESTUDIANTE = 'Estudiante';
-export const getUserType = (id : number) : string => {
-    return id === 1 ? ESTUDIANTE : ARRENDADOR;
-}
