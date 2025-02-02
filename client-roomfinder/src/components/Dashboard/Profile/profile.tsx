@@ -409,9 +409,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                     disabled={!editando}
                                     autoComplete='off'
                                 />
-                                {errors.vchmajor && (
-                                    <Alert message={errors.vchmajor.message}/>
-                                )}
+                               
                             </div></>)
                             }
                         </div>
