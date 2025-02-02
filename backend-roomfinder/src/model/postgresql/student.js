@@ -5,13 +5,14 @@ export class StudentsModel extends UsersModel {
 
     constructor({
         usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus,
-        bnverified, vchimage, vchcoverimage, roleid, created_at, intcodestudent, vchuniversity, usuario2id = null, messageid = null, chatid = null, vchcontenido = null, dtmessage = null,
+        bnverified, vchimage, vchcoverimage, roleid, created_at, intcodestudent, vchuniversity, vchmajor, usuario2id = null, messageid = null, chatid = null, vchcontenido = null, dtmessage = null,
         usuarioid2 = null, vchname2 = null, vchpaternalsurname2 = null, vchmaternalsurname2 = null, vchemail2 = null, vchpassword2 = null, dtbirthdate2 = null,
         bnstatus2 = null, bnverified2 = null, vchimage2 = null, vchcoverimage2 = null, roleid2 = null, created_at2 = null, vchphone2 = null, vchstreet2 = null, intzip2 = null, vchsuburb2 = null, vchmunicipality2 = null, vchstate2 = null
     }) {
         super({ usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, created_at });
         this.intcodestudent = intcodestudent;
         this.vchuniversity = vchuniversity;
+        this.vchmajor = vchmajor;
         this.usuario2id = usuario2id;
         this.messageid = messageid;
         this.chatid = chatid;

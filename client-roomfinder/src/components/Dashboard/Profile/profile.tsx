@@ -8,42 +8,40 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Camera, Pencil, MapPin, Book, Briefcase, Calendar } from 'lucide-react'
+import { Camera, Pencil, MapPin, BookMarkedIcon, Briefcase, MapPinned } from 'lucide-react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { UserProfile } from '@/utils/interfaces'
+import { LessorInfo, StudentInfo, UserProfile } from '@/utils/interfaces'
 import axios from 'axios'
 import { Spinner, useDisclosure } from '@nextui-org/react'
 import ImageModal from './ImageModal'
+import { messages, universities } from '@/utils/constants'
+import { Alert } from "@/utils/alert";
 
 // Estilos de leaflet
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
 import { customIcon } from '@/components/Map'
+import { ARRENDADOR, ESTUDIANTE } from '@/utils/constants'
+import { getUserType } from '@/utils/functions'
+import { IdCardIcon } from '@radix-ui/react-icons'
+import { useForm } from 'react-hook-form'
+import { validateDate } from '@/utils/functions'
 
 interface UserProfileComponentProps {
     userData: UserProfile;
 }
 
-
 const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData }) => {
-    const [coverImage, setCoverImage] = useState<string>("");
-    const [profileImage, setProfileImage] = useState<string>("");
 
-    const [usuario, setUsuario] = useState({
-        nombre: 'Ana García',
-        email: 'ana.garcia@universidad.es',
-        telefono: '+34 612 345 678',
-        universidad: 'Universidad Autónoma de Madrid',
-        carrera: 'Ingeniería Informática',
-        bio: 'Estudiante de tercer año buscando un apartamento tranquilo cerca del campus.',
-        fotoPerfil: '/perfiles/astronauta.jpg',
-        imagenFondo: '/background/fondo-1.jpg',
-        fechaNacimiento: '1999-05-15',
-        intereses: ['Tecnología', 'Viajes', 'Fotografía'],
-        experienciaLaboral: 'Prácticas en Desarrollo Web - Verano 2023',
-        ubicacion: [40.4165, -3.7026], // Coordenadas de Madrid
-    })
+    const [coverImage, setCoverImage] = useState("");
+    const [profileImage, setProfileImage] = useState("");
+
+    const [usuario, setUsuario] = useState<StudentInfo | LessorInfo>()
+
+    const {register, handleSubmit, reset, formState : {errors}} = useForm<LessorInfo | StudentInfo>({
+        mode: "onChange"
+    });
 
     const [editando, setEditando] = useState(false)
     type Ubicacion = [number, number] | null;
@@ -64,9 +62,62 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
             }
         };
 
-        fetchImageUrls();
-    }, [userData]);
+        const getUserData = async () => {
+            if(userData){
+                try{
+                    const {roleid, usuarioid} = userData;
+                    let path = "";
+                    if(getUserType(roleid) === ARRENDADOR){
+                        path = `/api/users/lessor/${usuarioid}`;
+                    }else{// estudiante
+                        path = `/api/users/student/${usuarioid}`;
+                    }
 
+                    const response = await axios.get(path);
+                    const {data} = response.data;
+
+                    // asignar los datos al objeto local
+                    let obj : LessorInfo | StudentInfo;
+                    if(getUserType(roleid) === ARRENDADOR){
+                        const {vchpassword, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate} = data[0];
+                        obj = {
+                            ...userData,
+                            vchphone: vchphone,
+                            vchstreet: vchstreet,
+                            intzip: intzip,
+                            vchsuburb: vchsuburb,
+                            vchmunicipality: vchmunicipality,
+                            vchstate: vchstate,
+                            vchpassword: vchpassword,
+                            confirm_password: ""
+                        }
+                    }else{
+                        const {vchpassword,intcodestudent, vchuniversity, vchmajor} = data[0];
+                        obj = {
+                            ...userData,
+                            intcodestudent: intcodestudent,
+                            vchuniversity: vchuniversity,
+                            vchpassword: vchpassword,
+                            confirm_password: "",
+                            vchmajor: vchmajor
+                        }
+                    }
+
+                    setUsuario(() => {
+                        const newObject = {...obj, ['dtbirthdate'] : userData.dtbirthdate.substring(0, 10),};
+                        reset(newObject);
+                        return newObject
+                    });
+
+                }catch(error){
+                    console.log(`error al cargar la info del usuario ${error}`);
+                }
+            }
+        }
+
+        fetchImageUrls();
+        getUserData();
+    }, [userData]);
 
     useEffect(() => {
         if ("geolocation" in navigator) {
@@ -76,39 +127,51 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
         }
     }, [])
 
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setUsuario(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
-
-
-
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, tipo: string) => {
         const file = e.target.files?.[0]
         if (file) {
             const imageUrl = URL.createObjectURL(file)
-            setUsuario(prevState => ({
+            /*setUsuario(prevState => ({
                 ...prevState,
                 [tipo]: imageUrl
-            }))
+            }))*/
         }
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        console.log('Datos actualizados:', usuario)
-        setEditando(false)
-        toast.success('Perfil actualizado con éxito!', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        })
+    const handleSave = async (data: LessorInfo | StudentInfo) => {
+        setEditando(false);
+
+        try{
+            let path = getUserType(data.roleid) === ARRENDADOR ? "/api/users/lessor" : "/api/users/student";
+            console.log("datos a actualizar: ");
+            console.log(data);
+            const response = await axios.patch(path, data);
+            // actualizar la información localmente
+            setUsuario(() => {
+                reset(data);
+                return data;
+            });
+            toast.success('Perfil actualizado con éxito!', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            })
+        }catch(error){
+            console.log(error);
+            toast.error('El perfil no se pudo actualizar!', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            })
+        }
     }
 
     return (
@@ -139,10 +202,10 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                         <Avatar className="h-32 w-32 border-4 border-gray-300">
                             <AvatarImage
                                 src={profileImage}
-                                alt={usuario.nombre}
+                                alt={userData.vchname}
                                 className="object-cover w-full h-full rounded-full"
                             />
-                            <AvatarFallback>{usuario.nombre.charAt(0)}</AvatarFallback>
+                            <AvatarFallback>{userData.vchname.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <label htmlFor="perfil" className="absolute bottom-0 right-0 bg-primary text-primary-foreground p-2 rounded-full cursor-pointer">
                             <Camera className="h-4 w-4" />
@@ -155,7 +218,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                             />
                         </label>
                     </div>
-                    <CardTitle className="text-2xl font-bold pt-12">{userData.vchname + ' ' + userData.vchmaternalsurname + ' ' + userData.vchpaternalsurname}</CardTitle>
+                    <CardTitle className="text-2xl font-bold pt-12">{`${usuario?.vchname ?? " "} ${usuario?.vchpaternalsurname ?? " "} ${usuario?.vchmaternalsurname ?? " "}`}</CardTitle>
                     <Button variant="outline" size="sm" className="absolute top-4 border-gray-400 dark:border-gray-900 right-4 bg-gray-300 hover:bg-gray-400 text-black dark:bg-gray-900 dark:hover:bg-gray-800 dark:text-white" onClick={() => setEditando(!editando)}>
                         <Pencil className="h-4 w-4 mr-2" />
                         {editando ? 'Cancelar' : 'Editar Perfil'}
@@ -163,18 +226,80 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                 </CardHeader>
                 <CardContent>
                     {/* <Image src='/utils/logoW.png' alt="Fondo de perfil" width={1000} height={1000} /> */}
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit(handleSave)} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <Label htmlFor="nombre">Nombre completo</Label>
+                                <Label htmlFor="vchname">Nombre</Label>
                                 <Input
-                                    id="nombre"
-                                    name="nombre"
+                                    {...register('vchname', {
+                                        required: {
+                                            value: true,
+                                            message: messages.vchname.required
+                                        },
+                                        minLength:{
+                                            value: 4,
+                                            message: messages.vchname.min
+                                        }
+                                    }
+                                    )}
+                                    type='text'
+                                    id="vchname"
+                                    name="vchname"
                                     className='border-gray-400 dark:border-gray-800'
-                                    value={userData.vchname + ' ' + userData.vchmaternalsurname + ' ' + userData.vchpaternalsurname}
-                                    onChange={handleChange}
                                     disabled={!editando}
+                                    autoComplete='off'
                                 />
+                                {errors?.vchname && (
+                                    <Alert message={errors?.vchname.message} />
+                                )}
+                            </div>
+                            <div>
+                                <Label htmlFor="vchpaternalsurname">Apellido paterno</Label>
+                                <Input
+                                    {...register('vchpaternalsurname', {
+                                        required:{
+                                            value: true,
+                                            message: messages.vchpaternalsurname.required
+                                        },
+                                        minLength:{
+                                            value: 4,
+                                            message: messages.vchpaternalsurname.min
+                                        }
+                                    })}
+                                    type='text'
+                                    id="vchpaternalsurname"
+                                    name="vchpaternalsurname"
+                                    className='border-gray-400 dark:border-gray-800'
+                                    disabled={!editando}
+                                    autoComplete='off'
+                                />
+                                {errors.vchpaternalsurname && (
+                                    <Alert message={errors.vchpaternalsurname.message}/>
+                                )}
+                            </div>
+                            <div>
+                                <Label htmlFor="vchmaternalsurname">Apellido materno</Label>
+                                <Input
+                                    {...register('vchmaternalsurname', {
+                                        required:{
+                                            value: true,
+                                            message: messages.vchmaternalsurname.required
+                                        },
+                                        minLength:{
+                                            value: 4,
+                                            message: messages.vchmaternalsurname.min
+                                        }
+                                    })}
+                                    type='text'
+                                    id="vchmaternalsurname"
+                                    name="vchmaternalsurname"
+                                    className='border-gray-400 dark:border-gray-800'
+                                    disabled={!editando}
+                                    autoComplete='off'
+                                />
+                                {errors.vchmaternalsurname && (
+                                    <Alert message={errors.vchmaternalsurname.message}/>
+                                )}
                             </div>
                             <div>
                                 <Label htmlFor="email">Correo electronico</Label>
@@ -184,89 +309,119 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                     type="email"
                                     className='border-gray-400 dark:border-gray-800'
                                     value={userData.vchemail}
-                                    onChange={handleChange}
-                                    disabled={!editando}
+                                    disabled
                                 />
                             </div>
-                            <div>
-                                <Label htmlFor="telefono">Teléfono</Label>
+                            { getUserType(userData.roleid) === ARRENDADOR && <div>
+                                <Label htmlFor="vchphone">Teléfono</Label>
                                 <Input
-                                    id="telefono"
-                                    name="telefono"
+                                    {...register('vchphone', {
+                                        required:{
+                                            value:true,
+                                            message: messages.vchphone.required
+                                        },
+                                        minLength:{
+                                            value:10,
+                                            message:messages.vchphone.length
+                                        },
+                                        maxLength:{
+                                            value: 10,
+                                            message:messages.vchphone.length
+                                        }
+                                    })}
+                                    type='tel'
+                                    id="vchphone"
+                                    name="vchphone"
                                     className='border-gray-400 dark:border-gray-800'
-                                    value={usuario.telefono}
-                                    onChange={handleChange}
                                     disabled={!editando}
+                                    autoComplete='off'
                                 />
+                                {errors.vchphone && (
+                                    <Alert message={errors.vchphone.message}/>
+                                )}
                             </div>
+                            }
                             <div>
-                                <Label htmlFor="fechaNacimiento">Fecha de Nacimiento</Label>
+                                <Label htmlFor="dtbirthdate">Fecha de Nacimiento</Label>
                                 <Input
-                                    id="fechaNacimiento"
-                                    name="fechaNacimiento"
+                                    {...register('dtbirthdate', {
+                                        required:{
+                                            value: true,
+                                            message: messages.dtbirthdate.required
+                                        },
+                                        valueAsDate: true,
+                                        validate: (value) => validateDate(value)
+                                    })}
+                                    id="dtbirthdate"
+                                    name="dtbirthdate"
                                     type="date"
                                     className='border-gray-400 dark:border-gray-800'
-                                    value={userData.dtbirthdate.substring(0, 10)}
-                                    onChange={handleChange}
                                     disabled={!editando}
                                 />
+                                {errors.dtbirthdate && (
+                                    <Alert message={errors.dtbirthdate.message}/>
+                                )}
                             </div>
-                            <div>
-                                <Label htmlFor="universidad">Universidad</Label>
-                                <Input
-                                    id="universidad"
+                            {getUserType(userData.roleid) === ESTUDIANTE && (<><div>
+                                <Label>Universidad</Label>
+                                <select
+                                    className='flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-gray-400 dark:border-gray-800'
                                     name="universidad"
-                                    className='border-gray-400 dark:border-gray-800'
-                                    value={usuario.universidad}
-                                    onChange={handleChange}
+                                    id="universidad"
                                     disabled={!editando}
-                                />
+                                >
+                                    {universities.map((university, index) => <option key={index} className='text-sm'>{university.name}</option>)}
+                                </select>
                             </div>
                             <div>
-                                <Label htmlFor="carrera">Carrera</Label>
+                                <Label htmlFor="vchmajor">Carrera</Label>
                                 <Input
-                                    id="carrera"
-                                    name="carrera"
+                                    {...register('vchmajor', {
+                                        required:{
+                                            value:true,
+                                            message: messages.vchmajor.required
+                                        },
+                                        minLength:{
+                                            value: 10,
+                                            message: messages.vchmajor.min
+                                        }
+                                    })}
+                                    type='text'
+                                    id="vchmajor"
+                                    name="vchmajor"
                                     className='border-gray-400 dark:border-gray-800'
-                                    value={usuario.carrera}
-                                    onChange={handleChange}
                                     disabled={!editando}
+                                    autoComplete='off'
                                 />
-                            </div>
+                                {/*errors.vchmajor && (
+                                    <Alert message={errors.vchmajor.message}/>
+                                )*/}
+                            </div></>)
+                            }
                         </div>
                         <div>
-                            <Label htmlFor="bio">Biografía</Label>
+                            <Label htmlFor="vchbiography">Biografía</Label>
                             <Textarea
-                                id="bio"
-                                name="bio"
+                                {...register('vchbiography', {
+                                    minLength:{
+                                        value:50,
+                                        message: messages.vchbiography.min
+                                    },
+                                    maxLength:{
+                                        value:255,
+                                        message: messages.vchbiography.max
+                                    }
+                                })}
+                                id="vchbiography"
+                                name="vchbiography"
                                 className='border-gray-400 dark:border-gray-800'
-                                value={usuario.bio}
-                                onChange={handleChange}
                                 disabled={!editando}
                                 rows={4}
+                                placeholder='Escribe una breve descripción sobre tí...'
                             />
-                        </div>
-                        {/* <div>
-                            <Label htmlFor="experienciaLaboral">Experiencia Laboral</Label>
-                            <Textarea
-                                id="experienciaLaboral"
-                                name="experienciaLaboral"
-                                className='border-gray-400 dark:border-gray-800'
-                                value={usuario.experienciaLaboral}
-                                onChange={handleChange}
-                                disabled={!editando}
-                                rows={3}
-                            />
-                        </div> */}
-                        <div>
-                            <Label>Intereses</Label>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                                {usuario.intereses.map((interes, index) => (
-                                    <span key={index} className="bg-primary-400 text-primary-foreground px-3 py-1 rounded-full text-xs">
-                                        {interes}
-                                    </span>
-                                ))}
-                            </div>
+                            {errors.vchbiography && (
+                                <Alert message={errors.vchbiography.message}/>
+                            )}
                         </div>
                         {editando && (
                             <Button type="submit" className="w-full">
@@ -279,21 +434,28 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                         <div className="mt-6">
                             <h3 className="text-lg font-semibold mb-2">Información Adicional</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {getUserType(userData.roleid) === ARRENDADOR ? (<>
+                                <div className="flex items-center">
+                                    <MapPinned className="h-5 w-5 mr-2 text-primary-300" />
+                                    <span className='text-sm dark:text-primary-foreground'>{`${usuario?.vchmunicipality ?? " "}, ${usuario?.vchstate ?? " "}`}</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <BookMarkedIcon className="h-5 w-5 mr-2 text-primary-300" />
+                                    <span className='text-sm dark:text-primary-foreground'>{usuario?.intzip ?? " "}</span>
+                                </div>
                                 <div className="flex items-center">
                                     <MapPin className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm dark:text-primary-foreground'>Madrid, España</span>
+                                    <span className='text-sm dark:text-primary-foreground'>{`${usuario?.vchstreet ?? " "}, ${usuario?.vchsuburb ?? " "}`}</span>
                                 </div>
-                                <div className="flex items-center">
-                                    <Book className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm dark:text-primary-foreground'>{usuario.carrera}</span>
+                                </>): (<>
+                                    <div className="flex items-center">
+                                    <IdCardIcon className="h-5 w-5 mr-2 text-primary-300" />
+                                    <span className='text-sm dark:text-primary-foreground'>{usuario?.intcodestudent ?? " "}</span>
                                 </div>
+                                </>)}
                                 <div className="flex items-center">
                                     <Briefcase className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm dark:text-primary-foreground'>{userData.roleid === 1 ? 'Estudiante' : 'Arrendador'}</span>
-                                </div>
-                                <div className="flex items-center">
-                                    <Calendar className="h-5 w-5 mr-2 text-primary-300" />
-                                    <span className='text-sm dark:text-primary-foreground'>{new Date(usuario.fechaNacimiento).toLocaleDateString()}</span>
+                                    <span className='text-sm dark:text-primary-foreground'>{getUserType(userData.roleid)}</span>
                                 </div>
                             </div>
                         </div>
