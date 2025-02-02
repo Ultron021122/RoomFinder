@@ -70,3 +70,59 @@ export async function POST(req, res) {
         );
     }
 }
+
+export async function PATCH(req, res) {
+    const {
+        vchname,
+        vchpaternalsurname,
+        vchmaternalsurname,
+        vchemail,
+        vchpassword,
+        dtbirthdate,
+        bnstatus,
+        bnverified,
+        vchimage,
+        roleid,
+        vchbiography,
+        intcodestudent,
+        vchuniversity,
+        vchmajor,
+        usuarioid
+    } = await req.json();
+
+    try{
+        const response = await axios.patch(`${process.env.REST_URL}/students/${usuarioid}`,{
+            vchname,
+            vchpaternalsurname,
+            vchmaternalsurname,
+            vchemail,
+            vchpassword,
+            dtbirthdate,
+            bnstatus,
+            bnverified,
+            vchimage,
+            roleid,
+            vchbiography,
+            intcodestudent,
+            vchuniversity,
+            vchmajor
+        }, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
+        
+        const message = "Usuario actualizado correctamente";
+
+        return NextResponse.json(
+            { message },
+            { status: response.status }
+        );
+
+    }catch(error){
+        return NextResponse.json(
+            { message: 'Server error'},
+            { status: 503 }
+        );
+    }
+}
