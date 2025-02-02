@@ -5,13 +5,13 @@ export class LessorsModel extends UsersModel {
 
     constructor({
         usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate,
-        bnstatus, bnverified, vchimage, vchcoverimage, roleid, created_at, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate,
+        bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchbiography, created_at, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate,
         usuario2id = null, messageid = null, chatid = null, vchcontenido = null, dtmessage = null,
         usuarioid2 = null, vchname2 = null, vchpaternalsurname2 = null, vchmaternalsurname2 = null, vchemail2 = null, vchpassword2 = null, dtbirthdate2 = null,
         bnstatus2 = null, bnverified2 = null, vchimage2 = null, vchcoverimage2 = null, roleid2 = null, created_at2 = null, intcodestudent2 = null, vchuniversity2 = null
     }) {
         super({ 
-            usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, created_at 
+            usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchbiography, created_at
         });
         this.vchphone = vchphone;
         this.vchstreet = vchstreet;
@@ -177,36 +177,57 @@ export class LessorsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const {vchname, vchpaternalsurname, vchmaternalsurname, dtbirthdate, vchbiography, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
-            const userData = { // datos actualizables de la tabla usuario
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchbiography, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
+            const userData = {
                 vchname,
                 vchpaternalsurname,
                 vchmaternalsurname,
+                vchemail,
+                vchpassword,
                 dtbirthdate,
+                bnstatus,
+                bnverified,
+                vchimage,
+                vchcoverimage,
+                roleid,
                 vchbiography
             }
 
-            const lessorData = { // datos actualizables de la tabla arrendadores
-                vchphone,
-                vchstreet,
-                intzip,
-                vchsuburb,
-                vchmunicipality,
+            const studentData = {
+                vchphone, 
+                vchstreet, 
+                intzip, 
+                vchsuburb, 
+                vchmunicipality, 
                 vchstate
             }
             
-            const user = await UsersModel.update({ id, userData })
+            const user = await UsersModel.update({ id, input: userData })
             if (user === false) return false;
             if (!user) return null;
 
-            const updateColumns = Object.entries(lessorData) // revisar si funciona
+            const updateColumns = Object.entries({
+                vchphone, 
+                vchstreet, 
+                intzip, 
+                vchsuburb, 
+                vchmunicipality, 
+                vchstate
+            })
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
-                    return `${key} = $${Object.keys(lessorData).indexOf(key) + 1}`;
+                    return `${key} = $${Object.keys(studentData).indexOf(key) + 1}`;
                 })
                 .join(', ');
 
-            const updateValues = Object.values(lessorData)
+            const updateValues = Object.values({
+                vchphone, 
+                vchstreet, 
+                intzip, 
+                vchsuburb, 
+                vchmunicipality, 
+                vchstate
+            })
                 .filter(value => value != undefined);
 
             if (updateValues.length !== 0) {
@@ -227,4 +248,5 @@ export class LessorsModel extends UsersModel {
             throw new Error(`Error updating lessor: ${error.message}`);
         }
     }
+
 }

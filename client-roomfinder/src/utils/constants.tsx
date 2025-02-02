@@ -869,5 +869,20 @@ export const reviews = [
     }
 ];
 
-export const ARRENDADOR = 'Arrendador';
-export const ESTUDIANTE = 'Estudiante';
+export const ARRENDADOR = 2;
+export const ESTUDIANTE = 1;
+
+export const AboutUs = [
+    {
+        "url": "/images/carrousel-about-us.jpg",
+        "photoid": 325
+    },
+    {
+        "url": "/images/carrousel-about-us-2.jpg",
+        "photoid": 326
+    },
+    {
+        "url": "/images/carrousel-about-us-3.jpg",
+        "photoid": 326
+    },
+]

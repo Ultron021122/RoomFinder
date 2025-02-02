@@ -1,13 +1,13 @@
 import { Metadata } from "next";
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Instrument_Sans, Inter } from "next/font/google";
 import Providers from "./providers";
 import { ToastContainer } from "react-toastify";
 import Navigate from "@/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 // import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Instrument_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
