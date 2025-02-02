@@ -121,6 +121,12 @@ export interface StudentInfo extends User {
      */
     vchuniversity: string;
     /**
+     * Student state
+     * @example
+     * state: 'Jalisco'
+     */
+    vchmajor: string;
+    /**
      * Student phone
      * @example
      * vchphone: '1234567890'
@@ -156,12 +162,6 @@ export interface StudentInfo extends User {
      * state: 'Jalisco'
      */
     vchstate?: string;
-    /**
-     * Student state
-     * @example
-     * state: 'Jalisco'
-     */
-    vchmajor?: string;
 }
 
 /**
@@ -178,6 +178,10 @@ export interface LessorInfo extends User {
      * University - Not required
      */
     vchuniversity?: string;
+    /**
+     * Student state
+     */
+    vchmajor?: string;
     /**
      * Phone
      * @example
