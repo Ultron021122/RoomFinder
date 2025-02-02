@@ -39,7 +39,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
 
     const [usuario, setUsuario] = useState<StudentInfo | LessorInfo>()
 
-    const {register, handleSubmit, reset, formState : {errors}} = useForm<LessorInfo | StudentInfo>({
+    const {register, handleSubmit, reset, formState : {errors}} = useForm<StudentInfo | LessorInfo>({
         mode: "onChange"
     });
 
@@ -95,7 +95,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                         const {vchpassword,intcodestudent, vchuniversity, vchmajor} = data[0];
                         obj = {
                             ...userData,
-                            intcodestudent: intcodestudent,
+                            intcodestudent: parseInt(intcodestudent),
                             vchuniversity: vchuniversity,
                             vchpassword: vchpassword,
                             confirm_password: "",
@@ -143,23 +143,39 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
 
         try{
             let path = getUserType(data.roleid) === ARRENDADOR ? "/api/users/lessor" : "/api/users/student";
-            console.log("datos a actualizar: ");
-            console.log(data);
+            
             const response = await axios.patch(path, data);
-            // actualizar la información localmente
-            setUsuario(() => {
-                reset(data);
-                return data;
-            });
-            toast.success('Perfil actualizado con éxito!', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            })
+            if(response.status == 200){
+                setUsuario(() => {
+                    const {dtbirthdate} = data;
+                    const fecha = new Date(dtbirthdate);
+                    const newObject = {
+                        ...data,
+                        ['dtbirthdate'] : fecha.toISOString().substring(0, 10)
+                    }
+                    reset(newObject);
+                    return newObject;
+                });
+                toast.success('Perfil actualizado con éxito!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                })
+            }else{
+                toast.error('A ocurrido un error inesperado!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                })
+            }
         }catch(error){
             console.log(error);
             toast.error('El perfil no se pudo actualizar!', {
@@ -393,9 +409,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                     disabled={!editando}
                                     autoComplete='off'
                                 />
-                                {/*errors.vchmajor && (
-                                    <Alert message={errors.vchmajor.message}/>
-                                )*/}
+                               
                             </div></>)
                             }
                         </div>

@@ -174,25 +174,31 @@ export class StudentsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, intcodestudent, vchuniversity } = input
-            const user = await UsersModel.update({ id, input })
+            const { vchname, vchpaternalsurname, vchmaternalsurname, dtbirthdate, vchbiography, vchuniversity, vchmajor } = input
+            const userData = { // información actualizable de tabla usuario
+                vchname,
+                vchpaternalsurname,
+                vchmaternalsurname,
+                dtbirthdate,
+                vchbiography
+            }
+
+            const studentData = { // información actualizable de tabla estudiantes
+                vchuniversity,
+                vchmajor
+            }
+            const user = await UsersModel.update({ id, userData })
             if (user === false) return false;
             if (!user) return null;
 
-            const updateColumns = Object.entries({
-                intcodestudent,
-                vchuniversity
-            })
+            const updateColumns = Object.entries(studentData)
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
-                    return `${key} = $${Object.keys(input).indexOf(key) + 1}`; // Increment position by 1
+                    return `${key} = $${Object.keys(studentData).indexOf(key) + 1}`; // Increment position by 1
                 })
                 .join(', ');
 
-            const updateValues = Object.values({
-                intcodestudent,
-                vchuniversity
-            })
+            const updateValues = Object.values(studentData)
                 .filter(value => value != undefined);
 
             if (updateValues.length !== 0) {

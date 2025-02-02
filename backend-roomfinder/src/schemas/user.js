@@ -22,7 +22,7 @@ const userSchema = z.object({
     vchimage: z.string().url(),
     vchcoverimage: z.string().url().optional(),
     roleid: z.number(),
-    vchbiography: z.string().optional()
+    vchbiography: z.string().nullable().optional(),
 })
 
 export function validateUser(input) {

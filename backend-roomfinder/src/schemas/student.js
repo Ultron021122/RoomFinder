@@ -22,7 +22,9 @@ const studentSchema = z.object({
     vchimage: z.string().url(),
     roleid: z.number(),
     intcodestudent: z.number().positive(),
-    vchuniversity: z.string()
+    vchuniversity: z.string(),
+    vchbiography: z.string().nullable().optional(),
+    vchmajor: z.string().optional()
 })
 
 export function validateStudent(input) {
@@ -30,5 +32,6 @@ export function validateStudent(input) {
 }
 
 export function validatePartialStudent(input) {
+    console.log(input);
     return studentSchema.partial().safeParse(input)
 } 
