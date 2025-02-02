@@ -31,7 +31,7 @@ function Navbar({
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center justify-center h-auto">
                             <Image
-                                src="/utils/rf6.png"
+                                src="/utils/rf8.png"
                                 alt="RoomFinder"
                                 priority
                                 width={128}
