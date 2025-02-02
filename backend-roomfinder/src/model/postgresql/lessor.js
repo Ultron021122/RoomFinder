@@ -177,33 +177,36 @@ export class LessorsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
-            const user = await UsersModel.update({ id, input })
+            const {vchname, vchpaternalsurname, vchmaternalsurname, dtbirthdate, vchbiography, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
+            const userData = { // datos actualizables de la tabla usuario
+                vchname,
+                vchpaternalsurname,
+                vchmaternalsurname,
+                dtbirthdate,
+                vchbiography
+            }
+
+            const lessorData = { // datos actualizables de la tabla arrendadores
+                vchphone,
+                vchstreet,
+                intzip,
+                vchsuburb,
+                vchmunicipality,
+                vchstate
+            }
+            
+            const user = await UsersModel.update({ id, userData })
             if (user === false) return false;
             if (!user) return null;
 
-            const updateColumns = Object.entries({
-                vchphone,
-                vchstreet,
-                intzip,
-                vchsuburb,
-                vchmunicipality,
-                vchstate
-            })
+            const updateColumns = Object.entries(lessorData) // revisar si funciona
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
-                    return `${key} = $${Object.keys(input).indexOf(key) + 1}`;
+                    return `${key} = $${Object.keys(lessorData).indexOf(key) + 1}`;
                 })
                 .join(', ');
 
-            const updateValues = Object.values({
-                vchphone,
-                vchstreet,
-                intzip,
-                vchsuburb,
-                vchmunicipality,
-                vchstate
-            })
+            const updateValues = Object.values(lessorData)
                 .filter(value => value != undefined);
 
             if (updateValues.length !== 0) {
