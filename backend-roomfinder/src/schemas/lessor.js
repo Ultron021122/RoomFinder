@@ -20,6 +20,7 @@ const lessorSchema = z.object({
     bnstatus: z.boolean(),
     bnverified: z.boolean(),
     vchimage: z.string().url(),
+    vchcoverimage: z.string().optional(),
     roleid: z.number(),
     vchphone: z.string().superRefine((val, ctx) => {
         const phoneRegex = /^\d{10}$/; // Match a 10-digit phone number
@@ -37,8 +38,7 @@ const lessorSchema = z.object({
     vchsuburb: z.string(),
     vchmunicipality: z.string(),
     vchstate: z.string(),
-    vchcoverimage: z.string().optional(),
-    vchbiography: z.string().nullable().optional(),
+    vchbiography: z.string().nullable().optional()
 })
 
 export function validateLessor(input) {

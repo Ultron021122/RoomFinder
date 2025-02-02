@@ -17,7 +17,7 @@ import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // Utilidades
 import { messages, patterns, universities, roles, ESTUDIANTE } from "@/utils/constants";
-import { getUserType, validateDate } from "@/utils/functions";
+import { validateDate } from "@/utils/functions";
 import { StudentInfo, LessorInfo } from "@/utils/interfaces";
 import Footer from "@/components/Footer";
 import { Alert } from '@/utils/alert';
@@ -77,9 +77,7 @@ const Registrar = () => {
         } else {
             setIsLoading(true);
             setErrorSystem(null);
-
-            console.log(userInfo.vchimage);
-            if (getUserType(userInfo.roleid) === ESTUDIANTE) {
+            if (userInfo.roleid === ESTUDIANTE) {
                 const data = userInfo as StudentInfo;
                 try {
                     const response = await axios.post("/api/users/student", data);

@@ -135,21 +135,46 @@ export class UsersModel {
         }
     }
 
-    static async update({ id, userData }) {
+    static async update({ id, input }) {
         try {
-            const { dtbirthdate } = userData
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchbiography } = input
             const user = await this.getById({ id })
             if (!user) return null;
 
-            const birthdate = new Date(dtbirthdate);
-            const updateColumns = Object.entries({...userData, ['dtbirthdate'] : birthdate})
+            const updateColumns = Object.entries({
+                vchname,
+                vchpaternalsurname,
+                vchmaternalsurname,
+                vchemail,
+                vchpassword,
+                dtbirthdate,
+                bnstatus,
+                bnverified,
+                vchimage,
+                vchcoverimage,
+                roleid,
+                vchbiography
+            })
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
-                    return `${key} = $${Object.keys(userData).indexOf(key) + 1}`; // Increment position by 1
+                    return `${key} = $${Object.keys(input).indexOf(key) + 1}`; // Increment position by 1
                 })
                 .join(', ');
 
-            const updateValues = Object.values({...userData, ['dtbirthdate'] : birthdate})
+            const updateValues = Object.values({
+                vchname,
+                vchpaternalsurname,
+                vchmaternalsurname,
+                vchemail,
+                vchpassword,
+                dtbirthdate,
+                bnstatus,
+                bnverified,
+                vchimage,
+                vchcoverimage,
+                roleid,
+                vchbiography
+            })
                 .filter(value => value !== undefined);
 
             if (updateValues.length !== 0) {

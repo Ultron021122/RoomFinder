@@ -94,13 +94,12 @@ export interface User {
      * roleid: 1
     */
     roleid: number;
-
-    vchbiography?: string;
     /**
      * User biography
      * @example
      * biography: estudiante dedicado del cucei
     */
+    vchbiography?: string;
 }
 
 /**
@@ -922,13 +921,12 @@ export interface UserProfile {
      * roleid: 1
      */
     roleid: number;
-    
-    vchbiography?: string;
     /**
      * User biography
      * @example
      * biography: estudiante dedicado del cucei
     */
+    vchbiography?: string;
 }
 
 /**

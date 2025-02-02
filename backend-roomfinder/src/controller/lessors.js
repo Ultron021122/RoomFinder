@@ -89,7 +89,7 @@ export class LessorController {
             .then(updateLessor => {
                 if (updateLessor === false) return res.status(409).json({ message: 'Email already exists' })
                 if (!updateLessor) return res.status(404).json({ message: 'Lessor not found' })
-                return res.json(updateLessor)
+                return res.json({message: 'Lessor updated successful', updateLessor})
             })
             .catch(next);
     }

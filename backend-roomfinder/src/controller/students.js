@@ -91,7 +91,7 @@ export class StudentController {
             .then(updateStudent => {
                 if (updateStudent === false) return res.status(409).json({ message: 'Email already exists' })
                 if (!updateStudent) return res.status(404).json({ message: 'Student not found' })
-                return res.json(updateStudent)
+                return res.json({message: 'Student updated successful', updateStudent})
             })
             .catch(next);
     }

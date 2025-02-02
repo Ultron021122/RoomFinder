@@ -34,10 +34,6 @@ export const shortName = ({ vchname = '', vchpaternalsurname = '', vchmaternalsu
     return `${vchname} ${vchpaternalsurname} ${vchmaternalsurname}`;
 }
 
-export const getUserType = (id : number) : string => {
-    return id === 1 ? ESTUDIANTE : ARRENDADOR;
-}
-
 export const validateDate = (value : string) => {
     const fechaNacimiento = new Date(value);
     const fechaActual = new Date();

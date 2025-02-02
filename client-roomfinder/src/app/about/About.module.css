@@ -1,16 +1,16 @@
-.container {
-    max-width: 800px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .heading {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .text {
-    line-height: 1.6;
-    margin-bottom: 16px;
-  }
+.carousel-item {
+  background-size: cover;
+  background-position: center;
+}
+
+.img-1 {
+  background-image: url('/images/about-us.jpg');
+}
+
+.img-2 {
+  background-image: url('/images/about-us.jpg');
+}
+
+.img-3 {
+  background-image: url('/images/about-us.jpg');
+}

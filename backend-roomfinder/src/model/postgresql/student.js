@@ -174,31 +174,48 @@ export class StudentsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, dtbirthdate, vchbiography, vchuniversity, vchmajor } = input
-            const userData = { // información actualizable de tabla usuario
+            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchbiography, intcodestudent, vchuniversity, vchmajor } = input
+            const userData = {
                 vchname,
                 vchpaternalsurname,
                 vchmaternalsurname,
+                vchemail,
+                vchpassword,
                 dtbirthdate,
+                bnstatus,
+                bnverified,
+                vchimage,
+                vchcoverimage,
+                roleid,
                 vchbiography
             }
 
-            const studentData = { // información actualizable de tabla estudiantes
-                vchuniversity,
+            const studentData = {
+                intcodestudent, 
+                vchuniversity, 
                 vchmajor
             }
-            const user = await UsersModel.update({ id, userData })
+
+            const user = await UsersModel.update({ id, input: userData })
             if (user === false) return false;
             if (!user) return null;
 
-            const updateColumns = Object.entries(studentData)
+            const updateColumns = Object.entries({
+                intcodestudent, 
+                vchuniversity, 
+                vchmajor
+            })
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
                     return `${key} = $${Object.keys(studentData).indexOf(key) + 1}`; // Increment position by 1
                 })
                 .join(', ');
 
-            const updateValues = Object.values(studentData)
+            const updateValues = Object.values({
+                intcodestudent, 
+                vchuniversity, 
+                vchmajor
+            })
                 .filter(value => value != undefined);
 
             if (updateValues.length !== 0) {
@@ -216,7 +233,7 @@ export class StudentsModel extends UsersModel {
 
             return await this.getById({ id });
         } catch (error) {
-            throw new Error(`Error deleting student: ${error.message}`)
+            throw new Error(`Error update student: ${error.message}`)
         }
     }
 }
