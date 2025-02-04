@@ -5,8 +5,13 @@ import "dotenv/config";
 import { Server as SocketServer } from "socket.io";
 import cors from "cors";
 import fetch from "node-fetch"; // Asegúrate de tener node-fetch instalado
-
+import helmet from "helmet";
 import { PORT } from "./config.js";
+import rateLimit from "express-rate-limit";
+import csurf from "csurf";
+// import jwt from "jsonwebtoken";
+
+const csrfProtection = csurf({ cookie: true });
 
 // Initializations
 const app = express();
@@ -20,8 +25,33 @@ const io = new SocketServer(server, {
 
 // Middlewares
 app.use(cors());
+app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(csrfProtection);
+
+// const apiLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutos
+//   max: 100, // Limite de 100 solicitudes por IP
+// });
+// app.use("/api/", apiLimiter);
+
+// Middleware para verificar JWT en Socket.IO
+// io.use((socket, next) => {
+//   const token = socket.handshake.auth.token;
+//   if (!token) {
+//     return next(new Error("Authentication error"));
+//   }
+//   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//     if (err) {
+//       return next(new Error("Authentication error"));
+//     }
+//     socket.user = decoded;
+//     next();
+//   });
+// });
+
 
 io.on("connection", (socket) => {
   // console.log("A user has connected! " + socket.id);
@@ -61,6 +91,9 @@ io.on("connection", (socket) => {
           "Authorization": `Bearer ${process.env.API_SECRET}`,
         },
       });
+      if (!result.ok) {
+        throw new Error('Failed to fetch messages');
+      }
       const messages = await result.json();
       socket.emit('receiveMessages', messages);
     } catch (error) {
