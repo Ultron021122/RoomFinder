@@ -40,7 +40,7 @@ export async function PATCH(req, res) {
         });
 
         const statusMessageMap = {
-            200: { message: 'Successful', data: response.data },
+            200: { message: 'Exitoso', data: response.data },
             400: { message: response.data.message },
             404: { message: response.data.message },
             default: { message: 'Error al subir imagen' },

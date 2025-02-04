@@ -137,43 +137,38 @@ export class UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchbiography } = input
+            // const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchbiography } = input
             const user = await this.getById({ id })
             if (!user) return null;
 
+            const userFields = [
+                'vchname',
+                'vchpaternalsurname',
+                'vchmaternalsurname',
+                'vchemail',
+                'vchpassword',
+                'dtbirthdate',
+                'bnstatus',
+                'bnverified',
+                'vchimage',
+                'vchcoverimage',
+                'roleid',
+                'vchbiography'
+            ];
+
+            const userData = this.createDataObject(input, userFields);
+
             const updateColumns = Object.entries({
-                vchname,
-                vchpaternalsurname,
-                vchmaternalsurname,
-                vchemail,
-                vchpassword,
-                dtbirthdate,
-                bnstatus,
-                bnverified,
-                vchimage,
-                vchcoverimage,
-                roleid,
-                vchbiography
+                ...userData
             })
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
-                    return `${key} = $${Object.keys(input).indexOf(key) + 1}`; // Increment position by 1
+                    return `${key} = $${Object.keys(userData).indexOf(key) + 1}`; // Increment position by 1
                 })
                 .join(', ');
 
             const updateValues = Object.values({
-                vchname,
-                vchpaternalsurname,
-                vchmaternalsurname,
-                vchemail,
-                vchpassword,
-                dtbirthdate,
-                bnstatus,
-                bnverified,
-                vchimage,
-                vchcoverimage,
-                roleid,
-                vchbiography
+                ...userData
             })
                 .filter(value => value !== undefined);
 
@@ -301,5 +296,17 @@ export class UsersModel {
         } catch (error) {
             throw new Error(`Error recovering password: ${error.message}`)
         }
+    }
+
+    static createDataObject(input, fields) {
+        if (!Array.isArray(fields)) {
+            throw new Error("fields should be an array");
+        }
+        return fields.reduce((obj, field) => {
+            if (input[field] !== undefined) {
+                obj[field] = input[field];
+            }
+            return obj;
+        }, {});
     }
 }

@@ -71,10 +71,32 @@ export class StudentsModel extends UsersModel {
         const client = await db.pool.connect();
         try {
             const students = await client.query(
-                `   SELECT 
-                        us.*, 
-                        e.intcodestudent,
-                        e.vchuniversity,
+                `   WITH chat_estudiantes AS (
+                        -- Subconsulta para obtener los estudiantes con los que ya tienes un chat
+                        SELECT DISTINCT
+                            CASE 
+                                WHEN ct.usuario1id = $1 THEN ct.usuario2id 
+                                ELSE ct.usuario1id 
+                            END AS usuarioid2
+                        FROM "Usuario"."Chats" ct
+                        WHERE ct.usuario1id = $1 OR ct.usuario2id = $1
+                    )
+                    SELECT 
+                        us.usuarioid, 
+                        us.vchname, 
+                        us.vchpaternalsurname, 
+                        us.vchmaternalsurname, 
+                        us.vchemail, 
+                        us.vchpassword, 
+                        us.dtbirthdate, 
+                        us.bnstatus, 
+                        us.bnverified, 
+                        us.vchimage, 
+                        us.roleid, 
+                        us.created_at, 
+                        us.vchcoverimage,
+                        a.intcodestudent,
+                        a.vchuniversity,
                         CASE 
                             WHEN us.usuarioid = ct.usuario1id THEN ct.usuario2id 
                             ELSE ct.usuario1id 
@@ -83,7 +105,7 @@ export class StudentsModel extends UsersModel {
                         m.chatid, 
                         m.vchcontenido, 
                         m.created_at AS dtmessage,
-                        u.usuarioid as usuarioid2,
+                        u.usuarioid AS usuarioid2,
                         u.vchname AS vchname2, 
                         u.vchpaternalsurname AS vchpaternalsurname2, 
                         u.vchmaternalsurname AS vchmaternalsurname2, 
@@ -96,15 +118,15 @@ export class StudentsModel extends UsersModel {
                         u.roleid AS roleid2, 
                         u.created_at AS created_at2, 
                         u.vchcoverimage AS vchcoverimage2,
-                        ar.vchphone AS vchphone2,
-                        ar.vchstreet AS vchstreet2,
-                        ar.intzip AS intzip2,
-                        ar.vchsuburb AS vchsuburb2,
-                        ar.vchmunicipality AS vchmunicipality2,
-                        ar.vchstate AS vchstate2
+                        es.vchphone AS vchphone2, 
+                        es.vchstreet AS vchstreet2, 
+                        es.intzip AS intzip2, 
+                        es.vchsuburb AS vchsuburb2, 
+                        es.vchmunicipality AS vchmunicipality2, 
+                        es.vchstate AS vchstate2
                     FROM "Usuario"."Usuario" us
-                    INNER JOIN "Usuario"."Estudiantes" e
-                        ON us.usuarioid = e.usuarioid
+                    INNER JOIN "Usuario"."Estudiantes" a
+                        ON us.usuarioid = a.usuarioid
                     LEFT JOIN (
                         SELECT DISTINCT ON (usuario1id, usuario2id) chatid, usuario1id, usuario2id
                         FROM "Usuario"."Chats"
@@ -120,15 +142,77 @@ export class StudentsModel extends UsersModel {
                         ON ct.chatid = ult_msj.chatid
                     LEFT JOIN "Usuario"."Mensajes" m
                         ON m.chatid = ult_msj.chatid AND m.created_at = ult_msj.ultima_fecha
-                    LEFT OUTER JOIN "Usuario"."Usuario" u
+                    LEFT JOIN "Usuario"."Usuario" u
                         ON u.usuarioid = CASE 
                                             WHEN us.usuarioid = ct.usuario1id THEN ct.usuario2id 
-                                            ELSE ct.usuario1id END
-                    LEFT OUTER JOIN "Usuario"."Arrendadores" ar
-                        ON ar.usuarioid = CASE 
+                                            ELSE ct.usuario1id 
+                                        END
+                    LEFT JOIN "Usuario"."Arrendadores" es
+                        ON es.usuarioid = CASE 
                                             WHEN us.usuarioid = ct.usuario1id THEN ct.usuario2id 
-                                            ELSE ct.usuario1id END
-                    WHERE (ct.usuario1id = $1 OR ct.usuario2id = $1 OR ct.chatid IS NULL) AND us.usuarioid = $1;
+                                            ELSE ct.usuario1id 
+                                        END
+                    WHERE (ct.usuario1id = $1 OR ct.usuario2id = $1 OR ct.chatid IS NULL) AND us.usuarioid = $1
+
+                    UNION ALL
+
+                    -- Subconsulta para obtener los estudiantes con los que no tienes un chat
+                    SELECT 
+                        us.usuarioid, 
+                        us.vchname, 
+                        us.vchpaternalsurname, 
+                        us.vchmaternalsurname, 
+                        us.vchemail, 
+                        us.vchpassword, 
+                        us.dtbirthdate, 
+                        us.bnstatus, 
+                        us.bnverified, 
+                        us.vchimage, 
+                        us.roleid, 
+                        us.created_at, 
+                        us.vchcoverimage, 
+                        a.intcodestudent,
+                        a.vchuniversity,
+                        u.usuarioid AS usuario2id, 
+                        NULL AS messageid, 
+                        NULL AS chatid, 
+                        NULL AS vchcontenido, 
+                        NULL AS dtmessage,
+                        u.usuarioid AS usuarioid2,
+                        u.vchname AS vchname2, 
+                        u.vchpaternalsurname AS vchpaternalsurname2, 
+                        u.vchmaternalsurname AS vchmaternalsurname2, 
+                        u.vchemail AS vchemail2, 
+                        u.vchpassword AS vchpassword2, 
+                        u.dtbirthdate AS dtbirthdate2, 
+                        u.bnstatus AS bnstatus2, 
+                        u.bnverified AS bnverified2, 
+                        u.vchimage AS vchimage2, 
+                        u.roleid AS roleid2, 
+                        u.created_at AS created_at2, 
+                        u.vchcoverimage AS vchcoverimage2,
+                        es.vchphone AS vchphone2, 
+                        es.vchstreet AS vchstreet2, 
+                        es.intzip AS intzip2, 
+                        es.vchsuburb AS vchsuburb2, 
+                        es.vchmunicipality AS vchmunicipality2, 
+                        es.vchstate AS vchstate2
+                    FROM "Usuario"."Arrendadores" es
+                    INNER JOIN "Usuario"."Usuario" u
+                        ON es.usuarioid = u.usuarioid
+                    INNER JOIN "Usuario"."Usuario" us
+                        ON us.roleid = 1
+                    INNER JOIN "Usuario"."Estudiantes" a
+                        ON us.usuarioid = a.usuarioid
+                    WHERE u.roleid = 2
+                    AND es.usuarioid NOT IN (
+                        SELECT CASE 
+                            WHEN ct.usuario1id = $1 THEN ct.usuario2id 
+                            ELSE ct.usuario1id 
+                        END
+                        FROM "Usuario"."Chats" ct
+                        WHERE ct.usuario1id = $1 OR ct.usuario2id = $1
+                    );
                 `,
                 [id]
             );
@@ -174,36 +258,20 @@ export class StudentsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchbiography, intcodestudent, vchuniversity, vchmajor } = input
-            const userData = {
-                vchname,
-                vchpaternalsurname,
-                vchmaternalsurname,
-                vchemail,
-                vchpassword,
-                dtbirthdate,
-                bnstatus,
-                bnverified,
-                vchimage,
-                vchcoverimage,
-                roleid,
-                vchbiography
-            }
+            const studentFields = [
+                'intcodestudent',
+                'vchuniversity',
+                'vchmajor'
+            ];
 
-            const studentData = {
-                intcodestudent, 
-                vchuniversity, 
-                vchmajor
-            }
+            const studentData = this.createDataObject(input, studentFields);
 
-            const user = await UsersModel.update({ id, input: userData })
+            const user = await UsersModel.update({ id, input })
             if (user === false) return false;
             if (!user) return null;
 
             const updateColumns = Object.entries({
-                intcodestudent, 
-                vchuniversity, 
-                vchmajor
+                ...studentData
             })
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
@@ -212,9 +280,7 @@ export class StudentsModel extends UsersModel {
                 .join(', ');
 
             const updateValues = Object.values({
-                intcodestudent, 
-                vchuniversity, 
-                vchmajor
+                ...studentData
             })
                 .filter(value => value != undefined);
 
@@ -235,5 +301,17 @@ export class StudentsModel extends UsersModel {
         } catch (error) {
             throw new Error(`Error update student: ${error.message}`)
         }
+    }
+
+    static createDataObject(input, fields) {
+        if (!Array.isArray(fields)) {
+            throw new Error("fields should be an array");
+        }
+        return fields.reduce((obj, field) => {
+            if (input[field] !== undefined) {
+                obj[field] = input[field];
+            }
+            return obj;
+        }, {});
     }
 }

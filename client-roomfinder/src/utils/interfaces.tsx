@@ -1400,6 +1400,13 @@ export interface ChatUsers {
     bnverified: boolean;
 
     /**
+     * User biography
+     * @example
+     * biography: estudiante dedicado del cucei
+    */
+        vchbiography?: string;
+
+    /**
      * URL de la imagen del usuario
      * @example "https://res.cloudinary.com/dal8aivch/image/upload/v1719809427/students/anvzbjybzttfigrojik4.jpg"
      */
@@ -1702,4 +1709,172 @@ export interface User2 {
      * @example "2024-09-12T04:25:49.293Z"
      */
     created_at2: string;
+}
+
+
+/**
+ * User interface to manage the user data Edit
+ * @interface
+ */
+export interface UserEdit {
+    /**
+     * User id
+     * @example
+     * usuarioid: 1
+     */
+        usuarioid: number | null;
+    /**
+     * User name
+     * @example
+     * vchname: 'Sebastian'
+     */
+    vchname: string;
+    /**
+     * User last name
+     * @example
+     * vchpaternalsurname: 'Martinez'
+     */
+    vchpaternalsurname: string;
+    /**
+     * User last name
+     * @example
+     * vchmaternalsurname: 'Lopez'
+    */
+    vchmaternalsurname: string;
+    /**
+     * User birthday
+     * @example
+     * dtbirthdate: '1999-11-22'
+     */
+    dtbirthdate: string;
+        /**
+     * User type
+     * @example
+     * roleid: 1
+    */
+    roleid: number;
+    /**
+     * User biography
+     * @example
+     * biography: estudiante dedicado del cucei
+    */
+    vchbiography?: string;
+}
+
+/**
+ * Student interface to manage the student data Edit
+ * @interface
+ * @extends User
+ */
+export interface StudentEdit extends UserEdit {
+    /**
+     * Student code
+     * @example
+     * intcodestudent: 123456
+     */
+    intcodestudent: number;
+    /**
+     * Student university
+     * @example
+     * vchuniversity: 'Centro Universitario'
+     */
+    vchuniversity: string;
+    /**
+     * Student state
+     * @example
+     * state: 'Jalisco'
+     */
+    vchmajor: string;
+    /**
+     * Student phone
+     * @example
+     * vchphone: '1234567890'
+     */
+    vchphone?: string;
+    /**
+     * Student street
+     * @example
+     * vchstreet: 'Calle 123'
+     */
+    vchstreet?: string;
+    /**
+     * Student zip
+     * @example
+     * intzip: 12345
+     */
+    intzip?: number;
+    /**
+     * Student suburb
+     * @example
+     * vchsuburb: 'Colonia'
+     */
+    vchsuburb?: string;
+    /**
+     * Student municipality
+     * @example
+     * vchmunicipality: 'Municipio'
+     */
+    vchmunicipality?: string;
+    /**
+     * Student state
+     * @example
+     * state: 'Jalisco'
+     */
+    vchstate?: string;
+}
+
+/**
+ * Lessor interface to manage the lessor data Edit
+ * @interface
+ * @extends User
+ */
+export interface LessorEdit extends UserEdit {
+    /**
+     * Code student - Not required
+     */
+    intcodestudent?: number;
+    /**
+     * University - Not required
+     */
+    vchuniversity?: string;
+    /**
+     * Student state
+     */
+    vchmajor?: string;
+    /**
+     * Phone
+     * @example
+     * vchphone: '1234567890'
+     */
+    vchphone: string;
+    /**
+     * Street
+     * @example
+     * vchstreet: 'Calle 123'
+     */
+    vchstreet: string;
+    /**
+     * Zip
+     * @example
+     * intzip: 12345
+     */
+    intzip: number;
+    /**
+     * Suburb
+     * @example
+     * vchsuburb: 'Colonia'
+     */
+    vchsuburb: string;
+    /**
+     * Municipality
+     * @example
+     * vchmunicipality: 'Municipio'
+     */
+    vchmunicipality: string;
+    /**
+     * State
+     * @example
+     * vchstate: 'Jalisco'
+     */
+    vchstate: string;
 }

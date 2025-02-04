@@ -10,7 +10,7 @@ export class LessorsModel extends UsersModel {
         usuarioid2 = null, vchname2 = null, vchpaternalsurname2 = null, vchmaternalsurname2 = null, vchemail2 = null, vchpassword2 = null, dtbirthdate2 = null,
         bnstatus2 = null, bnverified2 = null, vchimage2 = null, vchcoverimage2 = null, roleid2 = null, created_at2 = null, intcodestudent2 = null, vchuniversity2 = null
     }) {
-        super({ 
+        super({
             usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchbiography, created_at
         });
         this.vchphone = vchphone;
@@ -73,8 +73,30 @@ export class LessorsModel extends UsersModel {
         const client = await db.pool.connect();
         try {
             const lessors = await client.query(
-                `SELECT 
-                    us.*, 
+                `WITH chat_estudiantes AS (
+                    -- Subconsulta para obtener los estudiantes con los que ya tienes un chat
+                    SELECT DISTINCT
+                        CASE 
+                            WHEN ct.usuario1id = $1 THEN ct.usuario2id 
+                            ELSE ct.usuario1id 
+                        END AS usuarioid2
+                    FROM "Usuario"."Chats" ct
+                    WHERE ct.usuario1id = $1 OR ct.usuario2id = $1
+                )
+                SELECT 
+                    us.usuarioid, 
+                    us.vchname, 
+                    us.vchpaternalsurname, 
+                    us.vchmaternalsurname, 
+                    us.vchemail, 
+                    us.vchpassword, 
+                    us.dtbirthdate, 
+                    us.bnstatus, 
+                    us.bnverified, 
+                    us.vchimage, 
+                    us.roleid, 
+                    us.created_at, 
+                    us.vchcoverimage, 
                     a.vchphone, 
                     a.vchstreet, 
                     a.intzip, 
@@ -89,7 +111,7 @@ export class LessorsModel extends UsersModel {
                     m.chatid, 
                     m.vchcontenido, 
                     m.created_at AS dtmessage,
-                    u.usuarioid as usuarioid2,
+                    u.usuarioid AS usuarioid2,
                     u.vchname AS vchname2, 
                     u.vchpaternalsurname AS vchpaternalsurname2, 
                     u.vchmaternalsurname AS vchmaternalsurname2, 
@@ -122,15 +144,77 @@ export class LessorsModel extends UsersModel {
                     ON ct.chatid = ult_msj.chatid
                 LEFT JOIN "Usuario"."Mensajes" m
                     ON m.chatid = ult_msj.chatid AND m.created_at = ult_msj.ultima_fecha
-                LEFT OUTER JOIN "Usuario"."Usuario" u
+                LEFT JOIN "Usuario"."Usuario" u
                     ON u.usuarioid = CASE 
                                         WHEN us.usuarioid = ct.usuario1id THEN ct.usuario2id 
-                                        ELSE ct.usuario1id END
-                LEFT OUTER JOIN "Usuario"."Estudiantes" es
+                                        ELSE ct.usuario1id 
+                                    END
+                LEFT JOIN "Usuario"."Estudiantes" es
                     ON es.usuarioid = CASE 
                                         WHEN us.usuarioid = ct.usuario1id THEN ct.usuario2id 
-                                        ELSE ct.usuario1id END
-                WHERE (ct.usuario1id = $1 OR ct.usuario2id = $1 OR ct.chatid IS NULL) AND us.usuarioid = $1;
+                                        ELSE ct.usuario1id 
+                                    END
+                WHERE (ct.usuario1id = $1 OR ct.usuario2id = $1 OR ct.chatid IS NULL) AND us.usuarioid = $1
+
+                UNION ALL
+
+                -- Subconsulta para obtener los estudiantes con los que no tienes un chat
+                SELECT 
+                    us.usuarioid, 
+                    us.vchname, 
+                    us.vchpaternalsurname, 
+                    us.vchmaternalsurname, 
+                    us.vchemail, 
+                    us.vchpassword, 
+                    us.dtbirthdate, 
+                    us.bnstatus, 
+                    us.bnverified, 
+                    us.vchimage, 
+                    us.roleid, 
+                    us.created_at, 
+                    us.vchcoverimage, 
+                    a.vchphone, 
+                    a.vchstreet, 
+                    a.intzip, 
+                    a.vchsuburb, 
+                    a.vchmunicipality, 
+                    a.vchstate,
+                    u.usuarioid AS usuario2id, 
+                    NULL AS messageid, 
+                    NULL AS chatid, 
+                    NULL AS vchcontenido, 
+                    NULL AS dtmessage,
+                    u.usuarioid AS usuarioid2,
+                    u.vchname AS vchname2, 
+                    u.vchpaternalsurname AS vchpaternalsurname2, 
+                    u.vchmaternalsurname AS vchmaternalsurname2, 
+                    u.vchemail AS vchemail2, 
+                    u.vchpassword AS vchpassword2, 
+                    u.dtbirthdate AS dtbirthdate2, 
+                    u.bnstatus AS bnstatus2, 
+                    u.bnverified AS bnverified2, 
+                    u.vchimage AS vchimage2, 
+                    u.roleid AS roleid2, 
+                    u.created_at AS created_at2, 
+                    u.vchcoverimage AS vchcoverimage2,
+                    es.intcodestudent AS intcodestudent2,
+                    es.vchuniversity AS vchuniversity2
+                FROM "Usuario"."Estudiantes" es
+                INNER JOIN "Usuario"."Usuario" u
+                    ON es.usuarioid = u.usuarioid
+                INNER JOIN "Usuario"."Usuario" us
+                    ON us.roleid = 2 -- Aseguramos que es un arrendador
+                INNER JOIN "Usuario"."Arrendadores" a
+                    ON us.usuarioid = a.usuarioid
+                WHERE u.roleid = 1
+                AND es.usuarioid NOT IN (
+                    SELECT CASE 
+                        WHEN ct.usuario1id = $1 THEN ct.usuario2id 
+                        ELSE ct.usuario1id 
+                    END
+                    FROM "Usuario"."Chats" ct
+                    WHERE ct.usuario1id = $1 OR ct.usuario2id = $1
+                );
                 `,
                 [id]
             );
@@ -177,42 +261,25 @@ export class LessorsModel extends UsersModel {
 
     static async update({ id, input }) {
         try {
-            const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchbiography, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
-            const userData = {
-                vchname,
-                vchpaternalsurname,
-                vchmaternalsurname,
-                vchemail,
-                vchpassword,
-                dtbirthdate,
-                bnstatus,
-                bnverified,
-                vchimage,
-                vchcoverimage,
-                roleid,
-                vchbiography
-            }
+            //const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, dtbirthdate, bnstatus, bnverified, vchimage, vchcoverimage, roleid, vchbiography, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = input
 
-            const studentData = {
-                vchphone, 
-                vchstreet, 
-                intzip, 
-                vchsuburb, 
-                vchmunicipality, 
-                vchstate
-            }
-            
-            const user = await UsersModel.update({ id, input: userData })
+            const studentFields = [
+                'vchphone',
+                'vchstreet',
+                'intzip',
+                'vchsuburb',
+                'vchmunicipality',
+                'vchstate'
+            ];
+
+            const studentData = this.createDataObject(input, studentFields);
+
+            const user = await UsersModel.update({ id, input })
             if (user === false) return false;
             if (!user) return null;
 
             const updateColumns = Object.entries({
-                vchphone, 
-                vchstreet, 
-                intzip, 
-                vchsuburb, 
-                vchmunicipality, 
-                vchstate
+                ...studentData
             })
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => {
@@ -221,12 +288,7 @@ export class LessorsModel extends UsersModel {
                 .join(', ');
 
             const updateValues = Object.values({
-                vchphone, 
-                vchstreet, 
-                intzip, 
-                vchsuburb, 
-                vchmunicipality, 
-                vchstate
+                ...studentData
             })
                 .filter(value => value != undefined);
 
@@ -249,4 +311,15 @@ export class LessorsModel extends UsersModel {
         }
     }
 
+    static createDataObject(input, fields) {
+        if (!Array.isArray(fields)) {
+            throw new Error("fields should be an array");
+        }
+        return fields.reduce((obj, field) => {
+            if (input[field] !== undefined) {
+                obj[field] = input[field];
+            }
+            return obj;
+        }, {});
+    }
 }
