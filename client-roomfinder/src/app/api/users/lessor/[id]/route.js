@@ -36,13 +36,7 @@ export async function PATCH(request, { params }) {
         vchname,
         vchpaternalsurname,
         vchmaternalsurname,
-        vchemail,
-        vchpassword,
         dtbirthdate,
-        bnstatus,
-        bnverified,
-        vchimage,
-        vchcoverimage,
         roleid,
         vchbiography,
         vchphone,
@@ -58,13 +52,7 @@ export async function PATCH(request, { params }) {
             vchname,
             vchpaternalsurname,
             vchmaternalsurname,
-            vchemail,
-            vchpassword,
             dtbirthdate,
-            bnstatus,
-            bnverified,
-            vchimage,
-            vchcoverimage,
             roleid,
             vchbiography,
             vchphone,
@@ -80,8 +68,8 @@ export async function PATCH(request, { params }) {
         });
 
         return NextResponse.json(
-            { message: response.data.message },
-            { status: response.status }
+            { data: response.data },
+            { status: 200 }
         );
 
     } catch (error) {

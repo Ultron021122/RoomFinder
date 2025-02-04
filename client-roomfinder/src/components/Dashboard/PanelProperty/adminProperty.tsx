@@ -153,7 +153,7 @@ export default function AdminProperties() {
 
     return (
         <div className="bg-gradient-to-r p-2 md:p-8">
-            <Card className="overflow-hidden w-full max-w-8xl mx-auto bg-gray-300 dark:bg-gray-950">
+            <Card className="overflow-hidden w-full max-w-8xl mx-auto bg-gray-100 dark:bg-gray-950">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold">Administración de Propiedades</CardTitle>
                 </CardHeader>
