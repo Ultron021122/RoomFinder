@@ -14,8 +14,7 @@ import Image from "next/image";
 import TimeAgo from "javascript-time-ago";
 import es from "javascript-time-ago/locale/es";
 
-TimeAgo.addDefaultLocale(es);
-
+TimeAgo.addLocale(es); // Cambiado a addLocale
 
 export default function MessageMainComponent() {
   const { data: session } = useSession();
@@ -38,7 +37,6 @@ export default function MessageMainComponent() {
 
         let route = (user.roleid === 1 ? '/api/chats/students/' : '/api/chats/lessors/') + user.usuarioid;
         const response = await axios.get<UserList>(route);
-        console.log(response)
         if (response.status === 200) {
           setUsers(response.data);
         } else {
@@ -52,18 +50,16 @@ export default function MessageMainComponent() {
     };
 
     fetchUsers();
-  }, [user?.roleid]); // Cambié las dependencias aquí
-
+  }, [user?.roleid]);
 
   const handleUserClick = (user: User2) => {
     setSelectedUser(user.usuarioid2);
-    setImageUser(user.vchimage2);
-    //setName(user.vchname);
-    setNameUser(user.vchname2 + ' ' + user.vchpaternalsurname2 + ' ' + user.vchmaternalsurname2);
-  }
+    setImageUser(user.vchimage2 || '');
+    setNameUser(`${user.vchname2 || ''} ${user.vchpaternalsurname2 || ''} ${user.vchmaternalsurname2 || ''}`);
+  };
 
   const filteredUsers = users ? users.data.filter(user =>
-    user.vchname2.toLowerCase().includes(name.toLowerCase()) ||
+    user.vchname2?.toLowerCase().includes(name.toLowerCase()) ||
     (user.vchpaternalsurname2 + ' ' + user.vchmaternalsurname2).toLowerCase().includes(name.toLowerCase())
   ) : [];
 
@@ -71,17 +67,13 @@ export default function MessageMainComponent() {
     <div>
       <section className="h-[calc(100vh-150px)] flex flex-col">
         <div className="flex flex-col md:flex-row h-full max-w-8xl border rounded-lg overflow-hidden border-stroke bg-white shadow-md dark:bg-gray-950">
-          {/* Users Box */}
           <div className="w-full md:w-1/3 border-r overflow-y-auto custom-scrollbar">
             <div className="p-4 flex items-center justify-between border-b">
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-300">
-                Chats
-              </h4>
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-300">Chats</h4>
               <div className="p-2 rounded-lg bg-primary-500 text-white hover:bg-primary-600">
                 <Mail size={22} />
               </div>
             </div>
-            {/* Busqueda de usuarios */}
             <div className="p-4 border-b">
               <div className="relative">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -93,7 +85,6 @@ export default function MessageMainComponent() {
                 />
               </div>
             </div>
-            {/* Lista de usuarios */}
             <ScrollArea className="h-[calc(100vh-300px)]">
               {isLoading ? (
                 <div className="flex items-center h-12 justify-center">
@@ -103,7 +94,7 @@ export default function MessageMainComponent() {
                 <div className="flex items-center p-4">
                   <p className="p-4 text-sm text-gray-500 dark:text-gray-300">No hay chats disponibles.</p>
                 </div>
-              ) : filteredUsers.length === 0 ? (
+              ) : filteredUsers.length === 0 || (filteredUsers[0].vchname2 === null && filteredUsers.length === 1) ? (
                 <div className="flex items-center justify-center p-4">
                   <p className="p-4 text-sm text-gray-500 dark:text-gray-300">No se encontraron resultados.</p>
                 </div>
@@ -117,22 +108,17 @@ export default function MessageMainComponent() {
                     >
                       <Badge
                         content=""
-                        color={user.bnstatus == true ? "success" : "danger"}
+                        color={user.bnstatus ? "success" : "danger"}
                         shape="circle"
                         placement="bottom-right"
                       >
-                        <Avatar
-                          radius="full"
-                          src={user.vchimage2}
-                        />
+                        <Avatar radius="full" src={user.vchimage2 || ''} />
                       </Badge>
                       <div className="flex-1 min-w-0 ml-4">
                         <h3 className="text-sm font-semibold truncate">
-                          {user.vchname2 + ' ' + user.vchpaternalsurname2}
+                          {user.vchname2 ? `${user.vchname2} ${user.vchpaternalsurname2}` : 'Nombre no disponible'}
                         </h3>
-                        {/* Change for last message */}
-                        {/* <p className="text-sm text-muted-foreground truncate">{user.bnstatus2 == true ? 'Activo' : 'Inactivo'}</p> */}
-                        <p className="text-sm text-muted-foreground truncate">{user.vchcontenido}</p>
+                        <p className="text-sm text-muted-foreground truncate">{user.vchcontenido || 'Sin contenido'}</p>
                       </div>
                       <span className="text-xs text-muted-foreground">
                         {user.dtmessage && timeAgo.format(new Date(user.dtmessage))}
@@ -143,13 +129,11 @@ export default function MessageMainComponent() {
               )}
             </ScrollArea>
           </div>
-          {/* Other Box */}
           <div className={`w-full md:w-2/3 flex flex-col ${selectedUser ? '' : 'items-center justify-center'}`}>
             {selectedUser ? (
               <MessageComponent userID={selectedUser} name={name} image={imageUser} nameUser={nameUser} bnstatus className='w-full' onBack={() => setSelectedUser(null)} />
             ) : (
               <div className={`w-full flex-col items-center justify-center h-full overflow-y-auto custom-scrollbar md:flex hidden`}>
-                {/* <RocketIcon size={64} className="text-gray-500 dark:text-gray-300" /> */}
                 <div className="max-w-lg w-full space-y-8 text-center">
                   <div className="space-y-4">
                     <div className="relative w-72 h-64 mx-auto">

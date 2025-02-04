@@ -9,9 +9,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import 'react-toastify/dist/ReactToastify.css'
 import { Camera, Pencil, MapPin, BookMarkedIcon, Briefcase, MapPinned } from 'lucide-react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { LessorInfo, StudentInfo, UserProfile } from '@/utils/interfaces'
+import { LessorEdit, LessorInfo, StudentEdit, StudentInfo, UserProfile } from '@/utils/interfaces'
 import axios from 'axios'
-import { Spinner, useDisclosure } from '@nextui-org/react'
+import { Spinner, useDisclosure, user } from '@nextui-org/react'
 import ImageModal from './ImageModal'
 import { messages, universities } from '@/utils/constants'
 import { Alert } from "@/utils/alert";
@@ -30,28 +30,26 @@ import { ARRENDADOR, ESTUDIANTE } from '@/utils/constants'
 import { IdCardIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { validateDate } from '@/utils/functions'
+import { useSession } from 'next-auth/react'
 
 interface UserProfileComponentProps {
     userData: UserProfile;
 }
 
 const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData }) => {
-
+    const { data: session, update } = useSession();
     const [coverImage, setCoverImage] = useState("");
     const [profileImage, setProfileImage] = useState("");
-
     const [usuario, setUsuario] = useState<StudentInfo | LessorInfo>()
-
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<StudentInfo | LessorInfo>({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<StudentEdit | LessorEdit>({
         mode: "onChange"
     });
 
-    const [editando, setEditando] = useState(false)
+    const [editando, setEditando] = useState(false);
     type Ubicacion = [number, number] | null;
 
     const [ubicacionActual, setUbicacionActual] = useState<Ubicacion>(null);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
 
@@ -73,8 +71,8 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
     }, [errorSystem]);
 
     useEffect(() => {
-        const fetchImageUrls = async () => {
-            if (userData) {
+        if (userData) {  // Solo ejecuta si los datos no han sido cargados
+            const fetchImageUrls = async () => {
                 try {
                     const response = await axios.get(`/api/users/images/${userData.usuarioid}`);
                     setCoverImage(response.data.data.vchcoverimage);
@@ -82,29 +80,27 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                 } catch (Error: any) {
                     setErrorSystem(Error.response?.data.message);
                 }
-            }
-        };
+            };
 
-        const getUserData = async () => {
-            if (userData) {
+            const getUserData = async () => {
                 try {
                     const { roleid, usuarioid } = userData;
                     let path = "";
                     if (roleid === ARRENDADOR) {
                         path = `/api/users/lessor/${usuarioid}`;
-                    } else {// estudiante
+                    } else { // estudiante
                         path = `/api/users/student/${usuarioid}`;
                     }
 
                     const response = await axios.get(path);
                     const { data } = response.data;
 
-                    // asignar los datos al objeto local
+                    // Asignar los datos al objeto local
                     let obj: LessorInfo | StudentInfo;
                     if (roleid === ARRENDADOR) {
                         const { vchpassword, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = data;
                         obj = {
-                            ...userData,
+                            ...data,
                             vchphone: vchphone,
                             vchstreet: vchstreet,
                             intzip: intzip,
@@ -113,34 +109,34 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                             vchstate: vchstate,
                             vchpassword: vchpassword,
                             confirm_password: ""
-                        }
+                        };
                     } else {
                         const { vchpassword, intcodestudent, vchuniversity, vchmajor } = data;
                         obj = {
-                            ...userData,
+                            ...data,
                             intcodestudent: parseInt(intcodestudent),
                             vchuniversity: vchuniversity,
                             vchpassword: vchpassword,
                             confirm_password: "",
                             vchmajor: vchmajor
-                        }
+                        };
                     }
 
                     setUsuario(() => {
-                        const newObject = { ...obj, ['dtbirthdate']: userData.dtbirthdate.substring(0, 10), };
+                        const newObject = { ...obj, ['dtbirthdate']: data.dtbirthdate.substring(0, 10) };
                         reset(newObject);
-                        return newObject
+                        return newObject;
                     });
 
                 } catch (Error: any) {
                     setErrorSystem(Error.response?.data.message);
                 }
-            }
-        }
+            };
 
-        fetchImageUrls();
-        getUserData();
-    }, [userData]);
+            fetchImageUrls();
+            getUserData();
+        }
+    }, [userData, reset]);
 
     useEffect(() => {
         if ("geolocation" in navigator) {
@@ -161,27 +157,39 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
         }
     }
 
-    const handleSave = async (data: LessorInfo | StudentInfo) => {
+    const handleSave = async (data: LessorEdit | StudentEdit) => {
         setEditando(false);
         if (data.roleid === ARRENDADOR) {
             setIsLoading(true);
             setErrorSystem(null);
-
             try {
                 const response = await axios.patch(`/api/users/lessor/${userData.usuarioid}`, data);
                 setIsLoading(false);
                 if (response.status === 200) {
+
+                    const { dtbirthdate, vchmaternalsurname, vchname, vchpaternalsurname, vchbiography } = response.data.data.updateLessor;
+                    const fecha = new Date(dtbirthdate);
+                    await update({
+                        ...session,
+                        user: {
+                            ...session?.user,
+                            vchname: vchname,
+                            vchpaternalsurname: vchpaternalsurname,
+                            vchmaternalsurname: vchmaternalsurname,
+                            vchbiography: vchbiography,
+                            dtbirthdate: dtbirthdate
+                        }
+                    });
+
                     setUsuario(() => {
-                        const { dtbirthdate } = data;
-                        const fecha = new Date(dtbirthdate);
                         const newObject = {
-                            ...data,
-                            ['dtbirthdate']: fecha.toISOString().substring(0, 10)
+                            ...response.data.data.updateLessor
+                            , ['dtbirthdate']: fecha.toISOString().substring(0, 10)
                         }
                         reset(newObject);
                         return newObject;
                     });
-                    toast.success(response.data.message, {
+                    toast.success(response.data.data.message, {
                         position: "bottom-right",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -193,7 +201,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                         transition: Slide,
                     });
                 } else {
-                    setErrorSystem(response.data.message);
+                    setErrorSystem(response.data?.message);
                 }
             } catch (Error: any) {
                 setErrorSystem(Error.response?.data.message);
@@ -208,17 +216,30 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                 const response = await axios.patch(`/api/users/student/${userData.usuarioid}`, data);
                 setIsLoading(false);
                 if (response.status === 200) {
+                    const { dtbirthdate, intcodestudent, vchmaternalsurname, vchname, vchpaternalsurname, vchbiography } = response.data.data.updateStudent;
+                    const fecha = new Date(dtbirthdate);
+                    await update({
+                        ...session,
+                        user: {
+                            ...session?.user,
+                            vchname: vchname,
+                            vchpaternalsurname: vchpaternalsurname,
+                            vchmaternalsurname: vchmaternalsurname,
+                            vchbiography: vchbiography,
+                            dtbirthdate: dtbirthdate
+                        }
+                    });
+
                     setUsuario(() => {
-                        const { dtbirthdate } = data;
-                        const fecha = new Date(dtbirthdate);
                         const newObject = {
-                            ...data,
-                            ['dtbirthdate']: fecha.toISOString().substring(0, 10)
+                            ...response.data.data.updateStudent
+                            , ['dtbirthdate']: fecha.toISOString().substring(0, 10)
+                            , ['intcodestudent']: parseInt(intcodestudent)
                         }
                         reset(newObject);
                         return newObject;
                     });
-                    toast.success(response.data.message, {
+                    toast.success(response.data.data.message, {
                         position: "bottom-right",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -230,7 +251,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                         transition: Slide,
                     });
                 } else {
-                    setErrorSystem(response.data.message);
+                    setErrorSystem(response.data?.message);
                 }
             } catch (Error: any) {
                 setErrorSystem(Error.response?.data.message);
@@ -273,10 +294,10 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                             <Avatar className="h-32 w-32 border-4 border-gray-300">
                                 <AvatarImage
                                     src={profileImage}
-                                    alt={userData.vchname}
+                                    alt={usuario?.vchname}
                                     className="object-cover w-full h-full rounded-full"
                                 />
-                                <AvatarFallback>{userData.vchname.charAt(0)}</AvatarFallback>
+                                <AvatarFallback>{usuario?.vchname.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <label htmlFor="perfil" className="absolute bottom-0 right-0 bg-primary text-primary-foreground p-2 rounded-full cursor-pointer">
                                 <Camera className="h-4 w-4" />
@@ -379,7 +400,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                         name="email"
                                         type="email"
                                         className='border-gray-400 dark:border-gray-800'
-                                        value={userData.vchemail}
+                                        value={userData?.vchemail}
                                         disabled
                                     />
                                 </div>
@@ -418,10 +439,9 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                         {...register('dtbirthdate', {
                                             required: {
                                                 value: true,
-                                                message: messages.dtbirthdate.required
+                                                message: 'La fecha de nacimiento es requerida'  // Reemplaza con tu mensaje
                                             },
                                             valueAsDate: true,
-                                            validate: (value) => validateDate(value)
                                         })}
                                         id="dtbirthdate"
                                         name="dtbirthdate"
@@ -433,41 +453,57 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                         <Alert message={errors.dtbirthdate.message} />
                                     )}
                                 </div>
-                                {userData.roleid === ESTUDIANTE && (<><div>
-                                    <Label>Universidad</Label>
-                                    <select
-                                        className='flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-gray-400 dark:border-gray-800'
-                                        name="universidad"
-                                        id="universidad"
-                                        disabled={!editando}
-                                    >
-                                        {universities.map((university, index) => <option key={index} className='text-sm'>{university.name}</option>)}
-                                    </select>
-                                </div>
-                                    <div>
-                                        <Label htmlFor="vchmajor">Carrera</Label>
-                                        <Input
-                                            {...register('vchmajor', {
-                                                required: {
-                                                    value: true,
-                                                    message: messages.vchmajor.required
-                                                },
-                                                minLength: {
-                                                    value: 10,
-                                                    message: messages.vchmajor.min
-                                                }
-                                            })}
-                                            type='text'
-                                            id="vchmajor"
-                                            name="vchmajor"
-                                            className='border-gray-400 dark:border-gray-800'
-                                            disabled={!editando}
-                                            autoComplete='off'
-                                        />
-                                        {errors.vchmajor && (
-                                            <Alert message={errors.vchmajor.message} />
-                                        )}
-                                    </div></>)
+                                {userData.roleid === ESTUDIANTE && (
+                                    <>
+                                        <div>
+                                            <Label htmlFor="vchuniversity">Universidad</Label>
+                                            <select
+                                                {...register('vchuniversity', {
+                                                    required: {
+                                                        value: true,
+                                                        message: messages.vchuniversity.required,
+                                                    },
+                                                })}
+                                                id="vchuniversity"
+                                                name="vchuniversity"
+                                                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-gray-400 dark:border-gray-800"
+                                                disabled={!editando}
+                                            >
+                                                <option value="" className="text-sm">Seleccione una universidad</option>
+                                                {universities.map((university, index) => (
+                                                    <option key={index} value={university.name} className="text-sm">
+                                                        {university.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            {errors.vchuniversity && (
+                                                <Alert message={errors.vchuniversity.message} />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="vchmajor">Carrera</Label>
+                                            <Input
+                                                {...register('vchmajor', {
+                                                    required: {
+                                                        value: true,
+                                                        message: messages.vchmajor.required
+                                                    },
+                                                    minLength: {
+                                                        value: 10,
+                                                        message: messages.vchmajor.min
+                                                    }
+                                                })}
+                                                type='text'
+                                                id="vchmajor"
+                                                name="vchmajor"
+                                                className='border-gray-400 dark:border-gray-800'
+                                                disabled={!editando}
+                                                autoComplete='off'
+                                            />
+                                            {errors.vchmajor && (
+                                                <Alert message={errors.vchmajor.message} />
+                                            )}
+                                        </div></>)
                                 }
                             </div>
                             <div>

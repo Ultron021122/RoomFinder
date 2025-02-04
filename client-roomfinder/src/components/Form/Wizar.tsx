@@ -23,6 +23,7 @@ import { useSession } from "next-auth/react";
 import { UserProfile } from "@/utils/interfaces";
 import { Button } from "../ui/button";
 import axios from "axios";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 
 const esNumero = (valor?: string): boolean => valor !== undefined && /^[0-9]+$/.test(valor);
 export const inputVacio = (input?: string): boolean => !input;
@@ -185,66 +186,65 @@ export default function Wizar() {
     return (
         <div className="w-full">
             <PerfectScrollbar>
-                <div className="h-[100vh] flex flex-col gap-9 p-2">
-                    {/* <!-- Sign In Form --> */}
-                    <div className="rounded-sm border border-gray-300 bg-white shadow-default dark:border-gray-900 dark:bg-gray-950">
-                        <div className="border-b border-gray-300 px-[26px] py-4 dark:border-gray-900">
-                            <h3 className="font-medium text-black dark:text-white">
-                                Agregar propiedad
-                            </h3>
-                        </div>
-                        {
-                            isLoading ? (
-                                <div className="flex items-center justify-center h-96">
-                                    <Spinner color="primary" />
-                                </div>
-                            ) : (
-                                <>
-                                    <div className="w-full md:w-3/4 px-3 md:px-0 mt-8 mx-auto h-auto overflow-hidden overflow-y-auto">
-                                        {actual === 1 && <TipoInmueble />}
-                                        {actual === 2 && <Fotos />}
-                                        {actual === 3 && <AddProperty />}
-                                        {actual === 4 && <ServiciosAmenidades />}
-                                        {actual === 5 && <InformacionGeneral />}
-                                        {actual === 6 && <Ubicacion />}
-                                        {actual === 7 && <ConfirmarUbicacion />}
-                                        {actual === 8 && <Restricciones />}
-                                        {actual === 9 && <Confirmar />}
+                <div className="bg-gradient-to-r p-2 md:p-8">
+                    <Card className="overflow-hidden w-full max-w-8xl mx-auto bg-gray-100 dark:bg-gray-950">
+                        <CardHeader>
+                            <CardTitle className="text-2xl font-bold">Publicar propiedad</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {
+                                isLoading ? (
+                                    <div className="flex items-center justify-center h-96">
+                                        <Spinner color="primary" />
                                     </div>
-                                    <div className="w-full md:w-3/4 px-3 md:px-0 mx-auto pt-5 pb-10">
-                                        <Progress
-                                            size="sm"
-                                            aria-label="Loading..."
-                                            classNames={{
-                                                label: "font-medium text-default-700 dark:text-gray-200",
-                                                value: "text-gray-700 dark:text-gray-200",
-                                            }}
-                                            value={(actual / 9) * 100}
-                                            label={`Paso ${actual} de 9`}
-                                            showValueLabel={true}
-                                        />
-                                        <div className="flex justify-between mt-5 mb-10">
-                                            <Button
-                                                onClick={anterior}
-                                                style={{
-                                                    backgroundColor: actual === 1 ? '#64748b' : '#1e293b',
-                                                    color: actual === 1 ? '#fff' : '#fff',
-                                                }}
-                                                disabled={actual === 1}
-                                            >
-                                                Anterior
-                                            </Button>
-                                            <Button
-                                                color={actual < 9 ? 'primary' : 'success'}
-                                                onClick={handleClick}
-                                            >
-                                                {actual < 9 ? "Siguiente" : "Enviar"}
-                                            </Button>
+                                ) : (
+                                    <>
+                                        <div className="w-full md:w-3/4 px-3 md:px-0 mt-8 mx-auto h-auto overflow-hidden overflow-y-auto">
+                                            {actual === 1 && <TipoInmueble />}
+                                            {actual === 2 && <Fotos />}
+                                            {actual === 3 && <AddProperty />}
+                                            {actual === 4 && <ServiciosAmenidades />}
+                                            {actual === 5 && <InformacionGeneral />}
+                                            {actual === 6 && <Ubicacion />}
+                                            {actual === 7 && <ConfirmarUbicacion />}
+                                            {actual === 8 && <Restricciones />}
+                                            {actual === 9 && <Confirmar />}
                                         </div>
-                                    </div>
-                                </>
-                            )}
-                    </div>
+                                        <div className="w-full md:w-3/4 px-3 md:px-0 mx-auto pt-5 pb-10">
+                                            <Progress
+                                                size="sm"
+                                                aria-label="Loading..."
+                                                classNames={{
+                                                    label: "font-medium text-default-700 dark:text-gray-200",
+                                                    value: "text-gray-700 dark:text-gray-200",
+                                                }}
+                                                value={(actual / 9) * 100}
+                                                label={`Paso ${actual} de 9`}
+                                                showValueLabel={true}
+                                            />
+                                            <div className="flex justify-between mt-5 mb-10">
+                                                <Button
+                                                    onClick={anterior}
+                                                    style={{
+                                                        backgroundColor: actual === 1 ? '#64748b' : '#1e293b',
+                                                        color: actual === 1 ? '#fff' : '#fff',
+                                                    }}
+                                                    disabled={actual === 1}
+                                                >
+                                                    Anterior
+                                                </Button>
+                                                <Button
+                                                    color={actual < 9 ? 'primary' : 'success'}
+                                                    onClick={handleClick}
+                                                >
+                                                    {actual < 9 ? "Siguiente" : "Enviar"}
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                        </CardContent>
+                    </Card>
                 </div>
             </PerfectScrollbar >
         </div >
