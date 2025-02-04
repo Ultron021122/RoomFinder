@@ -15,7 +15,6 @@ export async function GET(request, { params }) {
             { status: 200 }
         );
     } catch (error) {
-        console.error(error);
         return NextResponse.json(
             { message: 'Server error' },
             { status: 503 }
@@ -31,18 +30,12 @@ export async function PATCH(request, { params }) {
         vchname,
         vchpaternalsurname,
         vchmaternalsurname,
-        vchemail,
-        vchpassword,
         dtbirthdate,
-        bnstatus,
-        bnverified,
-        vchimage,
-        vchcoverimage,
         roleid,
         vchbiography,
         intcodestudent,
         vchuniversity,
-        vchmajor,
+        vchmajor
     } = await request.json();
 
     try {
@@ -50,13 +43,7 @@ export async function PATCH(request, { params }) {
             vchname,
             vchpaternalsurname,
             vchmaternalsurname,
-            vchemail,
-            vchpassword,
             dtbirthdate,
-            bnstatus,
-            bnverified,
-            vchimage,
-            vchcoverimage,
             roleid,
             vchbiography,
             intcodestudent,
@@ -67,10 +54,10 @@ export async function PATCH(request, { params }) {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }
         });
-        
+
         return NextResponse.json(
-            { message: response.data.message },
-            { status: response.status }
+            { data: response.data },
+            { status: 200 }
         );
 
     } catch (error) {
