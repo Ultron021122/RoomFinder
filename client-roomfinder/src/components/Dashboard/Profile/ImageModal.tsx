@@ -18,7 +18,7 @@ interface ImageModalComponentProps {
 
 const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose, imageType }) => {
     const [selectedImage, setSelectedImage] = useState<string | ArrayBuffer | null>(null);
-    const { data: session } = useSession();
+    const { data: session, update } = useSession();
     const user = session?.user as UserProfile;
 
     const [isLoading, setIsLoading] = useState(false);
@@ -72,6 +72,18 @@ const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose, image
                     type: imageType
                 })
 
+                const key = imageType === COVER_IMAGE ? "vchcoverimage" : "vchimage";
+                const value = imageType === COVER_IMAGE ? response.data.message.data.vchcoverimage : response.data.message.data.vchimage;
+
+                // actualizar los datos de la sesión
+                await update({
+                    ...session,
+                    user: {
+                        ...session?.user,
+                        [key] : value
+                    }
+                })
+                
                 setIsLoading(false);
                 if (response.status === 200) {
                     toast.success(response.data.message.message, {
