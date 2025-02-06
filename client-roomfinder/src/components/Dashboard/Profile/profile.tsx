@@ -11,9 +11,9 @@ import { Camera, Pencil, MapPin, BookMarkedIcon, Briefcase, MapPinned } from 'lu
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { LessorEdit, LessorInfo, StudentEdit, StudentInfo, UserProfile } from '@/utils/interfaces'
 import axios from 'axios'
-import { Spinner, useDisclosure, user } from '@nextui-org/react'
+import { Spinner, useDisclosure } from '@nextui-org/react'
 import ImageModal from './ImageModal'
-import { messages, universities } from '@/utils/constants'
+import { COVER_IMAGE, messages, PROFILE_IMAGE, universities } from '@/utils/constants'
 import { Alert } from "@/utils/alert";
 
 // Estilos de leaflet
@@ -29,7 +29,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ARRENDADOR, ESTUDIANTE } from '@/utils/constants'
 import { IdCardIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
-import { validateDate } from '@/utils/functions'
 import { useSession } from 'next-auth/react'
 
 interface UserProfileComponentProps {
@@ -40,7 +39,8 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
     const { data: session, update } = useSession();
     const [coverImage, setCoverImage] = useState("");
     const [profileImage, setProfileImage] = useState("");
-    const [usuario, setUsuario] = useState<StudentInfo | LessorInfo>()
+    const [usuario, setUsuario] = useState<StudentInfo | LessorInfo>();
+    const [imageType, setImageType] = useState<number | null>(null);
     const { register, handleSubmit, reset, formState: { errors } } = useForm<StudentEdit | LessorEdit>({
         mode: "onChange"
     });
@@ -146,15 +146,9 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
         }
     }, [])
 
-    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, tipo: string) => {
-        const file = e.target.files?.[0]
-        if (file) {
-            const imageUrl = URL.createObjectURL(file)
-            /*setUsuario(prevState => ({
-                ...prevState,
-                [tipo]: imageUrl
-            }))*/
-        }
+    const handleUpdateImage = (imageType:number) => {
+        setImageType(imageType);
+        onOpen();
     }
 
     const handleSave = async (data: LessorEdit | StudentEdit) => {
@@ -277,17 +271,9 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                             priority
                             className='absolute inset-0 object-cover w-full h-full'
                         />
-                        <label htmlFor="fondo" className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer">
-                            <Camera className="h-6 w-6" />
-                            <input
-                                id="fondo"
-                                type="button"
-                                className="hidden"
-                                onClick={onOpen}
-                            // onChange={(e) => handleImageUpload(e, 'imagenFondo')}
-                            // accept="image/*"
-                            />
-                        </label>
+                        <button className='absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer' onClick={() => handleUpdateImage(COVER_IMAGE)}>
+                            <Camera/>
+                        </button>
                     </div>
                     <CardHeader className="relative">
                         <div className="absolute -top-16 left-4">
@@ -299,16 +285,9 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                 />
                                 <AvatarFallback>{usuario?.vchname.charAt(0)}</AvatarFallback>
                             </Avatar>
-                            <label htmlFor="perfil" className="absolute bottom-0 right-0 bg-primary text-primary-foreground p-2 rounded-full cursor-pointer">
-                                <Camera className="h-4 w-4" />
-                                <input
-                                    id="perfil"
-                                    type="file"
-                                    className="hidden"
-                                    onChange={(e) => handleImageUpload(e, 'fotoPerfil')}
-                                    accept="image/*"
-                                />
-                            </label>
+                            <button className='absolute bottom-0 right-0 bg-primary text-primary-foreground p-2 rounded-full cursor-pointer' onClick={() => handleUpdateImage(PROFILE_IMAGE)}>
+                                <Camera/>
+                            </button>
                         </div>
                         <CardTitle className="text-2xl font-bold pt-12">{`${usuario?.vchname ?? " "} ${usuario?.vchpaternalsurname ?? " "} ${usuario?.vchmaternalsurname ?? " "}`}</CardTitle>
                         <Button variant="outline" size="sm" className="absolute top-4 border-gray-400 dark:border-gray-900 right-4 bg-gray-300 hover:bg-gray-400 text-black dark:bg-gray-900 dark:hover:bg-gray-800 dark:text-white" onClick={() => setEditando(!editando)}>
@@ -596,7 +575,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                     </CardContent>
                 </Card>
             }
-            <ImageModal isOpen={isOpen} onClose={onOpenChange} />
+            <ImageModal isOpen={isOpen} onClose={onOpenChange} imageType={imageType}/>
         </div>
     )
 }
