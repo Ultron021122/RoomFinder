@@ -13,7 +13,7 @@ import { COVER_IMAGE, PROFILE_IMAGE } from "@/utils/constants";
 interface ImageModalComponentProps {
     isOpen: boolean;
     onClose: () => void;
-    imageType: number | null
+    imageType?: number | null
 }
 
 const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose, imageType }) => {
