@@ -11,17 +11,20 @@ import PropertyReviews from './property-reviews';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { toast, ToastContainer, Bounce, Slide } from 'react-toastify'
+import { toast, ToastContainer, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Spinner } from '@nextui-org/react';
 import { ImageOverlay } from './image-overlay';
-
+import { DatePickerWithRange } from '@/components/ui/datepicker';
 
 export default function PropertyComponent({ id }: { id: string }) {
     const [property, setProperty] = useState<Properties>();
     const [showPayment, setShowPayment] = useState(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
+    const [hasStayed, setHasStayed] = useState<boolean>(false);
 
     // Errores
     useEffect(() => {
@@ -48,6 +51,9 @@ export default function PropertyComponent({ id }: { id: string }) {
                 const response = await axios.get(`/api/properties/${id}`);
                 setProperty(response.data.data);
                 setIsLoading(false);
+                // Aquí se debería verificar si el usuario ya se ha hospedado en la propiedad
+                // y actualizar el estado `hasStayed` en consecuencia.
+                // setHasStayed(response.data.hasStayed);
             } catch (Error: any) {
                 setErrorSystem(Error.response?.data.message || Error.message);
             } finally {
@@ -186,6 +192,15 @@ export default function PropertyComponent({ id }: { id: string }) {
                             </CardHeader>
                             <CardContent>
                                 <p className="text-2xl font-bold mb-4">${property?.decrentalcost || 0} / noche</p>
+                                <div className="mb-4">
+                                    <h4 className="font-semibold mb-2">Selecciona las fechas</h4>
+                                    <DatePickerWithRange
+                                        startDate={startDate}
+                                        endDate={endDate}
+                                        onStartDateChange={setStartDate}
+                                        onEndDateChange={setEndDate}
+                                    />
+                                </div>
                                 <Button className="w-full" onClick={handlePayment}>
                                     Reservar ahora
                                 </Button>
@@ -198,7 +213,19 @@ export default function PropertyComponent({ id }: { id: string }) {
                             </CardContent>
                         </Card>
 
-                        <PropertyReviews reviews={reviews} />
+                        {/* Comentarios */}
+                        {hasStayed ? (
+                            <PropertyReviews reviews={reviews} />
+                        ) : (
+                            <Card className='bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-900'>
+                                <CardHeader>
+                                    <CardTitle>Comentarios</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-sm">Sólo los huéspedes que se han hospedado pueden dejar un comentario.</p>
+                                </CardContent>
+                            </Card>
+                        )}
                     </div>
                 </>
             ) : (
@@ -211,4 +238,3 @@ export default function PropertyComponent({ id }: { id: string }) {
         </>
     );
 }
-
