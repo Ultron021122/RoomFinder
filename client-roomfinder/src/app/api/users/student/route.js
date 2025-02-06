@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export async function GET() {
     try {
-        const response = await axios.get(`${process.env.REST_URL}/lessors/`, {
+        const response = await axios.get(`${process.env.REST_URL}/students/`, {
             headers: {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }
