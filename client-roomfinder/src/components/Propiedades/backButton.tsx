@@ -3,6 +3,7 @@
 import { ArrowLeft, Undo2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ReactNode } from "react";
 
 export default function BackButton({ className }: { className: string }) {
     const router = useRouter();
@@ -25,7 +26,7 @@ export default function BackButton({ className }: { className: string }) {
     );
 }
 
-export function RouteButton({ className, children, route }: { className?: string, children: string, route?: string }) {
+export function RouteButton({ className, children, route }: { className?: string, children: ReactNode, route?: string }) {
     const clases = className ? className : 'bg-blue-600 text-white text-sm leading-6 font-medium py-2 px-3 rounded-lg';
 
     const router = useRouter();
@@ -41,5 +42,27 @@ export function RouteButton({ className, children, route }: { className?: string
             className={clases}>
             {children}
         </button>
+    );
+}
+
+export function RouteButtonT({ className, children, route }: { className?: string, children: ReactNode, route?: string })  {
+    const clases = className ? className : 'bg-blue-600 text-white text-sm leading-6 font-medium py-2 px-3 rounded-lg';
+
+    const router = useRouter();
+
+    const handleRoute = () => {
+        router.push(`/${route}`);
+    }
+
+    return (
+        <div className={className}>
+            <Button
+                variant="link"
+                className={clases}
+                onClick={() => { route ? handleRoute() : null }}
+            >
+                {children}
+            </Button>
+        </div>
     );
 }

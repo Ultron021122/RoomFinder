@@ -17,6 +17,7 @@ const excludedRoutes = [
     '/dashboard/home',
     '/dashboard/manage',
     '/test',
+    '/checkout'
 ];
 
 function Navigate() {
