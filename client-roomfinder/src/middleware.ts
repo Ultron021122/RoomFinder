@@ -25,6 +25,7 @@ export const config = {
     "/dashboard/:path*",
     "/admin",
     "/user/:path*",
+    "/checkout"
     //'/api/:path*',
   ],
 };
