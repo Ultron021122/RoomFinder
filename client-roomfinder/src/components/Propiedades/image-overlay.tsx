@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Expand, Fullscreen, X } from 'lucide-react'
 
 interface ImageOverlayProps {
     images: { url: string; photoid: number }[]
@@ -22,7 +22,9 @@ export function ImageOverlay({ images }: ImageOverlayProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" className="absolute top-2 right-2 z-10">Ver todas las fotos</Button>
+                <Button variant="ghost" className="absolute top-2 right-2 z-30">
+                    <Expand size={25} />
+                </Button>
             </DialogTrigger>
             <DialogContent
                 className="sm:p-0 max-w-max max-h-[90vh] p-2 text-white"
