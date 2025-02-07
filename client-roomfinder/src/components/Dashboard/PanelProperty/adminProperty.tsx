@@ -362,7 +362,7 @@ export default function AdminProperties() {
                                         value={propertyEdit.intnumberrooms as number}
                                         onChange={(e) => setPropertyEdit({ ...propertyEdit, intnumberrooms: parseInt(e.target.value) })}
                                     />
-                                    <Label htmlFor="bnavailability">
+                                    <Label htmlFor="intnumberrooms">
                                         Número de habitaciones
                                     </Label>
                                 </div>

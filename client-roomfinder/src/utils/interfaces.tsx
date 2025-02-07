@@ -1055,6 +1055,12 @@ export interface Properties {
     decrentalcost: string;
 
     /**
+     * Type property name
+     * @example "Departamento"
+     */
+    vchtypename: string;
+
+    /**
      * Availability date of the property.
      * @example "2025-03-01"
      */
