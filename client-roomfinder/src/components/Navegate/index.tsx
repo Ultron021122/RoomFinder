@@ -65,7 +65,7 @@ export function SidebarItem({
   const roleName = rolesMapping[user?.roleid] || 'Desconocido';
 
   return (
-    <li className={`relative flex items-center justify-center my-1 font-medium rounded-md cursor-pointer transition-colors group z-50 ${pathname === url ? "bg-gradient-to-tr from-blue-200 to-blue-100 dark:from-blue-700 dark:to-blue-800" : "hover:bg-blue-50 dark:hover:bg-blue-900"}`} onClick={onClickSidebar}>
+    <li className={`relative flex items-center justify-center my-1 font-medium rounded-md cursor-pointer transition-colors group z-30 ${pathname === url ? "bg-gradient-to-tr from-blue-200 to-blue-100 dark:from-blue-700 dark:to-blue-800" : "hover:bg-blue-50 dark:hover:bg-blue-900"}`} onClick={onClickSidebar}>
       {!dropdownItems ? (
         <Link href={url} className={`${pathname === url ? "px-3 py-2 text-blue-800 dark:text-blue-100" : "px-3 py-2 text-gray-600 dark:text-gray-400"} flex`}>
           {icon}
