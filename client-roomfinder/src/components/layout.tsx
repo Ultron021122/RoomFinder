@@ -8,7 +8,9 @@ interface Props {
 
 const Layout = ({ children }: Props) => (
     <PerfectScrollbar>
-        {children}
+        <div className='mx-2'>
+            {children}
+        </div>
     </PerfectScrollbar>
 );
 
