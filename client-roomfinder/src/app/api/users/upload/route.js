@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import { uploadImage } from '../../cloudinary';
 import axios from 'axios';
+import { COVER_IMAGE } from '@/utils/constants';
 
 export async function PATCH(req, res) {
-    const { usuarioid, vchcoverimage } = await req.json();
+    const { usuarioid, image, type } = await req.json();
     let imageUrl;
     try {
         imageUrl = await uploadImage(
-            vchcoverimage,
+            image,
             'users',
             {
                 transformation: [
@@ -30,9 +31,10 @@ export async function PATCH(req, res) {
         );
     }
     try {
-        const response = await axios.patch(`${process.env.REST_URL}/users/${usuarioid}`, {
-            vchcoverimage: imageUrl.secure_url,
-        }, {
+        const data = {
+            [type === COVER_IMAGE ? "vchcoverimage" : "vchimage"] : imageUrl.secure_url
+        }
+        const response = await axios.patch(`${process.env.REST_URL}/users/${usuarioid}`, data , {
             headers: {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }

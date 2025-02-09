@@ -8,13 +8,15 @@ import { UserProfile } from "@/utils/interfaces";
 import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ImageIcon } from "lucide-react";
+import { COVER_IMAGE, PROFILE_IMAGE } from "@/utils/constants";
 
 interface ImageModalComponentProps {
     isOpen: boolean;
     onClose: () => void;
+    imageType?: number | null
 }
 
-const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose }) => {
+const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose, imageType }) => {
     const [selectedImage, setSelectedImage] = useState<string | ArrayBuffer | null>(null);
     const { data: session, update } = useSession();
     const user = session?.user as UserProfile;
@@ -38,7 +40,6 @@ const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose }) => 
             });
         }
     }, [errorSystem]);
-
 
     // Handler for image drop and selection
     const onDrop = (acceptedFiles: File[]) => {
@@ -67,9 +68,22 @@ const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose }) => 
                 // Upload image
                 const response = await axios.patch("/api/users/upload", {
                     usuarioid: user.usuarioid,
-                    vchcoverimage: selectedImage,
+                    image : selectedImage,
+                    type: imageType
                 })
 
+                const key = imageType === COVER_IMAGE ? "vchcoverimage" : "vchimage";
+                const value = imageType === COVER_IMAGE ? response.data.message.data.vchcoverimage : response.data.message.data.vchimage;
+
+                // actualizar los datos de la sesión
+                await update({
+                    ...session,
+                    user: {
+                        ...session?.user,
+                        [key] : value
+                    }
+                })
+                
                 setIsLoading(false);
                 if (response.status === 200) {
                     console.log(response)
@@ -126,7 +140,7 @@ const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose }) => 
             className="dark:bg-gray-900"
         >
             <ModalContent>
-                <ModalHeader className="flex flex-col gap-1 font-semibold text-neutral-900 dark:text-neutral-100">Fondo de perfil</ModalHeader>
+                <ModalHeader className="flex flex-col gap-1 font-semibold text-neutral-900 dark:text-neutral-100">{imageType === COVER_IMAGE ? "Imagen de fondo" : imageType === PROFILE_IMAGE && "Imagen de perfil"}</ModalHeader>
                 {
                     isLoading ? (
                         <div className="flex items-center justify-center h-80">

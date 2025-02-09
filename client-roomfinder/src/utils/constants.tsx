@@ -871,6 +871,8 @@ export const reviews = [
 
 export const ARRENDADOR = 2;
 export const ESTUDIANTE = 1;
+export const PROFILE_IMAGE = 1;
+export const COVER_IMAGE = 2;
 
 export const AboutUs = [
     {
