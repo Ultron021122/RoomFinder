@@ -20,7 +20,8 @@ const io = new SocketServer(server, {
   cors: {
     origin: [process.env.CLIENT_URL],
   },
-  connectionStateRecovery: {},
+  connectionStateRecovery: {
+  },
 });
 
 // Middlewares

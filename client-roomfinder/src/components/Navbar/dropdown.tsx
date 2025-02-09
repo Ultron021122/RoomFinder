@@ -93,12 +93,12 @@ const DropdownUser = () => {
                         Nueva Propiedad
                     </DropdownItem>
                 </DropdownSection>
-                <DropdownItem key="settings" textValue="Configuraciones">
+                {/* <DropdownItem key="settings" textValue="Configuraciones">
                     Mis Configuraciones
-                </DropdownItem>
-                <DropdownItem key="team_settings" textValue="Configuraciones de equipo">
+                </DropdownItem> */}
+                {/* <DropdownItem key="team_settings" textValue="Configuraciones de equipo">
                     Team Settings
-                </DropdownItem>
+                </DropdownItem> */}
                 <DropdownSection aria-label="Help & Feedback">
                     <DropdownItem key="help_and_feedback" textValue="Ayuda">
                         Ayuda y Retroalimentación

@@ -104,7 +104,7 @@ const PropertyReviews: React.FC<PropertyReviewsProps> = ({ reviews: initialRevie
               value={newReview.comment}
               onChange={handleInputChange}
               placeholder="Tu comentario"
-              className="mb-2 text-sm"
+              className="mb-2 text-sm border-gray-200 dark:text-gray-300"
             />
             <Button onClick={handleSubmit} className='w-full'>Enviar</Button>
           </CardContent>
