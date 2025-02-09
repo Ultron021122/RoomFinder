@@ -1,8 +1,8 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, SendIcon, SmileIcon } from "lucide-react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { ArrowLeft, SendIcon, SmileIcon, StickerIcon } from "lucide-react";
 import io from "socket.io-client";
 import TimeAgo from "javascript-time-ago";
 import es from "javascript-time-ago/locale/es";
@@ -14,55 +14,16 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { HoverCard, HoverCardTrigger } from "@radix-ui/react-hover-card";
-import { HoverCardContent } from "@/components/ui/hover-card";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 
 TimeAgo.addDefaultLocale(es);
 
 const socket = io(`${process.env.NEXT_PUBLIC_WEBSOCKET}`, {
-  autoConnect: false, // disable auto-connect to set auth
+  autoConnect: false,
 });
 
-export default function MessageComponent({
-  userID,
-  image,
-  nameUser,
-  name,
-  bnstatus,
-  className,
-  onBack
-}: {
-  userID: number,
-  image: string,
-  nameUser: string,
-  name: string
-  bnstatus: boolean,
-  className?: string | null,
-  onBack: () => void
-}) {
+const useSocket = (user: UserProfile | undefined, chatID: number | null) => {
   const [conversations, setConversations] = useState<Message[]>([]);
-  const [message, setMessage] = useState("");
-  const [chatID, setChatID] = useState<number | null>(null);
-  const [showEmojis, setShowEmojis] = useState(false); // Estado para mostrar el selector de emojis
-  const emojiList = ["😊", "😂", "😍", "😢", "😎", "👍", "🙌", "😒", "👻", "👽", "😈", "👿", "🤡", "🤠", "🤮", "🤢", "🤕", "😵", "🥵"]; // Lista de emojis disponibles
-
-  const { data: session } = useSession();
-  const user = session?.user as UserProfile;
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const timeAgo = new TimeAgo("es-ES");
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [conversations]);
-
-  const scrollToBottom = () => {
-    if (scrollAreaRef.current) {
-      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
-      if (scrollContainer) {
-        scrollContainer.scrollTop = scrollContainer.scrollHeight;
-      }
-    }
-  };
 
   useEffect(() => {
     if (user) {
@@ -93,30 +54,65 @@ export default function MessageComponent({
     }
   }, [user, chatID]);
 
+  return { conversations, setConversations };
+};
+
+export default function MessageComponent({
+  userID,
+  image,
+  nameUser,
+  className,
+  onBack,
+}: {
+  userID: number;
+  image: string;
+  nameUser: string;
+  className?: string | null;
+  onBack: () => void;
+}) {
+  const { data: session } = useSession();
+  const user = session?.user as UserProfile;
+  const [chatID, setChatID] = useState<number | null>(null);
+  const [message, setMessage] = useState("");
+  const [showEmojis, setShowEmojis] = useState(false);
+  const emojiList = useMemo(() => ["😊", "😂", "😍", "😢", "😎", "👍", "🙌", "😒", "👻", "👽", "😈", "👿", "🤡", "🤠", "🤮", "🤢", "🤕", "😵", "🥵"], []);
+  const { conversations, setConversations } = useSocket(user, chatID);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const timeAgo = useMemo(() => new TimeAgo("es-ES"), []);
+
+  const fetchMessages = useCallback(async () => {
+    try {
+      const response = await axios.post("/api/chats", {
+        usuario1id: user?.usuarioid,
+        usuario2id: userID,
+      });
+      setChatID(response.data.data.chatid);
+      setConversations([]);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
+  }, [user, userID, setConversations]);
+
   useEffect(() => {
     if (userID) {
-      const fetchMessages = async () => {
-        try {
-          const response = await axios.post('/api/chats', {
-            usuario1id: user?.usuarioid,
-            usuario2id: userID,
-          });
-          setChatID(response.data.data.chatid);
-          setConversations([]); // Limpiar las conversaciones al cambiar de usuario
-        } catch (error) {
-          console.error("Error fetching messages:", error);
-        }
-      };
-
       fetchMessages();
     }
-  }, [userID, user]);
+  }, [userID, fetchMessages]);
+
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollContainer) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      }
+    }
+  }, [conversations]);
 
   const sendMessage = (event: React.FormEvent) => {
     event.preventDefault();
     if (message.trim() && chatID) {
       const newMessage: Message = {
-        chatid: chatID as number,
+        chatid: chatID,
         vchcontenido: message,
         usuarioid: user?.usuarioid,
         created_at: new Date(),
@@ -127,12 +123,12 @@ export default function MessageComponent({
   };
 
   const handleEmojiClick = (emoji: string) => {
-    setMessage((prevMessage) => prevMessage + emoji); // Agregar el emoji al mensaje
-    setShowEmojis(false); // Cerrar el selector de emojis
+    setMessage((prevMessage) => prevMessage + emoji);
+    setShowEmojis(false);
   };
 
   return (
-    <section className="h-[calc(100vh-150px)] ">
+    <section className="h-[calc(100vh-200px)]">
       <div className="h-full w-full flex flex-col">
         <CardHeader className="border-b">
           <div className="flex items-center justify-start">
@@ -146,7 +142,7 @@ export default function MessageComponent({
             <CardTitle>{nameUser !== undefined ? nameUser : 'Selecciona un chat'}</CardTitle>
           </div>
         </CardHeader>
-        <CardContent className="flex-1 overflow-y-auto ">
+        <CardContent className="flex-1 overflow-y-auto">
           <ScrollArea className="h-full pr-4" ref={scrollAreaRef}>
             {conversations.length === 0 ? (
               <div className="flex items-center justify-center h-full">
@@ -174,11 +170,11 @@ export default function MessageComponent({
             )}
           </ScrollArea>
         </CardContent>
-        <div className="p-4 border-t relative"> {/* Cambié esto para poder posicionar el selector de emoticones flotante */}
+        <div className="p-4 border-t relative">
           <form onSubmit={sendMessage} className="flex dark:bg-gray-950 border-gray-800">
             <HoverCard>
-              <HoverCardTrigger className="dark:bg-blue-500 bg-blue-400 p-2 rounded-lg mr-2">
-                <SmileIcon size={18} />
+              <HoverCardTrigger className="dark:bg-blue-500 bg-blue-400 text-white p-2 rounded-lg mr-2">
+                <StickerIcon size={18} />
               </HoverCardTrigger>
               <HoverCardContent>
                 {emojiList.map((emoji) => (
@@ -198,7 +194,7 @@ export default function MessageComponent({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Escribe un mensaje..."
-              className="flex-grow mr-2 "
+              className="flex-grow mr-2"
             />
             <Button type="submit" className="ml-2 p-2 bg-green-500 text-white rounded-lg">
               <SendIcon size={20} />

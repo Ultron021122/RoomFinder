@@ -65,7 +65,7 @@ export default function MessageMainComponent() {
 
   return (
     <div>
-      <section className="h-[calc(100vh-150px)] flex flex-col">
+      <section className="h-[calc(100vh-200px)] flex flex-col mr-1">
         <div className="flex flex-col md:flex-row h-full max-w-8xl border rounded-lg overflow-hidden border-stroke bg-white shadow-md dark:bg-gray-950">
           <div className="w-full md:w-1/3 border-r overflow-y-auto custom-scrollbar">
             <div className="p-4 flex items-center justify-between border-b">
@@ -131,21 +131,18 @@ export default function MessageMainComponent() {
           </div>
           <div className={`w-full md:w-2/3 flex flex-col ${selectedUser ? '' : 'items-center justify-center'}`}>
             {selectedUser ? (
-              <MessageComponent userID={selectedUser} name={name} image={imageUser} nameUser={nameUser} bnstatus className='w-full' onBack={() => setSelectedUser(null)} />
+              <MessageComponent userID={selectedUser} image={imageUser} nameUser={nameUser} className='w-full' onBack={() => setSelectedUser(null)} />
             ) : (
               <div className={`w-full flex-col items-center justify-center h-full overflow-y-auto custom-scrollbar md:flex hidden`}>
                 <div className="max-w-lg w-full space-y-8 text-center">
-                  <div className="space-y-4">
-                    <div className="relative w-72 h-64 mx-auto">
+                  <div className="flex justify-center items-center">
                       <Image
-                        src="/utils/logoIconT.png"
+                        src="/utils/messages.svg"
                         alt="Ilustración de búsqueda"
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className='absolute inset-0 object-cover w-full h-full'
+                        width={256}
+                        height={124}
                         priority
                       />
-                    </div>
                   </div>
                 </div>
                 <div>

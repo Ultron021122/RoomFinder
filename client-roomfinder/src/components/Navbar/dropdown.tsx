@@ -1,9 +1,7 @@
-"use client";
-import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, User } from "@nextui-org/react";
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@nextui-org/react";
 import Link from 'next/link';
 import { PlusIcon } from "./icon";
 import { useSession, signOut } from "next-auth/react";
-import { rolesMapping } from "@/utils/constants";
 import { shortName } from "@/utils/functions";
 
 interface DropdownUserProps {
@@ -23,7 +21,7 @@ interface DropdownUserProps {
 const DropdownUser = () => {
     const { data: session } = useSession();
     const user = session?.user as DropdownUserProps;
-    const roleName = rolesMapping[user?.roleid] || 'Desconocido';
+    // const roleName = rolesMapping[user?.roleid] || 'Desconocido';
 
     return (
         <Dropdown placement="bottom-start" classNames={{
@@ -93,12 +91,12 @@ const DropdownUser = () => {
                         Nueva Propiedad
                     </DropdownItem>
                 </DropdownSection>
-                <DropdownItem key="settings" textValue="Configuraciones">
+                {/* <DropdownItem key="settings" textValue="Configuraciones">
                     Mis Configuraciones
-                </DropdownItem>
-                <DropdownItem key="team_settings" textValue="Configuraciones de equipo">
+                </DropdownItem> */}
+                {/* <DropdownItem key="team_settings" textValue="Configuraciones de equipo">
                     Team Settings
-                </DropdownItem>
+                </DropdownItem> */}
                 <DropdownSection aria-label="Help & Feedback">
                     <DropdownItem key="help_and_feedback" textValue="Ayuda">
                         Ayuda y Retroalimentación

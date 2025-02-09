@@ -1,15 +1,15 @@
-'use client';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
+import { ScrollArea } from './ui/scroll-area';
 
 interface Props {
     children: React.ReactNode;
 }
 
 const Layout = ({ children }: Props) => (
-    <PerfectScrollbar>
-        {children}
-    </PerfectScrollbar>
+    <ScrollArea>
+        <div>
+            {children}
+        </div>
+    </ScrollArea>
 );
 
 export default Layout;

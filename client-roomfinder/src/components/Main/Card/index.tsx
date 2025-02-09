@@ -8,13 +8,6 @@ import { useRouter } from 'next/navigation';
 import { MapPin, Star } from 'lucide-react';
 import { Photos, Properties } from '@/utils/interfaces';
 
-// interface CardOwnerProps {
-//     id: number;
-//     title: string;
-//     description: string;
-//     value: number;
-//     imagenes: Photos[];
-// }
 
 export const CardOwner = (cardProps: Properties) => {
     const route = useRouter();
@@ -76,7 +69,7 @@ export const CardOwner = (cardProps: Properties) => {
                     <span
                         className="text-base leading-6 col-start-1 sm:col-span-2 lg:row-start-4 lg:col-span-1 dark:text-slate-200"
                     >
-                        $599.00 MXN
+                        ${cardProps.decrentalcost}
                     </span>
                 </CardActions>
             </CardActionArea>

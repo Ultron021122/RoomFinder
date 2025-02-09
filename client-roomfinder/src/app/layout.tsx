@@ -5,6 +5,7 @@ import Providers from "./providers";
 import { ToastContainer } from "react-toastify";
 import Navigate from "@/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import Footer from "@/components/Footer";
 // import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Instrument_Sans({ subsets: ["latin"] });
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
   applicationName: 'RoomFinder',
 };
 
-const mainClass = `bg-white dark:bg-gray-900 ${inter.className}`; // Add the inter font to the main class
+const MainClass = `bg-white dark:bg-gray-900 ${inter.className}`; // Add the inter font to the main class
 
 export default function RootLayout({
   children,
@@ -32,7 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning={true}>
-      <body className={mainClass} suppressHydrationWarning={true}>
+      <body className={MainClass} suppressHydrationWarning={true}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -40,10 +41,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers>
-            <div className="max-w-screen-2xl mx-auto">
+            <div className="max-w-screen-2xl w-full mx-auto">
               <Navigate />
               <ToastContainer limit={3} />
               {children}
+              <Footer />
             </div>
             {/* <SpeedInsights /> */}
           </Providers>

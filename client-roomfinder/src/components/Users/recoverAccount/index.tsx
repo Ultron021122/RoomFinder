@@ -99,91 +99,88 @@ function RecoverComponent() {
     }, [status, router]);
 
     return (
-        <section className="bg-gray-50 dark:bg-gray-900">
-            <PerfectScrollbar>
-                <div className="h-[100vh]">
-                    {isLoading ? (
-                        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
-                            <Spinner />
-                        </div>
-                    ) : (
-                        <>
-                            {!isTokenValid ? (
-                                <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
-                                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-800">
-                                        <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                                            <div>
-                                                <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                                                    Validar token
-                                                </h2>
-                                                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                                    Recibiste un correo electrónico con un token, ingrésalo a continuación.
-                                                </p>
-                                            </div>
-                                            <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
-                                                <div>
-                                                    <InputOTP
-                                                        maxLength={8}
-                                                        pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
-                                                        {...register("vchtoken", {
-                                                            required: {
-                                                                value: true,
-                                                                message: messages.vchtoken.required
-                                                            },
-                                                            minLength: {
-                                                                value: 8,
-                                                                message: messages.vchtoken.min
-                                                            },
-                                                            maxLength: {
-                                                                value: 8,
-                                                                message: messages.vchtoken.max
-                                                            },
-                                                            pattern: {
-                                                                value: /^[a-zA-Z0-9]+$/, // Acepta letras y números
-                                                                message: messages.vchtoken.pattern
-                                                            }
-                                                        })}
-                                                        onChange={(value) => {
-                                                            setValue("vchtoken", value); // Actualiza el valor en react-hook-form
-                                                            trigger("vchtoken"); // Desencadena validación
-                                                        }}
-                                                    >
-                                                        <InputOTPGroup
-                                                            className="flex justify-center space-x-2 items-center"
-                                                        >
-                                                            {[...Array(8)].map((_, index) => (
-                                                                <InputOTPSlot
-                                                                    key={index}
-                                                                    index={index}
-                                                                    className="w-10 h-10 text-center border rounded-md dark:border-gray-700"
-                                                                />
-                                                            ))}
-                                                        </InputOTPGroup>
-                                                    </InputOTP>
-                                                    {errors.vchtoken && (
-                                                        <Alert message={errors.vchtoken.message} />
-                                                    )}
-                                                </div>
-                                                <Button type="submit" color="primary" variant="solid" className="font-normal w-full">
-                                                    Validar token
-                                                </Button>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                    ¿No tienes una cuenta? <Link href='/users/signup' className="text-sky-600 hover:underline dark:text-sky-500">Crear una cuenta</Link>
-                                                </p>
-                                            </form>
+        <section className="dark:bg-gray-900">
+            <div className="h-[100vh]">
+                {isLoading ? (
+                    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                        <Spinner />
+                    </div>
+                ) : (
+                    <>
+                        {!isTokenValid ? (
+                            <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-800">
+                                    <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                                        <div>
+                                            <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                                                Validar token
+                                            </h2>
+                                            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                Recibiste un correo electrónico con un token, ingrésalo a continuación.
+                                            </p>
                                         </div>
+                                        <form className="space-y-4 md:space-y-5" onSubmit={handleSubmit(onSubmit)}>
+                                            <div>
+                                                <InputOTP
+                                                    maxLength={8}
+                                                    pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                                                    {...register("vchtoken", {
+                                                        required: {
+                                                            value: true,
+                                                            message: messages.vchtoken.required
+                                                        },
+                                                        minLength: {
+                                                            value: 8,
+                                                            message: messages.vchtoken.min
+                                                        },
+                                                        maxLength: {
+                                                            value: 8,
+                                                            message: messages.vchtoken.max
+                                                        },
+                                                        pattern: {
+                                                            value: /^[a-zA-Z0-9]+$/, // Acepta letras y números
+                                                            message: messages.vchtoken.pattern
+                                                        }
+                                                    })}
+                                                    onChange={(value) => {
+                                                        setValue("vchtoken", value); // Actualiza el valor en react-hook-form
+                                                        trigger("vchtoken"); // Desencadena validación
+                                                    }}
+                                                >
+                                                    <InputOTPGroup
+                                                        className="flex justify-center space-x-2 items-center"
+                                                    >
+                                                        {[...Array(8)].map((_, index) => (
+                                                            <InputOTPSlot
+                                                                key={index}
+                                                                index={index}
+                                                                className="w-10 h-10 text-center border rounded-md dark:border-gray-700"
+                                                            />
+                                                        ))}
+                                                    </InputOTPGroup>
+                                                </InputOTP>
+                                                {errors.vchtoken && (
+                                                    <Alert message={errors.vchtoken.message} />
+                                                )}
+                                            </div>
+                                            <Button type="submit" color="primary" variant="solid" className="font-normal w-full">
+                                                Validar token
+                                            </Button>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                ¿No tienes una cuenta? <Link href='/users/signup' className="text-sky-600 hover:underline dark:text-sky-500">Crear una cuenta</Link>
+                                            </p>
+                                        </form>
                                     </div>
                                 </div>
-                            ) : (
-                                <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
-                                    <Form token={token} />
-                                </div>
-                            )}
-                        </>
-                    )}
-                    <Footer />
-                </div>
-            </PerfectScrollbar>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col justify-center items-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                                <Form token={token} />
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
         </section>
     );
 };

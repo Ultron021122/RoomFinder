@@ -4,7 +4,7 @@ import { LessorsModel } from './lessor.js'
 export class PropertiesModel {
 
     constructor({ vchtitle, propertyid, propertytypeid, lessorid, bnavailability, intnumberrooms, intnumberbeds, intnumberbathrooms,
-        intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, dtavailabilitydate,
+        intmaxoccupacy, bnfurnished, vchfurnituretype, decrentalcost, vchtypename, dtavailabilitydate,
         intmincontractduration, intmaxcontractduration, decpropertyrating,
         bnstudyzone, vchbuildingsecurity, vchtransportationaccess,
         bnwaterincluded, bnelectricityincluded, bninternetincluded, bngasincluded,
@@ -27,6 +27,7 @@ export class PropertiesModel {
         this.bnfurnished = bnfurnished;
         this.vchfurnituretype = vchfurnituretype;
         this.decrentalcost = decrentalcost;
+        this.vchtypename = vchtypename;
         this.dtavailabilitydate = dtavailabilitydate;
         this.intmincontractduration = intmincontractduration;
         this.intmaxcontractduration = intmaxcontractduration;
