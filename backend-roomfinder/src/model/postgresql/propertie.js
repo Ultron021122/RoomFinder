@@ -176,7 +176,7 @@ export class PropertiesModel {
         try {
             const property = await this.getById({ id })
             if (property === null) return false;
-
+            console.log('Modelo: ', input)
             const db = new Database();
             const client = await db.pool.connect();
             try {
