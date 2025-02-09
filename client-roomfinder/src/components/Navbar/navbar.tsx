@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation'
 import { useSession } from "next-auth/react";
 import { Button, Link as LinkUI } from "@nextui-org/react";
 import DropdownUser from "./dropdown";
-import { GraduationCapIcon } from "lucide-react";
 import { ModeToggle } from "../mode-toggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useTheme } from "next-themes";
@@ -26,7 +25,7 @@ function Navbar({
 
     return (
         <>
-            <nav className="w-screen max-w-screen-2xl bg-white border-b border-white dark:bg-gray-900 dark:border-gray-800 md:dark:border-gray-900 absolute top-0 z-50">
+            <nav className="w-full max-w-screen-2xl bg-white border-b border-white dark:bg-gray-900 dark:border-gray-800 md:dark:border-gray-900 absolute top-0 z-50">
                 <div className="max-w-screen-2xl p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center justify-center h-auto">

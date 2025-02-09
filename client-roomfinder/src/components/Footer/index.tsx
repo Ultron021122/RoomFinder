@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-export default function Footer() {
+function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="border-t border-gray-200 shadow dark:border-gray-900 dark:bg-gray-950 max-w-screen-2xl mx-auto">
+        <footer className="border-t border-gray-200 dark:border-gray-900 dark:bg-gray-950 max-w-screen-2xl w-full mx-auto">
             <div className="w-full mx-auto max-w-screen-2xl p-4 md:flex md:items-center md:justify-between">
                 <span className="text-sm text-neutral-950 sm:text-center dark:text-gray-300 dark:hover:text-white">
                     © {currentYear} <Link href="/" className="hover:underline">RoomFinder™</Link>. Todos Los Derechos Reservados.
@@ -30,3 +30,5 @@ export default function Footer() {
         </footer>
     );
 }
+
+export default Footer;

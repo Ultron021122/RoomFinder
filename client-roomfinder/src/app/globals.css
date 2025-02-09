@@ -1,6 +1,13 @@
+/* Añade tus estilos globales aquí */
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import 'react-perfect-scrollbar/dist/css/styles.css';
 
 :root {
     --white: #FFFFFF;
@@ -179,7 +186,7 @@ input[type="number"] {
 }
 
 @layer base {
-  :root {
+    :root {
         --background: 0 0% 100%;
         --foreground: 0 0% 3.9%;
         --card: 0 0% 100%;
@@ -214,7 +221,8 @@ input[type="number"] {
         --sidebar-border: 220 13% 91%;
         --sidebar-ring: 217.2 91.2% 59.8%;
     }
-  .dark {
+
+    .dark {
         --background: 0 0% 3.9%;
         --foreground: 0 0% 98%;
         --card: 0 0% 3.9%;
@@ -251,10 +259,11 @@ input[type="number"] {
 }
 
 @layer base {
-  * {
-    @apply border-border;
+    * {
+        @apply border-border;
     }
-  body {
-    @apply bg-background text-foreground;
+
+    body {
+        @apply bg-background text-foreground;
     }
 }

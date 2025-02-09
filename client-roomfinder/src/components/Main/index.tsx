@@ -10,7 +10,7 @@ export default function HomeComponent() {
         <Layout key={1}>
             <div className='h-[100vh] w-full'>
                 <MainBanner />
-                <section className="max-w-screen-2xl mx-auto my-14 p-2 sm:p-0">
+                <section className="max-w-screen-2xl w-full mx-auto my-14 p-2 sm:p-0">
                     <div className="mb-10">
                         <div className="mb-16 max-w-7xl mx-auto">
                             <h3
