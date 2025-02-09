@@ -46,6 +46,7 @@ const locationSchema = z.object({
 });
 
 const propertySchema = z.object({
+    propertyid: z.number().optional(),
     lessorid: z.number(),
     propertytypeid: z.number(),
     vchtitle: z.string().min(5, {

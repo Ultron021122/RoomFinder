@@ -71,18 +71,6 @@ const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose, image
                     image : selectedImage,
                     type: imageType
                 })
-
-                const key = imageType === COVER_IMAGE ? "vchcoverimage" : "vchimage";
-                const value = imageType === COVER_IMAGE ? response.data.message.data.vchcoverimage : response.data.message.data.vchimage;
-
-                // actualizar los datos de la sesión
-                await update({
-                    ...session,
-                    user: {
-                        ...session?.user,
-                        [key] : value
-                    }
-                })
                 
                 setIsLoading(false);
                 if (response.status === 200) {

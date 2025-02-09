@@ -21,31 +21,12 @@ interface DropdownUserProps {
 const DropdownUser = () => {
     const { data: session } = useSession();
     const user = session?.user as DropdownUserProps;
-    // const roleName = rolesMapping[user?.roleid] || 'Desconocido';
 
     return (
         <Dropdown placement="bottom-start" classNames={{
             content: "dark:bg-gray-900 border dark:border-gray-800 rounded-md"
         }}>
             <DropdownTrigger>
-                {/* <User
-                    as="button"
-                    avatarProps={{
-                        isBordered: true,
-                        color: "primary",
-                        classNames: {
-                            base: "ring-offset-gray-900 mr-1"
-                        },
-                        src: `${user.vchimage}`
-                    }}
-                    className="transition-transform"
-                    description={user.vchemail}
-                    name={user.vchname + " " + user.vchpaternalsurname + " " + user.vchmaternalsurname}
-                    classNames={{
-                        wrapper: "hidden sm:inline-flex flex-col items-start",
-                        name: "dark:text-gray-200",
-                    }}
-                /> */}
                 <Avatar
                     isBordered
                     as="button"

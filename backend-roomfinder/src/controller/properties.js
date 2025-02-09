@@ -44,7 +44,6 @@ export class PropertyController {
 
     create = async (req, res, next) => {
         const result = validateProperty(req.body)
-        //console.log('Input:', req.body)
         if (result.error) {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
