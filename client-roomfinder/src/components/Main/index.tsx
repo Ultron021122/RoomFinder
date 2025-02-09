@@ -1,7 +1,5 @@
 import Layout from "@/components/layout";
-import Footer from '@/components/Footer';
 import { itemDataImage, propertiesHome } from "@/utils/constants";
-import { CardOwner } from "./Card";
 import Banner from "./Banner";
 import MainBanner from "./MainBanner";
 import BlurFade from "@/components/ui/blur-fade";
@@ -12,7 +10,7 @@ export default function HomeComponent() {
         <Layout key={1}>
             <div className='h-[100vh] w-full'>
                 <MainBanner />
-                <section className="max-w-screen-2xl mx-auto my-14 p-2 sm:p-0">
+                <section className="max-w-screen-2xl w-full mx-auto my-14 p-2 sm:p-0">
                     <div className="mb-10">
                         <div className="mb-16 max-w-7xl mx-auto">
                             <h3
@@ -34,13 +32,12 @@ export default function HomeComponent() {
                         <BlurFadeDemo />
                     </div>
                 </section>
-                <Footer />
             </div >
         </Layout >
     );
 };
 
-export function BlurFadeDemo() {
+function BlurFadeDemo() {
   return (
     <section id="photos" className="max-w-6xl mx-auto">
       <div className="columns-2 gap-4 sm:columns-3">

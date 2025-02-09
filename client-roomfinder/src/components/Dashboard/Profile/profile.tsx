@@ -37,8 +37,8 @@ interface UserProfileComponentProps {
 
 const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData }) => {
     const { data: session, update } = useSession();
-    const [coverImage, setCoverImage] = useState("");
-    const [profileImage, setProfileImage] = useState("");
+    const [coverImage, setCoverImage] = useState(userData.vchcoverimage);
+    const [profileImage, setProfileImage] = useState(userData.vchimage);
     const [usuario, setUsuario] = useState<StudentInfo | LessorInfo>();
     const [imageType, setImageType] = useState<number | null>(null);
     const { register, handleSubmit, reset, formState: { errors } } = useForm<StudentEdit | LessorEdit>({
@@ -72,15 +72,15 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
 
     useEffect(() => {
         if (userData) {  // Solo ejecuta si los datos no han sido cargados
-            const fetchImageUrls = async () => {
-                try {
-                    const response = await axios.get(`/api/users/images/${userData.usuarioid}`);
-                    setCoverImage(response.data.data.vchcoverimage);
-                    setProfileImage(response.data.data.vchimage);
-                } catch (Error: any) {
-                    setErrorSystem(Error.response?.data.message);
-                }
-            };
+            // const fetchImageUrls = async () => {
+            //     try {
+            //         const response = await axios.get(`/api/users/images/${userData.usuarioid}`);
+            //         setCoverImage(response.data.data.vchcoverimage);
+            //         setProfileImage(response.data.data.vchimage);
+            //     } catch (Error: any) {
+            //         setErrorSystem(Error.response?.data.message);
+            //     }
+            // };
 
             const getUserData = async () => {
                 try {
@@ -133,7 +133,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                 }
             };
 
-            fetchImageUrls();
+            // fetchImageUrls();
             getUserData();
         }
     }, [userData, reset]);
@@ -256,9 +256,9 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-r p-4"> {/*bg-gradient-to-r*/}
+        <div className="bg-gradient-to-r p-4"> {/*bg-gradient-to-r*/}
             {isLoading ?
-                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
                     <Spinner />
                 </div>
                 :

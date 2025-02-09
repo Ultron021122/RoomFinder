@@ -86,6 +86,16 @@ const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose, image
                 
                 setIsLoading(false);
                 if (response.status === 200) {
+                    console.log(response)
+                    const { vchimage, vchcoverimage } = response.data.message.data;
+                    await update({
+                        ...session,
+                        user: {
+                            ...session?.user,
+                            vchimage: vchimage,
+                            vchcoverimage: vchcoverimage
+                        }
+                    });
                     toast.success(response.data.message.message, {
                         position: "bottom-right",
                         autoClose: 5000,
