@@ -29,7 +29,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ARRENDADOR, ESTUDIANTE } from '@/utils/constants'
 import { IdCardIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
-import { validateDate } from '@/utils/functions'
 import { useSession } from 'next-auth/react'
 
 interface UserProfileComponentProps {
@@ -262,9 +261,9 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-r p-4"> {/*bg-gradient-to-r*/}
+        <div className="bg-gradient-to-r p-4"> {/*bg-gradient-to-r*/}
             {isLoading ?
-                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[100vh] lg:py-0">
+                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
                     <Spinner />
                 </div>
                 :

@@ -39,7 +39,6 @@ export class ChatsController {
     }
 
     create = async (req, res, next) => {
-        console.log('Error problem:',req.body);
         const result = validateChat(req.body);
         if (result.error) {
             return res.status(400).json({ error: JSON.parse(result.error.message) });
