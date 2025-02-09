@@ -135,17 +135,14 @@ export default function MessageMainComponent() {
             ) : (
               <div className={`w-full flex-col items-center justify-center h-full overflow-y-auto custom-scrollbar md:flex hidden`}>
                 <div className="max-w-lg w-full space-y-8 text-center">
-                  <div className="space-y-4">
-                    <div className="relative w-72 h-64 mx-auto">
+                  <div className="flex justify-center items-center">
                       <Image
-                        src="/utils/logoIconT.png"
+                        src="/utils/messages.svg"
                         alt="Ilustración de búsqueda"
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className='absolute inset-0 object-cover w-full h-full'
+                        width={256}
+                        height={124}
                         priority
                       />
-                    </div>
                   </div>
                 </div>
                 <div>
