@@ -9,12 +9,12 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { toast, ToastContainer, Bounce, Slide } from 'react-toastify'
+import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Search, Edit, Trash2, UserPlus, ChevronLeft, ChevronRight, Home } from 'lucide-react'
 import axios from 'axios'
-import { format, set } from 'date-fns'
-import { Spinner, Tab } from '@nextui-org/react'
+import { format } from 'date-fns'
+import { Spinner } from '@nextui-org/react'
 import { HomeIcon } from '@radix-ui/react-icons'
 import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -105,32 +105,40 @@ export default function AdminProperties() {
         setDialogoAbierto(true)
     }
 
-    const handleGuardarCambios = () => {
+    const handleGuardarCambios = async () => {
         if (propertyEdit) {
-            setProperties(properties.map(u => u.propertyid === propertyEdit.propertyid ? propertyEdit : u))
-            setDialogoAbierto(false)
-            toast.success('Propiedad actualizada con éxito', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            })
+            try {
+                const response = await axios.patch(`/api/properties/${propertyEdit.propertyid}`, propertyEdit);
+                setProperties(properties.map(u => u.propertyid === propertyEdit.propertyid ? propertyEdit : u));
+                setDialogoAbierto(false);
+                toast.success(response.data.message.message, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    style: { fontSize: '0.9rem' },
+                    transition: Slide,
+                });
+            } catch (Error: any) {
+                setErrorSystem(Error.response?.data.message);
+            }
         }
     }
 
     const handleEliminarPropietario = async (id: number) => {
         setIsLoading(true);
         setErrorSystem(null);
-        setProperties(properties.filter(u => u.propertyid !== id));
         try {
             const response = await axios.delete(`/api/properties/${id}`);
+            setProperties(properties.filter(u => u.propertyid !== id));
             setIsLoading(false);
             if (response.status === 200) {
-                setProperties(properties.filter(u => u.propertyid !== id));
                 toast.success(response.data.message.message, {
-                    position: "top-right",
+                    position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -200,12 +208,11 @@ export default function AdminProperties() {
                                         <TableCell className="justify-center items-center">
                                             <Badge
                                                 variant={propiedad.bnavailability === true ? 'default' : 'outline'}
-                                            //propiedad.bnavailability === 'Inactivo' ? 'secondary' : 'outline'}
                                             >
                                                 {propiedad.bnavailability === true ? 'Disponible' : 'No Disponible'}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell>{format(propiedad.created_at, 'yyyy-MM-dd HH:mm:ss')}</TableCell>
+                                        <TableCell>{format(new Date(propiedad.created_at), 'yyyy-MM-dd HH:mm:ss')}</TableCell>
                                         <TableCell>
                                             <Button variant="ghost" size="sm" onClick={() => handleEditarUsuario(propiedad)}>
                                                 <Edit className="h-4 w-4" />
@@ -335,7 +342,7 @@ export default function AdminProperties() {
                                     <Label htmlFor="tipo">Tipo de inmueble</Label>
                                     <Select
                                         value={propertyEdit.propertytypeid.toString()}
-                                        onValueChange={(e) => setPropertyEdit({ ...propertyEdit, propertytypeid: e as string })}
+                                        onValueChange={(value) => setPropertyEdit({ ...propertyEdit, propertytypeid: parseInt(value) })}
                                         defaultValue={propertyEdit.propertytypeid.toString()}
                                     >
                                         <SelectTrigger>
@@ -366,50 +373,11 @@ export default function AdminProperties() {
                                         Número de habitaciones
                                     </Label>
                                 </div>
-                                {/* <div>
-                                <Label htmlFor="tipo">Tipo</Label>
-                                <Select
-                                    value={usuarioEditando.tipo}
-                                    onValueChange={(value) => setUsuarioEditando({ ...usuarioEditando, tipo: value as 'Estudiante' | 'Propietario' })}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecciona el tipo de usuario" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Estudiante">Estudiante</SelectItem>
-                                        <SelectItem value="Propietario">Propietario</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div> */}
-                                {/* <div>
-                                <Label htmlFor="estado">Estado</Label>
-                                <Select
-                                    value={usuarioEditando.estado}
-                                    onValueChange={(value) => setUsuarioEditando({ ...usuarioEditando, estado: value as 'Activo' | 'Inactivo' | 'Pendiente' })}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecciona el estado del usuario" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Activo">Activo</SelectItem>
-                                        <SelectItem value="Inactivo">Inactivo</SelectItem>
-                                        <SelectItem value="Pendiente">Pendiente</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div> */}
                                 <Button
                                     type="submit"
-                                // onClick={handleGuardarCambios}
                                 >
                                     Guardar Cambios
                                 </Button>
-                                {/* <Button
-                                type='button'
-                                variant="outline" 
-                                onClick={() => setDialogoAbierto(false)}
-                            >
-                                Cancelar
-                            </Button> */}
                             </form>
                         )}
                     </ScrollArea>

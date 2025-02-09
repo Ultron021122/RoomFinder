@@ -17,7 +17,7 @@ import { ImageOverlay } from './image-overlay';
 import { DatePickerWithRange } from '@/components/ui/datepicker';
 import { Separator } from '../ui/separator';
 
-export default function PropertyComponent({ id }: { id: string }) {
+function PropertyComponent({ id }: { id: string }) {
     const [property, setProperty] = useState<Properties>();
     const [showPayment, setShowPayment] = useState(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -239,3 +239,5 @@ export default function PropertyComponent({ id }: { id: string }) {
         </>
     );
 }
+
+export default PropertyComponent;
