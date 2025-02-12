@@ -8,7 +8,8 @@ const ACCEPTED_ORIGINS = [
     'http://localhost:3001',
     'https://roomfinder.site',
     'https://www.roomfinder.site',
-    'https://www.roomfinder.website'
+    'https://www.roomfinder.website',
+    'https://api.roomfinder.website'
 ]
 
 export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => cors({
