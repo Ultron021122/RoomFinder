@@ -23,7 +23,6 @@ export async function GET() {
 
 export async function POST(req, res) {
     const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, confirm_password, bnstatus, dtbirthdate, vchimage, roleid, intcodestudent, vchuniversity } = await req.json();
-    console.log('Image', vchimage);
     let imageUrl;
     try {
         imageUrl = await uploadImage(
@@ -79,7 +78,6 @@ export async function POST(req, res) {
         );
 
     } catch (error) {
-        console.error(error)
         if (imageUrl && imageUrl.public_id) {
             await deleteImage(imageUrl.public_id);
         }
