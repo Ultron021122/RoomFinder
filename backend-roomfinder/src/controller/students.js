@@ -41,6 +41,7 @@ export class StudentController {
     create = async (req, res, next) => {
         const result = validateStudent(req.body)
         if (result.error) {
+            console.log(JSON.parse(result.error.message))
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
         // Encrypt password
