@@ -27,6 +27,18 @@ export const createPropertiesRouter = ({ propertieModel }) => {
         propertyController.getById
     ])
 
+    propertiesRouter.get('/owner/:lessorid', [
+        param('lessorid').isInt().withMessage('lessorid must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({errors: errors.array() })
+            }
+            next()
+        },
+        propertyController.getByLessor
+    ])
+
     propertiesRouter.get('/top/featured', propertyController.getFeaturedProperties)
 
     propertiesRouter.post('/', propertyController.create)
