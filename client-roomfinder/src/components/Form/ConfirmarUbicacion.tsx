@@ -210,6 +210,7 @@ export default function ConfirmarUbicacion() {
             <DynamicMap
                 position={[latitud, longitud]}
                 zoom={16}
+                style="rounded-sm shadow-lg h-96 w-96 w-full mx-auto"
             />
         </div>
     );
