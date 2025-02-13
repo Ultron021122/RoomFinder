@@ -2,7 +2,6 @@
 
 import { useFormulario } from "./FormularioContext";
 import Image from 'next/image';
-import Input from "../GeneralComponents/Input";
 import { inputVacio } from "./Wizar";
 import { Chip, Spinner } from "@nextui-org/react";
 import dynamic from "next/dynamic";
@@ -130,7 +129,7 @@ export default function Confirmar() {
                                                 alt={`Imagen del inmueble ${index + 1}`}
                                                 width={400}
                                                 height={300}
-                                                className="rounded-lg object-cover"
+                                                className="carousel-image rounded-lg object-cover"
                                             />
                                         </CarouselItem>
                                     );
@@ -188,7 +187,7 @@ export default function Confirmar() {
                     </div>
                 </div>
             </div>
-            <div className="my-5">
+            <div className="mt-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="p-4">
                         <h3 className="font-semibold text-sm sm:text-base my-5 text-blue-600 dark:text-blue-400">

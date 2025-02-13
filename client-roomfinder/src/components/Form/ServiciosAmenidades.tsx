@@ -66,8 +66,8 @@ export default function ServiciosAmenidades() {
                             >
                                 <Image
                                     src={data.icon}
-                                    width={40}
-                                    height={40}
+                                    width={35}
+                                    height={35}
                                     alt={`Icono de ${data.content}`}
                                     className={`filter dark:invert ${inmueble.servicios[data.variable as keyof ServicesAmenities] ? 'invert' : ''}`}
                                 />

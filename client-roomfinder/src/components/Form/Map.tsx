@@ -12,11 +12,11 @@ const customIcon = new Icon({
     iconSize: [52, 52]
 });
 
-const styleDefault = 'rounded-sm shadow-lg h-96 w-96 sm:w-[400px] md:w-[500px] lg:w-[725px] mx-auto';
+const styleDefault = 'rounded-sm shadow-lg h-96 w-96 sm:w-[400px] md:w-[500px] lg:w-[600px] mx-auto';
 
 export default function Map({ position, zoom, style }: MapDataComponent) {
     return (
-        <div>
+        <div className="h-[400px]">
             <MapContainer
                 center={position}
                 zoom={zoom}
