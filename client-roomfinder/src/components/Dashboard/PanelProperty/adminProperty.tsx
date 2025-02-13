@@ -22,6 +22,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Properties, PropertyType } from '@/utils/interfaces';
 import Form from '@/components/Form';
 import { usePropertyContext } from '@/contexts/PropertyContext';
+import { FormularioProvider } from '@/components/Form/FormularioContext';
+import Wizar from '@/components/Form/Wizar';
+import ElementForm from '@/components/Form/element_form';
 
 export default function AdminProperties() {
     const { properties, propertyTypes, isLoading, error, refetchProperties } = usePropertyContext();
@@ -173,7 +176,10 @@ export default function AdminProperties() {
                                 className="pl-8"
                             />
                         </div>
-                        <Button className='flex flex-row items-center justify-center md:justify-start'>
+                        <Button
+                            className='flex flex-row items-center justify-center md:justify-start'
+                            onClick={() => setCreateProperty(true)}
+                        >
                             <HomeIcon className="mr-2 h-5 w-5 md:h-4 md:w-4" />
                             <span className='hidden md:inline'>Agregar Propiedad</span>
                         </Button>
@@ -387,13 +393,15 @@ export default function AdminProperties() {
             >
                 <DialogContent
                     aria-describedby="create_element"
-                    className="w-96"
+                    className="w-screen"
                 >
                     <DialogHeader>
                         <DialogTitle>Nueva Propiedad</DialogTitle>
                     </DialogHeader>
-                    <ScrollArea className="min-h-28">
-                        <Form />
+                    <ScrollArea className="h-[500px]">
+                        <FormularioProvider>
+                            <ElementForm />
+                        </FormularioProvider>
                     </ScrollArea>
                 </DialogContent>
             </Dialog>

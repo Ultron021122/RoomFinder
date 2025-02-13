@@ -267,3 +267,11 @@ input[type="number"] {
         @apply bg-background text-foreground;
     }
 }
+
+
+.carousel-image {
+    height: 250px; /* Ajusta según tus necesidades */
+    width: 100%; /* Ajusta al ancho completo del contenedor */
+    object-fit: cover; /* Mantiene la relación de aspecto de la imagen */
+    border-radius: 0.5rem; /* Ajusta el radio del borde si es necesario */
+}
