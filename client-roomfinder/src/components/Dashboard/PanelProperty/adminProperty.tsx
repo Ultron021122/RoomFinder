@@ -1,37 +1,37 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Search, Edit, Trash2, UserPlus, ChevronLeft, ChevronRight, Home } from 'lucide-react'
-import axios from 'axios'
-import { format } from 'date-fns'
-import { Spinner } from '@nextui-org/react'
-import { HomeIcon } from '@radix-ui/react-icons'
-import { Textarea } from '@/components/ui/textarea'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { Properties, PropertyType } from '@/utils/interfaces'
-
+import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Home } from 'lucide-react';
+import axios from 'axios';
+import { format } from 'date-fns';
+import { Spinner } from '@nextui-org/react';
+import { HomeIcon } from '@radix-ui/react-icons';
+import { Textarea } from '@/components/ui/textarea';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Properties, PropertyType } from '@/utils/interfaces';
+import Form from '@/components/Form';
+import { usePropertyContext } from '@/contexts/PropertyContext';
 
 export default function AdminProperties() {
-    const [properties, setProperties] = useState<Properties[]>([]);
-    const [busqueda, setBusqueda] = useState<string>('')
-    const [propertyEdit, setPropertyEdit] = useState<Properties | null>(null)
-    const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([])
-    const [dialogoAbierto, setDialogoAbierto] = useState<boolean>(false)
-    const [paginaActual, setPaginaActual] = useState<number>(1)
-    const [propiedadesPorPagina] = useState<number>(10)
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [errorSystem, setErrorSystem] = useState<string | null>(null);
+    const { properties, propertyTypes, isLoading, error, refetchProperties } = usePropertyContext();
+    const [busqueda, setBusqueda] = useState<string>('');
+    const [propertyEdit, setPropertyEdit] = useState<Properties | null>(null);
+    const [dialogoAbierto, setDialogoAbierto] = useState<boolean>(false);
+    const [createProperty, setCreateProperty] = useState<boolean>(false);
+    const [paginaActual, setPaginaActual] = useState<number>(1);
+    const [propiedadesPorPagina] = useState<number>(10);
+    const [isLoadingState, setIsLoading] = useState<boolean>(false);
 
     const filtrarProperties = () => {
         return properties.filter(property =>
@@ -40,10 +40,9 @@ export default function AdminProperties() {
         );
     };
 
-    // Errores
     useEffect(() => {
-        if (errorSystem) {
-            toast.error(errorSystem, {
+        if (error) {
+            toast.error(error, {
                 position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -55,61 +54,31 @@ export default function AdminProperties() {
                 transition: Bounce,
             });
         }
-    }, [errorSystem]);
+    }, [error]);
 
-    useEffect(() => {
-        const fetchProperties = async () => {
-
-            setIsLoading(true);
-            setErrorSystem(null);
-            try {
-                const response = await axios.get(`/api/properties`);
-                setProperties(response.data.data);
-                setIsLoading(false);
-            } catch (Error: any) {
-                setErrorSystem(Error.response?.data.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchProperties();
-    }, []);
-
-    useEffect(() => {
-        const fetchTypesProperties = async () => {
-            try {
-                const response = await axios.get(`/api/typeproperty`);
-                setPropertyTypes(response.data.data);
-            } catch (Error: any) {
-                setErrorSystem(Error.response?.data.message);
-            }
-        };
-        fetchTypesProperties();
-    }, []);
-
-    const propiedadesFiltrados = filtrarProperties()
-    const totalPaginas = Math.ceil(propiedadesFiltrados.length / propiedadesPorPagina)
+    const propiedadesFiltrados = filtrarProperties();
+    const totalPaginas = Math.ceil(propiedadesFiltrados.length / propiedadesPorPagina);
 
     const obtenerPropiedadesPaginados = () => {
-        const indiceInicio = (paginaActual - 1) * propiedadesPorPagina
-        const indiceFin = indiceInicio + propiedadesPorPagina
-        return propiedadesFiltrados.slice(indiceInicio, indiceFin)
-    }
+        const indiceInicio = (paginaActual - 1) * propiedadesPorPagina;
+        const indiceFin = indiceInicio + propiedadesPorPagina;
+        return propiedadesFiltrados.slice(indiceInicio, indiceFin);
+    };
 
     useEffect(() => {
-        setPaginaActual(1)
-    }, [busqueda])
+        setPaginaActual(1);
+    }, [busqueda]);
 
     const handleEditarUsuario = (propiedad: Properties) => {
         setPropertyEdit(propiedad);
-        setDialogoAbierto(true)
-    }
+        setDialogoAbierto(true);
+    };
 
     const handleGuardarCambios = async () => {
         if (propertyEdit) {
             try {
                 const response = await axios.patch(`/api/properties/${propertyEdit.propertyid}`, propertyEdit);
-                setProperties(properties.map(u => u.propertyid === propertyEdit.propertyid ? propertyEdit : u));
+                refetchProperties();
                 setDialogoAbierto(false);
                 toast.success(response.data.message.message, {
                     position: "bottom-right",
@@ -124,18 +93,26 @@ export default function AdminProperties() {
                     transition: Slide,
                 });
             } catch (Error: any) {
-                setErrorSystem(Error.response?.data.message);
+                toast.error(Error.response?.data.message, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
             }
         }
-    }
+    };
 
     const handleEliminarPropietario = async (id: number) => {
         setIsLoading(true);
-        setErrorSystem(null);
         try {
             const response = await axios.delete(`/api/properties/${id}`);
-            setProperties(properties.filter(u => u.propertyid !== id));
-            setIsLoading(false);
+            refetchProperties();
             if (response.status === 200) {
                 toast.success(response.data.message.message, {
                     position: "bottom-right",
@@ -150,10 +127,30 @@ export default function AdminProperties() {
                     transition: Slide,
                 });
             } else {
-                setErrorSystem(response.data.message);
+                toast.error(response.data.message, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
             }
         } catch (Error: any) {
-            setErrorSystem(Error.response?.data.message || Error.response.request.statusText);
+            toast.error(Error.response?.data.message || Error.response.request.statusText, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
         } finally {
             setIsLoading(false);
         }
@@ -289,7 +286,7 @@ export default function AdminProperties() {
                 onOpenChange={setDialogoAbierto}
             >
                 <DialogContent
-                    aria-describedby="modal-description"
+                    aria-describedby="update_element"
                     className="w-96"
                 >
                     <DialogHeader>
@@ -383,6 +380,23 @@ export default function AdminProperties() {
                     </ScrollArea>
                 </DialogContent>
             </Dialog>
+
+            <Dialog
+                open={createProperty}
+                onOpenChange={setCreateProperty}
+            >
+                <DialogContent
+                    aria-describedby="create_element"
+                    className="w-96"
+                >
+                    <DialogHeader>
+                        <DialogTitle>Nueva Propiedad</DialogTitle>
+                    </DialogHeader>
+                    <ScrollArea className="min-h-28">
+                        <Form />
+                    </ScrollArea>
+                </DialogContent>
+            </Dialog>
         </div>
-    )
+    );
 }

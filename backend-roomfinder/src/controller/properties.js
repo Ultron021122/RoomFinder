@@ -24,10 +24,11 @@ export class PropertyController {
             .catch(next);
     }
 
-    getTypeProperties = async (req, res, next) => {
+    getByLessor = async (req, res, next) => {
+        const { lessorid } = req.params
         try {
-            const typeProperties = await this.propertieModel.getTypeProperties()
-            return res.json(typeProperties);
+            const properties = await this.propertieModel.getByLessor({ lessorid })
+            return res.json(properties);
         } catch (err) {
             next(err);
         }
