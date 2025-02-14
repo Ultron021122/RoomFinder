@@ -152,9 +152,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         alert
                     />
                 </Sidebar>
-                <main className={`flex-1 px-2 pt-4 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
+                <main className={`flex-1 pt-4 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
                     <section className={`${windowWidth <= 640 && expanded && 'hidden'}`}>
-                        <ScrollArea className="h-[calc(100vh-100px)] p-2">
+                        <ScrollArea className="w-[380px] sm:w-full h-[calc(100vh-100px)] px-2">
                             {children}
                         </ScrollArea>
                     </section>

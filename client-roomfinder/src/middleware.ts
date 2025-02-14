@@ -1,6 +1,6 @@
 export { default } from "next-auth/middleware";
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+
 /**
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -20,6 +20,12 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 */
+
+export async function middleware(req: NextRequest) {
+  const ip = req.ip || req.headers.get('x-forwarded-for');
+  return NextResponse.next();
+}
+
 export const config = {
   matcher: [
     "/dashboard/:path*",
