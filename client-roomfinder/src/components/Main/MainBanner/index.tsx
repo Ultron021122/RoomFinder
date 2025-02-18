@@ -10,7 +10,7 @@ export default function MainBanner() {
         <>
             <div className="relative flex size-full items-center justify-center overflow-hidden rounded-lg bg-background dark:bg-gray-900 p-10 md:p-14 lg:p-20">
                 <div className="z-10 px-4 mx-auto max-w-screen-xl text-center lg:px-12">
-                    <Link href={'/'} className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm rounded-full bg-gray-200 text-black hover:bg-gray-300 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700" role="alert">
+                    <Link href={'/properties'} className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm rounded-full bg-gray-200 text-black hover:bg-gray-300 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700" role="alert">
                         <span className="text-xs bg-primary-600 rounded-full text-white px-4 py-1.5 mr-3">Nuevo</span> <span className="text-xs md:text-sm font-medium">¡Nuevas habitaciones disponibles! Descúbrelo</span>
                         <ChevronRightIcon className="ml-2 w-5 h-5" />
                     </Link>
