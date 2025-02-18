@@ -3,15 +3,14 @@
 import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
 import { Properties } from '@/utils/interfaces';
-import { Spinner } from "@nextui-org/react";
 import { Skeleton } from "@/components/ui/skeleton"
-import CardOwner from "../Main/Card";
-import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { SelectValue } from "@radix-ui/react-select";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import CardOwner from "@/components/Main/Card";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 12;
 
 export const SectionProperty = () => {
     const [allProperties, setAllProperties] = useState<Properties[]>([]);
@@ -72,8 +71,8 @@ export const SectionProperty = () => {
     const content = useMemo(() => {
         if (isLoading) {
             // return <Spinner />;
-            return count.map((item) => (
-                <SkeletonCard />
+            return count.map((item, index) => (
+                <SkeletonCard index={index} />
             ));
         }
 
@@ -84,12 +83,10 @@ export const SectionProperty = () => {
         if (paginatedProperties.length === 0) {
             return <p>No hay propiedades destacadas.</p>;
         }
-        return count.map((item) => (
-            <SkeletonCard />
+
+        return paginatedProperties.map((property, index) => (
+            <CardOwner key={index} {...property} />
         ));
-        // return paginatedProperties.map((property, index) => (
-        //     <CardOwner key={index} {...property} />
-        // ));
     }, [isLoading, errorSystem, paginatedProperties]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +100,7 @@ export const SectionProperty = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto min-h-screen mt-20 p-2 sm:p-0">
+        <div className="max-w-6xl mx-auto min-h-screen mt-5 p-2 sm:p-0">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-5">
                 <Input
                     placeholder="Buscar propiedades..."
@@ -115,7 +112,7 @@ export const SectionProperty = () => {
                     value={filterType}
                     onValueChange={(value) => setFilterType(value)}
                 >
-                    <SelectTrigger className="border-gray-700"> 
+                    <SelectTrigger className="border-gray-700">
                         <SelectValue placeholder="Filtrar por tipo" />
                     </SelectTrigger>
                     <SelectContent className="bg-gray-950">
@@ -153,13 +150,13 @@ export const SectionProperty = () => {
 
 export default SectionProperty;
 
-export function SkeletonCard() {
+export function SkeletonCard({ index }: { index: number }) {
     return (
-        <div className="flex flex-col space-y-3">
-            <Skeleton className="min-w-screen h-60 rounded-xl bg-gray-300 dark:bg-gray-800" />
+        <div className="flex flex-col space-y-3" key={index}>
+            <Skeleton className="min-w-screen h-60 rounded-xl bg-gray-300 dark:bg-gray-800" key={index+1} />
             <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px] bg-gray-300 dark:bg-gray-800" />
-                <Skeleton className="h-4 w-[200px] bg-gray-300 dark:bg-gray-800" />
+                <Skeleton className="h-4 w-[250px] bg-gray-300 dark:bg-gray-800" key={index+2} />
+                <Skeleton className="h-4 w-[200px] bg-gray-300 dark:bg-gray-800" key={index+3} />
             </div>
         </div>
     )

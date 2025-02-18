@@ -88,6 +88,9 @@ function Navbar({
                                     <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                         Arrendadores
                                     </Link>
+                                    <Link href="/properties" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                        Propiedades
+                                    </Link>
                                     <ModeToggle />
                                 </div>
                             )
@@ -125,6 +128,11 @@ function Navbar({
                                     <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-100 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/arrendadores' ? 'dark:bg-gray-800' : ''}`}>
                                         <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-900 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                             Arrendadores
+                                        </Link>
+                                    </li>
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-100 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/arrendadores' ? 'dark:bg-gray-800' : ''}`}>
+                                        <Link href="/properties" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-900 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                            Propiedades
                                         </Link>
                                     </li>
                                     {/* Falta por terminar */}
