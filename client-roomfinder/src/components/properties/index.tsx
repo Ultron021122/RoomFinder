@@ -81,7 +81,7 @@ export const SectionProperty = () => {
         }
 
         if (paginatedProperties.length === 0) {
-            return <p>No hay propiedades destacadas.</p>;
+            return <p>No hay propiedades.</p>;
         }
 
         return paginatedProperties.map((property, index) => (
@@ -123,7 +123,7 @@ export const SectionProperty = () => {
                     </SelectContent>
                 </Select>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 p-2">
                 {content}
             </div>
 
