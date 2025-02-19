@@ -3,7 +3,7 @@ import { BreadcrumbWithCustomSeparator } from '@/components/GeneralComponents/Br
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: 'Inmuebless',
+    title: 'Inmuebles',
 };
 
 export default function DashboardHome() {

@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Header() {
     return (
-        <div className="relative isolate overflow-hidden bg-white dark:bg-gray-900 px-6 pb-10 pt-8 sm:pt-10 lg:overflow-visible lg:px-0">
+        <div className="relative isolate overflow-hidden bg-white dark:bg-gray-900 px-6 pb-5 pt-8 sm:pt-10 lg:overflow-visible lg:px-0">
             <div className="absolute inset-0 -z-10 overflow-hidden">
                 <svg
                     aria-hidden="true"
