@@ -32,7 +32,7 @@ export default function Galeria({ imagenes }: { imagenes: JSX.Element[] }) {
 
     return (
         <div className="relative group overflow-hidden h-[100vh] rounded-t-lg">
-            <div className="relative flex h-full w-full transition-transform ease-out duration-500 transform bg-slate-400" style={{ transform: `translateX(-${actual * 100}%)` }}>
+            <div className="flex h-full w-full transition-transform ease-out duration-500 transform bg-slate-400" style={{ transform: `translateX(-${actual * 100}%)` }}>
                 {imagenes}
             </div>
 

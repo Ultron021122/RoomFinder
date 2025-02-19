@@ -1,11 +1,11 @@
 'use client';
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
+import { Car, DoorOpen, Heater, LucideProps, PaintBucket, ParkingCircle, Sofa, WashingMachine } from 'lucide-react';
 import { Properties } from '@/utils/interfaces';
 import Image from "next/image";
-import { MapPin, Star, Wifi, Tv, CookingPotIcon as Kitchen, Car, Users, Bed, Bath } from 'lucide-react';
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { comments, reviews } from '@/utils/constants';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { reviews } from '@/utils/constants';
 import PropertyReviews from './property-reviews';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +16,19 @@ import { Spinner } from '@nextui-org/react';
 import { ImageOverlay } from './image-overlay';
 import { DatePickerWithRange } from '@/components/ui/datepicker';
 import { Separator } from '../ui/separator';
+import { MapPin, Star, Wifi, Tv, CookingPotIcon as Kitchen, Users, Bed, Bath, AirVentIcon, Sparkles, Refrigerator, Utensils, Zap, Fence, Flame, DropletsIcon } from 'lucide-react';
+
+interface Amenity {
+    text: string
+    icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>
+    included: boolean
+}
+
+interface PropertyDetails { // puedo mejorar esta parte
+    text: string
+    icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>
+    amount: number
+}
 
 function PropertyComponent({ id }: { id: string }) {
     const [property, setProperty] = useState<Properties>();
@@ -49,6 +62,8 @@ function PropertyComponent({ id }: { id: string }) {
             setErrorSystem(null);
             try {
                 const response = await axios.get(`/api/properties/${id}`);
+                console.log('datos de la propiedad:')
+                console.log(response.data.data);
                 setProperty(response.data.data);
                 setIsLoading(false);
                 // Aquí se debería verificar si el usuario ya se ha hospedado en la propiedad
@@ -63,12 +78,35 @@ function PropertyComponent({ id }: { id: string }) {
         fetchProperty();
     }, [id]);
 
-    const amenities = [
-        { icon: Wifi, text: "Wi-Fi de alta velocidad" },
-        { icon: Tv, text: "TV por cable" },
-        { icon: Kitchen, text: "Cocina equipada" },
-        { icon: Car, text: "Estacionamiento" },
-    ];
+    const amenities : Amenity[] = useMemo(() => {
+        return [
+            { text: "Aire acondicionado", icon: AirVentIcon, included: property?.bnairconditioningincluded!},
+            { text: "TV cable", icon: Tv, included: property?.bncabletvincluded!},
+            { text: "Limpieza", icon: Sparkles, included: property?.bncleaningincluded!},
+            { text: "Refrigerador", icon: Refrigerator, included: property?.bncoolerincluded!},
+            { text: "Comedor", icon: Utensils, included: property?.bndiningroom!},
+            { text: "Luz", icon: Zap, included: property?.bnelectricityincluded!},
+            { text: "Patio", icon: Fence, included: property?.bngardenincluded!},
+            { text: "Gas", icon: Flame, included: property?.bngasincluded!},
+            { text: "Boiler", icon: Heater, included: property?.bnheatingincluded!},
+            { text: "Internet", icon: Wifi, included: property?.bninternetincluded!},
+            { text: "Cocina", icon: Kitchen, included: property?.bnkitchen!},
+            { text: "Área de lavado", icon: PaintBucket, included: property?.bnlaundryincluded!},
+            { text: "Sala de estar", icon: Sofa, included: property?.bnlivingroom!},
+            { text: "Estacionamiento", icon: ParkingCircle, included: property?.bnparkingincluded!},
+            { text: "Lavadora", icon: WashingMachine, included: property?.bnwashingmachineincluded!},
+            { text: "Servicio de agua", icon: DropletsIcon, included: property?.bnwaterincluded!}
+        ];
+    }, [property]);
+
+    const propertyDetails : PropertyDetails[] = useMemo(() => {
+        return [
+            { text: 'Recámaras', icon: DoorOpen, amount: property?.intnumberrooms!},
+            { text: 'Camas', icon: Bed, amount: property?.intnumberbeds!},
+            { text: 'Baños', icon: Bath, amount: property?.intnumberbathrooms!},
+            { text: 'Cap. Estacionamiento', icon: Car, amount: property?.intaccountparking!}
+        ]
+    }, [property]);
 
     const handlePayment = () => {
         setShowPayment(true);
@@ -155,31 +193,33 @@ function PropertyComponent({ id }: { id: string }) {
                                     <div>
                                         <h4 className="font-semibold mb-2">Detalles de la propiedad</h4>
                                         <div className="flex flex-wrap gap-2">
-                                            <Badge variant="secondary" className="flex items-center">
-                                                <Bed className="mr-1 h-4 w-4" />
-                                                {property?.intnumberrooms || 0} habitaciones
-                                            </Badge>
-                                            <Badge variant="secondary" className="flex items-center">
-                                                <Bath className="mr-1 h-4 w-4" />
-                                                {property?.intnumberbathrooms || 0} baños
-                                            </Badge>
-                                            <Badge variant="secondary" className="flex items-center">
-                                                <Users className="mr-1 h-4 w-4" />
-                                                {property?.intmaxoccupancy || 0} huéspedes
-                                            </Badge>
+                                            {propertyDetails.map((detail, index) => {
+                                                return detail.amount > 0 && <Badge key={index} variant="secondary" className="flex items-center">
+                                                    <detail.icon className="mr-1 h-4 w-4" />
+                                                    {`${detail.amount} ${detail.text}`}
+                                                </Badge>
+                                            })}
                                         </div>
                                     </div>
                                     <div>
                                         <h4 className="font-semibold mb-2">Amenidades</h4>
                                         <ul className="space-y-1">
-                                            {amenities.map((amenity, index) => (
-                                                <li key={index} className="flex items-center">
+                                            {amenities.map((amenity, index) => {
+                                                    return amenity.included && <li key={index} className="flex items-center">
                                                     <amenity.icon className="mr-2 h-4 w-4" />
                                                     <span className='text-sm'>{amenity.text}</span>
                                                 </li>
-                                            ))}
+                                            })}
                                         </ul>
                                     </div>
+                                </div>
+                                <div className='mt-10'>
+                                    <h4 className='font-semibold mb-2'>Reglamento</h4>
+                                    <ul className='space-y-1'>
+                                        {property.vchpropertyrules.map((rule, index) => <li key={index}>
+                                            <p>{rule}</p>
+                                        </li>)}
+                                    </ul>
                                 </div>
                             </CardContent>
                         </Card>

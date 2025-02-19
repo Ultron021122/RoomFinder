@@ -1,10 +1,9 @@
 import Image from 'next/image'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Bed, Bath, MapPin, Maximize } from 'lucide-react'
+import { Bed, Bath, MapPin, DoorOpen } from 'lucide-react'
 import { Properties } from '@/utils/interfaces'
-import Galeria from '@/components/carrousel'
+import { Galeria } from '../Galeria'
 
 interface TarjetaPropiedadProps {
     data: Properties
@@ -16,34 +15,24 @@ export default function TarjetaPropiedad({data, handleViewProperty}: TarjetaProp
         if (precio === null || precio === undefined) {
             return 'Precio no disponible'
         }
-        return precio.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
+        return precio.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
     }
 
-    const imagenes = data.objphotos.map(photo => <Image
-        key={photo.photoid}
-        src={photo.url}
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        fill
-        className='object-cover w-full h-full'
-        alt={`imagen de propiedad ${photo.photoid}`}
-    />)
+    const imagenes = data.objphotos.map(photo => <div key={photo.photoid} className='relative min-w-full h-full'>
+            <Image
+                width={800}
+                height={600}
+                src={photo.url}
+                className='absolute inset-0 object-cover w-full h-full'
+                alt={`imagen de propiedad ${photo.photoid}`}
+            />
+        </div>
+    )
 
     return (
         <Card className="w-full mx-auto max-w-sm overflow-hidden bg-gray-950">
-            <CardHeader className="p-0 h-48 w-full">
+            <CardHeader className="p-0 h-56 w-full">
             <Galeria imagenes={imagenes}/>
-                {/*<div className="h-48 w-full">
-                    {/*<Image
-                        src="/background/interior1.jpg"
-                        alt={titulo}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className='absolute inset-0 object-cover w-full h-full'
-                    />}
-                    {/*<Badge className="absolute top-2 right-2 bg-primary text-primary-foreground">
-                        {data.vchtypename}
-                    </Badge>}
-                </div>*/}
             </CardHeader>
             <CardContent className="p-4">
                 <CardTitle className="text-xl font-bold mb-2">{data.vchtitle}</CardTitle>
@@ -54,7 +43,7 @@ export default function TarjetaPropiedad({data, handleViewProperty}: TarjetaProp
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{data.vchdescription}</p>
                 <div className="flex justify-between items-center text-sm text-muted-foreground mb-4">
                     <div className="flex items-center">
-                        <Bed className="h-4 w-4 mr-1" />
+                        <DoorOpen className="h-4 w-4 mr-1" />
                         <span>{data.intnumberrooms} hab.</span>
                     </div>
                     <div className="flex items-center">
@@ -62,7 +51,7 @@ export default function TarjetaPropiedad({data, handleViewProperty}: TarjetaProp
                         <span>{data.intnumberbathrooms} baños</span>
                     </div>
                     <div className="flex items-center">
-                        <Maximize className="h-4 w-4 mr-1" />
+                        <Bed className="h-4 w-4 mr-1" />
                         <span>{data.intnumberbeds} camas</span>
                     </div>
                 </div>

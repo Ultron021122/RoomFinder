@@ -43,7 +43,6 @@ export default function Inmuebles() {
         async function fetchProperties(){
             const response = await axios.get('/api/properties/');
             if(response.status === 200){
-                console.log(response.data); // eliminar esto
                 setproperties(response.data.data);
                 setIsLoading(false);
             }else{
