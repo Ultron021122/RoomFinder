@@ -5,11 +5,13 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import { Properties } from '@/utils/interfaces';
 import CardOwner from "./Card";
 import { Spinner } from "@nextui-org/react";
+import { SkeletonCard } from "../properties";
 
 export const SectionProperty = () => {
     const [properties, setProperties] = useState<Properties[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
+    const count = [1, 2, 3, 4, 5, 6];
 
     const fetchProperties = useCallback(async () => {
         setIsLoading(true);
@@ -38,7 +40,9 @@ export const SectionProperty = () => {
 
     const content = useMemo(() => {
         if (isLoading) {
-            return <Spinner />;
+            return count.map((item, index) => (
+                <SkeletonCard index={index} />
+            ));
         }
 
         if (errorSystem) {
