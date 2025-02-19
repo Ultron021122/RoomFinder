@@ -42,9 +42,7 @@ export class EmailService {
                         <meta name="viewport" content="width=device-width, initial-scale=1.0">
                         <link rel="preconnect" href="https://fonts.googleapis.com">
                         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                        <link
-                            href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
-                            rel="stylesheet">
+                        <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
                         <title>Verificación de correo</title>
                         <style>
                             body {
@@ -61,16 +59,21 @@ export class EmailService {
                                 margin: 0 auto;
                                 background-color: #ffffff;
                                 border-radius: 8px;
-                                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                                overflow: hidden;
                                 color: #333333;
                             }
 
                             .header {
-                                background-color: #3b82f6;
+                                background-color: #0f172a;
                                 padding: 20px;
-                                border-radius: 8px 8px 0 0;
-                                text-align: center;
                                 color: #ffffff;
+                                text-align: center;
+                            }
+
+                            .header img {
+                                max-width: 120px;
+                                margin-bottom: 10px;
                             }
 
                             .header h1 {
@@ -94,11 +97,10 @@ export class EmailService {
                                 padding: 15px 25px;
                                 font-size: 16px;
                                 color: #ffffff;
-                                background-color: #3b82f6;
+                                background-color: #0f172a;
                                 border-radius: 5px;
                                 text-decoration: none;
                                 font-weight: 500;
-                                margin-bottom: 1rem;
                             }
 
                             .button:hover {
@@ -110,6 +112,7 @@ export class EmailService {
                                 padding: 20px;
                                 font-size: 14px;
                                 color: #999999;
+                                background-color: #f4f4f7;
                             }
 
                             .footer a {
@@ -126,13 +129,12 @@ export class EmailService {
                     <body>
                         <div class="email-container">
                             <div class="header">
+                                <img src="https://res.cloudinary.com/dal8aivch/image/upload/v1739424183/utils/xoe4vqadlpkfy0d8ux11.png" alt="Logo">
                                 <h1>Verificación de cuenta</h1>
                             </div>
                             <div class="content">
                                 <p>Hola ${vchname},<br>Oprime el siguiente botón para poder verificar tu cuenta:</p>
-                                <a href="${process.env.URL_FRONTEND + '/users/verify?ui=' + usuarioid + '&token=' + token}" class="button"
-                                    style="display: inline-block; padding: 15px 25px; font-size: 16px; color: #ffffff; background-color: #3b82f6; border-radius: 5px; text-decoration: none; font-weight: 500; margin-top: 20px;">Verificar
-                                    cuenta</a>
+                                <a href="${process.env.URL_FRONTEND + '/users/verify?ui=' + usuarioid + '&token=' + token}" class="button">Verificar cuenta</a>
                                 <p>Si no solicitaste este correo, por favor ignóralo.</p>
                             </div>
                             <div class="footer">
@@ -147,7 +149,6 @@ export class EmailService {
                     `,
             };
             const result = await this.transporter.sendMail(info);
-            console.log('Message sent: %s', result.messageId);
             return result.messageId;
         } catch (error) {
             throw new Error(`Error sending mail: ${error.message}`);
@@ -193,12 +194,39 @@ export class EmailService {
                             color: #333333;
                         }
 
-                        .header {
-                            background-color: #3b82f6;
-                            padding: 20px;
-                            border-radius: 8px 8px 0 0;
-                            text-align: center;
+                        .number {
+                            display: inline-block;
+                            padding: 15px 25px;
+                            font-size: 24px;
+                            margin-bottom: 1rem;
                             color: #ffffff;
+                            background-color: #0f172a;
+                            border-radius: 5px;
+                            text-decoration: none;
+                            font-weight: 500;
+                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                            margin-top: 20px;
+                        }
+
+                        .footer a {
+                            color: #007bff;
+                            text-decoration: none;
+                        }
+
+                        .footer a:hover {
+                            text-decoration: underline;
+                        }
+
+                        .header {
+                            background-color: #0f172a;
+                            padding: 20px;
+                            color: #ffffff;
+                            text-align: center;
+                        }
+
+                        .header img {
+                            max-width: 120px;
+                            margin-bottom: 10px;
                         }
 
                         .header h1 {
@@ -217,18 +245,19 @@ export class EmailService {
                             margin: 0 0 20px;
                         }
 
-                        .number {
+                        .button {
                             display: inline-block;
                             padding: 15px 25px;
-                            font-size: 24px;
-                            margin-bottom: 1rem;
+                            font-size: 16px;
                             color: #ffffff;
-                            background-color: #3b82f6;
+                            background-color: #0f172a;
                             border-radius: 5px;
                             text-decoration: none;
                             font-weight: 500;
-                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-                            margin-top: 20px;
+                        }
+
+                        .button:hover {
+                            background-color: #335bcb;
                         }
 
                         .footer {
@@ -236,6 +265,7 @@ export class EmailService {
                             padding: 20px;
                             font-size: 14px;
                             color: #999999;
+                            background-color: #f4f4f7;
                         }
 
                         .footer a {
@@ -252,6 +282,7 @@ export class EmailService {
                 <body>
                     <div class="email-container">
                         <div class="header">
+                            <img src="https://res.cloudinary.com/dal8aivch/image/upload/v1739424183/utils/xoe4vqadlpkfy0d8ux11.png" alt="Logo">
                             <h1>Recuperación de cuenta</h1>
                         </div>
                         <div class="content">
@@ -272,7 +303,6 @@ export class EmailService {
 
             };
             const result = await this.transporter.sendMail(info);
-            console.log('Message sent: %s', result.messageId);
             return result.messageId;
         } catch (error) {
             throw new Error(`Error sending mail: ${error.message}`);

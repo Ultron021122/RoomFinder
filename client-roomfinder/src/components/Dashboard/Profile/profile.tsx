@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import 'react-toastify/dist/ReactToastify.css'
-import { Camera, Pencil, MapPin, BookMarkedIcon, Briefcase, MapPinned } from 'lucide-react'
+import { Camera, Pencil, MapPin, BookMarkedIcon, Briefcase, MapPinned, X } from 'lucide-react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { LessorEdit, LessorInfo, StudentEdit, StudentInfo, UserProfile } from '@/utils/interfaces'
 import axios from 'axios'
@@ -30,6 +30,7 @@ import { ARRENDADOR, ESTUDIANTE } from '@/utils/constants'
 import { IdCardIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { useSession } from 'next-auth/react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface UserProfileComponentProps {
     userData: UserProfile;
@@ -71,17 +72,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
     }, [errorSystem]);
 
     useEffect(() => {
-        if (userData) {  // Solo ejecuta si los datos no han sido cargados
-            // const fetchImageUrls = async () => {
-            //     try {
-            //         const response = await axios.get(`/api/users/images/${userData.usuarioid}`);
-            //         setCoverImage(response.data.data.vchcoverimage);
-            //         setProfileImage(response.data.data.vchimage);
-            //     } catch (Error: any) {
-            //         setErrorSystem(Error.response?.data.message);
-            //     }
-            // };
-
+        if (userData) {
             const getUserData = async () => {
                 try {
                     const { roleid, usuarioid } = userData;
@@ -146,7 +137,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
         }
     }, [])
 
-    const handleUpdateImage = (imageType:number) => {
+    const handleUpdateImage = (imageType: number) => {
         setImageType(imageType);
         onOpen();
     }
@@ -272,7 +263,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                             className='absolute inset-0 object-cover w-full h-full'
                         />
                         <button className='absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer' onClick={() => handleUpdateImage(COVER_IMAGE)}>
-                            <Camera/>
+                            <Camera />
                         </button>
                     </div>
                     <CardHeader className="relative">
@@ -286,14 +277,30 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                 <AvatarFallback>{usuario?.vchname.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <button className='absolute bottom-0 right-0 bg-primary text-primary-foreground p-2 rounded-full cursor-pointer' onClick={() => handleUpdateImage(PROFILE_IMAGE)}>
-                                <Camera/>
+                                <Camera />
                             </button>
                         </div>
                         <CardTitle className="text-2xl font-bold pt-12">{`${usuario?.vchname ?? " "} ${usuario?.vchpaternalsurname ?? " "} ${usuario?.vchmaternalsurname ?? " "}`}</CardTitle>
-                        <Button variant="outline" size="sm" className="absolute top-4 border-gray-400 dark:border-gray-900 right-4 bg-gray-300 hover:bg-gray-400 text-black dark:bg-gray-900 dark:hover:bg-gray-800 dark:text-white" onClick={() => setEditando(!editando)}>
-                            <Pencil className="h-4 w-4 mr-2" />
-                            {editando ? 'Cancelar' : 'Editar Perfil'}
-                        </Button>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className={`absolute top-4 right-4 ${editando ? 'bg-red-300 hover:bg-red-400 border-red-400 dark:bg-red-900 dark:hover:bg-red-800 dark:border-red-900' : 'bg-gray-300 hover:bg-gray-400 border-gray-400 dark:bg-gray-900 dark:hover:bg-gray-800 dark:border-gray-900'} text-black dark:text-white`}
+                                        onClick={() => setEditando(!editando)}
+                                    >
+                                        {!editando ? <Pencil className="h-4 w-4 sm:mr-1" /> : <X className='h-4 w-4 sm:mr-1' />}
+                                        <span className='hidden sm:block'>{editando ? 'Cancelar' : 'Editar Perfil'}</span>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent side='right'>
+                                    {!editando ? <p>Editar</p> : <p>Cancelar</p>}
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+
+
                     </CardHeader>
                     <CardContent>
                         {/* <Image src='/utils/logoW.png' alt="Fondo de perfil" width={1000} height={1000} /> */}
@@ -575,7 +582,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                     </CardContent>
                 </Card>
             }
-            <ImageModal isOpen={isOpen} onClose={onOpenChange} imageType={imageType}/>
+            <ImageModal isOpen={isOpen} onClose={onOpenChange} imageType={imageType} />
         </div>
     )
 }

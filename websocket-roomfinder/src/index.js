@@ -9,7 +9,7 @@ import helmet from "helmet";
 import { PORT } from "./config.js";
 import rateLimit from "express-rate-limit";
 import csurf from "csurf";
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 const csrfProtection = csurf({ cookie: true });
 
@@ -32,11 +32,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(csrfProtection);
 
-// const apiLimiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutos
-//   max: 100, // Limite de 100 solicitudes por IP
-// });
-// app.use("/api/", apiLimiter);
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // Limite de 100 solicitudes por IP
+});
+app.use("/api/", apiLimiter);
 
 // Middleware para verificar JWT en Socket.IO
 // io.use((socket, next) => {

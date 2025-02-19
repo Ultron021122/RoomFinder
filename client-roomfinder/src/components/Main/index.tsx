@@ -7,8 +7,8 @@ import SectionProperty from "./properties";
 
 export default function HomeComponent() {
     return (
-        <Layout key={1}>
-            <div className='h-[100vh] w-full'>
+        <Layout>
+            <div className='h-screen w-full'>
                 <MainBanner />
                 <section className="max-w-screen-2xl w-full mx-auto my-14 p-2 sm:p-0">
                     <div className="mb-10">
