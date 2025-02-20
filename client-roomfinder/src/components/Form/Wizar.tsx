@@ -70,7 +70,7 @@ const validaciones: Record<number, FuncionValidacion> = {
     },
     6: ({ ubicacion }) => {
         const { pais, direccion, estado, codigoPostal, ciudad_municipio, latitud, longitud } = ubicacion;
-        return (pais && direccion && estado && codigoPostal !== -1 && ciudad_municipio && latitud && longitud)
+        return (pais && direccion && estado && codigoPostal && ciudad_municipio && latitud && longitud)
             ? true
             : 'Ingresa la dirección de tu inmueble';
     },

@@ -31,7 +31,8 @@ export const messages = {
     vchpassword: {
         required: "Contraseña requerida",
         min: "Debe ser mayor a 8 caracteres",
-        max: "Debe ser menor a 16 caracteres"
+        max: "Debe ser menor a 16 caracteres",
+        pattern: "Contraseña no segura"
     },
     confirm_password: {
         required: "Confirmar contraseña es requerida",
@@ -63,7 +64,8 @@ export const messages = {
     },
     vchphone: {
         required: "Teléfono es requerido",
-        length: "Este campo debe contener 10 dígitos"
+        length: "Este campo debe contener 10 dígitos",
+        pattern: "Número de telefono no valido"
     },
     intzip: {
         required: "Código postal es requerido",
@@ -244,10 +246,11 @@ export const images = [
 
 export const patterns = {
     vchemail: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    vchpassword: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,16}$/,
+    vchpassword: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z\d!@#$%^&*(),.?":{}|<>]{8,16}$/,
     code_student: /^[0-9]{8}$/,
     uuidv4: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/,
     vchtoken: /^[A-Za-z0-9]{8}$/,
+    vchphone: /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/,
 };
 
 export const role: Roles[] = [
