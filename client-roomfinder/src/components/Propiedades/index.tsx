@@ -16,22 +16,28 @@ import { Spinner } from '@nextui-org/react';
 import { ImageOverlay } from './image-overlay';
 import { DatePickerWithRange } from '@/components/ui/datepicker';
 import { Separator } from '../ui/separator';
-import { MapPin, Star, Wifi, Tv, CookingPotIcon as Kitchen, Users, Bed, Bath, AirVentIcon, Sparkles, Refrigerator, Utensils, Zap, Fence, Flame, DropletsIcon } from 'lucide-react';
+import { MapPin, Star, Wifi, Tv, CookingPotIcon as Kitchen, Bed, Bath, AirVentIcon, Sparkles, Refrigerator, Utensils, Zap, Fence, Flame, DropletsIcon } from 'lucide-react';
 
-interface Amenity {
+type Amenity = {
     text: string
     icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>
     included: boolean
 }
 
-interface PropertyDetails { // puedo mejorar esta parte
-    text: string
-    icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>
+type PropertyDetails = Pick<Amenity, 'text' | 'icon'> & {
     amount: number
+}
+
+type LessorData = {
+    image: string
+    name: string
+    biography: string
+    phone: string
 }
 
 function PropertyComponent({ id }: { id: string }) {
     const [property, setProperty] = useState<Properties>();
+    const [Lessor, setLessor] = useState<LessorData>();
     const [showPayment, setShowPayment] = useState(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
@@ -58,13 +64,18 @@ function PropertyComponent({ id }: { id: string }) {
 
     useEffect(() => {
         const fetchProperty = async () => {
-            setIsLoading(true);
             setErrorSystem(null);
             try {
                 const response = await axios.get(`/api/properties/${id}`);
-                console.log('datos de la propiedad:')
-                console.log(response.data.data);
+                const lessorResponse = await axios.get(`/api/users/lessor/${response.data.data.lessorid}`);
+                const data = lessorResponse.data.data;
                 setProperty(response.data.data);
+                setLessor({
+                    image: data.vchimage,
+                    name: `${data.vchname} ${data.vchpaternalsurname}`,
+                    biography: data.vchbiography,
+                    phone: data.vchphone
+                })
                 setIsLoading(false);
                 // Aquí se debería verificar si el usuario ya se ha hospedado en la propiedad
                 // y actualizar el estado `hasStayed` en consecuencia.
@@ -75,6 +86,7 @@ function PropertyComponent({ id }: { id: string }) {
                 setIsLoading(false);
             }
         };
+
         fetchProperty();
     }, [id]);
 
@@ -121,9 +133,9 @@ function PropertyComponent({ id }: { id: string }) {
                 </div>
             ) : property ? (
                 <>
-                    <main className="py-6 px-4 sm:p-6 md:py-10 md:px-8">
-                        <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-x-20 lg:grid-cols-2">
-                            <div className="relative p-3 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t from-black/75 via-black/0 sm:bg-none sm:row-start-2 sm:p-0 lg:row-start-1 z-30">
+                    <main className="py-2 px-4 sm:p-6 md:py-2 md:px-8">
+                        <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-x-10 lg:grid-cols-2">
+                            <div className="p-3 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t from-black/75 via-black/0 sm:bg-none sm:row-start-2 sm:p-0 lg:row-start-1 z-30">
                                 <h1 className="mt-1 text-lg font-semibold text-white sm:text-slate-900 md:text-2xl dark:sm:text-white">{property?.vchtitle}</h1>
                                 <p className="text-sm leading-4 font-medium text-white sm:text-slate-500 dark:sm:text-slate-400">Propiedad</p>
                             </div>
@@ -179,6 +191,9 @@ function PropertyComponent({ id }: { id: string }) {
                             <p className="mt-4 text-sm leading-6 col-start-1 sm:col-span-2 lg:mt-4 lg:row-start-4 lg:col-span-1 dark:text-slate-400">
                                 {property?.vchdescription}
                             </p>
+                            <Button className='col-start-1 row-start-6 mt-4 lg:-mt-10 lg:max-w-[70%] lg:ml-16 shadow-lg'>
+                                Contactar al arrendador
+                            </Button>
                         </div>
                     </main>
 
@@ -250,6 +265,33 @@ function PropertyComponent({ id }: { id: string }) {
                                         <p>Implementa aquí tu pasarela de pagos preferida (e.g., Stripe, PayPal)</p>
                                     </div>
                                 )}
+
+                                <section className='mt-5 space-y-4'>
+                                    <h5 className='text-lg font-semibold'>Sobre el arrendador</h5>
+                                    <div className='grid grid-cols-1 p-4 rounded-lg shadow-xl border border-gray-100 space-y-2 lg:grid-cols-2 dark:border-none'>
+                                        <div className='grid grid-cols-1 place-items-center space-y-4'>
+                                            <Image
+                                                src={`${Lessor?.image}`}
+                                                width={200}
+                                                height={200}
+                                                className='rounded-full max-w-48 max-h-48'
+                                                objectFit={'cover'}
+                                                alt='Foto de perfil del arrendador'
+                                            />
+                                            <p className='text-lg font-semibold'>{Lessor?.name}</p>
+                                        </div>
+                                        <div className='flex flex-col space-y-2'>
+                                            <div className=''>
+                                                <p className='text-gray-500 opacity-70'>Biografía</p>
+                                                <p>{Lessor?.biography}</p>
+                                            </div>
+                                            <div className=''>
+                                                <p className='text-gray-500 opacity-70'>Número de teléfono</p>
+                                                <p>{Lessor?.phone}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
                             </CardContent>
                         </Card>
 
