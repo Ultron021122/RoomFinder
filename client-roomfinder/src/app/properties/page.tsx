@@ -1,7 +1,6 @@
 import Layout from "@/components/layout";
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import styles from './Properties.module.css';
 import SectionProperty from "@/components/properties";
 
 function PropertiesView() {

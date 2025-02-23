@@ -19,7 +19,15 @@ import { validateDate } from "@/utils/functions";
 import { StudentInfo, LessorInfo } from "@/utils/interfaces";
 import { Alert } from '@/utils/alert';
 import { SelectContent, SelectItem, SelectTrigger, Select as SelectS, SelectValue } from "@/components/ui/select";
+import { Button as ButtonS } from '@/components/ui/button';
 import { Label } from "@/components/ui/label";
+import { FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format, subYears } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { es } from "date-fns/locale";
 
 const Registrar = () => {
     const { status } = useSession();
@@ -82,6 +90,8 @@ const Registrar = () => {
         }
     };
 
+    const fifteenYearsAgo = subYears(new Date(), 15);
+
     // Errores
     useEffect(() => {
         if (errorSystem) {
@@ -109,6 +119,8 @@ const Registrar = () => {
         } else {
             setIsLoading(true);
             setErrorSystem(null);
+
+            console.log(userInfo)
             if (userInfo.roleid === ESTUDIANTE) {
                 const data = userInfo as StudentInfo;
                 try {
@@ -708,7 +720,7 @@ const Registrar = () => {
                                             )}
                                         </div>
                                         {/* Fecha de nacimiento */}
-                                        <div className="relative z-0 w-full mb-2 group">
+                                        {/* <div className="relative z-0 w-full mb-2 group">
                                             <input
                                                 {...register("dtbirthdate", {
                                                     required: {
@@ -732,6 +744,57 @@ const Registrar = () => {
                                             {errors?.dtbirthdate && (
                                                 <Alert message={errors?.dtbirthdate?.message} />
                                             )}
+                                        </div> */}
+                                        <div>
+                                            <Label id="university-label" className="peer-focus:font-medium font-normal text-sm peer-focus:text-sm text-gray-500 dark:text-gray-400">
+                                                Fecha de nacimiento
+                                            </Label>
+                                            <Controller
+                                                control={control}
+                                                name="dtbirthdate"
+                                                rules={{
+                                                    required: {
+                                                        value: true,
+                                                        message: messages.dtbirthdate.required
+                                                    }
+                                                }}
+                                                render={({ field }) => (
+                                                    <div className="flex flex-col">
+                                                        <Popover>
+                                                            <PopoverTrigger asChild>
+                                                                <ButtonS
+                                                                    variant={null}
+                                                                    className={cn(
+                                                                        "w-full pl-3 text-left font-normal border rounded-md border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-400 focus:dark:bg-slate-100",
+                                                                        !field.value && "text-muted-foreground"
+                                                                    )}
+                                                                >
+                                                                    {field.value ? (
+                                                                        format(new Date(field.value), "PPP", { locale: es })
+                                                                    ) : (
+                                                                        <span>Elige una fecha</span>
+                                                                    )}
+                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                </ButtonS>
+                                                            </PopoverTrigger>
+                                                            <PopoverContent className="w-auto p-0" align="start">
+                                                                <Calendar
+                                                                    mode="single"
+                                                                    locale={es}
+                                                                    selected={new Date(field.value)}
+                                                                    onSelect={field.onChange}
+                                                                    disabled={{after: fifteenYearsAgo}}
+                                                                    defaultMonth={fifteenYearsAgo}
+                                                                    initialFocus
+                                                                />
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                        {errors?.dtbirthdate && (
+                                                            <Alert message={errors?.dtbirthdate?.message} />
+                                                        )}
+                                                    </div>
+                                                )}
+                                            />
                                         </div>
                                         {watch("roleid") === 1 && renderStudent()}
                                         {watch("roleid") === 2 && renderLessor()}
