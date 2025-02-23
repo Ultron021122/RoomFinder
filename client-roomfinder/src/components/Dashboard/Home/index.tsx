@@ -2,7 +2,7 @@ import { Bento } from "@/components/GeneralComponents/Bento";
 
 export default function Home() {
     return (
-        <div className="h-full max-w-screen-2xl mx-auto dark:bg-gray-900">
+        <div className="h-full max-w-screen-2xl mx-auto dark:bg-gray-950">
             <aside className="mx-auto">
                 <section>
                     <Bento />

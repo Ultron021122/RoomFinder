@@ -3,10 +3,9 @@
 import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
 import { Properties } from '@/utils/interfaces';
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
-import { SelectValue } from "@radix-ui/react-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import CardOwner from "@/components/Main/Card";
 
@@ -70,9 +69,8 @@ export const SectionProperty = () => {
 
     const content = useMemo(() => {
         if (isLoading) {
-            // return <Spinner />;
             return count.map((item, index) => (
-                <SkeletonCard index={index} />
+                <SkeletonCard key={index} index={index} />
             ));
         }
 
@@ -100,7 +98,7 @@ export const SectionProperty = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto min-h-screen mt-5 p-2 sm:p-0">
+        <div className="max-w-6xl mx-auto min-h-screen mt-20 p-2 sm:p-0">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-5">
                 <Input
                     placeholder="Buscar propiedades..."
@@ -116,7 +114,7 @@ export const SectionProperty = () => {
                         <SelectValue placeholder="Filtrar por tipo" />
                     </SelectTrigger>
                     <SelectContent className="bg-gray-950">
-                        <SelectItem value="0" className="">Todos</SelectItem>
+                        <SelectItem value="0">Todos</SelectItem>
                         <SelectItem value="3">Apartamento</SelectItem>
                         <SelectItem value="1">Casa</SelectItem>
                         <SelectItem value="2">Habitación</SelectItem>
@@ -134,12 +132,12 @@ export const SectionProperty = () => {
                     </PaginationItem>
                     {[...Array(totalPages)].map((_, index) => (
                         <PaginationItem key={index}>
-                            <PaginationLink onClick={() => handlePageChange(index + 1)} isActive={currentPage === index + 1 ? true : false} >
+                            <PaginationLink onClick={() => handlePageChange(index + 1)} isActive={currentPage === index + 1}>
                                 {index + 1}
                             </PaginationLink>
                         </PaginationItem>
                     ))}
-                    <PaginationItem className="">
+                    <PaginationItem>
                         <PaginationNext onClick={() => handlePageChange(currentPage + 1)} />
                     </PaginationItem>
                 </PaginationContent>
@@ -153,11 +151,11 @@ export default SectionProperty;
 export function SkeletonCard({ index }: { index: number }) {
     return (
         <div className="flex flex-col space-y-3" key={index}>
-            <Skeleton className="min-w-screen h-60 rounded-xl bg-gray-300 dark:bg-gray-800" key={index+1} />
+            <Skeleton className="min-w-screen h-60 rounded-xl bg-gray-300 dark:bg-gray-800" />
             <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px] bg-gray-300 dark:bg-gray-800" key={index+2} />
-                <Skeleton className="h-4 w-[200px] bg-gray-300 dark:bg-gray-800" key={index+3} />
+                <Skeleton className="h-4 w-[250px] bg-gray-300 dark:bg-gray-800" />
+                <Skeleton className="h-4 w-[200px] bg-gray-300 dark:bg-gray-800" />
             </div>
         </div>
-    )
+    );
 }
