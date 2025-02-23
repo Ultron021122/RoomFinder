@@ -154,7 +154,7 @@ function RecoverComponent() {
                                                             <InputOTPSlot
                                                                 key={index}
                                                                 index={index}
-                                                                className="w-10 h-10 text-center border rounded-md dark:border-gray-700"
+                                                                className="sm:w-10 sm:h-10 w-8 h-8 text-center border rounded-md dark:border-gray-700"
                                                             />
                                                         ))}
                                                     </InputOTPGroup>
