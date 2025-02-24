@@ -56,13 +56,12 @@ export class MessagesModel {
             const db = new Database();
             const client = await db.pool.connect();
             const { chatid, vchcontenido, created_at, usuarioid } = input
-            console.log('input:', input);
             try {
                 const newMessage = await client.query(
                     `INSERT INTO "Usuario"."Mensajes" (chatid, vchcontenido, created_at, usuarioid) VALUES ($1, $2, $3, $4) RETURNING *;`,
                     [chatid, vchcontenido, created_at, usuarioid]
                 );
-                console.log('newMessage:', newMessage);
+                
                 return new MessagesModel(newMessage.rows[0]);
             } finally {
                 client.release();
