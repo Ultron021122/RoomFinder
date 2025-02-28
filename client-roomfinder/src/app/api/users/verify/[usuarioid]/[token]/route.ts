@@ -3,6 +3,11 @@ import axios from 'axios';
 
 export async function GET(req: NextRequest) {
     // Obtener la ruta actual
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     const pathname = req.nextUrl.pathname;
     const getValues = pathname.split('/');
     const token = getValues.pop();
@@ -13,7 +18,7 @@ export async function GET(req: NextRequest) {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }
         });
-        console.log(response.data.message);
+
         const statusMessageMap: Record<number, { message: string }> = {
             503: { message: 'Service unavailable' },
             404: { message: 'Usuario no encontrado' },
@@ -24,7 +29,7 @@ export async function GET(req: NextRequest) {
         const message = statusMessageMap[response.status] || statusMessageMap[0];
         return NextResponse.json(
             { message },
-            { status: response?.status ? response.status as number : 500}
+            { status: response?.status ? response.status as number : 500 }
         );
     } catch (error: any) {
         console.error('Error dentro de verify', error);
@@ -37,7 +42,7 @@ export async function GET(req: NextRequest) {
         const message = statusMessageMap[error.response?.status] || statusMessageMap[0];
         return NextResponse.json(
             { message },
-            { status: error.response?.status ? error.response.status as number : 500}
+            { status: error.response?.status ? error.response.status as number : 500 }
         );
     }
 }

@@ -3,6 +3,11 @@ import { NextResponse } from 'next/server';
 export async function GET(request, { params }) {
     const postalCode = params.postalcode;
 
+    const secretKey = request.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const data = await fetch(`${process.env.REST_URL}/utils/${postalCode}`, {
             headers: {

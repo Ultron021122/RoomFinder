@@ -2,6 +2,11 @@ import { NextResponse, NextRequest } from 'next/server';
 import axios from 'axios';
 
 export async function GET(req: NextRequest) {
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     // Obtener la ruta actual
     const pathname = req.nextUrl.pathname;
     const getValues = pathname.split('/');
@@ -26,7 +31,7 @@ export async function GET(req: NextRequest) {
         const message = statusMessageMap[error.response?.status] || statusMessageMap[0];
         return NextResponse.json(
             { message },
-            { status: error.response?.status ? error.response.status as number : 500}
+            { status: error.response?.status ? error.response.status as number : 500 }
         );
     }
 }
@@ -45,7 +50,7 @@ export async function POST(req: NextRequest) {
         const usuarioid = findUser.data.usuarioid;
         const recuperacionid = findUser.data.recuperacionid;
         const response = await axios.patch(`${process.env.REST_URL}/users/${usuarioid}`, {
-            vchpassword 
+            vchpassword
         }, {
             headers: {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
@@ -57,7 +62,7 @@ export async function POST(req: NextRequest) {
             }
         });
         return NextResponse.json(
-            { data: response.data, message: 'Contraseña actualizada'},
+            { data: response.data, message: 'Contraseña actualizada' },
             { status: 200 }
         );
 
@@ -71,7 +76,7 @@ export async function POST(req: NextRequest) {
         const message = statusMessageMap[error.response?.status] || statusMessageMap[0];
         return NextResponse.json(
             { message },
-            { status: error.response?.status ? error.response.status as number : 500}
+            { status: error.response?.status ? error.response.status as number : 500 }
         );
     }
 }
