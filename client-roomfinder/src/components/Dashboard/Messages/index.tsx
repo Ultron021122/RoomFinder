@@ -137,7 +137,7 @@ export default function MessageMainComponent() {
                 <div className="max-w-lg w-full space-y-8 text-center">
                   <div className="flex justify-center items-center">
                       <Image
-                        src="/utils/messages.svg"
+                        src="/images/planet.svg"
                         alt="Ilustración de búsqueda"
                         width={256}
                         height={124}

@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 
 export async function GET() {
+    const secretKey = request.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const response = await axios.get(`${process.env.REST_URL}/typeproperty/`, {
             headers: {

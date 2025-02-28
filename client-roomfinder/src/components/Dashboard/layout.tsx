@@ -5,7 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { rolesMapping } from "@/utils/constants";
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal, MoreVerticalIcon } from "lucide-react";
+import { LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal, MoreVerticalIcon, Users } from "lucide-react";
 import { HomeIcon } from "@radix-ui/react-icons";
 import { UserProfile } from "@/utils/interfaces";
 import Link from "next/link";
@@ -123,6 +123,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 icon={<HomeIcon className="w-[22px] h-[22px]" />}
                                 text="Publicar"
                                 url="/dashboard/publish"
+                                onClickSidebar={handleSidebarItemClick}
+                            />
+                            <SidebarItem
+                                icon={<Users className="w-[22px] h-[22px]" />}
+                                text="Usuarios"
+                                url="/dashboard/users"
                                 onClickSidebar={handleSidebarItemClick}
                             />
                         </>

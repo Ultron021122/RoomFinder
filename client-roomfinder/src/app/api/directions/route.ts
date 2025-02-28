@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
 export async function GET(req: NextRequest) {
+
+  const secretKey = req.headers.get('x-secret-key');
+  if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+
   const { searchParams } = new URL(req.url);
   const origin = searchParams.get('origin');
   const destination = searchParams.get('destination');

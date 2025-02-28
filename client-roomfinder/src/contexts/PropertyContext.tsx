@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { Properties, PropertyType, UserProfile } from '@/utils/interfaces';
@@ -49,7 +51,7 @@ export const PropertyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     fetchProperties();
     fetchPropertyTypes();
-  }, [userProfileData]);
+  }, []);
 
   return (
     <PropertyContext.Provider

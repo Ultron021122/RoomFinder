@@ -9,7 +9,7 @@ export default function DashboardApp(
 ) {
     return (
         <DashboardLayout>
-            {children}
+                {children}
         </ DashboardLayout>
     );
 }
