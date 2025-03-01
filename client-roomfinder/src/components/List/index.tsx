@@ -20,7 +20,11 @@ export default function ListItems() {
         try {
             setIsLoading(true);
             setErrorSystem(null);
-            const response = await axios.get<LessorResponse>('/api/users/lessor');
+            const response = await axios.get<LessorResponse>('/api/users/lessor', {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            });
             if (response.status === 200) {
                 setLessors(response.data.data);
             } else {

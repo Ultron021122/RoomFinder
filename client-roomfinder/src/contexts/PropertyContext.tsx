@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
@@ -17,7 +17,7 @@ interface PropertyContextProps {
 const PropertyContext = createContext<PropertyContextProps | undefined>(undefined);
 
 export const PropertyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const userProfileData = session?.user as UserProfile;
   const [properties, setProperties] = useState<Properties[]>([]);
   const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([]);
@@ -29,7 +29,11 @@ export const PropertyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`/api/properties/owner/${userProfileData.usuarioid}`);
+      const response = await axios.get(`/api/properties/owner/${userProfileData.usuarioid}`, {
+        headers: {
+          'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+        }
+      });
       setProperties(response.data.data);
     } catch (error: any) {
       setError(error.response?.data.message);
@@ -41,7 +45,11 @@ export const PropertyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const fetchPropertyTypes = async () => {
     setError(null);
     try {
-      const response = await axios.get(`/api/typeproperty`);
+      const response = await axios.get(`/api/typeproperty`, {
+        headers: {
+          'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+        }
+      });
       setPropertyTypes(response.data.data);
     } catch (error: any) {
       setError(error.response?.data.message);
@@ -49,9 +57,11 @@ export const PropertyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   useEffect(() => {
-    fetchProperties();
-    fetchPropertyTypes();
-  }, []);
+    if (status === 'authenticated') {
+      fetchProperties();
+      fetchPropertyTypes();
+    }
+  }, [status]);
 
   return (
     <PropertyContext.Provider

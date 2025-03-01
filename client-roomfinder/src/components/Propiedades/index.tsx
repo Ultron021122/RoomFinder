@@ -48,7 +48,11 @@ function PropertyComponent({ id }: { id: string }) {
             setIsLoading(true);
             setErrorSystem(null);
             try {
-                const response = await axios.get(`/api/properties/${id}`);
+                const response = await axios.get(`/api/properties/${id}`, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 setProperty(response.data.data);
                 setIsLoading(false);
                 // Aquí se debería verificar si el usuario ya se ha hospedado en la propiedad

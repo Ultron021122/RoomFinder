@@ -83,7 +83,11 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                         path = `/api/users/student/${usuarioid}`;
                     }
 
-                    const response = await axios.get(path);
+                    const response = await axios.get(path, {
+                        headers: {
+                            'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                        }
+                    });
                     const { data } = response.data;
 
                     // Asignar los datos al objeto local
@@ -148,7 +152,12 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
             setIsLoading(true);
             setErrorSystem(null);
             try {
-                const response = await axios.patch(`/api/users/lessor/${userData.usuarioid}`, data);
+                const response = await axios.patch(`/api/users/lessor/${userData.usuarioid}`,
+                    data, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 setIsLoading(false);
                 if (response.status === 200) {
 
@@ -198,7 +207,12 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
             setErrorSystem(null);
 
             try {
-                const response = await axios.patch(`/api/users/student/${userData.usuarioid}`, data);
+                const response = await axios.patch(`/api/users/student/${userData.usuarioid}`,
+                    data, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 setIsLoading(false);
                 if (response.status === 200) {
                     const { dtbirthdate, intcodestudent, vchmaternalsurname, vchname, vchpaternalsurname, vchbiography } = response.data.data.updateStudent;

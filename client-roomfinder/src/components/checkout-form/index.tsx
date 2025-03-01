@@ -20,6 +20,7 @@ const CheckoutForm: React.FC = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
       },
     });
 

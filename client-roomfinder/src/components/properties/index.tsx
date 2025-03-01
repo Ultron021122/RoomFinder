@@ -29,8 +29,8 @@ export const SectionProperty = () => {
             try {
                 const response = await axios.get(`/api/properties`, {
                     headers: {
-                        'x-secret-key': process.env.INTERNAL_SECRET_KEY
-                    }
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    } 
                 });
                 if (response.status === 200) {
                     setAllProperties(response.data.data);

@@ -68,10 +68,14 @@ const ImageModal: React.FC<ImageModalComponentProps> = ({ isOpen, onClose, image
                 // Upload image
                 const response = await axios.patch("/api/users/upload", {
                     usuarioid: user.usuarioid,
-                    image : selectedImage,
+                    image: selectedImage,
                     type: imageType
-                })
-                
+                }, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
+
                 setIsLoading(false);
                 if (response.status === 200) {
                     console.log(response)
