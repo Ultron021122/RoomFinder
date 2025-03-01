@@ -17,7 +17,11 @@ export const SectionProperty = () => {
         setIsLoading(true);
         setErrorSystem(null);
         try {
-            const response = await axios.get(`/api/properties/feature`);
+            const response = await axios.get(`/api/properties/feature`, {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            });
             if (response.status === 200) {
                 setProperties(response.data.data);
             } else {

@@ -23,7 +23,6 @@ import { useSession } from "next-auth/react";
 import { UserProfile } from "@/utils/interfaces";
 import { Button } from "../ui/button";
 import axios from "axios";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 
 const esNumero = (valor?: string): boolean => valor !== undefined && /^[0-9]+$/.test(valor);
 export const inputVacio = (input?: string): boolean => !input;
@@ -153,7 +152,12 @@ export default function ElementForm() {
             setErrorSystem(null);
             // Intentar enviar la información
             try {
-                const response = await axios.post('/api/properties', inmueble);
+                const response = await axios.post('/api/properties',
+                    inmueble, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 setIsLoading(false);
                 if (response.status === 201) {
                     toast.success(response.data.message.message, {

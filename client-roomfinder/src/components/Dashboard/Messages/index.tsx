@@ -7,7 +7,6 @@ import { User, User2, UserList, UserProfile } from "@/utils/interfaces";
 import axios from "axios";
 import { Avatar, Badge, Spinner } from "@nextui-org/react";
 import MessageComponent from "./messages";
-import { shortName } from "@/utils/functions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
@@ -36,8 +35,13 @@ export default function MessageMainComponent() {
         setErrorSystem(null);
 
         let route = (user.roleid === 1 ? '/api/chats/students/' : '/api/chats/lessors/') + user.usuarioid;
-        const response = await axios.get<UserList>(route);
+        const response = await axios.get<UserList>(route, {
+          headers: {
+            'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+          }
+        });
         if (response.status === 200) {
+          console.log(response)
           setUsers(response.data);
         } else {
           setErrorSystem('Error al cargar los usuarios');
@@ -136,13 +140,13 @@ export default function MessageMainComponent() {
               <div className={`w-full flex-col items-center justify-center h-full overflow-y-auto custom-scrollbar md:flex hidden`}>
                 <div className="max-w-lg w-full space-y-8 text-center">
                   <div className="flex justify-center items-center">
-                      <Image
-                        src="/utils/messages.svg"
-                        alt="Ilustración de búsqueda"
-                        width={256}
-                        height={124}
-                        priority
-                      />
+                    <Image
+                      src="/images/planet.svg"
+                      alt="Ilustración de búsqueda"
+                      width={256}
+                      height={124}
+                      priority
+                    />
                   </div>
                 </div>
                 <div>

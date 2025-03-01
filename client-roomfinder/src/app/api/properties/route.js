@@ -2,7 +2,12 @@ import axios from "axios";
 import { NextResponse } from "next/server";
 import { deleteImage, uploadImage } from "../cloudinary";
 
-export async function GET() {
+export async function GET(request) {
+    const secretKey = request.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const response = await axios.get(`${process.env.REST_URL}/properties`, {
             headers: {
@@ -23,6 +28,12 @@ export async function GET() {
 }
 
 export async function POST(req, res) {
+
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     const {
         lessorId, // ID del lessor
         tipoInmueble,

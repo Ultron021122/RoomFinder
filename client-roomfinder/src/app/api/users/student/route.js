@@ -3,6 +3,11 @@ import { deleteImage, uploadImage } from '../../cloudinary';
 import axios from 'axios';
 
 export async function GET() {
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const response = await axios.get(`${process.env.REST_URL}/students/`, {
             headers: {
@@ -22,6 +27,11 @@ export async function GET() {
 }
 
 export async function POST(req, res) {
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, confirm_password, bnstatus, dtbirthdate, vchimage, roleid, intcodestudent, vchuniversity } = await req.json();
     let imageUrl;
     try {
@@ -37,7 +47,6 @@ export async function POST(req, res) {
             }
         );
     } catch (error) {
-        console.error(error);
         return NextResponse.json(
             { messages: "Server error" },
             { status: 503 }
@@ -89,6 +98,11 @@ export async function POST(req, res) {
 }
 
 export async function PATCH(req, res) {
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     const {
         vchname,
         vchpaternalsurname,

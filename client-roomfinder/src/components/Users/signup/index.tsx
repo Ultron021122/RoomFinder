@@ -124,7 +124,13 @@ const Registrar = () => {
             if (userInfo.roleid === ESTUDIANTE) {
                 const data = userInfo as StudentInfo;
                 try {
-                    const response = await axios.post("/api/users/student", data);
+                    const response = await axios.post("/api/users/student",
+                        data,
+                        {
+                            headers: {
+                                'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                            }
+                        });
                     setIsLoading(false);
                     if (response.status === 201) {
                         toast.success(response.data.message.message, {
@@ -783,7 +789,7 @@ const Registrar = () => {
                                                                     locale={es}
                                                                     selected={new Date(field.value)}
                                                                     onSelect={field.onChange}
-                                                                    disabled={{after: fifteenYearsAgo}}
+                                                                    disabled={{ after: fifteenYearsAgo }}
                                                                     defaultMonth={fifteenYearsAgo}
                                                                     initialFocus
                                                                 />

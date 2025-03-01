@@ -70,6 +70,14 @@ export interface User {
      * bnstatus: true | false
      */
     bnstatus: boolean;
+
+    /**
+     * Verified user
+     * @example
+     * bnverified: true | false | null
+     */
+    bnverified: boolean;
+
     /**
      * User birthday
      * @example

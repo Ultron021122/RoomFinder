@@ -4,6 +4,11 @@ import axios from 'axios';
 import { COVER_IMAGE } from '@/utils/constants';
 
 export async function PATCH(req, res) {
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     const { usuarioid, image, type } = await req.json();
     let imageUrl;
     try {

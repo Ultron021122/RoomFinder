@@ -1,27 +1,27 @@
-import PropertiesComponent from "@/components/Dashboard/PanelProperty";
+import UsersComponent from "@/components/Dashboard/panel-user";
 import { BreadcrumbWithCustomSeparator } from "@/components/GeneralComponents/Breadcrumbs";
-import { PropertyProvider } from "@/contexts/PropertyContext";
+import { UserProvider } from "@/contexts/user-context";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: 'Propiedades',
+    title: 'Usuarios',
 };
 
-function PropertiesPage() {
+function UsersPage() {
     return (
         <>
-            <PropertyProvider>
+            <UserProvider>
                 <div className="h-full max-w-screen-2xl mx-auto">
                     <div className="mx-auto">
-                        <BreadcrumbWithCustomSeparator pageName="Propiedades" />
+                        <BreadcrumbWithCustomSeparator pageName="Usuarios" />
                         <div className="mx-auto rounded-sm border border-stroke bg-white dark:bg-transparent dark:border-transparent shadow-md">
-                            <PropertiesComponent />
+                            <UsersComponent />
                         </div>
                     </div>
                 </div>
-            </PropertyProvider>
+            </UserProvider>
         </>
     );
 }
 
-export default PropertiesPage;
+export default UsersPage;

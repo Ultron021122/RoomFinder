@@ -77,7 +77,11 @@ export default function Map({ position, zoom, name, typeProperty, rating }: MapD
         const fetchProperties = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`/api/properties`);
+                const response = await axios.get(`/api/properties`, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 setProperties(response.data.data);
                 setFilterProperties(response.data.data);
             } catch (Error) {

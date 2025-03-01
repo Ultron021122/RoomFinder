@@ -48,7 +48,11 @@ function PropertyComponent({ id }: { id: string }) {
             setIsLoading(true);
             setErrorSystem(null);
             try {
-                const response = await axios.get(`/api/properties/${id}`);
+                const response = await axios.get(`/api/properties/${id}`, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 setProperty(response.data.data);
                 setIsLoading(false);
                 // Aquí se debería verificar si el usuario ya se ha hospedado en la propiedad
@@ -148,7 +152,7 @@ function PropertyComponent({ id }: { id: string }) {
                         <Card className="mb-6 bg-transparent border-none shadow-none">
                             <CardHeader>
                                 <CardTitle>Características y Amenidades</CardTitle>
-                                <Separator className='dark:bg-slate-400'/>
+                                <Separator className='dark:bg-slate-400' />
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-2 gap-4">
@@ -188,7 +192,7 @@ function PropertyComponent({ id }: { id: string }) {
                         <Card className='bg-white dark:bg-gray-900 border-none shadow-none'>
                             <CardHeader>
                                 <CardTitle>Reserva tu estancia</CardTitle>
-                                <Separator className='dark:bg-slate-400'/>
+                                <Separator className='dark:bg-slate-400' />
                             </CardHeader>
                             <CardContent className='mx-2'>
                                 <p className="text-2xl font-bold mb-4">${property?.decrentalcost || 0} / mensuales</p>
@@ -220,7 +224,7 @@ function PropertyComponent({ id }: { id: string }) {
                             <Card className='bg-white dark:bg-gray-900 border-none shadow-none'>
                                 <CardHeader>
                                     <CardTitle>Comentarios</CardTitle>
-                                    <Separator className='dark:bg-slate-400'/>
+                                    <Separator className='dark:bg-slate-400' />
                                 </CardHeader>
                                 <CardContent>
                                     <p className="text-sm">Sólo los huéspedes que se han hospedado pueden dejar un comentario.</p>
