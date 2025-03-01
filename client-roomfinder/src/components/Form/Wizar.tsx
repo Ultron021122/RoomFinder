@@ -153,7 +153,12 @@ export default function Wizar() {
             setErrorSystem(null);
             // Intentar enviar la información
             try {
-                const response = await axios.post('/api/properties', inmueble);
+                const response = await axios.post('/api/properties',
+                    inmueble, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 setIsLoading(false);
                 if (response.status === 201) {
                     toast.success(response.data.message.message, {

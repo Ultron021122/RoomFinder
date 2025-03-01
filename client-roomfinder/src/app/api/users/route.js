@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function GET() {
+export async function GET(request) {
     const secretKey = request.headers.get('x-secret-key');
     if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -27,7 +27,7 @@ export async function GET() {
 
 
 export async function POST(req) {
-    const secretKey = request.headers.get('x-secret-key');
+    const secretKey = req.headers.get('x-secret-key');
     if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

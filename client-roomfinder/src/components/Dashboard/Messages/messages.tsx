@@ -85,13 +85,17 @@ export default function MessageComponent({
       const response = await axios.post("/api/chats", {
         usuario1id: user?.usuarioid,
         usuario2id: userID,
+      }, {
+        headers: {
+          'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+        }
       });
       setChatID(response.data.data.chatid);
       setConversations([]);
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
-  }, [user, userID, setConversations]);
+  }, [userID,setConversations]);
 
   useEffect(() => {
     if (userID) {

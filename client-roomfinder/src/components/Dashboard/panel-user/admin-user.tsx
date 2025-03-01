@@ -21,6 +21,8 @@ import ElementForm from '@/components/Form/element_form';
 import { debounce } from '@/lib/debounce';
 import { User } from '@/utils/interfaces';
 import { useUserContext } from '@/contexts/user-context';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function AdminUsers() {
     const { users, roles, isLoading, error, refetchUsers } = useUserContext();
@@ -88,7 +90,12 @@ export default function AdminUsers() {
     const handleGuardarCambios = async () => {
         if (userEdit) {
             try {
-                const response = await axios.patch(`/api/users/${userEdit.usuarioid}`, userEdit);
+                const response = await axios.patch(`/api/users/${userEdit.usuarioid}`,
+                    userEdit, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 refetchUsers();
                 setDialogoAbierto(false);
                 toast.success(response.data.message.message, {
@@ -122,7 +129,11 @@ export default function AdminUsers() {
     const handleEliminarUsuario = async (id: number) => {
         setIsLoading(true);
         try {
-            const response = await axios.delete(`/api/users/${id}`);
+            const response = await axios.delete(`/api/users/${id}`, {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            });
             refetchUsers();
             if (response.status === 200) {
                 toast.success(response.data.message.message, {
@@ -168,8 +179,8 @@ export default function AdminUsers() {
     };
 
     return (
-        <div className="bg-gradient-to-r p-2 md:p-8">
-            <Card className="overflow-hidden w-full max-w-8xl mx-auto bg-gray-100 dark:bg-gray-950">
+        <div className="p-2 md:p-8 h-screen overflow-hidden">
+            <Card className="overflow-hidden w-auto sm:w-full mx-auto bg-gray-100 dark:bg-gray-950">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold">Administración de Usuarios</CardTitle>
                 </CardHeader>
@@ -191,61 +202,79 @@ export default function AdminUsers() {
                             <span className='hidden md:inline'>Agregar Usuario</span>
                         </Button>
                     </div>
-                    <Table className='w-full'>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Nombre</TableHead>
-                                <TableHead>Acciones</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {isLoading ?
+                    <ScrollArea className="w-full overflow-x-auto">
+                        <Table className='w-full max-w-7xl'>
+                            <TableHeader>
                                 <TableRow>
-                                    <TableCell colSpan={5}>
-                                        <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto h-[40vh] lg:py-0'>
-                                            <Spinner />
-                                        </div>
-                                    </TableCell>
+                                    <TableHead>Nombre</TableHead>
+                                    <TableHead>Email</TableHead>
+                                    <TableHead>Estado</TableHead>
+                                    <TableHead>Verificado</TableHead>
+                                    <TableHead>Acciones</TableHead>
                                 </TableRow>
-                                :
-                                getUserPaginated().map((usuario) => (
-                                    <TableRow key={usuario.usuarioid}>
-                                        <TableCell>{usuario.vchname}</TableCell>
-                                        <TableCell>
-                                            <Button variant="ghost" size="sm" onClick={() => handleEditarUsuario(usuario)}>
-                                                <Edit className="h-4 w-4" />
-                                            </Button>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button variant="ghost" size="sm">
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle>
-                                                            ¿Estás seguro de eliminar este usuario?
-                                                        </AlertDialogTitle>
-                                                        <AlertDialogDescription>
-                                                            Esta acción no se puede deshacer. Este usuario será eliminado permanentemente.
-                                                        </AlertDialogDescription>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                        <AlertDialogAction
-                                                            onClick={() => handleEliminarUsuario(usuario.usuarioid || 0)}
-                                                        >
-                                                            Continuar
-                                                        </AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
+                            </TableHeader>
+                            <TableBody>
+                                {isLoading ?
+                                    <TableRow>
+                                        <TableCell colSpan={5}>
+                                            <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto h-[40vh] lg:py-0'>
+                                                <Spinner />
+                                            </div>
                                         </TableCell>
                                     </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
+                                    :
+                                    getUserPaginated().map((usuario) => (
+                                        <TableRow key={usuario.usuarioid}>
+                                            <TableCell>{usuario.vchname + ' ' + usuario.vchpaternalsurname + ' ' + usuario.vchmaternalsurname}</TableCell>
+                                            <TableCell>{usuario.vchemail}</TableCell>
+                                            <TableCell>
+                                                <Badge
+                                                    variant={usuario.bnstatus === true ? 'default' : 'destructive'}
+                                                >
+                                                    {usuario.bnstatus === true ? 'Activo' : 'Inactivo'}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Checkbox 
+                                                    checked={usuario.bnverified}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button variant="ghost" size="sm" onClick={() => handleEditarUsuario(usuario)}>
+                                                    <Edit className="h-4 w-4" />
+                                                </Button>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant="ghost" size="sm">
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                ¿Estás seguro de eliminar este usuario?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                Esta acción no se puede deshacer. Este usuario será eliminado permanentemente.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                onClick={() => handleEliminarUsuario(usuario.usuarioid || 0)}
+                                                            >
+                                                                Continuar
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                }
+                            </TableBody>
+                        </Table>
+                    </ScrollArea>
                     <div className="flex items-center justify-between mt-4">
                         <div className="text-sm text-muted-foreground">
                             Mostrando {((paginaActual - 1) * usersPerPage) + 1} - {Math.min(paginaActual * usersPerPage, usuariosFiltrados.length)} de {usuariosFiltrados.length} usuarios
@@ -288,7 +317,7 @@ export default function AdminUsers() {
             >
                 <DialogContent
                     aria-describedby="update_element"
-                    className="w-screen"
+                    className="w-screen sm:w-full max-w-lg"
                 >
                     <DialogHeader>
                         <DialogTitle>Editar Usuario</DialogTitle>
@@ -353,7 +382,7 @@ export default function AdminUsers() {
                                                         key={rol.roleid}
                                                         value={rol.roleid.toString()}
                                                     >
-                                                        {rol.vchdescription}
+                                                        {rol.vchname}
                                                     </SelectItem>
                                                 ))
                                             }
@@ -387,7 +416,7 @@ export default function AdminUsers() {
             >
                 <DialogContent
                     aria-describedby="create_element"
-                    className="w-full"
+                    className="w-screen sm:w-full max-w-lg"
                 >
                     <DialogHeader>
                         <DialogTitle>Nuevo Usuario</DialogTitle>

@@ -5,7 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { rolesMapping } from "@/utils/constants";
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal, MoreVerticalIcon, Users } from "lucide-react";
+import { LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal, MoreVerticalIcon, Users, Plus } from "lucide-react";
 import { HomeIcon } from "@radix-ui/react-icons";
 import { UserProfile } from "@/utils/interfaces";
 import Link from "next/link";
@@ -83,7 +83,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </Link>
                 </div>
             </header>
-            <div className="flex flex-1 mt-16">
+            <div className="flex flex-1 mt-16 w-full">
                 <Sidebar expanded={expanded}>
                     <SidebarItem
                         icon={<LayoutDashboard size={22} />}
@@ -120,7 +120,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 onClickSidebar={handleSidebarItemClick}
                             />
                             <SidebarItem
-                                icon={<HomeIcon className="w-[22px] h-[22px]" />}
+                                icon={<Plus className="w-[22px] h-[22px]" />}
                                 text="Publicar"
                                 url="/dashboard/publish"
                                 onClickSidebar={handleSidebarItemClick}
@@ -151,7 +151,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         vchname={user?.vchname}
                         vchpaternalsurname={user?.vchpaternalsurname}
                         vchmaternalsurname={user?.vchmaternalsurname}
-                        url="/dashboard/profile"
+                        url="/dashboard"
                         onClickSidebar={handleSidebarItemClick}
                         dropdownItems={dropdownItems}
                         color='active'
@@ -160,7 +160,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </Sidebar>
                 <main className={`flex-1 pt-4 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>
                     <section className={`${windowWidth <= 640 && expanded && 'hidden'}`}>
-                        <ScrollArea className="w-full h-[calc(100vh-100px)] px-2">
+                        <ScrollArea className="w-full h-[calc(100vh-100px)] px-2 max-w-sm md:max-w-[90rem]">
                             {children}
                         </ScrollArea>
                     </section>

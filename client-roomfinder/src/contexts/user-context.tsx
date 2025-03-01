@@ -23,7 +23,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsLoading(true);
         setError(null);
         try {
-            const response = await axios.get(`/api/users`);
+            const response = await axios.get(`/api/users`, {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            });
             setUsers(response.data.data);
         } catch (err) {
             const error = err as any;

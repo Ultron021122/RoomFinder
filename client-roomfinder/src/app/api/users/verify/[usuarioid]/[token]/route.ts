@@ -2,12 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
 export async function GET(req: NextRequest) {
-    // Obtener la ruta actual
-    const secretKey = req.headers.get('x-secret-key');
-    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
     const pathname = req.nextUrl.pathname;
     const getValues = pathname.split('/');
     const token = getValues.pop();

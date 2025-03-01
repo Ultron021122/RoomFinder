@@ -154,7 +154,7 @@ export class LessorsModel extends UsersModel {
                                         WHEN us.usuarioid = ct.usuario1id THEN ct.usuario2id 
                                         ELSE ct.usuario1id 
                                     END
-                WHERE (ct.usuario1id = $1 OR ct.usuario2id = $1 OR ct.chatid IS NULL) AND us.usuarioid = $1
+                WHERE (ct.usuario1id = $1 OR ct.usuario2id = $1 OR ct.chatid IS NULL) AND us.usuarioid = $1 AND usuario2id IS NOT NULL
 
                 UNION ALL
 
@@ -206,7 +206,7 @@ export class LessorsModel extends UsersModel {
                     ON us.roleid = 2 -- Aseguramos que es un arrendador
                 INNER JOIN "Usuario"."Arrendadores" a
                     ON us.usuarioid = a.usuarioid
-                WHERE u.roleid = 1
+                WHERE u.roleid = 1 AND us.usuarioid = $1
                 AND es.usuarioid NOT IN (
                     SELECT CASE 
                         WHEN ct.usuario1id = $1 THEN ct.usuario2id 

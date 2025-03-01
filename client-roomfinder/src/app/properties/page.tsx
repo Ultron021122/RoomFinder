@@ -38,7 +38,7 @@ const Banner = () => {
                             <p
                                 className="py-2.5 px-3.5 text-sm font-medium text-center rounded-lg border text-white border-gray-700 hover:bg-gray-700 focus:ring-gray-800"
                             >
-                                Actividades <span aria-hidden="true">→</span>
+                                Mapa <span aria-hidden="true">→</span>
                             </p>
                         </div>
                     </div>
