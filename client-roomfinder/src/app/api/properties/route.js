@@ -62,9 +62,9 @@ export async function POST(req, res) {
                 'properties', // Nombre de la carpeta en la que se va a almacenar los archivos
                 {
                     transformation: [
-                        { width: 800, height: 600, crop: "fill" },
+                        { width: 800, height: auto, crop: "fill" },
                         { quality: "auto" },
-                        { format: "jpg" }
+                        { format: "webp" }
                     ]
                 }
             );

@@ -82,7 +82,28 @@ export class UsersModel {
         const client = await db.pool.connect();
         try {
             const user = await client.query(
-                `SELECT vchImage, vchCoverImage FROM "Usuario"."Usuario" WHERE usuarioid = $1;`,
+                `SELECT 
+                    roleid,
+                    CASE
+                        WHEN vchimage ~ '^.*?/upload/v[0-9]+/(users/[^/.]+|students/[^/.]+|lessors/[^/.]+)\.[^/]+$' THEN   
+                        REGEXP_REPLACE(
+                            vchimage,
+                            '^.*?/upload/v[0-9]+/(users/[^/.]+|students/[^/.]+|lessors/[^/.]+)\.[^/]+$',
+                            '\\1'
+                        )
+                        ELSE NULL 
+                    END AS vchimage,
+                    CASE
+                        WHEN vchcoverimage ~ '^.*?/upload/v[0-9]+/(users/[^/.]+|students/[^/.]+|lessors/[^/.]+)\.[^/]+$' THEN   
+                        REGEXP_REPLACE(
+                            vchcoverimage,
+                            '^.*?/upload/v[0-9]+/(users/[^/.]+|students/[^/.]+|lessors/[^/.]+)\.[^/]+$',
+                            '\\1'
+                        )
+                        ELSE NULL 
+                    END AS vchcoverimage
+                FROM "Usuario"."Usuario" 
+                WHERE usuarioid = $1`,
                 [id]
             );
             return user.rowCount > 0 ? new UsersModel(user.rows[0]) : null;
