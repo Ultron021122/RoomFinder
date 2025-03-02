@@ -10,23 +10,46 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Search, Edit, Trash2, ChevronLeft, ChevronRight, User as UserIcon } from 'lucide-react';
+import { Search, Edit, Trash2, ChevronLeft, ChevronRight, User as UserIcon, CalendarIcon } from 'lucide-react';
 import axios from 'axios';
 import { Spinner } from '@nextui-org/react';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { FormularioProvider } from '@/components/Form/FormularioContext';
-import ElementForm from '@/components/Form/element_form';
 import { debounce } from '@/lib/debounce';
 import { User } from '@/utils/interfaces';
 import { useUserContext } from '@/contexts/user-context';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import CopyText from '@/components/ui/copy-text';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { CalendarField } from './calendar-field';
+import { fifteenYearsAgo } from '@/utils/functions';
+
+const userFormSchema = z.object({
+    vchname: z.string().min(3).max(50),
+    vchpaternalsurname: z.string().min(3).max(50),
+    vchmaternalsurname: z.string().min(3).max(50),
+    vchemail: z.string().email(),
+    dtbirthdate: z.date({
+        required_error: "A date of birth is required.",
+    }),
+    vchimage: z.string(),
+    vchpassword: z.string().min(8, {
+        message: 'Contraseña debe ser de 8 o más caracteres'
+    }),
+    roleid: z.number().positive()
+})
+
 
 export default function AdminUsers() {
     const { users, roles, isLoading, error, refetchUsers } = useUserContext();
     const [busqueda, setBusqueda] = useState<string>('');
+    const [verificado, setVerificado] = useState<string>('all');
     const [userEdit, setUserEdit] = useState<User | null>(null);
     const [dialogoAbierto, setDialogoAbierto] = useState<boolean>(false);
     const [createUser, setCreateUser] = useState<boolean>(false);
@@ -34,8 +57,34 @@ export default function AdminUsers() {
     const [usersPerPage] = useState<number>(10);
     const [isLoadingState, setIsLoading] = useState<boolean>(false);
 
+    // 1. Define your form.
+    const form = useForm<z.infer<typeof userFormSchema>>({
+        resolver: zodResolver(userFormSchema),
+        defaultValues: {
+            vchname: "",
+            vchpaternalsurname: "",
+            vchmaternalsurname: "",
+            vchemail: "",
+            dtbirthdate: fifteenYearsAgo,
+            vchimage: "",
+            vchpassword: "",
+            roleid: 3
+        },
+    })
+    // 2. Define a submit handler.
+    function onSubmit(values: z.infer<typeof userFormSchema>) {
+        // Do something with the form values.
+        // ✅ This will be type-safe and validated.
+        console.log(values)
+    }
+
+
     const handleBusquedaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBusqueda(e.target.value);
+    };
+
+    const handleVerificadoChange = (value: string) => {
+        setVerificado(value);
     };
 
     const debouncedBusquedaChange = useMemo(() => debounce(handleBusquedaChange, 300), []);
@@ -47,11 +96,17 @@ export default function AdminUsers() {
     }, [debouncedBusquedaChange]);
 
     const filterUsers = useCallback(() => {
-        return users.filter(user =>
-            user.vchname.toLowerCase().includes(busqueda.toLowerCase()) ||
-            user.vchpaternalsurname.toLowerCase().includes(busqueda.toLowerCase())
-        );
-    }, [users, busqueda]);
+        return users.filter(user => {
+            const matchesBusqueda = user.vchname.toLowerCase().includes(busqueda.toLowerCase()) ||
+                user.vchpaternalsurname.toLowerCase().includes(busqueda.toLowerCase()) ||
+                user.vchmaternalsurname.toLowerCase().includes(busqueda.toLowerCase()) ||
+                (user.vchname + ' ' + user.vchpaternalsurname + ' ' + user.vchmaternalsurname).toLowerCase().includes(busqueda.toLowerCase());
+
+            const matchesVerificado = verificado === 'all' || (verificado === '1' && user.bnverified) || (verificado === '0' && !user.bnverified);
+
+            return matchesBusqueda && matchesVerificado;
+        });
+    }, [users, busqueda, verificado]);
 
     useEffect(() => {
         if (error) {
@@ -80,7 +135,7 @@ export default function AdminUsers() {
 
     useEffect(() => {
         setPaginaActual(1);
-    }, [busqueda]);
+    }, [busqueda, verificado]);
 
     const handleEditarUsuario = (user: User) => {
         setUserEdit(user);
@@ -186,20 +241,34 @@ export default function AdminUsers() {
                 </CardHeader>
                 <CardContent>
                     <div className="flex justify-between items-center mb-6">
-                        <div className="relative w-48 md:w-64">
-                            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Buscar usuarios..."
-                                onChange={debouncedBusquedaChange}
-                                className="pl-8"
-                            />
+                        <div className="flex space-x-4">
+                            <div className="relative w-48 md:w-64 lg:w-72">
+                                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Buscar usuarios..."
+                                    onChange={debouncedBusquedaChange}
+                                    className="pl-8"
+                                />
+                            </div>
+                            <div className="relative w-48">
+                                <Select value={verificado} onValueChange={handleVerificadoChange}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Verificado" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="all">Todos</SelectItem>
+                                        <SelectItem value="1">Verificado</SelectItem>
+                                        <SelectItem value="0">No verificado</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
                         <Button
                             className='flex flex-row items-center justify-center md:justify-start'
                             onClick={() => setCreateUser(true)}
                         >
                             <UserIcon className="mr-2 h-5 w-5 md:h-4 md:w-4" />
-                            <span className='hidden md:inline'>Agregar Usuario</span>
+                            <span className='hidden md:inline'>Agregar Usuario (Admin)</span>
                         </Button>
                     </div>
                     <ScrollArea className="w-full overflow-x-auto">
@@ -215,7 +284,7 @@ export default function AdminUsers() {
                             </TableHeader>
                             <TableBody>
                                 {isLoading ?
-                                    <TableRow>
+                                    <TableRow className='bg-transparent hover:bg-slate-100'>
                                         <TableCell colSpan={5}>
                                             <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto h-[40vh] lg:py-0'>
                                                 <Spinner />
@@ -225,8 +294,12 @@ export default function AdminUsers() {
                                     :
                                     getUserPaginated().map((usuario) => (
                                         <TableRow key={usuario.usuarioid}>
-                                            <TableCell>{usuario.vchname + ' ' + usuario.vchpaternalsurname + ' ' + usuario.vchmaternalsurname}</TableCell>
-                                            <TableCell>{usuario.vchemail}</TableCell>
+                                            <TableCell>
+                                                <CopyText text={usuario.vchname + ' ' + usuario.vchpaternalsurname + ' ' + usuario.vchmaternalsurname} />
+                                            </TableCell>
+                                            <TableCell>
+                                                <CopyText text={usuario.vchemail} />
+                                            </TableCell>
                                             <TableCell>
                                                 <Badge
                                                     variant={usuario.bnstatus === true ? 'default' : 'destructive'}
@@ -235,19 +308,37 @@ export default function AdminUsers() {
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
-                                                <Checkbox 
+                                                <Checkbox
                                                     checked={usuario.bnverified}
                                                 />
                                             </TableCell>
                                             <TableCell>
-                                                <Button variant="ghost" size="sm" onClick={() => handleEditarUsuario(usuario)}>
-                                                    <Edit className="h-4 w-4" />
-                                                </Button>
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button variant="ghost" size="sm" onClick={() => handleEditarUsuario(usuario)}>
+                                                                <Edit className="h-4 w-4" />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent className='bg-gray-800' side='top'>
+                                                            <p>Editar usuario</p>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
-                                                        <Button variant="ghost" size="sm">
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
+                                                        <TooltipProvider>
+                                                            <Tooltip>
+                                                                <TooltipTrigger asChild>
+                                                                    <Button variant="ghost" size="sm">
+                                                                        <Trash2 className="h-4 w-4" />
+                                                                    </Button>
+                                                                </TooltipTrigger>
+                                                                <TooltipContent className='bg-red-800' side='top'>
+                                                                    <p>Eliminar usuario</p>
+                                                                </TooltipContent>
+                                                            </Tooltip>
+                                                        </TooltipProvider>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
@@ -322,7 +413,7 @@ export default function AdminUsers() {
                     <DialogHeader>
                         <DialogTitle>Editar Usuario</DialogTitle>
                     </DialogHeader>
-                    <ScrollArea className="h-[500px]">
+                    <ScrollArea className="h-[550px]">
                         {userEdit && (
                             <form
                                 onSubmit={(e) => { e.preventDefault(); handleGuardarCambios(); }}
@@ -419,12 +510,99 @@ export default function AdminUsers() {
                     className="w-screen sm:w-full max-w-lg"
                 >
                     <DialogHeader>
-                        <DialogTitle>Nuevo Usuario</DialogTitle>
+                        <DialogTitle>Nuevo Usuario (Administrador)</DialogTitle>
                     </DialogHeader>
-                    <ScrollArea className="h-[500px]">
-                        <FormularioProvider>
-                            <ElementForm />
-                        </FormularioProvider>
+                    <ScrollArea className="h-[550px]">
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pl-2 pr-3">
+                                <FormField
+                                    control={form.control}
+                                    name="vchname"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Nombre</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Name" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Escribe el nombre del usuario.
+                                            </FormDescription>
+                                            <FormMessage className='text-red-600' />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="vchpaternalsurname"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Apellido paterno</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Name" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Escribe el apellido del usuario.
+                                            </FormDescription>
+                                            <FormMessage className='text-red-600' />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="vchmaternalsurname"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Apellido materno</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Name" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Escribe el apellido materno del usuario.
+                                            </FormDescription>
+                                            <FormMessage className='text-red-600' />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="vchemail"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Correo electronico</FormLabel>
+                                            <FormControl>
+                                                <Input type='email' placeholder="Name" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Escribe el correo electronico del usuario.
+                                            </FormDescription>
+                                            <FormMessage className='text-red-600' />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="dtbirthdate"
+                                    render={({ field }) => <CalendarField field={field} />}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="vchpassword"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Contraseña</FormLabel>
+                                            <FormControl>
+                                                <Input type='password' placeholder="***************" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Establece una contraseña.
+                                            </FormDescription>
+                                            <FormMessage className='text-red-600' />
+                                        </FormItem>
+                                    )}
+                                />
+                                <Button type="submit" className='w-full'>Agregar administrador</Button>
+                            </form>
+                        </Form>
                     </ScrollArea>
                 </DialogContent>
             </Dialog>

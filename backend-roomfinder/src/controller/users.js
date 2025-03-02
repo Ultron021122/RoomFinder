@@ -128,7 +128,7 @@ export class UserController {
         if (result.error) {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
-        console.log('Logout sessionid', result.data)
+    
         await this.userModel.logout({ sessionid: result.data.sessionid })
             .then(logout => {
                 if (logout) return res.json({ message: 'User logged out' })
