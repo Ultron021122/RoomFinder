@@ -42,7 +42,7 @@ export async function POST(req, res) {
                 transformation: [
                     { width: 600, height: 600, crop: "fill" },
                     { quality: "auto" },
-                    { format: "jpg" }
+                    { format: "webp" }
                 ]
             }
         );

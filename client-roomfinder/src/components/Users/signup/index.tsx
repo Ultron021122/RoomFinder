@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 // Componentes
-import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import { Controller, useForm } from "react-hook-form";
 import { Button, Spinner } from "@nextui-org/react";
 import ModalImage from "./image";
@@ -15,16 +14,15 @@ import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // Utilidades
 import { messages, patterns, universities, roles, ESTUDIANTE } from "@/utils/constants";
-import { validateDate } from "@/utils/functions";
+import { fifteenYearsAgo } from "@/utils/functions";
 import { StudentInfo, LessorInfo } from "@/utils/interfaces";
 import { Alert } from '@/utils/alert';
 import { SelectContent, SelectItem, SelectTrigger, Select as SelectS, SelectValue } from "@/components/ui/select";
 import { Button as ButtonS } from '@/components/ui/button';
 import { Label } from "@/components/ui/label";
-import { FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { format, subYears } from "date-fns";
+import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { es } from "date-fns/locale";
@@ -89,8 +87,6 @@ const Registrar = () => {
             });
         }
     };
-
-    const fifteenYearsAgo = subYears(new Date(), 15);
 
     // Errores
     useEffect(() => {

@@ -1,6 +1,7 @@
 import { Spinner } from "@nextui-org/react";
 import { ESTUDIANTE, ARRENDADOR } from "./constants";
 import { messages } from "./constants";
+import { subYears } from "date-fns";
 
 interface fullName {
     vchname: string;
@@ -40,5 +41,7 @@ export const validateDate = (value : string) => {
     const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
     return edad >= 18 || messages.dtbirthdate.age;
 }
+
+export const fifteenYearsAgo = subYears(new Date(), 15);
 
 export default getFullName;
