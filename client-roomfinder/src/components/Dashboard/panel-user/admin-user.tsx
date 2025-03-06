@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Search, Edit, Trash2, ChevronLeft, ChevronRight, User as UserIcon, CalendarIcon, KeyRound, RectangleEllipsis, LockKeyhole, ImageIcon } from 'lucide-react';
+import { Search, Edit, Trash2, ChevronLeft, ChevronRight, User as UserIcon, LockKeyhole, ImageIcon } from 'lucide-react';
 import axios from 'axios';
 import { Spinner } from '@nextui-org/react';
 import { Textarea } from '@/components/ui/textarea';
@@ -44,7 +44,8 @@ const userFormSchema = z.object({
     vchpassword: z.string().min(8, {
         message: 'Contraseña debe ser de 8 o más caracteres'
     }),
-    roleid: z.number().positive()
+    roleid: z.number().positive(),
+    vchbiography: z.string().max(255)
 })
 
 
@@ -58,6 +59,7 @@ export default function AdminUsers() {
     const [paginaActual, setPaginaActual] = useState<number>(1);
     const [usersPerPage] = useState<number>(10);
     const [isLoadingState, setIsLoading] = useState<boolean>(false);
+    const [errorSystem, setErrorSystem] = useState<string | null>(null);
     const [uploadedImage, setUploadedImage] = useState<string | ArrayBuffer | null>(null);
 
     // 1. Define your form.
@@ -74,10 +76,54 @@ export default function AdminUsers() {
         },
     })
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof userFormSchema>) {
+    async function onSubmit(values: z.infer<typeof userFormSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(values)
+        if (values) {
+            setIsLoading(true);
+            setErrorSystem(null);
+            try {
+                const response = await axios.post('/api/users/admin', values, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
+                setIsLoading(false);
+                if (response.status === 201) {
+                    toast.success(response.data.message.message, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        style: { fontSize: '0.9rem' },
+                        transition: Slide,
+                    });
+                    refetchUsers();
+                    setCreateUser(false);
+                } else {
+                    setErrorSystem(response.data.message);
+                }
+
+            } catch (Error: any) {
+                setErrorSystem(Error.response?.data.message);
+            } finally {
+                setIsLoading(false);
+                form.reset({
+                    vchname: "",
+                    vchpaternalsurname: "",
+                    vchmaternalsurname: "",
+                    vchemail: "",
+                    dtbirthdate: fifteenYearsAgo,
+                    vchpassword: "",
+                    roleid: 3
+                });
+                setUploadedImage(null);
+            }
+        }
     }
 
     const handleDrop = (acceptedFiles: File[]) => {
@@ -111,6 +157,23 @@ export default function AdminUsers() {
             debouncedBusquedaChange.cancel();
         };
     }, [debouncedBusquedaChange]);
+
+    // Errores
+    useEffect(() => {
+        if (errorSystem) {
+            toast.error(errorSystem, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        }
+    }, [errorSystem]);
 
     const filterUsers = useCallback(() => {
         return users.filter(user => {
@@ -347,8 +410,9 @@ export default function AdminUsers() {
                                                         </TooltipContent>
                                                     </Tooltip>
                                                 </TooltipProvider>
+
                                                 <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
+                                                    <AlertDialogTrigger>
                                                         <TooltipProvider>
                                                             <Tooltip>
                                                                 <TooltipTrigger asChild>
@@ -439,7 +503,7 @@ export default function AdminUsers() {
                         {userEdit && (
                             <form
                                 onSubmit={(e) => { e.preventDefault(); handleGuardarCambios(); }}
-                                className="space-y-4"
+                                className="space-y-4 pl-2 pr-3"
                             >
                                 <div>
                                     <Label htmlFor="vchname">Nombre</Label>
@@ -484,6 +548,7 @@ export default function AdminUsers() {
                                         value={userEdit.roleid.toString()}
                                         onValueChange={(value) => setUserEdit({ ...userEdit, roleid: parseInt(value) })}
                                         defaultValue={userEdit.roleid.toString()}
+                                        disabled
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Selecciona el tipo de usuario" />
@@ -653,6 +718,27 @@ export default function AdminUsers() {
                                         </div>
                                     )}
                                 </div>
+                                <FormField
+                                    control={form.control}
+                                    name="vchbiography"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Biografia</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    id="vchbiography"
+                                                    placeholder='Biography'
+                                                    className='h-24'
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Biografia del usuario.
+                                            </FormDescription>
+                                            <FormMessage className='text-red-600' />
+                                        </FormItem>
+                                    )}
+                                />
                                 <Button type="submit" className='w-full'>Agregar administrador</Button>
                             </form>
                         </Form>
