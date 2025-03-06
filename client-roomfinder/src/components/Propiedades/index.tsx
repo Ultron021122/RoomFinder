@@ -86,16 +86,20 @@ function PropertyComponent({ id }: { id: string }) {
                     <main className="py-6 px-4 sm:p-6 md:py-10 md:px-8">
                         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-x-20 lg:grid-cols-2">
                             <div className="relative p-3 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t from-black/75 via-black/0 sm:bg-none sm:row-start-2 sm:p-0 lg:row-start-1 z-30">
-                                <h1 className="mt-1 text-lg font-semibold text-white sm:text-slate-900 md:text-2xl dark:sm:text-white">{property?.vchtitle}</h1>
-                                <p className="text-sm leading-4 font-medium text-white sm:text-slate-500 dark:sm:text-slate-400">Propiedad</p>
+                                <h1 className="mt-1 text-lg font-semibold text-white sm:text-slate-900 md:text-2xl dark:sm:text-white">
+                                    {property?.vchtitle}
+                                </h1>
+                                <p className="text-sm leading-4 font-medium text-white sm:text-slate-500 dark:sm:text-slate-400">
+                                    Propiedad
+                                </p>
                             </div>
                             <div className="grid gap-2 col-start-1 col-end-3 row-start-1 sm:mb-6 sm:grid-cols-4 lg:gap-2 lg:col-start-2 lg:row-end-6 lg:row-span-6 lg:mb-0">
                                 <div className="relative sm:h-52 sm:col-span-2 lg:col-span-full">
                                     <Image
                                         width={800}
                                         height={800}
-                                        src={property?.objphotos[0].url || '/images/placeholder.webp'}
-                                        alt={`Imagen ${property?.objphotos[0].photoid}`}
+                                        src={property?.objphotos?.[0]?.url || '/No_image.png'}
+                                        alt={`Imagen ${property?.objphotos?.[0]?.photoid || 'No disponible'}`}
                                         priority
                                         className="w-full h-60 object-cover rounded-lg sm:h-52 sm:col-span-2 lg:col-span-full"
                                     />
@@ -104,16 +108,16 @@ function PropertyComponent({ id }: { id: string }) {
                                 <Image
                                     width={800}
                                     height={800}
-                                    src={property?.objphotos[1].url || '/images/placeholder.webp'}
-                                    alt={`Imagen ${property?.objphotos[1].photoid}`}
+                                    src={property?.objphotos?.[1]?.url || '/No_image.png'}
+                                    alt={`Imagen ${property?.objphotos?.[1]?.photoid || 'No disponible'}`}
                                     className="hidden w-full h-52 object-cover rounded-lg sm:block sm:col-span-2 md:col-span-1 lg:row-start-2 lg:col-span-2 lg:h-32"
                                     priority
                                 />
                                 <Image
                                     width={800}
                                     height={800}
-                                    src={property?.objphotos[2].url || '/images/placeholder.webp'}
-                                    alt={`Imagen ${property?.objphotos[2].photoid}`}
+                                    src={property?.objphotos?.[2]?.url || '/No_image.png'}
+                                    alt={`Imagen ${property?.objphotos?.[2]?.photoid || 'No disponible'}`}
                                     className="hidden w-full h-52 object-cover rounded-lg md:block lg:row-start-2 lg:col-span-2 lg:h-32"
                                     priority
                                 />
@@ -122,13 +126,17 @@ function PropertyComponent({ id }: { id: string }) {
                                 <dt className="sr-only">Reviews</dt>
                                 <dd className="text-blue-500 flex items-center dark:text-blue-400">
                                     <Star size={18} className="mr-1" />
-                                    <span>
-                                        {property?.decpropertyrating}
-                                    </span>
+                                    <span>{property?.decpropertyrating}</span>
                                 </dd>
                                 <dt className="sr-only">Location</dt>
                                 <dd className="flex items-center text-neutral-700 dark:text-neutral-200">
-                                    <svg width="2" height="2" aria-hidden="true" fill="currentColor" className="mx-3 text-slate-300">
+                                    <svg
+                                        width="2"
+                                        height="2"
+                                        aria-hidden="true"
+                                        fill="currentColor"
+                                        className="mx-3 text-slate-300"
+                                    >
                                         <circle cx="1" cy="1" r="1" />
                                     </svg>
                                     <MapPin size={18} className="mr-1" />
@@ -144,11 +152,11 @@ function PropertyComponent({ id }: { id: string }) {
                         </div>
                     </main>
 
-                    <div className='pb-6 md:py-5 max-w-5xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-r-14 lg:grid-cols-2'>
+                    <div className="pb-6 md:py-5 max-w-5xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-r-14 lg:grid-cols-2">
                         <Card className="mb-6 bg-transparent border-none shadow-none">
                             <CardHeader>
                                 <CardTitle>Características y Amenidades</CardTitle>
-                                <Separator className='dark:bg-slate-400'/>
+                                <Separator className="dark:bg-slate-400" />
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-2 gap-4">
@@ -175,7 +183,7 @@ function PropertyComponent({ id }: { id: string }) {
                                             {amenities.map((amenity, index) => (
                                                 <li key={index} className="flex items-center">
                                                     <amenity.icon className="mr-2 h-4 w-4" />
-                                                    <span className='text-sm'>{amenity.text}</span>
+                                                    <span className="text-sm">{amenity.text}</span>
                                                 </li>
                                             ))}
                                         </ul>
@@ -185,13 +193,15 @@ function PropertyComponent({ id }: { id: string }) {
                         </Card>
 
                         {/* Reservacion */}
-                        <Card className='bg-white dark:bg-gray-900 border-none shadow-none'>
+                        <Card className="bg-white dark:bg-gray-900 border-none shadow-none">
                             <CardHeader>
                                 <CardTitle>Reserva tu estancia</CardTitle>
-                                <Separator className='dark:bg-slate-400'/>
+                                <Separator className="dark:bg-slate-400" />
                             </CardHeader>
-                            <CardContent className='mx-2'>
-                                <p className="text-2xl font-bold mb-4">${property?.decrentalcost || 0} / mensuales</p>
+                            <CardContent className="mx-2">
+                                <p className="text-2xl font-bold mb-4">
+                                    ${property?.decrentalcost || 0} / mensuales
+                                </p>
                                 <div className="mb-4">
                                     <h4 className="font-semibold mb-2">Selecciona las fechas</h4>
                                     <DatePickerWithRange
@@ -217,13 +227,15 @@ function PropertyComponent({ id }: { id: string }) {
                         {!hasStayed ? (
                             <PropertyReviews reviews={reviews} />
                         ) : (
-                            <Card className='bg-white dark:bg-gray-900 border-none shadow-none'>
+                            <Card className="bg-white dark:bg-gray-900 border-none shadow-none">
                                 <CardHeader>
                                     <CardTitle>Comentarios</CardTitle>
-                                    <Separator className='dark:bg-slate-400'/>
+                                    <Separator className="dark:bg-slate-400" />
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="text-sm">Sólo los huéspedes que se han hospedado pueden dejar un comentario.</p>
+                                    <p className="text-sm">
+                                        Sólo los huéspedes que se han hospedado pueden dejar un comentario.
+                                    </p>
                                 </CardContent>
                             </Card>
                         )}
