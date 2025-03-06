@@ -1,28 +1,41 @@
 'use client';
 // Element: CardOwner
 import CardContent from '@mui/material/CardContent';
-import { CardActionArea, CardActions, Rating, Card } from '@mui/material';
+import { CardActionArea, CardActions, Card } from '@mui/material';
 import Image from 'next/image';
 import { Galeria } from '@/components/GeneralComponents/Galeria';
 import { useRouter } from 'next/navigation';
 import { MapPin, Star } from 'lucide-react';
-import { Photos, Properties } from '@/utils/interfaces';
-
+import { Properties } from '@/utils/interfaces';
 
 export const CardOwner = (cardProps: Properties) => {
     const route = useRouter();
 
-    const listaImagenes = cardProps.objphotos.map((imagen, index) =>
-        <div key={index} className="relative min-w-full h-full" >
+    // Si objphotos es null o está vacío, usar 'No_image.png' como fallback
+    const listaImagenes = (cardProps.objphotos && cardProps.objphotos.length > 0)
+    ? cardProps.objphotos.map((imagen, index) => (
+        <div key={index} className="relative min-w-full h-full">
             <Image
                 width={800}
                 height={600}
-                src={imagen.url}
-                alt={`Imagen de inmueble ${imagen.photoid}`}
-                className='absolute inset-0 object-cover w-full h-full'
+                src={imagen?.url || "/No_image.png"} // <- Validación aquí
+                alt={`Imagen de inmueble ${imagen?.photoid || "No disponible"}`}
+                className="absolute inset-0 object-cover w-full h-full"
             />
         </div>
-    );
+    ))
+    : [
+        <div key="fallback" className="relative min-w-full h-full">
+            <Image
+                width={800}
+                height={600}
+                src="/No_image.png"
+                alt="Imagen no disponible"
+                className="absolute inset-0 object-cover w-full h-full"
+            />
+        </div>
+    ];
+
 
     return (
         <Card
@@ -66,9 +79,7 @@ export const CardOwner = (cardProps: Properties) => {
                         marginBottom: '.5rem'
                     }}
                 >
-                    <span
-                        className="text-base leading-6 col-start-1 sm:col-span-2 lg:row-start-4 lg:col-span-1 dark:text-slate-200"
-                    >
+                    <span className="text-base leading-6 dark:text-slate-200">
                         ${cardProps.decrentalcost}
                     </span>
                 </CardActions>
