@@ -1,13 +1,3 @@
-"use client";
-
-import Inmuebles from "@/components/Dashboard/Inmuebles";
-import { BreadcrumbWithCustomSeparator } from "@/components/GeneralComponents/Breadcrumbs";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import CardOwner from "@/components/Main/Card";
-
-export default function DashboardHome() {
-
 import Inmuebles from '@/components/Dashboard/Inmuebles';
 import { BreadcrumbWithCustomSeparator } from '@/components/GeneralComponents/Breadcrumbs';
 import { Metadata } from "next";
