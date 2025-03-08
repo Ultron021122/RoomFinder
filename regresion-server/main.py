@@ -12,7 +12,7 @@ MODEL_PATH = os.path.join(BASE_DIR, "modelo.pkl")
 DATA_PATH = os.path.join(BASE_DIR, "datos_preprocesados.pkl")
 
 # 🔹 Conectar a PostgreSQL
-DB_URL = "postgresql://postgres:samir@localhost:5433/roomfinder"
+DB_URL = ""
 engine = create_engine(DB_URL)
 
 # 🔹 Variables globales
@@ -33,8 +33,6 @@ app.add_middleware(
 )
 
 # 🔄 Cargar modelo y datos
-
-
 def load_model_and_data():
     global model, student_features, df_encoded, all_features
     try:
@@ -52,8 +50,6 @@ def load_model_and_data():
         print("❌ Error al cargar el modelo o los datos:", e)
 
 # 🔄 Consultar base de datos si no hay datos preprocesados
-
-
 def update_data_from_db():
     global student_features, df_encoded, all_features
 
@@ -91,7 +87,6 @@ def update_data_from_db():
     print("✅ Datos preprocesados guardados.")
 
 # 🔹 Endpoint para recomendar una propiedad
-
 
 @app.get("/recommend/{student_id}")
 @app.get("/recommend/{student_id}")
@@ -136,7 +131,6 @@ def recommend_property(student_id: int):
         # 🔹 Convertimos a `float` por seguridad
         "distance": float(recommended_property["distance"])
     }
-
 
 # 🔹 Cargar modelo al iniciar
 load_model_and_data()

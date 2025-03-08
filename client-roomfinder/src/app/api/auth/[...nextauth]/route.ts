@@ -17,7 +17,6 @@ interface SessionInterface {
     roleid: number;
     created_at: string;
     sessionid: number;
-    recomendacion?: any; // 🔹 Agregamos la recomendación opcionalmente
 }
 
 const handler = NextAuth({
@@ -26,7 +25,7 @@ const handler = NextAuth({
             name: "Credentials",
             id: "credentials",
             credentials: {
-                vchemail: { label: "Email", type: "text" },
+                vchemail: { label: "Email", type: "text", placeholder: "jsmith" },
                 vchpassword: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
@@ -38,29 +37,21 @@ const handler = NextAuth({
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify(credentials),
-                    });
-
-                    if (!login.ok) {
+                    })
+                    if (login.status === 401 || login.status === 403 || login.status === 404) {
                         const error = await login.json();
                         throw new Error(error.message);
+                    };
+                    if (login.ok === false) {
+                        throw new Error("Internal Server Error");
                     }
-
-                    const user = await login.json();
-
-                    // 🔹 Llamar a la API de recomendación después del login
-                    try {
-                        const recomendacionRes = await fetch(`http://localhost:8080/recommend/${user.usuarioid}`);
-                        if (recomendacionRes.ok) {
-                            user.recomendacion = await recomendacionRes.json();
-                        }
-                    } catch (error) {
-                        console.error("Error obteniendo recomendación:", error);
-                        user.recomendacion = null;
-                    }
-
-                    return user;
+                    return login.json();
                 } catch (error) {
-                    throw new Error(error instanceof Error ? error.message : "Error desconocido");
+                    if (error instanceof Error) {
+                        throw new Error(error.message);
+                    } else {
+                        throw new Error("Algo salió mal. Por favor, inténtelo de nuevo");
+                    }
                 }
             },
         }),
@@ -71,30 +62,24 @@ const handler = NextAuth({
     },
     session: {
         strategy: "jwt",
-        maxAge: 3600,
+        maxAge: 3600, // 1 hour (in seconds)
     },
     callbacks: {
         async jwt({ token, user, trigger, session }) {
-            console.log("Usuario recibido en JWT:", user);
             if (trigger === "update") {
                 return { ...token, user: { ...session.user } };
             }
             if (user) token.user = user;
-            console.log("Token final en JWT:", token);
             return token;
         },
         async session({ session, token }) {
-            if (token.user) {
-                session.user = token.user as SessionInterface;
-            }
-            console.log("✅ Sesión en servidor con recomendación:", session);
+            session.user = token.user as SessionInterface;
             return session;
         },
     },
     events: {
         signOut: async (message) => {
-            const sessionid = (message.token?.user as SessionInterface)?.sessionid;
-            if (!sessionid) return;
+            const sessionid = message.token?.user as SessionInterface;
             try {
                 await fetch(`${process.env.REST_URL}/users/logout/`, {
                     method: "POST",
@@ -102,10 +87,14 @@ const handler = NextAuth({
                         "Authorization": `Bearer ${process.env.REST_SECRET}`,
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ sessionid }),
+                    body: JSON.stringify({ sessionid: sessionid.sessionid }),
                 });
             } catch (error) {
-                console.error("Error al cerrar sesión:", error);
+                if (error instanceof Error) {
+                    throw new Error(error.message);
+                } else {
+                    throw new Error("Algo salió mal. Por favor, inténtelo de nuevo");
+                }
             }
         },
     },

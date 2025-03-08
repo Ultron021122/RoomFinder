@@ -1,16 +1,15 @@
 'use client';
 // Element: CardOwner
 import CardContent from '@mui/material/CardContent';
-import { CardActionArea, CardActions, Card } from '@mui/material';
+import { CardActionArea, CardActions, Rating, Card } from '@mui/material';
 import Image from 'next/image';
 import { Galeria } from '@/components/GeneralComponents/Galeria';
 import { useRouter } from 'next/navigation';
 import { MapPin, Star } from 'lucide-react';
-import { Properties } from '@/utils/interfaces';
+import { Photos, Properties } from '@/utils/interfaces';
 
 export const CardOwner = (cardProps: Properties) => {
     const route = useRouter();
-
     // Si objphotos es null o está vacío, usar 'No_image.png' como fallback
     const listaImagenes = (cardProps.objphotos && cardProps.objphotos.length > 0)
     ? cardProps.objphotos.map((imagen, index) => (
@@ -35,7 +34,6 @@ export const CardOwner = (cardProps: Properties) => {
             />
         </div>
     ];
-
 
     return (
         <Card
@@ -79,7 +77,9 @@ export const CardOwner = (cardProps: Properties) => {
                         marginBottom: '.5rem'
                     }}
                 >
-                    <span className="text-base leading-6 dark:text-slate-200">
+                    <span
+                        className="text-base leading-6 col-start-1 sm:col-span-2 lg:row-start-4 lg:col-span-1 dark:text-slate-200"
+                    >
                         ${cardProps.decrentalcost}
                     </span>
                 </CardActions>
@@ -87,5 +87,6 @@ export const CardOwner = (cardProps: Properties) => {
         </Card>
     );
 }
+
 
 export default CardOwner;
