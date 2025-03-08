@@ -41,11 +41,11 @@ export default function DashboardHome() {
             }
         };
 
-        const propertyId = session?.user?.recomendacion?.recommended_property_id;
-        if (status === "authenticated" && propertyId) {
+        //const propertyId = session?.user?.recomendacion?.recommended_property_id;
+        /*if (status === "authenticated" && propertyId) {
             console.log("🏡 Recomendación recibida:", propertyId);
             fetchPropertyDetails(propertyId);
-        }
+        }*/
     }, [session, status]);
 
     return (
