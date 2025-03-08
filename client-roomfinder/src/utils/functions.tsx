@@ -35,7 +35,7 @@ export const shortName = ({ vchname = '', vchpaternalsurname = '', vchmaternalsu
     return `${vchname} ${vchpaternalsurname} ${vchmaternalsurname}`;
 }
 
-export const validateDate = (value : string) => {
+export const validateDate = (value: string) => {
     const fechaNacimiento = new Date(value);
     const fechaActual = new Date();
     const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
@@ -43,5 +43,17 @@ export const validateDate = (value : string) => {
 }
 
 export const fifteenYearsAgo = subYears(new Date(), 15);
+
+
+export function generatePassword(length: number = 12): string {
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+    }
+    return password;
+}
+
 
 export default getFullName;

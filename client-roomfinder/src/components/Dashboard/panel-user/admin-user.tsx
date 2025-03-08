@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Search, Edit, Trash2, ChevronLeft, ChevronRight, User as UserIcon, CalendarIcon } from 'lucide-react';
+import { Search, Edit, Trash2, ChevronLeft, ChevronRight, User as UserIcon, LockKeyhole, ImageIcon } from 'lucide-react';
 import axios from 'axios';
 import { Spinner } from '@nextui-org/react';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,7 +28,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { CalendarField } from './calendar-field';
-import { fifteenYearsAgo } from '@/utils/functions';
+import { fifteenYearsAgo, generatePassword } from '@/utils/functions';
+import { useDropzone } from 'react-dropzone';
+import Image from 'next/image';
 
 const userFormSchema = z.object({
     vchname: z.string().min(3).max(50),
@@ -42,7 +44,8 @@ const userFormSchema = z.object({
     vchpassword: z.string().min(8, {
         message: 'Contraseña debe ser de 8 o más caracteres'
     }),
-    roleid: z.number().positive()
+    roleid: z.number().positive(),
+    vchbiography: z.string().max(255)
 })
 
 
@@ -56,6 +59,8 @@ export default function AdminUsers() {
     const [paginaActual, setPaginaActual] = useState<number>(1);
     const [usersPerPage] = useState<number>(10);
     const [isLoadingState, setIsLoading] = useState<boolean>(false);
+    const [errorSystem, setErrorSystem] = useState<string | null>(null);
+    const [uploadedImage, setUploadedImage] = useState<string | ArrayBuffer | null>(null);
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof userFormSchema>>({
@@ -66,18 +71,76 @@ export default function AdminUsers() {
             vchmaternalsurname: "",
             vchemail: "",
             dtbirthdate: fifteenYearsAgo,
-            vchimage: "",
             vchpassword: "",
             roleid: 3
         },
     })
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof userFormSchema>) {
+    async function onSubmit(values: z.infer<typeof userFormSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(values)
+        if (values) {
+            setIsLoading(true);
+            setErrorSystem(null);
+            try {
+                const response = await axios.post('/api/users/admin', values, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
+                setIsLoading(false);
+                if (response.status === 201) {
+                    toast.success(response.data.message.message, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        style: { fontSize: '0.9rem' },
+                        transition: Slide,
+                    });
+                    refetchUsers();
+                    setCreateUser(false);
+                } else {
+                    setErrorSystem(response.data.message);
+                }
+
+            } catch (Error: any) {
+                setErrorSystem(Error.response?.data.message);
+            } finally {
+                setIsLoading(false);
+                form.reset({
+                    vchname: "",
+                    vchpaternalsurname: "",
+                    vchmaternalsurname: "",
+                    vchemail: "",
+                    dtbirthdate: fifteenYearsAgo,
+                    vchpassword: "",
+                    roleid: 3
+                });
+                setUploadedImage(null);
+            }
+        }
     }
 
+    const handleDrop = (acceptedFiles: File[]) => {
+        const file = acceptedFiles[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setUploadedImage(reader.result);
+            form.setValue('vchimage', reader.result as string);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const { getRootProps, getInputProps } = useDropzone({
+        onDrop: handleDrop,
+        accept: { 'image/*': ['.jpg', '.jpeg', '.png'] },
+        maxFiles: 1
+    });
 
     const handleBusquedaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBusqueda(e.target.value);
@@ -94,6 +157,23 @@ export default function AdminUsers() {
             debouncedBusquedaChange.cancel();
         };
     }, [debouncedBusquedaChange]);
+
+    // Errores
+    useEffect(() => {
+        if (errorSystem) {
+            toast.error(errorSystem, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        }
+    }, [errorSystem]);
 
     const filterUsers = useCallback(() => {
         return users.filter(user => {
@@ -233,6 +313,11 @@ export default function AdminUsers() {
         }
     };
 
+    const handleGeneratePassword = () => {
+        const newPassword = generatePassword(16);
+        form.setValue('vchpassword', newPassword);
+    };
+
     return (
         <div className="p-2 md:p-8 h-screen overflow-hidden">
             <Card className="overflow-hidden w-auto sm:w-full mx-auto bg-gray-100 dark:bg-gray-950">
@@ -240,9 +325,9 @@ export default function AdminUsers() {
                     <CardTitle className="text-2xl font-bold">Administración de Usuarios</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex justify-between items-center mb-6">
-                        <div className="flex space-x-4">
-                            <div className="relative w-48 md:w-64 lg:w-72">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-4">
+                            <div className="relative w-full sm:w-auto">
                                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                                 <Input
                                     placeholder="Buscar usuarios..."
@@ -250,7 +335,7 @@ export default function AdminUsers() {
                                     className="pl-8"
                                 />
                             </div>
-                            <div className="relative w-48">
+                            <div className="relative w-full sm:w-auto">
                                 <Select value={verificado} onValueChange={handleVerificadoChange}>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Verificado" />
@@ -264,10 +349,10 @@ export default function AdminUsers() {
                             </div>
                         </div>
                         <Button
-                            className='flex flex-row items-center justify-center md:justify-start'
+                            className='flex flex-row items-center justify-center w-full sm:w-auto sm:justify-start'
                             onClick={() => setCreateUser(true)}
                         >
-                            <UserIcon className="mr-2 h-5 w-5 md:h-4 md:w-4" />
+                            <UserIcon className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
                             <span className='hidden md:inline'>Agregar Usuario (Admin)</span>
                         </Button>
                     </div>
@@ -325,8 +410,9 @@ export default function AdminUsers() {
                                                         </TooltipContent>
                                                     </Tooltip>
                                                 </TooltipProvider>
+
                                                 <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
+                                                    <AlertDialogTrigger>
                                                         <TooltipProvider>
                                                             <Tooltip>
                                                                 <TooltipTrigger asChild>
@@ -417,7 +503,7 @@ export default function AdminUsers() {
                         {userEdit && (
                             <form
                                 onSubmit={(e) => { e.preventDefault(); handleGuardarCambios(); }}
-                                className="space-y-4"
+                                className="space-y-4 pl-2 pr-3"
                             >
                                 <div>
                                     <Label htmlFor="vchname">Nombre</Label>
@@ -462,6 +548,7 @@ export default function AdminUsers() {
                                         value={userEdit.roleid.toString()}
                                         onValueChange={(value) => setUserEdit({ ...userEdit, roleid: parseInt(value) })}
                                         defaultValue={userEdit.roleid.toString()}
+                                        disabled
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Selecciona el tipo de usuario" />
@@ -584,17 +671,69 @@ export default function AdminUsers() {
                                     name="dtbirthdate"
                                     render={({ field }) => <CalendarField field={field} />}
                                 />
+                                <div className='flex flex-row space-x-5 items-center'>
+                                    <FormField
+                                        control={form.control}
+                                        name="vchpassword"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Contraseña</FormLabel>
+                                                <FormControl>
+                                                    <Input type='password' placeholder="***************" {...field} />
+                                                </FormControl>
+                                                <FormDescription>
+                                                    Establece una contraseña.
+                                                </FormDescription>
+                                                <FormMessage className='text-red-600' />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <Button type="button" onClick={handleGeneratePassword} className="mt-2">
+                                        <LockKeyhole className="h-5 w-5" />
+                                    </Button>
+                                </div>
+                                <div
+                                    {...getRootProps({ className: 'dropzone' })}
+                                    className="border-2 border-dashed border-gray-300 p-4 rounded-lg text-center cursor-pointer"
+                                >
+                                    <input {...getInputProps()} />
+                                    {uploadedImage ? (
+                                        <div className="mt-4">
+                                            <Image
+                                                width={300}
+                                                height={300}
+                                                src={uploadedImage as string}
+                                                alt="Selected"
+                                                className="w-full max-h-96 rounded-md"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="text-center flex flex-col items-center justify-center">
+                                            <ImageIcon size={48} className="text-gray-600 dark:text-gray-200" />
+                                            <div className="mt-4 flex text-sm leading-6 text-gray-600 dark:text-gray-200">
+                                                <span className="text-gray-600 dark:text-gray-200">Sube una imagen</span>
+                                                <p className="pl-1">o arrastra y suelta</p>
+                                            </div>
+                                            <p className="text-xs leading-5 text-blue-400">PNG, JPG, GIF hasta 10MB</p>
+                                        </div>
+                                    )}
+                                </div>
                                 <FormField
                                     control={form.control}
-                                    name="vchpassword"
+                                    name="vchbiography"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Contraseña</FormLabel>
+                                            <FormLabel>Biografia</FormLabel>
                                             <FormControl>
-                                                <Input type='password' placeholder="***************" {...field} />
+                                                <Textarea
+                                                    id="vchbiography"
+                                                    placeholder='Biography'
+                                                    className='h-24'
+                                                    {...field}
+                                                />
                                             </FormControl>
                                             <FormDescription>
-                                                Establece una contraseña.
+                                                Biografia del usuario.
                                             </FormDescription>
                                             <FormMessage className='text-red-600' />
                                         </FormItem>

@@ -24,6 +24,7 @@ import { usePropertyContext } from '@/contexts/PropertyContext';
 import { FormularioProvider } from '@/components/Form/FormularioContext';
 import ElementForm from '@/components/Form/element_form';
 import { debounce } from '@/lib/debounce';
+import CopyText from '@/components/ui/copy-text';
 
 
 export default function AdminProperties() {
@@ -217,8 +218,12 @@ export default function AdminProperties() {
                                 :
                                 obtenerPropiedadesPaginados().map((propiedad) => (
                                     <TableRow key={propiedad.propertyid}>
-                                        <TableCell>{propiedad.vchtitle}</TableCell>
-                                        <TableCell>{propiedad.decrentalcost}</TableCell>
+                                        <TableCell>
+                                            <CopyText text={propiedad.vchtitle} />
+                                        </TableCell>
+                                        <TableCell>
+                                            <CopyText text={propiedad.decrentalcost} />
+                                        </TableCell>
                                         <TableCell className="justify-center items-center">
                                             <Badge
                                                 variant={propiedad.bnavailability === true ? 'default' : 'outline'}
@@ -226,7 +231,9 @@ export default function AdminProperties() {
                                                 {propiedad.bnavailability === true ? 'Disponible' : 'No Disponible'}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell>{format(new Date(propiedad.created_at), 'yyyy-MM-dd HH:mm:ss')}</TableCell>
+                                        <TableCell>
+                                            <CopyText text={format(new Date(propiedad.created_at), 'yyyy-MM-dd HH:mm:ss')} />
+                                        </TableCell>
                                         <TableCell>
                                             <Button variant="ghost" size="sm" onClick={() => handleEditarUsuario(propiedad)}>
                                                 <Edit className="h-4 w-4" />
@@ -304,7 +311,7 @@ export default function AdminProperties() {
             >
                 <DialogContent
                     aria-describedby="update_element"
-                    className="w-screen"
+                    className="w-screen sm:w-full max-w-lg"
                 >
                     <DialogHeader>
                         <DialogTitle>Editar Propiedad</DialogTitle>
@@ -313,7 +320,7 @@ export default function AdminProperties() {
                         {propertyEdit && (
                             <form
                                 onSubmit={(e) => { e.preventDefault(); handleGuardarCambios(); }}
-                                className="space-y-4"
+                                className="space-y-4 pl-2 pr-3"
                             >
                                 <div>
                                     <Label htmlFor="vchtitle">Titulo</Label>
