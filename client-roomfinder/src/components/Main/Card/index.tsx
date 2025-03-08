@@ -8,21 +8,32 @@ import { useRouter } from 'next/navigation';
 import { MapPin, Star } from 'lucide-react';
 import { Photos, Properties } from '@/utils/interfaces';
 
-
 export const CardOwner = (cardProps: Properties) => {
     const route = useRouter();
-
-    const listaImagenes = cardProps.objphotos.map((imagen, index) =>
-        <div key={index} className="relative min-w-full h-full" >
+    // Si objphotos es null o está vacío, usar 'No_image.png' como fallback
+    const listaImagenes = (cardProps.objphotos && cardProps.objphotos.length > 0)
+    ? cardProps.objphotos.map((imagen, index) => (
+        <div key={index} className="relative min-w-full h-full">
             <Image
                 width={800}
                 height={600}
-                src={imagen.url}
-                alt={`Imagen de inmueble ${imagen.photoid}`}
-                className='absolute inset-0 object-cover w-full h-full'
+                src={imagen?.url || "/No_image.png"} // <- Validación aquí
+                alt={`Imagen de inmueble ${imagen?.photoid || "No disponible"}`}
+                className="absolute inset-0 object-cover w-full h-full"
             />
         </div>
-    );
+    ))
+    : [
+        <div key="fallback" className="relative min-w-full h-full">
+            <Image
+                width={800}
+                height={600}
+                src="/No_image.png"
+                alt="Imagen no disponible"
+                className="absolute inset-0 object-cover w-full h-full"
+            />
+        </div>
+    ];
 
     return (
         <Card
@@ -76,5 +87,6 @@ export const CardOwner = (cardProps: Properties) => {
         </Card>
     );
 }
+
 
 export default CardOwner;

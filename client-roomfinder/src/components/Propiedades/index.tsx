@@ -98,8 +98,8 @@ function PropertyComponent({ id }: { id: string }) {
                                     <Image
                                         width={800}
                                         height={800}
-                                        src={property?.objphotos[0].url || '/images/placeholder.webp'}
-                                        alt={`Imagen ${property?.objphotos[0].photoid}`}
+                                        src={property?.objphotos?.[0]?.url || '/No_image.png'}
+                                        alt={`Imagen ${property?.objphotos?.[0]?.photoid || 'No disponible'}`}
                                         priority
                                         className="w-full h-60 object-cover rounded-lg sm:h-52 sm:col-span-2 lg:col-span-full"
                                     />
@@ -108,16 +108,16 @@ function PropertyComponent({ id }: { id: string }) {
                                 <Image
                                     width={800}
                                     height={800}
-                                    src={property?.objphotos[1].url || '/images/placeholder.webp'}
-                                    alt={`Imagen ${property?.objphotos[1].photoid}`}
+                                    src={property?.objphotos?.[1]?.url || '/No_image.png'}
+                                    alt={`Imagen ${property?.objphotos?.[1]?.photoid || 'No disponible'}`}
                                     className="hidden w-full h-52 object-cover rounded-lg sm:block sm:col-span-2 md:col-span-1 lg:row-start-2 lg:col-span-2 lg:h-32"
                                     priority
                                 />
                                 <Image
                                     width={800}
                                     height={800}
-                                    src={property?.objphotos[2].url || '/images/placeholder.webp'}
-                                    alt={`Imagen ${property?.objphotos[2].photoid}`}
+                                    src={property?.objphotos?.[2]?.url || '/No_image.png'}
+                                    alt={`Imagen ${property?.objphotos?.[2]?.photoid || 'No disponible'}`}
                                     className="hidden w-full h-52 object-cover rounded-lg md:block lg:row-start-2 lg:col-span-2 lg:h-32"
                                     priority
                                 />
@@ -147,6 +147,7 @@ function PropertyComponent({ id }: { id: string }) {
                             </p>
                         </div>
                     </main>
+
 
                     <div className='pb-6 md:py-5 max-w-5xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-r-14 lg:grid-cols-2'>
                         <Card className="mb-6 bg-transparent border-none shadow-none">
