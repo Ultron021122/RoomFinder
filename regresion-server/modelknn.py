@@ -3,7 +3,8 @@ import pandas as pd
 import numpy as np
 import pickle
 from sqlalchemy import create_engine
-from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from dotenv import load_dotenv
 import psycopg2
@@ -16,8 +17,8 @@ MODEL_DIR = "modelo_guardado"
 os.makedirs(MODEL_DIR, exist_ok=True)  # Crear la carpeta si no existe
 
 # 📌 Ruta de archivos
-MODEL_PATH = os.path.join(MODEL_DIR, "modelo.pkl")
-DATA_PATH = os.path.join(MODEL_DIR, "datos_preprocesados.pkl")
+MODEL_PATH = os.path.join(MODEL_DIR, "modelo_knn.pkl")
+DATA_PATH = os.path.join(MODEL_DIR, "datos_preprocesadosknn.pkl")
 
 # 🔹 Conectar a PostgreSQL con el parámetro de codificación LATIN1
 db_url = os.getenv("DB_URL")
@@ -63,7 +64,7 @@ else:
         FROM "Usuario"."RentalHistory";
     """
 
-    print("🔍 Consultando base de datos...", query)
+    # print("🔍 Consultando base de datos...", query)
 
     try:
         # Leer datos desde la base de datos
@@ -82,13 +83,12 @@ else:
     # 🔹 Agrupar por student_id y calcular características promedio
     student_features = df_encoded.groupby('studentid')[all_features].mean().reset_index()
 
-    # 🔹 Definir las características (X) y el target (y)
+    # 🔹 Definir las características (X)
     X = student_features[all_features]
-    y = X  # Predecimos todas las características
 
-    # 🔹 Entrenar el modelo de regresión lineal múltiple
-    model = LinearRegression()
-    model.fit(X, y)
+    # 🔹 Entrenar el modelo KNN para recomendar propiedades similares
+    model = NearestNeighbors(n_neighbors=5, algorithm='auto', metric='euclidean')
+    model.fit(X)
 
     # 🔹 Guardar el modelo entrenado
     with open(MODEL_PATH, "wb") as model_file:
@@ -99,3 +99,16 @@ else:
         pickle.dump((student_features, df_encoded, all_features), data_file)
 
     print("✅ Modelo y datos guardados correctamente.")
+
+    # 🔹 Hacer recomendaciones para un usuario específico (por ejemplo, para el primer usuario)
+    user_id = 8  # Reemplazar con el ID del usuario para el que quieres hacer la recomendación
+
+    # Obtener las características del usuario
+    user_features = student_features[student_features['studentid'] == user_id][all_features]
+
+    # Buscar las propiedades más similares usando el modelo KNN
+    distances, indices = model.kneighbors(user_features)
+
+    # Mostrar las propiedades recomendadas (ID de propiedades similares)
+    recommended_properties = df.iloc[indices[0]]['propertyid']
+    print("🔹 Propiedades recomendadas para el usuario:", recommended_properties.values)
