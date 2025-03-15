@@ -70,7 +70,7 @@ const validaciones: Record<number, FuncionValidacion> = {
     },
     6: ({ ubicacion }) => {
         const { pais, direccion, estado, codigoPostal, ciudad_municipio, latitud, longitud } = ubicacion;
-        return (pais && direccion && estado && codigoPostal !== -1 && ciudad_municipio && latitud && longitud)
+        return (pais && direccion && estado && codigoPostal && ciudad_municipio && latitud && longitud)
             ? true
             : 'Ingresa la dirección de tu inmueble';
     },
@@ -153,7 +153,12 @@ export default function Wizar() {
             setErrorSystem(null);
             // Intentar enviar la información
             try {
-                const response = await axios.post('/api/properties', inmueble);
+                const response = await axios.post('/api/properties',
+                    inmueble, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 setIsLoading(false);
                 if (response.status === 201) {
                     toast.success(response.data.message.message, {

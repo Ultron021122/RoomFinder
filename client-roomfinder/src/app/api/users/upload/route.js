@@ -1,20 +1,51 @@
 import { NextResponse } from 'next/server';
-import { uploadImage } from '../../cloudinary';
+import { deleteImage, uploadImage } from '../../cloudinary';
 import axios from 'axios';
 import { COVER_IMAGE } from '@/utils/constants';
 
 export async function PATCH(req, res) {
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
     const { usuarioid, image, type } = await req.json();
+    let resultConsult;
     let imageUrl;
+
+    try {
+        resultConsult = await fetch(`${process.env.REST_URL}/users/images/${usuarioid}`, {
+            headers: {
+                Authorization: `Bearer ${process.env.REST_SECRET}`
+            }
+        });
+        resultConsult = await resultConsult.json();
+
+    } catch (error) {
+        return NextResponse.json(
+            { message: 'Server error' },
+            { status: 503 }
+        );
+    }
+
+    if (!resultConsult || !resultConsult.roleid) {
+        return NextResponse.json(
+            { message: 'Usuario no encontrado' },
+            { status: 404 }
+        );
+    }
+
+    let widthImage = type === COVER_IMAGE ? 1200 : 600;
+    let heightImage = type === COVER_IMAGE ? 'auto' : 600;
+
     try {
         imageUrl = await uploadImage(
             image,
-            'users',
+            resultConsult.roleid === 1 ? 'students' : 'lessors',
             {
                 transformation: [
-                    { width: 1200, height: 1000, crop: "fill" },
+                    { width: widthImage, height: heightImage, crop: "fill" },
                     { quality: "auto" },
-                    { format: "jpg" }
+                    { format: "webp" }
                 ]
             }
         );
@@ -30,11 +61,22 @@ export async function PATCH(req, res) {
             { status: 503 }
         );
     }
+
+    try {
+        await deleteImage(type === COVER_IMAGE ? resultConsult.vchcoverimage : resultConsult.vchimage);
+    } catch (error) {
+        console.log('Error al eliminar la imagen', error);
+        return NextResponse.json(
+            { message: 'No  se pudo eliminar la imagen' },
+            { status: 503 }
+        );
+    }
+
     try {
         const data = {
-            [type === COVER_IMAGE ? "vchcoverimage" : "vchimage"] : imageUrl.secure_url
+            [type === COVER_IMAGE ? "vchcoverimage" : "vchimage"]: imageUrl.secure_url
         }
-        const response = await axios.patch(`${process.env.REST_URL}/users/${usuarioid}`, data , {
+        const response = await axios.patch(`${process.env.REST_URL}/users/${usuarioid}`, data, {
             headers: {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }
@@ -51,7 +93,7 @@ export async function PATCH(req, res) {
         return NextResponse.json(
             { message },
             { status: response.status },
-            { data: response.data}
+            { data: response.data }
         );
 
     } catch (error) {

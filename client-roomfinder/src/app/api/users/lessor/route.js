@@ -2,7 +2,13 @@ import { NextResponse } from 'next/server';
 import { deleteImage, uploadImage } from '../../cloudinary';
 import axios from 'axios';
 
-export async function GET() {
+export async function GET( request) {
+
+    const secretKey = request.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const response = await axios.get(`${process.env.REST_URL}/lessors/`, {
             headers: {
@@ -22,6 +28,10 @@ export async function GET() {
 }
 
 export async function POST(req, res) {
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
 
     const { vchname, vchpaternalsurname, vchmaternalsurname, vchemail, vchpassword, confirm_password, bnstatus, dtbirthdate, vchimage, roleid, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate, vchbiography } = await req.json();
     let imageUrl;
@@ -33,7 +43,7 @@ export async function POST(req, res) {
                 transformation: [
                     { width: 600, height: 600, crop: "fill" },
                     { quality: "auto" },
-                    { format: "jpg" }
+                    { format: "webp" }
                 ]
             }
         );
@@ -94,6 +104,10 @@ export async function POST(req, res) {
 }
 
 export async function PATCH(req) {
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
 
     const {
         vchname,
@@ -117,7 +131,7 @@ export async function PATCH(req) {
         usuarioid
     } = await req.json();
 
-    try{
+    try {
         const response = await axios.patch(`${process.env.REST_URL}/lessors/${usuarioid}`, {
             vchname,
             vchpaternalsurname,
@@ -142,7 +156,7 @@ export async function PATCH(req) {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }
         })
-        
+
         const message = "Usuario actualizado correctamente";
 
         return NextResponse.json(
@@ -150,7 +164,7 @@ export async function PATCH(req) {
             { status: response.status }
         );
 
-    }catch(error){
+    } catch (error) {
         return NextResponse.json(
             { message: error.message },
             { status: 503 }

@@ -10,6 +10,7 @@ import { PORT } from "./config.js";
 import rateLimit from "express-rate-limit";
 import csurf from "csurf";
 import jwt from "jsonwebtoken";
+import { corsMiddleware } from "./middlewares/corsMiddleware.js";
 
 const csrfProtection = csurf({ cookie: true });
 
@@ -25,7 +26,7 @@ const io = new SocketServer(server, {
 });
 
 // Middlewares
-app.use(cors());
+app.use(corsMiddleware());
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));

@@ -6,6 +6,7 @@ import { corsMiddleware } from './middlewares/cors.js'
 import morgan from "morgan"
 import { errorHandler } from './middlewares/errors.js'
 import { rateLimit } from 'express-rate-limit'
+import { verificarJWT } from './auth.js'
 // Importar las rutas
 import { createUsersRouter } from './routes/users.js'
 import { createPropertiesRouter } from './routes/properties.js'
@@ -15,6 +16,10 @@ import { createMessagesRouter } from './routes/messages.js'
 import { createChatsRouter } from './routes/chats.js'
 import { createRecoveryPassRouter } from './routes/recoverypass.js'
 import { createTypePropertyRouter } from './routes/typeproperty.js'
+import { createUtilsRouter } from './routes/utils.js'
+import { createLeasesRouter } from './routes/leases.js'
+import { createReviewsRouter } from './routes/reviews.js'
+import { createRequestsRouter } from './routes/request.js'
 // Importar el modelo de la base de datos
 // PostgreSQL
 import { UsersModel } from './model/postgresql/user.js'
@@ -25,7 +30,9 @@ import { MessagesModel } from './model/postgresql/messages.js'
 import { ChatsModel } from './model/postgresql/chats.js'
 import { RecoveryPassModel } from './model/postgresql/recoverypass.js'
 import { PropertyTypeModel } from './model/postgresql/typeproperty.js'
-import { verificarJWT } from './auth.js'
+import { LeasesModel } from './model/postgresql/leases.js'
+import { ReviewsModel } from './model/postgresql/reviews.js'
+import { RequestModel } from './model/postgresql/request.js'
 //MySQL 
 // import { UsersModel } from './model/mysql/user.js'
 // import { PropertiesModel } from './model/mysql/propertie.js'
@@ -59,6 +66,10 @@ app.use('/api/students', verificarJWT, createStudentsRouter({ studentModel: Stud
 app.use('/api/messages', verificarJWT, createMessagesRouter({ messageModel: MessagesModel }))
 app.use('/api/chats', verificarJWT, createChatsRouter({ chatsModel: ChatsModel }))
 app.use('/api/recovery', verificarJWT, createRecoveryPassRouter({ recoveryPassModel: RecoveryPassModel }))
+app.use('/api/leases', verificarJWT, createLeasesRouter({ leasesModel: LeasesModel }))
+app.use('/api/reviews', verificarJWT, createReviewsRouter({reviewModel: ReviewsModel}))
+app.use('/api/request', verificarJWT, createRequestsRouter({requestModel: RequestModel}))
+app.use('/api/utils', verificarJWT, createUtilsRouter())
 
 app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swagger)) // Documentation of the API
 app.use(errorHandler) // Middleware for error handling

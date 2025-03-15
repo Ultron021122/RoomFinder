@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 // Componentes
-import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import { Controller, useForm } from "react-hook-form";
 import { Button, Spinner } from "@nextui-org/react";
 import ModalImage from "./image";
@@ -15,11 +14,18 @@ import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // Utilidades
 import { messages, patterns, universities, roles, ESTUDIANTE } from "@/utils/constants";
-import { validateDate } from "@/utils/functions";
+import { fifteenYearsAgo } from "@/utils/functions";
 import { StudentInfo, LessorInfo } from "@/utils/interfaces";
 import { Alert } from '@/utils/alert';
 import { SelectContent, SelectItem, SelectTrigger, Select as SelectS, SelectValue } from "@/components/ui/select";
+import { Button as ButtonS } from '@/components/ui/button';
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { es } from "date-fns/locale";
 
 const Registrar = () => {
     const { status } = useSession();
@@ -28,11 +34,47 @@ const Registrar = () => {
     const { control, register, handleSubmit, formState: { errors }, watch, reset, setValue, setError, clearErrors } = useForm<StudentInfo | LessorInfo>({ mode: "onChange", defaultValues: { bnstatus: true } });
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
+    const [isZipValidated, setIsZipValidated] = useState(false);
+    const [locationData, setLocationData] = useState([]);
+    const [municipality, setMunicipality] = useState({ city: "", state: "" });
 
     const validatePasswordConfirmation = (value: string) => {
         const password = watch('vchpassword'); // Obtener el valor de la contraseña
         return value === password || messages.confirm_password.validate; // Comparar contraseñas
     }
+
+    const handleZipValidation = async (zip: string) => {
+        try {
+            const response = await axios.get(`https://api.zippopotam.us/mx/${zip}`);
+            if (response.status === 200) {
+                setLocationData(response.data.places);
+                setIsZipValidated(true);
+
+                try {
+                    const response = await axios.get(`/api/address/${zip}`);
+                    if (response.status === 200) {
+                        const { city, state } = response.data.response;
+                        setMunicipality({ city, state });
+                    }
+                } catch (error) {
+                    console.error("Error consult data: ", error);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching data from Zippopotamus API", error);
+        }
+    };
+
+    useEffect(() => {
+        const subscription = watch((value) => {
+            if (value.intzip && value.intzip.length === 5) {
+                handleZipValidation(value.intzip);
+            } else {
+                setIsZipValidated(false);
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, [watch]);
 
     const handleImageSave = (imageFile: string | null) => {
         if (imageFile) {
@@ -73,10 +115,18 @@ const Registrar = () => {
         } else {
             setIsLoading(true);
             setErrorSystem(null);
+
+            console.log(userInfo)
             if (userInfo.roleid === ESTUDIANTE) {
                 const data = userInfo as StudentInfo;
                 try {
-                    const response = await axios.post("/api/users/student", data);
+                    const response = await axios.post("/api/users/student",
+                        data,
+                        {
+                            headers: {
+                                'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                            }
+                        });
                     setIsLoading(false);
                     if (response.status === 201) {
                         toast.success(response.data.message.message, {
@@ -239,6 +289,10 @@ const Registrar = () => {
                                     required: {
                                         value: true,
                                         message: messages.vchphone.required
+                                    },
+                                    pattern: {
+                                        value: patterns.vchphone,
+                                        message: messages.vchphone.pattern
                                     }
                                 })
                                 }
@@ -258,25 +312,24 @@ const Registrar = () => {
                         </div>
                     </div>
                     <div>
-                        <div className="relative z-0 w-full group">
+                        <div className="relative z-0 w-full mb-3 group">
                             <input
                                 {...register("intzip", {
                                     required: {
                                         value: true,
                                         message: messages.intzip.required
                                     },
-                                    min: {
-                                        value: 10000,
+                                    minLength: {
+                                        value: 5,
                                         message: messages.intzip.min
                                     },
-                                    max: {
-                                        value: 99999,
+                                    maxLength: {
+                                        value: 5,
                                         message: messages.intzip.max
-                                    },
-                                    valueAsNumber: true
+                                    }
                                 })
                                 }
-                                type="number"
+                                type="string"
                                 name="intzip"
                                 id="intzip"
                                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -292,7 +345,7 @@ const Registrar = () => {
                         </div>
                     </div>
                 </div>
-                <div className="relative z-0 w-full mb-2 group">
+                <div className="relative z-0 w-full mb-3 group">
                     <input
                         {...register("vchstreet", {
                             required: {
@@ -307,6 +360,7 @@ const Registrar = () => {
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=""
                         autoComplete="off"
+                        disabled={!isZipValidated}
                     />
                     <label htmlFor="vchstreet" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                         Calle
@@ -315,76 +369,97 @@ const Registrar = () => {
                         <Alert message={errors?.vchstreet.message} />
                     )}
                 </div>
-                <div className="relative z-0 w-full mb-2 group">
-                    <input
-                        {...register("vchsuburb", {
+
+                {/* Colonia */}
+                <div className="mb-4">
+                    <Label id="vchsuburb-label" className="peer-focus:font-medium text-sm peer-focus:text-sm text-gray-500 dark:text-gray-400">
+                        Colonia
+                    </Label>
+                    <Controller
+                        name="vchsuburb"
+                        control={control}
+                        rules={{
                             required: {
                                 value: true,
                                 message: messages.vchsuburb.required
                             }
-                        })
-                        }
-                        type="text"
-                        name="vchsuburb"
-                        id="vchsuburb"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=""
-                        autoComplete="off"
+                        }}
+                        render={({ field }) => (
+                            <SelectS
+                                value={field.value}
+                                onValueChange={field.onChange}
+                            >
+                                <SelectTrigger className="border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-400">
+                                    <SelectValue placeholder="Selecciona tú colonia" />
+                                </SelectTrigger>
+                                <SelectContent className="dark:bg-gray-700">
+                                    {locationData.map((place, index) => (
+                                        <SelectItem
+                                            value={place?.["place name"]}
+                                            key={index}
+                                        >
+                                            {place?.["place name"]}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </SelectS>
+                        )}
                     />
-                    <label htmlFor="vchsuburb" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                        Colonia
-                    </label>
                     {errors?.vchsuburb && (
                         <Alert message={errors?.vchsuburb.message} />
                     )}
                 </div>
-                <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-2">
-                    <div className="relative z-0 w-full group">
-                        <input
-                            {...register("vchmunicipality", {
-                                required: {
-                                    value: true,
-                                    message: messages.vchmunicipality.required
-                                }
-                            })
-                            }
-                            type="text"
-                            name="vchmunicipality"
-                            id="vchmunicipality"
-                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            placeholder=""
-                            autoComplete="off"
-                        />
-                        <label htmlFor="vchmunicipality" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                            Municipio
-                        </label>
-                        {errors?.vchmunicipality && (
-                            <Alert message={errors?.vchmunicipality.message} />
+                <div className="grid sm:grid-cols-2 gap-5 sm:gap-2 mb-3">
+                    <Controller
+                        name="vchmunicipality"
+                        control={control}  // Asegúrate de tener `control` de `useForm` de react-hook-form
+                        defaultValue={municipality.city || ''}  // Asigna un valor predeterminado
+                        render={({ field }) => (
+                            <div className="relative z-0 w-full mb-2 group">
+                                <input
+                                    {...field}  // Esto conectará el campo con react-hook-form
+                                    type="text"
+                                    name="vchmunicipality"
+                                    id="vchmunicipality"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=""
+                                    autoComplete="off"
+                                    value={municipality.city || municipality.state}
+                                />
+                                <label htmlFor="vchmunicipality" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Municipio
+                                </label>
+                                {errors?.vchmunicipality && (
+                                    <Alert message={errors?.vchmunicipality.message} />
+                                )}
+                            </div>
                         )}
-                    </div>
-                    <div className="relative z-0 w-full mb-2 group">
-                        <input
-                            {...register("vchstate", {
-                                required: {
-                                    value: true,
-                                    message: messages.vchstate.required
-                                }
-                            })
-                            }
-                            type="text"
-                            name="vchstate"
-                            id="vchstate"
-                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            placeholder=""
-                            autoComplete="off"
-                        />
-                        <label htmlFor="vchstate" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                            Estado
-                        </label>
-                        {errors?.vchstate && (
-                            <Alert message={errors?.vchstate.message} />
+                    />
+                    <Controller
+                        name="vchstate"
+                        control={control}  // Asegúrate de tener `control` de `useForm` de react-hook-form
+                        defaultValue={municipality.state || ''}  // Asigna un valor predeterminado
+                        render={({ field }) => (
+                            <div className="relative z-0 w-full mb-2 group">
+                                <input
+                                    {...field}  // Esto conectará el campo con react-hook-form
+                                    type="text"
+                                    name="vchstate"
+                                    id="vchstate"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=""
+                                    autoComplete="off"
+                                    value={municipality.state}
+                                />
+                                <label htmlFor="vchstate" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    Estado
+                                </label>
+                                {errors?.vchstate && (
+                                    <Alert message={errors?.vchstate.message} />
+                                )}
+                            </div>
                         )}
-                    </div>
+                    />
                 </div>
             </div>
         );
@@ -554,6 +629,10 @@ const Registrar = () => {
                                                             maxLength: {
                                                                 value: 16,
                                                                 message: messages.vchpassword.max
+                                                            },
+                                                            pattern: {
+                                                                value: patterns.vchpassword,
+                                                                message: messages.vchpassword.pattern
                                                             }
                                                         })}
                                                         type="password"
@@ -642,9 +721,8 @@ const Registrar = () => {
                                                 <Alert message={errors?.roleid.message} />
                                             )}
                                         </div>
-
                                         {/* Fecha de nacimiento */}
-                                        <div className="relative z-0 w-full mb-2 group">
+                                        {/* <div className="relative z-0 w-full mb-2 group">
                                             <input
                                                 {...register("dtbirthdate", {
                                                     required: {
@@ -668,6 +746,57 @@ const Registrar = () => {
                                             {errors?.dtbirthdate && (
                                                 <Alert message={errors?.dtbirthdate?.message} />
                                             )}
+                                        </div> */}
+                                        <div>
+                                            <Label id="university-label" className="peer-focus:font-medium font-normal text-sm peer-focus:text-sm text-gray-500 dark:text-gray-400">
+                                                Fecha de nacimiento
+                                            </Label>
+                                            <Controller
+                                                control={control}
+                                                name="dtbirthdate"
+                                                rules={{
+                                                    required: {
+                                                        value: true,
+                                                        message: messages.dtbirthdate.required
+                                                    }
+                                                }}
+                                                render={({ field }) => (
+                                                    <div className="flex flex-col">
+                                                        <Popover>
+                                                            <PopoverTrigger asChild>
+                                                                <ButtonS
+                                                                    variant={null}
+                                                                    className={cn(
+                                                                        "w-full pl-3 text-left font-normal border rounded-md border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-400 focus:dark:bg-slate-100",
+                                                                        !field.value && "text-muted-foreground"
+                                                                    )}
+                                                                >
+                                                                    {field.value ? (
+                                                                        format(new Date(field.value), "PPP", { locale: es })
+                                                                    ) : (
+                                                                        <span>Elige una fecha</span>
+                                                                    )}
+                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                </ButtonS>
+                                                            </PopoverTrigger>
+                                                            <PopoverContent className="w-auto p-0" align="start">
+                                                                <Calendar
+                                                                    mode="single"
+                                                                    locale={es}
+                                                                    selected={new Date(field.value)}
+                                                                    onSelect={field.onChange}
+                                                                    disabled={{ after: fifteenYearsAgo }}
+                                                                    defaultMonth={fifteenYearsAgo}
+                                                                    initialFocus
+                                                                />
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                        {errors?.dtbirthdate && (
+                                                            <Alert message={errors?.dtbirthdate?.message} />
+                                                        )}
+                                                    </div>
+                                                )}
+                                            />
                                         </div>
                                         {watch("roleid") === 1 && renderStudent()}
                                         {watch("roleid") === 2 && renderLessor()}

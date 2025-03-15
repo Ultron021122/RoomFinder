@@ -1,6 +1,7 @@
 import { Spinner } from "@nextui-org/react";
 import { ESTUDIANTE, ARRENDADOR } from "./constants";
 import { messages } from "./constants";
+import { subYears } from "date-fns";
 
 interface fullName {
     vchname: string;
@@ -34,11 +35,25 @@ export const shortName = ({ vchname = '', vchpaternalsurname = '', vchmaternalsu
     return `${vchname} ${vchpaternalsurname} ${vchmaternalsurname}`;
 }
 
-export const validateDate = (value : string) => {
+export const validateDate = (value: string) => {
     const fechaNacimiento = new Date(value);
     const fechaActual = new Date();
     const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
     return edad >= 18 || messages.dtbirthdate.age;
 }
+
+export const fifteenYearsAgo = subYears(new Date(), 15);
+
+
+export function generatePassword(length: number = 12): string {
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+    }
+    return password;
+}
+
 
 export default getFullName;

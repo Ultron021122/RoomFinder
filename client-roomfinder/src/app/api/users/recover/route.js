@@ -3,6 +3,11 @@ import axios from "axios";
 
 export async function POST(req, res) {
     const { vchemail } = await req.json();
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const response = await axios.post(`${process.env.REST_URL}/users/forgot`, {
             vchemail,

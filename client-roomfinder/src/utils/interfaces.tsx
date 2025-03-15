@@ -70,6 +70,14 @@ export interface User {
      * bnstatus: true | false
      */
     bnstatus: boolean;
+
+    /**
+     * Verified user
+     * @example
+     * bnverified: true | false | null
+     */
+    bnverified: boolean;
+
     /**
      * User birthday
      * @example
@@ -143,7 +151,7 @@ export interface StudentInfo extends User {
      * @example
      * intzip: 12345
      */
-    intzip?: number;
+    intzip?: string;
     /**
      * Student suburb
      * @example
@@ -199,7 +207,7 @@ export interface LessorInfo extends User {
      * @example
      * intzip: 12345
      */
-    intzip: number;
+    intzip: string;
     /**
      * Suburb
      * @example
@@ -613,7 +621,7 @@ export interface LocationProperty {
      * @example
      * intzipcode: 12345
      */
-    intzipcode: number;
+    intzipcode: string;
     /**
      * Property number exterior
      * @example
@@ -1280,7 +1288,7 @@ export interface Properties {
      * ZIP code of the property.
      * @example 62704
      */
-    intzip: number;
+    intzip: string;
 
     /**
      * Country of the property.
@@ -1465,7 +1473,7 @@ export interface ChatUsers {
      * @example
      * intzip: 12345
      */
-    intzip?: number;
+    intzip?: string;
     /**
      * Student suburb
      * @example
@@ -1514,7 +1522,7 @@ export interface ChatUsers {
      * @example
      * intzip: 12345
      */
-    intzip2?: number;
+    intzip2?: string;
     /**
      * Student suburb
      * @example
@@ -1808,7 +1816,7 @@ export interface StudentEdit extends UserEdit {
      * @example
      * intzip: 12345
      */
-    intzip?: number;
+    intzip?: string;
     /**
      * Student suburb
      * @example
@@ -1864,7 +1872,7 @@ export interface LessorEdit extends UserEdit {
      * @example
      * intzip: 12345
      */
-    intzip: number;
+    intzip: string;
     /**
      * Suburb
      * @example

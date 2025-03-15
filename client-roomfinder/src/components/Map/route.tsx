@@ -31,8 +31,11 @@ export default function RouteMap({ center, zoom }: MapControllerProps) {
       const mode = 'walking'; // Specify the mode of transportation
 
       const response = await fetch(
-        `/api/directions?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&mode=${mode}`
-      );
+        `/api/directions?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&mode=${mode}`, {
+        headers: {
+          'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+        }
+      });
 
       if (!response.ok) {
         console.error('Failed to fetch directions:', response.statusText);
@@ -59,27 +62,27 @@ export default function RouteMap({ center, zoom }: MapControllerProps) {
   return (
 
 
-<div className={styles.mapContainer}>
-<div className={styles.routeDetails + ` bg-gray-100 shadow-sm dark:bg-gray-900 min-w-44`}>
-  <h3 className='text-black dark:text-white text-sm'>Detalles de la Ruta</h3>
-  {distance && duration ? (
-    <div>
-      <p><strong>Distancia:</strong> {distance}</p>
-      <p><strong>Duración:</strong> {duration}</p>
+    <div className={styles.mapContainer}>
+      <div className={styles.routeDetails + ` bg-gray-100 shadow-sm dark:bg-gray-900 min-w-44`}>
+        <h3 className='text-black dark:text-white text-sm'>Detalles de la Ruta</h3>
+        {distance && duration ? (
+          <div>
+            <p><strong>Distancia:</strong> {distance}</p>
+            <p><strong>Duración:</strong> {duration}</p>
+          </div>
+        ) : (
+          <p>Cargando datos de ruta...</p>
+        )}
+      </div>
+      <div className="h-screen w-full relative z-20">
+        <MapContainer center={center} zoom={zoom} style={{ height: '100%', width: '100%' }}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          {route.length > 0 && <Polyline positions={route} color="#2563eb" />}
+        </MapContainer>
+      </div>
     </div>
-  ) : (
-    <p>Cargando datos de ruta...</p>
-  )}
-</div>
-<div className="h-screen w-full relative z-20">
-      <MapContainer center={center} zoom={zoom} style={{ height: '100%', width: '100%' }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        {route.length > 0 && <Polyline positions={route} color="#2563eb" />}
-      </MapContainer>
-    </div>
-</div>
   )
 }

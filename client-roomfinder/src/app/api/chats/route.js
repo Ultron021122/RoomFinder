@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 
 export async function POST(req, res) {
+    const secretKey = req.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     const { usuario1id, usuario2id } = await req.json();
 
     try {
@@ -21,7 +26,7 @@ export async function POST(req, res) {
 
     } catch (error) {
         return NextResponse.json(
-            { message: 'Server error'},
+            { message: 'Server error' },
             { status: error.response.status }
         );
     }

@@ -3,6 +3,11 @@ import axios from 'axios';
 
 export async function GET(request, { params }) {
     const id = params.id;
+
+    const secretKey = request.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
     try {
         const response = await axios.get(`${process.env.REST_URL}/properties/${id}`, {
             headers: {
@@ -30,6 +35,11 @@ export async function GET(request, { params }) {
 
 export async function DELETE(request, { params }) {
     const id = params.id;
+    const secretKey = request.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const response = await axios.delete(`${process.env.REST_URL}/properties/${id}`, {
             headers: {
@@ -57,6 +67,10 @@ export async function DELETE(request, { params }) {
 
 export async function PATCH(request, { params }) {
     const id = params.id;
+    const secretKey = request.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
 
     const {
         propertytypeid,
@@ -105,19 +119,19 @@ export async function PATCH(request, { params }) {
                 }
             });
 
-            const statusMessageMap = {
-                200: { message: 'Exitoso', data: response.data },
-                400: { message: response.data.message },
-                404: { message: response.data.message },
-                default: { message: 'Error al actualizar informacion' },
-            };
-    
-            const message = statusMessageMap[response.status] || statusMessageMap.default;
-            return NextResponse.json(
-                { message },
-                { status: response.status },
-                { data: response.data}
-            );
+        const statusMessageMap = {
+            200: { message: 'Exitoso', data: response.data },
+            400: { message: response.data.message },
+            404: { message: response.data.message },
+            default: { message: 'Error al actualizar informacion' },
+        };
+
+        const message = statusMessageMap[response.status] || statusMessageMap.default;
+        return NextResponse.json(
+            { message },
+            { status: response.status },
+            { data: response.data }
+        );
 
     } catch (error) {
         const status = error.response ? error.response.status : 500;

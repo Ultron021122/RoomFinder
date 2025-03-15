@@ -1,36 +1,36 @@
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import 'react-toastify/dist/ReactToastify.css'
-import { Camera, Pencil, MapPin, BookMarkedIcon, Briefcase, MapPinned, X } from 'lucide-react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { LessorEdit, LessorInfo, StudentEdit, StudentInfo, UserProfile } from '@/utils/interfaces'
-import axios from 'axios'
-import { Spinner, useDisclosure } from '@nextui-org/react'
-import ImageModal from './ImageModal'
-import { COVER_IMAGE, messages, PROFILE_IMAGE, universities } from '@/utils/constants'
+import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import 'react-toastify/dist/ReactToastify.css';
+import { Camera, Pencil, MapPin, BookMarkedIcon, Briefcase, MapPinned, X } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { LessorEdit, LessorInfo, StudentEdit, StudentInfo, UserProfile } from '@/utils/interfaces';
+import axios from 'axios';
+import { Spinner, useDisclosure } from '@nextui-org/react';
+import ImageModal from './ImageModal';
+import { COVER_IMAGE, messages, PROFILE_IMAGE, universities } from '@/utils/constants';
 import { Alert } from "@/utils/alert";
 
 // Estilos de leaflet
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
-import { customIcon } from '@/components/Map'
+import { customIcon } from '@/components/Map';
 
 // Estilos de toastify
 import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { ARRENDADOR, ESTUDIANTE } from '@/utils/constants'
-import { IdCardIcon } from '@radix-ui/react-icons'
-import { useForm } from 'react-hook-form'
-import { useSession } from 'next-auth/react'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { ARRENDADOR, ESTUDIANTE } from '@/utils/constants';
+import { IdCardIcon } from '@radix-ui/react-icons';
+import { useForm } from 'react-hook-form';
+import { useSession } from 'next-auth/react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface UserProfileComponentProps {
     userData: UserProfile;
@@ -54,6 +54,9 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
 
+    // Use ref to control first render
+    const isFirstRender = useRef(true);
+
     // Errores
     useEffect(() => {
         if (errorSystem) {
@@ -72,75 +75,82 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
     }, [errorSystem]);
 
     useEffect(() => {
-        if (userData) {
-            const getUserData = async () => {
-                try {
-                    const { roleid, usuarioid } = userData;
-                    let path = "";
-                    if (roleid === ARRENDADOR) {
-                        path = `/api/users/lessor/${usuarioid}`;
-                    } else { // estudiante
-                        path = `/api/users/student/${usuarioid}`;
+        if (isFirstRender.current) {
+            if (userData) {
+                const getUserData = async () => {
+                    try {
+                        const { roleid, usuarioid } = userData;
+                        let path = "";
+                        if (roleid === ARRENDADOR) {
+                            path = `/api/users/lessor/${usuarioid}`;
+                        } else { // estudiante
+                            path = `/api/users/student/${usuarioid}`;
+                        }
+
+                        const response = await axios.get(path, {
+                            headers: {
+                                'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                            }
+                        });
+                        const { data } = response.data;
+
+                        // Asignar los datos al objeto local
+                        let obj: LessorInfo | StudentInfo;
+                        if (roleid === ARRENDADOR) {
+                            const { vchpassword, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = data;
+                            obj = {
+                                ...data,
+                                vchphone: vchphone,
+                                vchstreet: vchstreet,
+                                intzip: intzip,
+                                vchsuburb: vchsuburb,
+                                vchmunicipality: vchmunicipality,
+                                vchstate: vchstate,
+                                vchpassword: vchpassword,
+                                confirm_password: ""
+                            };
+                        } else {
+                            const { vchpassword, intcodestudent, vchuniversity, vchmajor } = data;
+                            obj = {
+                                ...data,
+                                intcodestudent: parseInt(intcodestudent),
+                                vchuniversity: vchuniversity,
+                                vchpassword: vchpassword,
+                                confirm_password: "",
+                                vchmajor: vchmajor
+                            };
+                        }
+
+                        setUsuario(() => {
+                            const newObject = { ...obj, ['dtbirthdate']: data.dtbirthdate.substring(0, 10) };
+                            reset(newObject);
+                            return newObject;
+                        });
+
+                    } catch (Error: any) {
+                        setErrorSystem(Error.response?.data.message);
                     }
+                };
 
-                    const response = await axios.get(path);
-                    const { data } = response.data;
-
-                    // Asignar los datos al objeto local
-                    let obj: LessorInfo | StudentInfo;
-                    if (roleid === ARRENDADOR) {
-                        const { vchpassword, vchphone, vchstreet, intzip, vchsuburb, vchmunicipality, vchstate } = data;
-                        obj = {
-                            ...data,
-                            vchphone: vchphone,
-                            vchstreet: vchstreet,
-                            intzip: intzip,
-                            vchsuburb: vchsuburb,
-                            vchmunicipality: vchmunicipality,
-                            vchstate: vchstate,
-                            vchpassword: vchpassword,
-                            confirm_password: ""
-                        };
-                    } else {
-                        const { vchpassword, intcodestudent, vchuniversity, vchmajor } = data;
-                        obj = {
-                            ...data,
-                            intcodestudent: parseInt(intcodestudent),
-                            vchuniversity: vchuniversity,
-                            vchpassword: vchpassword,
-                            confirm_password: "",
-                            vchmajor: vchmajor
-                        };
-                    }
-
-                    setUsuario(() => {
-                        const newObject = { ...obj, ['dtbirthdate']: data.dtbirthdate.substring(0, 10) };
-                        reset(newObject);
-                        return newObject;
-                    });
-
-                } catch (Error: any) {
-                    setErrorSystem(Error.response?.data.message);
-                }
-            };
-
-            // fetchImageUrls();
-            getUserData();
+                // fetchImageUrls();
+                getUserData();
+            }
+            isFirstRender.current = false;
         }
     }, [userData, reset]);
 
     useEffect(() => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(function (position) {
-                setUbicacionActual([position.coords.latitude, position.coords.longitude])
-            })
+                setUbicacionActual([position.coords.latitude, position.coords.longitude]);
+            });
         }
-    }, [])
+    }, []);
 
     const handleUpdateImage = (imageType: number) => {
         setImageType(imageType);
         onOpen();
-    }
+    };
 
     const handleSave = async (data: LessorEdit | StudentEdit) => {
         setEditando(false);
@@ -148,7 +158,12 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
             setIsLoading(true);
             setErrorSystem(null);
             try {
-                const response = await axios.patch(`/api/users/lessor/${userData.usuarioid}`, data);
+                const response = await axios.patch(`/api/users/lessor/${userData.usuarioid}`,
+                    data, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 setIsLoading(false);
                 if (response.status === 200) {
 
@@ -198,7 +213,12 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
             setErrorSystem(null);
 
             try {
-                const response = await axios.patch(`/api/users/student/${userData.usuarioid}`, data);
+                const response = await axios.patch(`/api/users/student/${userData.usuarioid}`,
+                    data, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 setIsLoading(false);
                 if (response.status === 200) {
                     const { dtbirthdate, intcodestudent, vchmaternalsurname, vchname, vchpaternalsurname, vchbiography } = response.data.data.updateStudent;
@@ -244,7 +264,8 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                 setIsLoading(false);
             }
         }
-    }
+    };
+
 
     return (
         <div className="bg-gradient-to-r p-4"> {/*bg-gradient-to-r*/}

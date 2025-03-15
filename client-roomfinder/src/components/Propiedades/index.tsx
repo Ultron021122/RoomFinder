@@ -66,7 +66,11 @@ function PropertyComponent({ id }: { id: string }) {
         const fetchProperty = async () => {
             setErrorSystem(null);
             try {
-                const response = await axios.get(`/api/properties/${id}`);
+                const response = await axios.get(`/api/properties/${id}`, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 const lessorResponse = await axios.get(`/api/users/lessor/${response.data.data.lessorid}`);
                 const data = lessorResponse.data.data;
                 setProperty(response.data.data);
@@ -144,8 +148,8 @@ function PropertyComponent({ id }: { id: string }) {
                                     <Image
                                         width={800}
                                         height={800}
-                                        src={property?.objphotos[0].url || '/images/placeholder.webp'}
-                                        alt={`Imagen ${property?.objphotos[0].photoid}`}
+                                        src={property?.objphotos?.[0]?.url || '/No_image.png'}
+                                        alt={`Imagen ${property?.objphotos?.[0]?.photoid || 'No disponible'}`}
                                         priority
                                         className="w-full h-60 object-cover rounded-lg sm:h-52 sm:col-span-2 lg:col-span-full"
                                     />
@@ -154,16 +158,16 @@ function PropertyComponent({ id }: { id: string }) {
                                 <Image
                                     width={800}
                                     height={800}
-                                    src={property?.objphotos[1].url || '/images/placeholder.webp'}
-                                    alt={`Imagen ${property?.objphotos[1].photoid}`}
+                                    src={property?.objphotos?.[1]?.url || '/No_image.png'}
+                                    alt={`Imagen ${property?.objphotos?.[1]?.photoid || 'No disponible'}`}
                                     className="hidden w-full h-52 object-cover rounded-lg sm:block sm:col-span-2 md:col-span-1 lg:row-start-2 lg:col-span-2 lg:h-32"
                                     priority
                                 />
                                 <Image
                                     width={800}
                                     height={800}
-                                    src={property?.objphotos[2].url || '/images/placeholder.webp'}
-                                    alt={`Imagen ${property?.objphotos[2].photoid}`}
+                                    src={property?.objphotos?.[2]?.url || '/No_image.png'}
+                                    alt={`Imagen ${property?.objphotos?.[2]?.photoid || 'No disponible'}`}
                                     className="hidden w-full h-52 object-cover rounded-lg md:block lg:row-start-2 lg:col-span-2 lg:h-32"
                                     priority
                                 />
@@ -197,11 +201,12 @@ function PropertyComponent({ id }: { id: string }) {
                         </div>
                     </main>
 
+
                     <div className='pb-6 md:py-5 max-w-5xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-r-14 lg:grid-cols-2'>
                         <Card className="mb-6 bg-transparent border-none shadow-none">
                             <CardHeader>
                                 <CardTitle>Características y Amenidades</CardTitle>
-                                <Separator className='dark:bg-slate-400'/>
+                                <Separator className='dark:bg-slate-400' />
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-2 gap-4">
@@ -243,7 +248,7 @@ function PropertyComponent({ id }: { id: string }) {
                         <Card className='bg-white dark:bg-gray-900 border-none shadow-none'>
                             <CardHeader>
                                 <CardTitle>Reserva tu estancia</CardTitle>
-                                <Separator className='dark:bg-slate-400'/>
+                                <Separator className='dark:bg-slate-400' />
                             </CardHeader>
                             <CardContent className='mx-2'>
                                 <p className="text-2xl font-bold mb-4">${property?.decrentalcost || 0} / mensuales</p>
@@ -302,7 +307,7 @@ function PropertyComponent({ id }: { id: string }) {
                             <Card className='bg-white dark:bg-gray-900 border-none shadow-none'>
                                 <CardHeader>
                                     <CardTitle>Comentarios</CardTitle>
-                                    <Separator className='dark:bg-slate-400'/>
+                                    <Separator className='dark:bg-slate-400' />
                                 </CardHeader>
                                 <CardContent>
                                     <p className="text-sm">Sólo los huéspedes que se han hospedado pueden dejar un comentario.</p>
