@@ -71,7 +71,11 @@ function PropertyComponent({ id }: { id: string }) {
                         'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
                     }
                 });
-                const lessorResponse = await axios.get(`/api/users/lessor/${response.data.data.lessorid}`);
+                const lessorResponse = await axios.get(`/api/users/lessor/${response.data.data.lessorid}`, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
                 const data = lessorResponse.data.data;
                 setProperty(response.data.data);
                 setLessor({

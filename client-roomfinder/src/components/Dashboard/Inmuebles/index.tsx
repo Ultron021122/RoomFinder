@@ -41,7 +41,11 @@ export default function Inmuebles() {
     /* traer las propiedades de la base de datos */
     useEffect(() => {
         async function fetchProperties(){
-            const response = await axios.get('/api/properties/');
+            const response = await axios.get('/api/properties/', {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            });
             if(response.status === 200){
                 setproperties(response.data.data);
                 setIsLoading(false);
