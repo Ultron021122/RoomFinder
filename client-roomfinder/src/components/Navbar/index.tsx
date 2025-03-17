@@ -15,8 +15,11 @@ const excludedRoutes = [
     '/dashboard/chats',
     '/dashboard/inmuebles',
     '/dashboard/home',
-    '/dashboard/manage',
     '/dashboard/users',
+    '/dashboard/history',
+    '/dashboard/rentals',
+    '/dashboard/payments',
+    '/dashboard/request',
     '/test',
     '/checkout'
 ];

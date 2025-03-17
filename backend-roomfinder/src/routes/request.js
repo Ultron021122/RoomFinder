@@ -65,7 +65,7 @@ export const createRequestsRouter = ({ requestModel }) => {
         requestController.delete
     ])
 
-    requestRouter.patch(':/id', [
+    requestRouter.patch('/:id', [
         param('id').isInt().withMessage('id must be an integer'),
         (req, res, next) => {
             const errors = validationResult(req)

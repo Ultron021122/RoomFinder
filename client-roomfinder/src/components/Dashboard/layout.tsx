@@ -5,7 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { rolesMapping } from "@/utils/constants";
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal, MoreVerticalIcon, Users, Plus, HousePlus } from "lucide-react";
+import { LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal, MoreVerticalIcon, Users, Plus, HousePlus, History, CreditCard, NotebookIcon, ClipboardList } from "lucide-react";
 import { HomeIcon } from "@radix-ui/react-icons";
 import { UserProfile } from "@/utils/interfaces";
 import Link from "next/link";
@@ -104,15 +104,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         alert
                         onClickSidebar={handleSidebarItemClick}
                     />
+                    {/* {roleName === 'Estudiante' && (
+                        <> */}
+                    <SidebarItem
+                        icon={<History size={22} />}
+                        text="Historial"
+                        url="/dashboard/history"
+                        onClickSidebar={handleSidebarItemClick}
+                    />
+                    <SidebarItem
+                        icon={<CreditCard size={22} />}
+                        text="Pagos"
+                        url="/dashboard/payments"
+                        onClickSidebar={handleSidebarItemClick}
+                    />
+                    <SidebarItem
+                        icon={<NotebookIcon size={22} />}
+                        text="Rentas"
+                        url="/dashboard/rentals"
+                        onClickSidebar={handleSidebarItemClick}
+                    />
+                    {/* </>
+                    )} */}
                     {roleName === 'Arrendador' && (
                         <>
-                            <SidebarItem
-                                icon={<Folder size={22} />}
-                                text="Administrar"
-                                url="/dashboard/manage"
-                                alert
-                                onClickSidebar={handleSidebarItemClick}
-                            />
                             <SidebarItem
                                 icon={<Folder size={22} />}
                                 text="Propiedades"
@@ -129,6 +144,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 icon={<Users className="w-[22px] h-[22px]" />}
                                 text="Usuarios"
                                 url="/dashboard/users"
+                                onClickSidebar={handleSidebarItemClick}
+                            />
+                            <SidebarItem
+                                icon={<ClipboardList size={22} />}
+                                text="Solicitudes"
+                                url="/dashboard/request"
+                                alert
                                 onClickSidebar={handleSidebarItemClick}
                             />
                         </>

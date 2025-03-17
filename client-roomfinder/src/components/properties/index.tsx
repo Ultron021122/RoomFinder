@@ -102,7 +102,7 @@ export const SectionProperty = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto min-h-screen mt-20 p-2 sm:p-0">
+        <div className="max-w-6xl mx-auto min-h-screen p-2 sm:p-0">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-5">
                 <Input
                     placeholder="Buscar propiedades..."
@@ -117,7 +117,7 @@ export const SectionProperty = () => {
                     <SelectTrigger className="border-gray-700">
                         <SelectValue placeholder="Filtrar por tipo" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-950">
+                    <SelectContent className="dark:bg-gray-950">
                         <SelectItem value="0">Todos</SelectItem>
                         <SelectItem value="3">Apartamento</SelectItem>
                         <SelectItem value="1">Casa</SelectItem>

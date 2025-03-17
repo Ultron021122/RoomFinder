@@ -1,11 +1,10 @@
 'use client';
-import { Properties } from '@/utils/interfaces';
+import { Properties, UserProfile } from '@/utils/interfaces';
 import Image from "next/image";
-import { MapPin, Star, Wifi, Tv, CookingPotIcon as Kitchen, Car, Users, Bed, Bath } from 'lucide-react';
+import { MapPin, Star, Wifi, Tv, CookingPotIcon as Kitchen, Car, Users, Bed, Bath, CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { comments, reviews } from '@/utils/constants';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { reviews } from '@/utils/constants';
 import PropertyReviews from './property-reviews';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,10 +13,62 @@ import { toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Spinner } from '@nextui-org/react';
 import { ImageOverlay } from './image-overlay';
-import { DatePickerWithRange } from '@/components/ui/datepicker';
 import { Separator } from '../ui/separator';
+import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import z from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormControl } from '@mui/material';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import { Switch } from '../ui/switch';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { cn } from '@/lib/utils';
+import { format, addMonths } from 'date-fns';
+import { Calendar } from '../ui/calendar';
+import { es } from "date-fns/locale";
+import { useSession } from 'next-auth/react';
+
+const requestFormSchema = z.object({
+    propertyid: z.number().positive(),
+    studentid: z.number().positive(),
+    statusid: z.number().positive(),
+    vchmessage: z.string({
+        message: 'El mensaje es requerido'
+    }).min(25, {
+        message: 'El mensaje debe tener al menos 25 caracteres'
+    }) ,
+    intnumguests: z.number({
+        message: 'El número de huéspedes es requerido'
+    }).positive().min(1),
+    bnhaspets: z.boolean({
+        message: 'El campo de mascotas'
+    }),
+    dtstartdate: z.date({
+        message: 'La fecha de inicio es requerida'
+    }),
+    dtenddate: z.date({
+        message: 'La fecha de fin es requerida'
+    }),
+});
+
+const reviewsFormSchema = z.object({
+    propertyid: z.number({
+        message: 'La propiedad es requerida'
+    }).positive(),
+    studentid: z.number({
+        message: 'El estudiante es requerido'
+    }).positive(),
+    decrating: z.number({
+        message: 'La calificación es requerida'
+    }).positive().max(5),
+    vchcomment: z.string({
+        message: 'El comentario es requerido'
+    }).min(25)
+});
 
 function PropertyComponent({ id }: { id: string }) {
+    const { data: session, update } = useSession();
     const [property, setProperty] = useState<Properties>();
     const [showPayment, setShowPayment] = useState(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -25,6 +76,68 @@ function PropertyComponent({ id }: { id: string }) {
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
     const [hasStayed, setHasStayed] = useState<boolean>(false);
+
+    const userProfileData = session?.user as UserProfile;
+
+    const form = useForm<z.infer<typeof requestFormSchema>>({
+        resolver: zodResolver(requestFormSchema),
+        defaultValues: {
+            propertyid: Number(id),
+            statusid: 2,
+            intnumguests: 1,
+            bnhaspets: false
+        },
+    });
+
+
+    const handleDateChange = (dates: { from: Date | null; to: Date | null }) => {
+        const { from: startDate, to: endDate } = dates;
+        if (startDate) {
+            const newEndDate = addMonths(startDate, 1);
+            setStartDate(startDate);
+            setEndDate(newEndDate);
+            form.setValue('dtstartdate', startDate);
+            form.setValue('dtenddate', newEndDate);
+        }
+    };
+
+    useEffect(() => {
+        if (userProfileData?.usuarioid) {
+            form.setValue('studentid', userProfileData.usuarioid);
+        }
+    }, [userProfileData, form]);
+
+    async function onSubmit(values: z.infer<typeof requestFormSchema>) {
+        console.log(values);
+        setIsLoading(true);
+        setErrorSystem(null);
+        try {
+            const response = await axios.post('/api/requests', values, {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            });
+            console.log(response.data);
+            setIsLoading(false);
+            if (response.status === 201) {
+                toast.success('Reserva realizada con éxito', {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
+            }
+        } catch (Error: any) {
+            setErrorSystem(Error.response?.data.message || Error.message);
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     // Errores
     useEffect(() => {
@@ -73,11 +186,6 @@ function PropertyComponent({ id }: { id: string }) {
         { icon: Kitchen, text: "Cocina equipada" },
         { icon: Car, text: "Estacionamiento" },
     ];
-
-    const handlePayment = () => {
-        setShowPayment(true);
-        // Aquí iría la lógica para iniciar el proceso de pago
-    };
 
     return (
         <>
@@ -148,7 +256,6 @@ function PropertyComponent({ id }: { id: string }) {
                         </div>
                     </main>
 
-
                     <div className='pb-6 md:py-5 max-w-5xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-r-14 lg:grid-cols-2'>
                         <Card className="mb-6 bg-transparent border-none shadow-none">
                             <CardHeader>
@@ -190,31 +297,136 @@ function PropertyComponent({ id }: { id: string }) {
                         </Card>
 
                         {/* Reservacion */}
-                        <Card className='bg-white dark:bg-gray-900 border-none shadow-none'>
+                        <Card className='bg-white dark:bg-gray-900 border-none shadow-none lg:row-span-2 lg:sticky lg:top-20'>
                             <CardHeader>
                                 <CardTitle>Reserva tu estancia</CardTitle>
                                 <Separator className='dark:bg-slate-400' />
                             </CardHeader>
                             <CardContent className='mx-2'>
-                                <p className="text-2xl font-bold mb-4">${property?.decrentalcost || 0} / mensuales</p>
-                                <div className="mb-4">
-                                    <h4 className="font-semibold mb-2">Selecciona las fechas</h4>
-                                    <DatePickerWithRange
-                                        startDate={startDate}
-                                        endDate={endDate}
-                                        onStartDateChange={setStartDate}
-                                        onEndDateChange={setEndDate}
-                                    />
-                                </div>
-                                <Button className="w-full" onClick={handlePayment}>
-                                    Reservar ahora
-                                </Button>
-                                {showPayment && (
-                                    <div className="mt-4">
-                                        <h4 className="font-semibold mb-2">Pasarela de Pagos</h4>
-                                        <p>Implementa aquí tu pasarela de pagos preferida (e.g., Stripe, PayPal)</p>
-                                    </div>
-                                )}
+                                <Form {...form}>
+                                    <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4 px-3 shadow-lg pt-2 pb-4 rounded-md'>
+                                        <p className="text-2xl font-bold mb-4 mx-2">${property?.decrentalcost || 0} / mensuales</p>
+                                        <FormField
+                                            control={form.control}
+                                            name='studentid'
+                                            render={({ field }) => (
+                                                <FormItem className='hidden'>
+                                                    <FormLabel>Usuario</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type='number'
+                                                            placeholder='Usuario'
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormDescription>
+                                                        Indique el usuario que realiza la reserva
+                                                    </FormDescription>
+                                                    <FormMessage className='text-red-600' />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name='intnumguests'
+                                            render={({ field }) => (
+                                                <FormItem className='flex flex-col'>
+                                                    <FormLabel>Número de huéspedes</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type='number'
+                                                            placeholder='Número de huéspedes'
+                                                            className='dark:hover:bg-gray-700 dark:border-gray-500'
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormDescription>
+                                                        Ingrese el número de huéspedes que se hospedarán
+                                                    </FormDescription>
+                                                    <FormMessage className='text-red-600' />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name='vchmessage'
+                                            render={({ field }) => (
+                                                <FormItem className='flex flex-col'>
+                                                    <FormLabel>Mensaje</FormLabel>
+                                                    <FormControl>
+                                                        <Textarea
+                                                            placeholder='Mensaje de reserva'
+                                                            className='h-24 text-sm dark:hover:bg-gray-700 dark:border-gray-500'
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormDescription>
+                                                        Deja un mensaje para el arrendador
+                                                    </FormDescription>
+                                                    <FormMessage className='text-red-600' />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name='bnhaspets'
+                                            render={({ field }) => (
+                                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm dark:hover:bg-gray-700 dark:border-gray-500">
+                                                    <div className="space-y-0.5">
+                                                        <FormLabel>
+                                                            ¿Tienes mascotas?
+                                                        </FormLabel>
+                                                        <FormDescription>
+                                                            Indica si llevarás mascotas
+                                                        </FormDescription>
+                                                    </div>
+                                                    <FormControl>
+                                                        <Switch
+                                                            checked={field.value}
+                                                            onCheckedChange={field.onChange}
+                                                            className='dark:data-[state=checked]:bg-primary dark:data-[state=unchecked]:bg-gray-500'
+                                                            aria-readonly
+                                                        />
+                                                    </FormControl>
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <div className='pb-4'>
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn(
+                                                            "w-full pl-3 text-left font-normal bg-transparent dark:hover:bg-gray-700 dark:border-gray-500",
+                                                            !startDate && "text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        {startDate ? (
+                                                            `${format(startDate, "PPP", { locale: es })} - ${format(endDate!, "PPP", { locale: es })}`
+                                                        ) : (
+                                                            <span>Selecciona un rango de fechas</span>
+                                                        )}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-auto p-0" align="start">
+                                                    <Calendar
+                                                        mode="range"
+                                                        locale={es}
+                                                        className='dark:bg-gray-800 dark:border-gray-500'
+                                                        selected={{ from: startDate || undefined, to: endDate || undefined }}
+                                                        onSelect={(range) => handleDateChange({ from: range?.from || null, to: range?.to || null })}
+                                                        disabled={(date) => date < new Date()}
+                                                        initialFocus
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                        </div>
+                                        <Button className="w-full" type="submit">
+                                            Reservar ahora
+                                        </Button>
+                                    </form>
+                                </Form>
                             </CardContent>
                         </Card>
 

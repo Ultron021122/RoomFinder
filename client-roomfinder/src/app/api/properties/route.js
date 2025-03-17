@@ -28,7 +28,6 @@ export async function GET(request) {
 }
 
 export async function POST(req, res) {
-
     const secretKey = req.headers.get('x-secret-key');
     if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -62,7 +61,7 @@ export async function POST(req, res) {
                 'properties', // Nombre de la carpeta en la que se va a almacenar los archivos
                 {
                     transformation: [
-                        { width: 800, height: auto, crop: "fill" },
+                        { width: 800, height: 800, crop: "fill" },
                         { quality: "auto" },
                         { format: "webp" }
                     ]
@@ -136,7 +135,7 @@ export async function POST(req, res) {
         bnStudyZone: false,
         dtavailabilitydate: new Date().toISOString(),
     };
-
+    console.log('que sucede')
     // Realizar la solicitud POST para guardar la información
     try {
         const response = await axios.post(`${process.env.REST_URL}/properties/`,

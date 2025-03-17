@@ -43,7 +43,6 @@ export const PropertyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const fetchPropertyTypes = async () => {
-    setError(null);
     try {
       const response = await axios.get(`/api/typeproperty`, {
         headers: {

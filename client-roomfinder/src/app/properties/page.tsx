@@ -16,7 +16,7 @@ const Banner = () => {
     const backgroundImage = `url('/images/city.jpg')`;
 
     return (
-        <section className="relative">
+        <section className="relative mb-20">
             <div className="bg-no-repeat bg-cover bg-center bg-blend-multiply bg-gray-500 p-4 h-[550px] pt-10"
                 style={{ backgroundImage }}
             >
@@ -25,7 +25,7 @@ const Banner = () => {
                         <h1 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-white lg:text-4xl">
                             Busca la Propiedad de tus Sueños
                         </h1>
-                        <p className="mb-6 text-lg font-medium text-gray-500 lg:text-xl sm:px-6 xl:px-48 dark:text-gray-400">
+                        <p className="mb-6 text-lg font-medium lg:text-xl sm:px-6 xl:px-48 text-gray-400">
                             Utiliza nuestro buscador avanzado para encontrar la propiedad perfecta para ti. Filtra por ubicación, precio, tipo de propiedad y más.
                         </p>
 

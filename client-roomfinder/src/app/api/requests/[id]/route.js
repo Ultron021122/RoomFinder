@@ -3,22 +3,22 @@ import axios from 'axios';
 
 export async function GET(request, { params }) {
     const id = params.id;
+
     const secretKey = request.headers.get('x-secret-key');
     if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-
     try {
-        const response = await axios.get(`${process.env.REST_URL}/users/${id}`, {
+        const response = await axios.get(`${process.env.REST_URL}/request/${id}`, {
             headers: {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }
         });
         const statusMessageMap = {
-            200: { message: 'Usuario encontrado', data: response.data },
-            404: { message: 'Usuario no encontrado' },
+            200: { message: 'Solicitud encontrada', data: response.data },
+            404: { message: 'Solicitud no encontrada' },
             400: { message: response.data.message },
-            default: { message: 'Error al buscar el usuario' },
+            default: { message: 'Error al buscar la solicitud' },
         };
         const message = statusMessageMap[response.status] || statusMessageMap.default;
         return NextResponse.json(
@@ -41,19 +41,17 @@ export async function DELETE(request, { params }) {
     }
 
     try {
-        const response = await axios.delete(`${process.env.REST_URL}/users/${id}`, {
+        const response = await axios.delete(`${process.env.REST_URL}/request/${id}`, {
             headers: {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }
         });
-
         const statusMessageMap = {
-            200: { message: 'Usuario eliminado', data: response.data },
-            404: { message: 'Usuario no encontrado' },
+            200: { message: 'Solicitud eliminada', data: response.data },
+            404: { message: 'Solicitud no encontrada' },
             400: { message: response.data.message },
-            default: { message: 'Error al eliminar el usuario' },
+            default: { message: 'Error al eliminar la solicitud' },
         };
-
         const message = statusMessageMap[response.status] || statusMessageMap.default;
         return NextResponse.json(
             { message, data: response.data },
@@ -75,28 +73,24 @@ export async function PATCH(request, { params }) {
     }
 
     const {
-        vchname,
-        vchpaternalsurname,
-        vchmaternalsurname,
-        dtbirthdate,
-        bnstatus,
-        bnverified,
-        vchimage,
-        vchcoverimage,
-        vchbiography
+        statusid,
+        dtrequest,
+        vchmessage,
+        intnumguests,
+        bnhaspets,
+        dtstartdate,
+        dtenddate
     } = await request.json();
 
     try {
-        const response = await axios.patch(`${process.env.REST_URL}/users/${id}`, {
-            vchname,
-            vchpaternalsurname,
-            vchmaternalsurname,
-            dtbirthdate,
-            bnstatus,
-            bnverified,
-            vchimage,
-            vchcoverimage,
-            vchbiography
+        const response = await axios.patch(`${process.env.REST_URL}/request/${id}`, {
+            statusid,
+            dtrequest,
+            vchmessage,
+            intnumguests,
+            bnhaspets,
+            dtstartdate,
+            dtenddate
         }
             , {
                 headers: {

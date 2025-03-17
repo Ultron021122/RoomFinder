@@ -57,6 +57,8 @@ export class RequestController {
         try {
             const newRequest = await this.requestModel.create({ input: result.data });
             if (newRequest === false) return res.status(409).json({ message: 'Request already exists' });
+
+            await this.EmailService.sendRequestLeasor({input: newRequest});
             return res.status(201).json(newRequest)
         } catch (err) {
             next(err);
@@ -78,7 +80,7 @@ export class RequestController {
         if (!result.success) {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
-        const { id } = req.paramsF
+        const { id } = req.params
         await this.requestModel.update({ id, input: result.data})
             .then(updateRequest => {
                 if (!updateRequest)  return res.status(404).json({ message: 'Request not found'})
