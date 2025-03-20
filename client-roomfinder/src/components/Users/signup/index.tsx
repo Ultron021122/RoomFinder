@@ -51,7 +51,11 @@ const Registrar = () => {
                 setIsZipValidated(true);
 
                 try {
-                    const response = await axios.get(`/api/address/${zip}`);
+                    const response = await axios.get(`/api/address/${zip}`, {
+                        headers: {
+                            'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                          }
+                    });
                     if (response.status === 200) {
                         const { city, state } = response.data.response;
                         setMunicipality({ city, state });
@@ -154,7 +158,11 @@ const Registrar = () => {
             } else { // Arrendador
                 const data = userInfo as LessorInfo;
                 try {
-                    const response = await axios.post("/api/users/lessor", data);
+                    const response = await axios.post("/api/users/lessor", data, {
+                        headers: {
+                            'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                          }
+                    });
                     setIsLoading(false);
                     if (response.status === 201) {
                         toast.success(response.data.message.message, {
