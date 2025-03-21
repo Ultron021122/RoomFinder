@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from 'next/navigation'
 import { useSession } from "next-auth/react";
-import { Button, Link as LinkUI } from "@nextui-org/react";
 import DropdownUser from "./dropdown";
 import { ModeToggle } from "../mode-toggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -25,7 +24,7 @@ function Navbar({
 
     return (
         <>
-            <nav className="w-full max-w-screen-2xl bg-white border-b border-white dark:bg-gray-900 dark:border-gray-800 md:dark:border-gray-900 absolute top-0 z-50">
+            <nav className="w-full max-w-screen-2xl bg-white border-b border-white dark:bg-gray-900 dark:border-gray-800 md:dark:border-gray-900 absolute top-0 z-50 shadow-lg">
                 <div className="max-w-screen-2xl p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center justify-center h-auto">
@@ -52,9 +51,9 @@ function Navbar({
                             {session ? (
                                 <DropdownUser />
                             ) : (
-                                <Button as={LinkUI} href="/users/login" size="sm" color="primary" variant="solid" className="font-normal">
+                                <Link href="/users/login" className="font-normal p-1.5 rounded-md bg-primary text-white transition active:opacity-80 ease-in duration-200">
                                     Iniciar sesión
-                                </Button>
+                                </Link>
                             )
                             }
                             <button
@@ -76,36 +75,32 @@ function Navbar({
                                 </svg>
                             </button>
                         </div>
-                        {
-                            pathname != '/properties/map' && (
-                                <div className="hidden md:flex items-center space-x-6 text-sm">
-                                    <Link href="/" className={`block lg:inline-block dark:hover:text-white ${pathname === '/' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                        Inicio
-                                    </Link>
-                                    <Link href="/properties/map" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties/map' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                        Mapa
-                                    </Link>
-                                    <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                        Arrendadores
-                                    </Link>
-                                    <Link href="/properties" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                        Propiedades
-                                    </Link>
-                                    <ModeToggle />
-                                </div>
-                            )
-                        }
+                        <div className="hidden md:flex items-center space-x-6 text-sm">
+                            <Link href="/" className={`block lg:inline-block dark:hover:text-white ${pathname === '/' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                Inicio
+                            </Link>
+                            <Link href="/properties/map" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties/map' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                Mapa
+                            </Link>
+                            <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                Arrendadores
+                            </Link>
+                            <Link href="/properties" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
+                                Propiedades
+                            </Link>
+                            <ModeToggle />
+                        </div>
                         <div className="hidden md:flex items-center space-x-6 text-sm">
                             {session ? (
                                 <DropdownUser />
                             ) : (
                                 <div className="hidden md:flex items-center space-x-2">
-                                    <Button as={LinkUI} href="/users/signup" size='sm' color="primary" variant="bordered" className="font-normal">
+                                    <Link href="/users/signup" className="font-normal p-2 rounded-md bg-white text-blue-600 border-blue-600 border-2 transition active:opacity-80 ease-in duration-200">
                                         Registrar
-                                    </Button>
-                                    <Button as={LinkUI} href="/users/login" size='sm' color="primary" variant="solid" className="font-normal">
+                                    </Link>
+                                    <Link href="/users/login" className="font-normal p-2 rounded-md bg-primary text-white transition active:opacity-80 ease-in duration-200">
                                         Iniciar sesión
-                                    </Button>
+                                    </Link>
                                 </div>
                             )}
                         </div>
