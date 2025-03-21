@@ -1,7 +1,7 @@
 import { Database } from "./database.js"
 
 export class ReviewsModel {
-    constructor({ reviewid, propertyid, studentid, decrating, vchcomment, created_at, updated_at }) {
+    constructor({ reviewid, propertyid, studentid, decrating, vchcomment, created_at, updated_at, vchname, vchpaternalsurname, vchmaternalsurname, vchimage, roleid }) {
         this.reviewid = reviewid;
         this.propertyid = propertyid;
         this.studentid = studentid;
@@ -9,6 +9,11 @@ export class ReviewsModel {
         this.vchcomment = vchcomment;
         this.created_at = created_at;
         this.updated_at = updated_at;
+        this.vchname = vchname;
+        this.vchpaternalsurname = vchpaternalsurname; 
+        this.vchmaternalsurname = vchmaternalsurname;
+        this.vchimage = vchimage; 
+        this.roleid = roleid;
     }
 
     static async getAll() {
@@ -17,7 +22,10 @@ export class ReviewsModel {
 
         try {
             const reviews = await client.query(
-                `SELECT * FROM "Usuario"."Opiniones";`
+                `SELECT o.reviewid, o.propertyid , o.studentid, o.decrating , o.vchcomment, o.created_at, o.updated_at, u.vchname, u.vchpaternalsurname, u.vchmaternalsurname, u.vchimage, u.roleid
+                    FROM "Usuario"."Opiniones" o
+                    inner join "Usuario"."Usuario" u
+                        on u.usuarioid = o.studentid;`
             );
 
             return reviews.rows.map((review) => new ReviewsModel(review));
@@ -31,7 +39,11 @@ export class ReviewsModel {
         const client = await db.pool.connect();
         try {
             const reviews = await client.query(
-                `SELECT * FROM "Usuario"."Opiniones" WHERE studentid = $1;`,
+                `SELECT o.reviewid, o.propertyid , o.studentid, o.decrating , o.vchcomment, o.created_at, o.updated_at, u.vchname, u.vchpaternalsurname, u.vchmaternalsurname, u.vchimage, u.roleid
+                    FROM "Usuario"."Opiniones" o
+                    inner join "Usuario"."Usuario" u
+                        on u.usuarioid = o.studentid
+                    WHERE studentid = $1;`,
                 [studentid]
             );
 
@@ -46,7 +58,11 @@ export class ReviewsModel {
         const client = await db.pool.connect();
         try {
             const review = await client.query(
-                `SELECT * FROM "Usuario"."Opiniones" WHERE reviewid = $1;`,
+                `SELECT o.reviewid, o.propertyid , o.studentid, o.decrating , o.vchcomment, o.created_at, o.updated_at, u.vchname, u.vchpaternalsurname, u.vchmaternalsurname, u.vchimage, u.roleid
+                    FROM "Usuario"."Opiniones" o
+                    INNER JOIN "Usuario"."Usuario" u
+                        on u.usuarioid = o.studentid 
+                    WHERE o.reviewid = $1;`,
                 [id]
             );
 
@@ -61,7 +77,11 @@ export class ReviewsModel {
         const client = await db.pool.connect();
         try {
             const reviews = await client.connect.query(
-                `SELECT * FROM "Usuario"."Opiniones" WHERE propertyid = $1;`,
+                `SELECT o.reviewid, o.propertyid , o.studentid, o.decrating , o.vchcomment, o.created_at, o.updated_at, u.vchname, u.vchpaternalsurname, u.vchmaternalsurname, u.vchimage, u.roleid
+                    FROM "Usuario"."Opiniones" o
+                    inner join "Usuario"."Usuario" u
+                        on u.usuarioid = o.studentid 
+                    WHERE o.propertyid = $1;`,
                 [propertyid]
             );
 

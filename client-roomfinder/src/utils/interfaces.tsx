@@ -2007,3 +2007,82 @@ export interface RequestStatus {
      */
     update_at: string;
 }
+
+/**
+ * Interface representing property opinions
+ */
+export interface PropertyOpinions {
+    /**
+     * Review ID
+     * @example
+     * reviewid: 1
+     */
+    reviewid: number;
+    /**
+     * Property ID
+     * @example
+     * propertyid: 1
+     */
+    propertyid: number;
+    /**
+     * Student id
+     * @example
+     * studentid: 1
+     */
+    studentid: number;
+    /**
+     * Rating
+     * @example
+     * decrating: 1.1
+     */
+    decrating: number;
+    /**
+     * Comment
+     * @example
+     * vchcomment: 'Comentario'
+     */
+    vchcomment: string;
+    /**
+     * Created
+     * @example
+     * created_at = '2025-01-01'
+     */
+    created_at: string;
+    /**
+     * Updated
+     * @example
+     * updated_at = '2025-01-01'
+     */
+    updated_at: string;
+    /**
+     * Name
+     * @example
+     * vchname: 'Name'
+     */
+    vchname: string; 
+    /**
+     * Paternal surname
+     * @example
+     * vchpaternalsurname: 'Paternalsurname'
+     */
+    vchpaternalsurname: string;
+    /**
+     * Maternal surname
+     * @example
+     * vchmaternalsurname: 'Maternal surname';
+     */
+    vchmaternalsurname: string;
+    /**
+     * Image
+     * @example
+     * vchimage: 'http://url.com'
+     */
+    vchimage: string;
+    /**
+     * Role ID
+     * @example
+     * roleid: 1;
+     */
+    roleid: number;
+
+}

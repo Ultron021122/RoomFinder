@@ -1,5 +1,5 @@
 'use client';
-import { Properties, UserProfile } from '@/utils/interfaces';
+import { Properties, PropertyOpinions, UserProfile } from '@/utils/interfaces';
 import Image from "next/image";
 import { MapPin, Star, Wifi, Tv, CookingPotIcon as Kitchen, Car, Users, Bed, Bath, CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from "react";
@@ -37,7 +37,7 @@ const requestFormSchema = z.object({
         message: 'El mensaje es requerido'
     }).min(25, {
         message: 'El mensaje debe tener al menos 25 caracteres'
-    }) ,
+    }),
     intnumguests: z.number({
         message: 'El número de huéspedes es requerido'
     }).positive().min(1),
@@ -68,8 +68,10 @@ const reviewsFormSchema = z.object({
 });
 
 function PropertyComponent({ id }: { id: string }) {
-    const { data: session, update } = useSession();
+    const { data: session, status, update } = useSession();
+    const userData = session?.user as UserProfile;
     const [property, setProperty] = useState<Properties>();
+    const [propertyOpinions, setPropertyOpinions] = useState<PropertyOpinions>();
     const [showPayment, setShowPayment] = useState(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
@@ -177,7 +179,21 @@ function PropertyComponent({ id }: { id: string }) {
                 setIsLoading(false);
             }
         };
+        const fetchPropertyOpinions = async () => {
+            try {
+                const response = await axios.get(`/api/properties/opinions/${id}`, {
+                    headers: {
+                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                    }
+                });
+                setPropertyOpinions(response.data.data);
+            } catch (Error: any) {
+                setErrorSystem(Error.response?.data.message || Error.message);
+            }
+        };
+
         fetchProperty();
+        fetchPropertyOpinions();
     }, [id]);
 
     const amenities = [
@@ -297,138 +313,142 @@ function PropertyComponent({ id }: { id: string }) {
                         </Card>
 
                         {/* Reservacion */}
-                        <Card className='bg-white dark:bg-gray-900 border-none shadow-none lg:row-span-2 lg:sticky lg:top-20'>
-                            <CardHeader>
-                                <CardTitle>Reserva tu estancia</CardTitle>
-                                <Separator className='dark:bg-slate-400' />
-                            </CardHeader>
-                            <CardContent className='mx-2'>
-                                <Form {...form}>
-                                    <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4 px-3 shadow-lg pt-2 pb-4 rounded-md'>
-                                        <p className="text-2xl font-bold mb-4 mx-2">${property?.decrentalcost || 0} / mensuales</p>
-                                        <FormField
-                                            control={form.control}
-                                            name='studentid'
-                                            render={({ field }) => (
-                                                <FormItem className='hidden'>
-                                                    <FormLabel>Usuario</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type='number'
-                                                            placeholder='Usuario'
-                                                            {...field}
-                                                        />
-                                                    </FormControl>
-                                                    <FormDescription>
-                                                        Indique el usuario que realiza la reserva
-                                                    </FormDescription>
-                                                    <FormMessage className='text-red-600' />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name='intnumguests'
-                                            render={({ field }) => (
-                                                <FormItem className='flex flex-col'>
-                                                    <FormLabel>Número de huéspedes</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type='number'
-                                                            placeholder='Número de huéspedes'
-                                                            className='dark:hover:bg-gray-700 dark:border-gray-500'
-                                                            {...field}
-                                                        />
-                                                    </FormControl>
-                                                    <FormDescription>
-                                                        Ingrese el número de huéspedes que se hospedarán
-                                                    </FormDescription>
-                                                    <FormMessage className='text-red-600' />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name='vchmessage'
-                                            render={({ field }) => (
-                                                <FormItem className='flex flex-col'>
-                                                    <FormLabel>Mensaje</FormLabel>
-                                                    <FormControl>
-                                                        <Textarea
-                                                            placeholder='Mensaje de reserva'
-                                                            className='h-24 text-sm dark:hover:bg-gray-700 dark:border-gray-500'
-                                                            {...field}
-                                                        />
-                                                    </FormControl>
-                                                    <FormDescription>
-                                                        Deja un mensaje para el arrendador
-                                                    </FormDescription>
-                                                    <FormMessage className='text-red-600' />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name='bnhaspets'
-                                            render={({ field }) => (
-                                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm dark:hover:bg-gray-700 dark:border-gray-500">
-                                                    <div className="space-y-0.5">
-                                                        <FormLabel>
-                                                            ¿Tienes mascotas?
-                                                        </FormLabel>
-                                                        <FormDescription>
-                                                            Indica si llevarás mascotas
-                                                        </FormDescription>
-                                                    </div>
-                                                    <FormControl>
-                                                        <Switch
-                                                            checked={field.value}
-                                                            onCheckedChange={field.onChange}
-                                                            className='dark:data-[state=checked]:bg-primary dark:data-[state=unchecked]:bg-gray-500'
-                                                            aria-readonly
-                                                        />
-                                                    </FormControl>
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <div className='pb-4'>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <Button
-                                                        variant={"outline"}
-                                                        className={cn(
-                                                            "w-full pl-3 text-left font-normal bg-transparent dark:hover:bg-gray-700 dark:border-gray-500",
-                                                            !startDate && "text-muted-foreground"
-                                                        )}
-                                                    >
-                                                        {startDate ? (
-                                                            `${format(startDate, "PPP", { locale: es })} - ${format(endDate!, "PPP", { locale: es })}`
-                                                        ) : (
-                                                            <span>Selecciona un rango de fechas</span>
-                                                        )}
-                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                    </Button>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
-                                                    <Calendar
-                                                        mode="range"
-                                                        locale={es}
-                                                        className='dark:bg-gray-800 dark:border-gray-500'
-                                                        selected={{ from: startDate || undefined, to: endDate || undefined }}
-                                                        onSelect={(range) => handleDateChange({ from: range?.from || null, to: range?.to || null })}
-                                                        disabled={(date) => date < new Date()}
-                                                        initialFocus
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
-                                        </div>
-                                        <Button className="w-full" type="submit">
-                                            Reservar ahora
-                                        </Button>
-                                    </form>
-                                </Form>
-                            </CardContent>
-                        </Card>
+                        {
+                            userData?.roleid == 1 && status === 'authenticated' && (
+                                <Card className='bg-white dark:bg-gray-900 border-none shadow-none lg:row-span-2 lg:sticky lg:top-20'>
+                                    <CardHeader>
+                                        <CardTitle>Reserva tu estancia</CardTitle>
+                                        <Separator className='dark:bg-slate-400' />
+                                    </CardHeader>
+                                    <CardContent className='mx-2'>
+                                        <Form {...form}>
+                                            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4 px-3 shadow-lg pt-2 pb-4 rounded-md'>
+                                                <p className="text-2xl font-bold mb-4 mx-2">${property?.decrentalcost || 0} / mensuales</p>
+                                                <FormField
+                                                    control={form.control}
+                                                    name='studentid'
+                                                    render={({ field }) => (
+                                                        <FormItem className='hidden'>
+                                                            <FormLabel>Usuario</FormLabel>
+                                                            <FormControl>
+                                                                <Input
+                                                                    type='number'
+                                                                    placeholder='Usuario'
+                                                                    {...field}
+                                                                />
+                                                            </FormControl>
+                                                            <FormDescription>
+                                                                Indique el usuario que realiza la reserva
+                                                            </FormDescription>
+                                                            <FormMessage className='text-red-600' />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name='intnumguests'
+                                                    render={({ field }) => (
+                                                        <FormItem className='flex flex-col'>
+                                                            <FormLabel>Número de huéspedes</FormLabel>
+                                                            <FormControl>
+                                                                <Input
+                                                                    type='number'
+                                                                    placeholder='Número de huéspedes'
+                                                                    className='dark:hover:bg-gray-700 dark:border-gray-500'
+                                                                    {...field}
+                                                                />
+                                                            </FormControl>
+                                                            <FormDescription>
+                                                                Ingrese el número de huéspedes que se hospedarán
+                                                            </FormDescription>
+                                                            <FormMessage className='text-red-600' />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name='vchmessage'
+                                                    render={({ field }) => (
+                                                        <FormItem className='flex flex-col'>
+                                                            <FormLabel>Mensaje</FormLabel>
+                                                            <FormControl>
+                                                                <Textarea
+                                                                    placeholder='Mensaje de reserva'
+                                                                    className='h-24 text-sm dark:hover:bg-gray-700 dark:border-gray-500'
+                                                                    {...field}
+                                                                />
+                                                            </FormControl>
+                                                            <FormDescription>
+                                                                Deja un mensaje para el arrendador
+                                                            </FormDescription>
+                                                            <FormMessage className='text-red-600' />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name='bnhaspets'
+                                                    render={({ field }) => (
+                                                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm dark:hover:bg-gray-700 dark:border-gray-500">
+                                                            <div className="space-y-0.5">
+                                                                <FormLabel>
+                                                                    ¿Tienes mascotas?
+                                                                </FormLabel>
+                                                                <FormDescription>
+                                                                    Indica si llevarás mascotas
+                                                                </FormDescription>
+                                                            </div>
+                                                            <FormControl>
+                                                                <Switch
+                                                                    checked={field.value}
+                                                                    onCheckedChange={field.onChange}
+                                                                    className='dark:data-[state=checked]:bg-primary dark:data-[state=unchecked]:bg-gray-500'
+                                                                    aria-readonly
+                                                                />
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <div className='pb-4'>
+                                                    <Popover>
+                                                        <PopoverTrigger asChild>
+                                                            <Button
+                                                                variant={"outline"}
+                                                                className={cn(
+                                                                    "w-full pl-3 text-left font-normal bg-transparent dark:hover:bg-gray-700 dark:border-gray-500",
+                                                                    !startDate && "text-muted-foreground"
+                                                                )}
+                                                            >
+                                                                {startDate ? (
+                                                                    `${format(startDate, "PPP", { locale: es })} - ${format(endDate!, "PPP", { locale: es })}`
+                                                                ) : (
+                                                                    <span>Selecciona un rango de fechas</span>
+                                                                )}
+                                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                            </Button>
+                                                        </PopoverTrigger>
+                                                        <PopoverContent className="w-auto p-0" align="start">
+                                                            <Calendar
+                                                                mode="range"
+                                                                locale={es}
+                                                                className='dark:bg-gray-800 dark:border-gray-500'
+                                                                selected={{ from: startDate || undefined, to: endDate || undefined }}
+                                                                onSelect={(range) => handleDateChange({ from: range?.from || null, to: range?.to || null })}
+                                                                disabled={(date) => date < new Date()}
+                                                                initialFocus
+                                                            />
+                                                        </PopoverContent>
+                                                    </Popover>
+                                                </div>
+                                                <Button className="w-full" type="submit">
+                                                    Reservar ahora
+                                                </Button>
+                                            </form>
+                                        </Form>
+                                    </CardContent>
+                                </Card>
+                            )
+                        }
 
                         {/* Comentarios */}
                         {!hasStayed ? (
