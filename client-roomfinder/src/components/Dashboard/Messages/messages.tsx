@@ -204,7 +204,7 @@ export default function MessageComponent({
                 <EmojiPicker
                   onEmojiClick={handleEmojiClick}
                   theme={theme}
-                  // reactionsDefaultOpen
+                  reactionsDefaultOpen
                   style={{ width: '100%', height: '80%', maxWidth: "400px", maxHeight: "400px" }}
                 />
               </div>
