@@ -64,6 +64,7 @@
     "dompurify": "^3.2.4",
     "embla-carousel-autoplay": "^8.5.1",
     "embla-carousel-react": "^8.5.1",
+    "emoji-picker-react": "^4.12.2",
     "flatpickr": "^4.6.13",
     "framer-motion": "^11.11.17",
     "input-otp": "^1.2.4",
