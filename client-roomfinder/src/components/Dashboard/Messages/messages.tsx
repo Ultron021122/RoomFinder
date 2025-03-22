@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 
 TimeAgo.addDefaultLocale(es);
 
@@ -75,10 +75,27 @@ export default function MessageComponent({
   const [chatID, setChatID] = useState<number | null>(null);
   const [message, setMessage] = useState("");
   const [showEmojis, setShowEmojis] = useState(false);
-  const emojiList = useMemo(() => ["😊", "😂", "😍", "😢", "😎", "👍", "🙌", "😒", "👻", "👽", "😈", "👿", "🤡", "🤠", "🤮", "🤢", "🤕", "😵", "🥵"], []);
+  const [theme, setTheme] = useState<Theme>(Theme.AUTO); // Setting the default theme to dark
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
   const { conversations, setConversations } = useSocket(user, chatID);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const timeAgo = useMemo(() => new TimeAgo("es-ES"), []);
+
+  // Función para cerrar el EmojiPicker cuando se hace clic fuera de él
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+        setShowEmojis(false);
+      }
+    };
+
+    // Agregar el evento de clic al documento
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Eliminar el evento de clic al desmontar el componente
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [emojiPickerRef]);
 
   const fetchMessages = useCallback(async () => {
     try {
@@ -95,7 +112,7 @@ export default function MessageComponent({
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
-  }, [userID,setConversations]);
+  }, [userID, setConversations]);
 
   useEffect(() => {
     if (userID) {
@@ -126,13 +143,13 @@ export default function MessageComponent({
     }
   };
 
-  const handleEmojiClick = (emoji: string) => {
-    setMessage((prevMessage) => prevMessage + emoji);
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    setMessage((prevMessage) => prevMessage + emojiData.emoji);
     setShowEmojis(false);
   };
 
   return (
-    <section className="h-[calc(100vh-200px)]">
+    <section className="h-[calc(100vh-150px)]">
       <div className="h-full w-full flex flex-col">
         <CardHeader className="border-b">
           <div className="flex items-center justify-start">
@@ -176,23 +193,22 @@ export default function MessageComponent({
         </CardContent>
         <div className="p-4 border-t relative">
           <form onSubmit={sendMessage} className="flex dark:bg-gray-950 border-gray-800">
-            <HoverCard>
-              <HoverCardTrigger className="dark:bg-blue-500 bg-blue-400 text-white p-2 rounded-lg mr-2">
-                <StickerIcon size={18} />
-              </HoverCardTrigger>
-              <HoverCardContent>
-                {emojiList.map((emoji) => (
-                  <button
-                    key={emoji}
-                    onClick={() => handleEmojiClick(emoji)}
-                    className="text-2xl p-1"
-                    type="button"
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </HoverCardContent>
-            </HoverCard>
+            <div
+              className={`relative dark:bg-blue-500 bg-blue-400 text-white p-2 rounded-lg mr-2`}
+              onClick={() => setShowEmojis(!showEmojis)}
+            >
+              <StickerIcon size={18} />
+            </div>
+            {showEmojis && (
+              <div ref={emojiPickerRef} className="absolute bottom-full mb-2">
+                <EmojiPicker
+                  onEmojiClick={handleEmojiClick}
+                  theme={theme}
+                  reactionsDefaultOpen
+                  style={{ width: '100%', height: '80%', maxWidth: "400px", maxHeight: "400px" }}
+                />
+              </div>
+            )}
             <Input
               type="text"
               value={message}
