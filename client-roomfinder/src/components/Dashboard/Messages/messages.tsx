@@ -38,17 +38,20 @@ const useSocket = (user: UserProfile | undefined, chatID: number | null) => {
         socket.emit("getMessages", { chatid: chatID });
       }
 
-      socket.on("receiveMessages", (data) => {
-        setConversations((prev) => [...prev, ...data]);
-      });
+      const handleReceiveMessages = (data: Message[]) => {
+        setConversations(data);
+      };
 
-      socket.on("receiveMessage", (newMessage) => {
+      const handleReceiveMessage = (newMessage: Message) => {
         setConversations((prev) => [...prev, newMessage]);
-      });
+      };
+
+      socket.on("receiveMessages", handleReceiveMessages);
+      socket.on("receiveMessage", handleReceiveMessage);
 
       return () => {
-        socket.off("receiveMessages");
-        socket.off("receiveMessage");
+        socket.off("receiveMessages", handleReceiveMessages);
+        socket.off("receiveMessage", handleReceiveMessage);
         socket.disconnect();
       };
     }
