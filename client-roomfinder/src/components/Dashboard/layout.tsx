@@ -98,7 +98,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <SidebarItem
                             icon={<HomeIcon className="w-[22px] h-[22px]" />}
                             text="Historial"
-                            url="/dashboard/historial"
+                            url="/dashboard/history"
                             onClickSidebar={handleSidebarItemClick}
                         />
                     </>)}
