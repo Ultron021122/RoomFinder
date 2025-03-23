@@ -25,7 +25,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const dropdownItems = [
         { text: 'Perfil', onClick: () => router.push('/dashboard/profile'), color: 'primary' },
         { text: 'Configuraciones', onClick: () => router.push('/dashboard/settings'), color: 'primary' },
-        { text: 'Cerrar sesión ', onClick: () => signOut(), color: 'error' },
+        { text: 'Cerrar sesión ', onClick: async () => { await signOut({
+            redirect: true,
+            callbackUrl: '/users/login'
+        }) }, color: 'error' },
     ];
 
     useEffect(() => {
@@ -91,12 +94,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         url="/dashboard/home"
                         onClickSidebar={handleSidebarItemClick}
                     />
-                    <SidebarItem
-                        icon={<HomeIcon className="w-[22px] h-[22px]" />}
-                        text="Inmuebles"
-                        url="/dashboard/inmuebles"
-                        onClickSidebar={handleSidebarItemClick}
-                    />
+                    {roleName === 'Estudiante' && (<>
+                        <SidebarItem
+                            icon={<HomeIcon className="w-[22px] h-[22px]" />}
+                            text="Historial"
+                            url="/dashboard/historial"
+                            onClickSidebar={handleSidebarItemClick}
+                        />
+                    </>)}
                     <SidebarItem
                         icon={<Mail size={22} />}
                         text="Mensajes"

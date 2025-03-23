@@ -1,7 +1,7 @@
 'use client'
 
 import TarjetaPropiedad from "@/components/GeneralComponents/Card";
-import Header from "./Header";
+import Header from "../Inmuebles/Header";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -24,7 +24,7 @@ const filterOptions : FilterOption[] = [
     { id: 4, name: 'Departamento' },
 ]
 
-export default function Inmuebles() {
+export default function StudentHomePage() {
 
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
