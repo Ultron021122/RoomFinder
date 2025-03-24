@@ -64,7 +64,8 @@ export default function MessageMainComponent() {
 
   const filteredUsers = users ? users.data.filter(user =>
     user.vchname2?.toLowerCase().includes(name.toLowerCase()) ||
-    (user.vchpaternalsurname2 + ' ' + user.vchmaternalsurname2).toLowerCase().includes(name.toLowerCase())
+    (user.vchpaternalsurname2 + ' ' + user.vchmaternalsurname2).toLowerCase().includes(name.toLowerCase()) ||
+    (user.vchname2 + ' ' + user.vchpaternalsurname2 + ' ' + user.vchmaternalsurname2).toLowerCase().includes(name.toLowerCase())
   ) : [];
 
   return (

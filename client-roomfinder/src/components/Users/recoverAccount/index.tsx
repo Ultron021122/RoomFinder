@@ -59,7 +59,11 @@ function RecoverComponent() {
         };
 
         try {
-            const response = await axios.get(`/api/users/recover/${dataToken.vchtoken}`);
+            const response = await axios.get(`/api/users/recover/${dataToken.vchtoken}`, {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            });
             setIsLoading(false);
             if (response.status === 200) {
                 toast.success(response.data.message, {

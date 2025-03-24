@@ -58,7 +58,11 @@ function Recover() {
         };
 
         try {
-            const response = await axios.post('/api/users/recover', data);
+            const response = await axios.post('/api/users/recover', data, {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            });
             setIsLoading(false);
             if (response.status === 200) {
                 toast.success('Email enviado!!!', {

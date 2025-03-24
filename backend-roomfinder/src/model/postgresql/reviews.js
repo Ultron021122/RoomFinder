@@ -76,7 +76,7 @@ export class ReviewsModel {
         const db = new Database();
         const client = await db.pool.connect();
         try {
-            const reviews = await client.connect.query(
+            const reviews = await client.query(
                 `SELECT o.reviewid, o.propertyid , o.studentid, o.decrating , o.vchcomment, o.created_at, o.updated_at, u.vchname, u.vchpaternalsurname, u.vchmaternalsurname, u.vchimage, u.roleid
                     FROM "Usuario"."Opiniones" o
                     inner join "Usuario"."Usuario" u
@@ -85,7 +85,7 @@ export class ReviewsModel {
                 [propertyid]
             );
 
-            return reviews.rowCount > 0 ? new ReviewsModel(reviews.rows[0]) : null;
+            return reviews.rows.map((review) => new ReviewsModel(review));
         } finally {
             client.release();
         }
