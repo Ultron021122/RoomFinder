@@ -188,7 +188,9 @@ function PropertyComponent({ id }: { id: string }) {
                 });
                 setPropertyOpinions(response.data.data);
             } catch (Error: any) {
-                setErrorSystem(Error.response?.data.message || Error.message);
+                if (Error.response.status !== 404) {
+                    setErrorSystem(Error.response?.data.message || Error.message);
+                }
             }
         };
 
