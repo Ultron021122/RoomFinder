@@ -14,7 +14,12 @@ export async function GET(request, { params }) {
                 Authorization: `Bearer ${process.env.REST_SECRET}`
             }
         });
-
+        const statusMessageMap = {
+            200: { message: 'Opinion encontrada', data: response.data },
+            404: { message: 'Opinion no encontrada' },
+            400: { message: response.data.message },
+            default: { message: 'Error al buscar la opinion' },
+        };
         const message = statusMessageMap[response.status] || statusMessageMap.default;
         return NextResponse.json(
             { message, data: response.data },

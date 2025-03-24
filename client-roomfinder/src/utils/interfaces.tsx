@@ -2017,7 +2017,7 @@ export interface PropertyOpinions {
      * @example
      * reviewid: 1
      */
-    reviewid: number;
+    reviewid: number | null;
     /**
      * Property ID
      * @example

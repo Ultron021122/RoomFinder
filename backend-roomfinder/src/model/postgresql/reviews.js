@@ -85,7 +85,7 @@ export class ReviewsModel {
                 [propertyid]
             );
 
-            return reviews.rowCount > 0 ? new ReviewsModel(reviews.rows[0]) : null;
+            return reviews.rows.map((review) => new ReviewsModel(review));
         } finally {
             client.release();
         }

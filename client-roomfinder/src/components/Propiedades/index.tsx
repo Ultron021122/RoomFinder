@@ -69,10 +69,8 @@ const reviewsFormSchema = z.object({
 
 function PropertyComponent({ id }: { id: string }) {
     const { data: session, status, update } = useSession();
-    const userData = session?.user as UserProfile;
     const [property, setProperty] = useState<Properties>();
-    const [propertyOpinions, setPropertyOpinions] = useState<PropertyOpinions>();
-    const [showPayment, setShowPayment] = useState(false);
+    const [propertyOpinions, setPropertyOpinions] = useState<PropertyOpinions[]>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
     const [startDate, setStartDate] = useState<Date | null>(null);
@@ -110,7 +108,6 @@ function PropertyComponent({ id }: { id: string }) {
     }, [userProfileData, form]);
 
     async function onSubmit(values: z.infer<typeof requestFormSchema>) {
-        console.log(values);
         setIsLoading(true);
         setErrorSystem(null);
         try {
@@ -187,6 +184,7 @@ function PropertyComponent({ id }: { id: string }) {
                     }
                 });
                 setPropertyOpinions(response.data.data);
+                console.log(response.data.data)
             } catch (Error: any) {
                 if (Error.response.status !== 404) {
                     setErrorSystem(Error.response?.data.message || Error.message);
@@ -316,7 +314,7 @@ function PropertyComponent({ id }: { id: string }) {
 
                         {/* Reservacion */}
                         {
-                            userData?.roleid == 1 && status === 'authenticated' && (
+                            userProfileData?.roleid == 1 && status === 'authenticated' && (
                                 <Card className='bg-white dark:bg-gray-900 border-none shadow-none lg:row-span-2 lg:sticky lg:top-20'>
                                     <CardHeader>
                                         <CardTitle>Reserva tu estancia</CardTitle>
@@ -453,18 +451,8 @@ function PropertyComponent({ id }: { id: string }) {
                         }
 
                         {/* Comentarios */}
-                        {!hasStayed ? (
-                            <PropertyReviews reviews={reviews} />
-                        ) : (
-                            <Card className='bg-white dark:bg-gray-900 border-none shadow-none'>
-                                <CardHeader>
-                                    <CardTitle>Comentarios</CardTitle>
-                                    <Separator className='dark:bg-slate-400' />
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-sm">Sólo los huéspedes que se han hospedado pueden dejar un comentario.</p>
-                                </CardContent>
-                            </Card>
+                        {propertyOpinions && (
+                            <PropertyReviews reviews={propertyOpinions} comment={hasStayed} user={userProfileData} propertyid={property.propertyid} />
                         )}
                     </div>
                 </>
