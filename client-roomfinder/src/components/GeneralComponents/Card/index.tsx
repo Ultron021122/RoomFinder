@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button"
 import { Bed, Bath, MapPin, DoorOpen } from 'lucide-react'
 import { Properties } from '@/utils/interfaces'
 import { Galeria } from '../Galeria'
+import Link from 'next/link'
 
 interface TarjetaPropiedadProps {
     data: Properties
-    handleViewProperty: (id:number) => void
 }
 
-export default function TarjetaPropiedad({data, handleViewProperty}: TarjetaPropiedadProps) {
+export default function TarjetaPropiedad({data}: TarjetaPropiedadProps) {
     const formatPrecio = (precio: number | null) => {
         if (precio === null || precio === undefined) {
             return 'Precio no disponible'
@@ -61,7 +61,7 @@ export default function TarjetaPropiedad({data, handleViewProperty}: TarjetaProp
                     {formatPrecio(parseFloat(data.decrentalcost))}
                     {data.decrentalcost !== null && data.decrentalcost !== undefined && <span className="text-sm font-normal">/mes</span>}
                 </div>
-                <Button onClick={() => handleViewProperty(data.propertyid)} variant="default">Ver propiedad</Button>
+                <Link href={`/dashboard/propertyDetails/${data.propertyid}`}>Ver propiedad</Link>
             </CardFooter>
         </Card>
     )

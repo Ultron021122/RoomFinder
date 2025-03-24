@@ -17,14 +17,17 @@ const excludedRoutes = [
     '/dashboard/home',
     '/dashboard/manage',
     '/dashboard/users',
+    '/dashboard/history',
     '/test',
     '/checkout'
 ];
 
+const dynamicRoutesPattern = /^\/dashboard\/propertyDetails\/\d+$/;  // Expresión regular para la ruta dinámica
+
 function Navigate() {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
-    const shouldShowNavbar = !excludedRoutes.includes(pathname);
+    const shouldShowNavbar = !excludedRoutes.includes(pathname) && !dynamicRoutesPattern.test(pathname);
     const toggle = () => {
         setIsOpen(!isOpen);
     };

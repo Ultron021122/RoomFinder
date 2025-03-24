@@ -34,10 +34,6 @@ export default function StudentHomePage() {
         return (properties != null && properties.length > 0) ? true : false;
     }
 
-    function handleViewProperty(id: number){
-        router.push(`/property/${id}`);
-    }
-
     /* traer las propiedades de la base de datos */
     useEffect(() => {
         async function fetchProperties(){
@@ -87,7 +83,7 @@ export default function StudentHomePage() {
                 ) : 
                 (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> {/* contenedor de propiedades */}
-                    {properties?.map(property => <TarjetaPropiedad key={property.propertyid} data={property} handleViewProperty={handleViewProperty}/>)}
+                    {properties?.map(property => <TarjetaPropiedad key={property.propertyid} data={property}/>)}
                 </div>
                 )}
             </section>
