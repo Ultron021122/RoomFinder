@@ -61,10 +61,12 @@ const DropdownUser = () => {
                         <p className="text-small">{user.vchemail}</p>
                     </DropdownItem>
                     <DropdownItem as={Link} href="/dashboard" key="dashboard" textValue="Panel de administración">
-                        Dashboard
+                        Panel
                     </DropdownItem>
-                    <DropdownItem key="settings" textValue="Configuraciones">Settings</DropdownItem>
+                    <DropdownItem as={Link} href="/dashboard/settings" key="settings" textValue="Configuraciones">Configuración</DropdownItem>
                     <DropdownItem
+                        as={Link} 
+                        href="/dashboard/publish"
                         key="new_project"
                         textValue="Create a new project"
                         endContent={<PlusIcon className="text-large"></PlusIcon>}
@@ -79,8 +81,8 @@ const DropdownUser = () => {
                     Team Settings
                 </DropdownItem> */}
                 <DropdownSection aria-label="Help & Feedback">
-                    <DropdownItem key="help_and_feedback" textValue="Ayuda">
-                        Ayuda y Retroalimentación
+                    <DropdownItem as={Link} href="/dashboard/help" key="help_and_feedback" textValue="Ayuda">
+                        Ayuda
                     </DropdownItem>
                     <DropdownItem key="logout" textValue="Cerrar sesión" color="danger" onClick={() => { signOut(); }}>
                         Cerrar Sesión

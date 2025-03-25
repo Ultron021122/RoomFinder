@@ -23,7 +23,7 @@ export function ImageOverlay({ images }: ImageOverlayProps) {
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant="ghost" className="absolute top-2 right-2 z-30">
-                    <Expand size={25} />
+                    <Expand size={25} className='text-gray-700' />
                 </Button>
             </DialogTrigger>
             <DialogContent
