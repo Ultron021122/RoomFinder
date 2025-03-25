@@ -64,16 +64,16 @@ const PropertyReviews: React.FC<PropertyReviewsProps> = ({ reviews: initialRevie
   };
 
   return (
-    <Card className="bg-white dark:bg-gray-900 border-none shadow-none">
-      <CardHeader>
-        <CardTitle>Comentarios</CardTitle>
-        <Separator className='dark:bg-slate-400' />
+    <Card className="mb-6 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-md rounded-xl overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-blue-50 to-white dark:from-gray-800 dark:to-gray-800 border-b border-gray-100 dark:border-gray-700">
+        <CardTitle className='text-blue-800 dark:text-blue-300'>Comentarios</CardTitle>
+        {/* <Separator className='dark:bg-slate-400' /> */}
       </CardHeader>
       <CardContent>
         {/* Verificar si reviews es un array antes de usar map */}
         {reviews.length > 0 ? (
           reviews.map((review: PropertyOpinions) => (
-            <div key={review.reviewid} className="mb-6 last:mb-0">
+            <div key={review.reviewid} className="my-6 last:mb-0">
               <div className="flex items-center mb-2">
                 <Avatar className="h-10 w-10 mr-2">
                   <AvatarImage src={review.vchimage} alt={review.vchname} />
@@ -89,7 +89,7 @@ const PropertyReviews: React.FC<PropertyReviewsProps> = ({ reviews: initialRevie
                   {[...Array(5)].map((_, i) => (
                     <StarIcon
                       key={i}
-                      className={`h-5 w-5 ${i < review.decrating ? "text-blue-500 dark:text-blue-400 fill-current" : "text-gray-400 dark:text-gray-300"}`}
+                      className={`h-5 w-5 ${i < review.decrating ? "text-yellow-500 dark:text-yellow-400 fill-current" : "text-gray-400 dark:text-gray-300"}`}
                     />
                   ))}
                 </div>
@@ -100,7 +100,7 @@ const PropertyReviews: React.FC<PropertyReviewsProps> = ({ reviews: initialRevie
         ) : (
           <p>No hay comentarios disponibles.</p> // Mensaje si no hay comentarios
         )}
-        <Card className='mt-6 dark:bg-gray-800'>
+        <Card className='mt-6 dark:bg-gray-700 dark:border-gray-600'>
           <CardHeader>
             <CardTitle>Agregar comentario</CardTitle>
           </CardHeader>
@@ -112,7 +112,7 @@ const PropertyReviews: React.FC<PropertyReviewsProps> = ({ reviews: initialRevie
                     <StarIcon
                       key={i}
                       onClick={() => handleRatingChange(i + 1)}
-                      className={`h-5 w-5 cursor-pointer ${i < newReview.decrating ? "text-blue-500 dark:text-blue-400 fill-current" : "text-gray-400 dark:text-gray-300"}`}
+                      className={`h-5 w-5 cursor-pointer ${i < newReview.decrating ? "text-yellow-500 dark:text-yellow-400 fill-current" : "text-gray-400 dark:text-gray-300"}`}
                     />
                   ))}
                 </div>
