@@ -125,7 +125,7 @@ export async function POST(req, res) {
         },
         decrentalcost: precio,
         vchpropertyrules: reglas,
-        decpropertyrating: 0,
+        decpropertyrating: 1,
         vchbuildingsecurity: '',
         vchtransportationaccess: '',
         intmincontractduration: 1,
@@ -135,7 +135,6 @@ export async function POST(req, res) {
         bnStudyZone: false,
         dtavailabilitydate: new Date().toISOString(),
     };
-    console.log('que sucede')
     // Realizar la solicitud POST para guardar la información
     try {
         const response = await axios.post(`${process.env.REST_URL}/properties/`,
@@ -160,8 +159,6 @@ export async function POST(req, res) {
         );
 
     } catch (error) {
-        //console.error(error);
-        console.log(error.response.data.error);
         // Limpiar las imágenes subidas si es necesario
         const publicIds = imageUrls.map(imageUrl => imageUrl.public_id);
         publicIds.forEach(async publicId => {

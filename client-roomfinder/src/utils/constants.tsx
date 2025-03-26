@@ -356,7 +356,7 @@ export const universities: UniversityData[] = [
         popUp: "Centro Universitario de Ciencias Sociales y Humanidades (CUCSH)",
         description: "El CUCSH se especializa en las ciencias sociales y humanidades, ofreciendo programas en áreas como derecho, sociología, historia y más.",
         imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1717299889/resources/cn2o7cfvlbv5mkzriznu.jpg",
-        website: "https://www.cucsh.udg.mx/"
+        website: "http://www.cucsh.udg.mx/"
     },
     {
         name: "Centro Universitario de la Ciénega (CUCIÉNEGA)",
@@ -364,7 +364,7 @@ export const universities: UniversityData[] = [
         popUp: "Centro Universitario de la Ciénega (CUCIÉNEGA)",
         description: "El CUCIÉNEGA ofrece programas educativos enfocados en el desarrollo regional, ciencias naturales y humanidades.",
         imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1717300203/resources/ipozv6we3jsdk2ibnuny.jpg",
-        website: "https://www.cucienega.udg.mx/"
+        website: "https://cuci.udg.mx/"
     },
     {
         name: "Centro Universitario de la Costa (CUCOSTA)",
@@ -372,7 +372,7 @@ export const universities: UniversityData[] = [
         popUp: "Centro Universitario de la Costa (CUCOSTA)",
         description: "El CUCOSTA es un centro educativo ubicado en la costa del Pacífico, con programas en turismo, biología marina, y desarrollo sustentable.",
         imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1717300356/resources/n9wubz2sfkdndnt26t95.jpg",
-        website: "https://www.cucosta.udg.mx/"
+        website: "http://www.cuc.udg.mx/"
     },
     {
         name: "Centro Universitario de la Costa Sur (CUCSUR)",
@@ -380,7 +380,7 @@ export const universities: UniversityData[] = [
         popUp: "Centro Universitario de la Costa Sur (CUCSUR)",
         description: "El CUCSUR se enfoca en la investigación y formación en áreas como la agroecología, gestión ambiental y desarrollo rural.",
         imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1717300468/resources/mltjqiw8o81ir40osdd5.jpg",
-        website: "https://www.cucsur.udg.mx/"
+        website: "http://www.cucsur.udg.mx/"
     },
     {
         name: "Centro Universitario de los Lagos (CULAGOS)",
@@ -404,7 +404,7 @@ export const universities: UniversityData[] = [
         popUp: "Centro Universitario del Sur (CUSUR)",
         description: "El CUSUR ofrece programas académicos en áreas como la salud, ciencias sociales y económicas, con un fuerte compromiso con la investigación.",
         imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1717300822/resources/y8lwjucfjhki0zepgcnv.jpg",
-        website: "https://www.cusur.udg.mx/"
+        website: "http://www.cusur.udg.mx/"
     },
     {
         name: "Centro Universitario de Tonalá (CUTONALÁ)",
@@ -412,7 +412,7 @@ export const universities: UniversityData[] = [
         popUp: "Centro Universitario de Tonalá (CUTONALÁ)",
         description: "El CUTONALÁ se enfoca en la formación profesional en áreas como la ingeniería, ciencias sociales y humanidades, con una visión integral del desarrollo.",
         imageUrl: "https://res.cloudinary.com/dal8aivch/image/upload/v1717300953/resources/dihvulkmx5uvxfdngwyv.jpg",
-        website: "https://www.cutonalá.udg.mx/"
+        website: "http://www.cutonala.udg.mx/"
     },
     {
         name: "Centro Universitario de los Valles (CUVALLES)",
@@ -608,268 +608,6 @@ export const itemDataImage = [
         img: 'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=500',
         title: 'Coffee table',
     },
-];
-
-export const users = [
-    {
-        id: 1,
-        name: "Tony Reichert",
-        role: "CEO",
-        team: "Management",
-        status: "active",
-        age: "29",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-        email: "tony.reichert@example.com",
-    },
-    {
-        id: 2,
-        name: "Zoey Lang",
-        role: "Tech Lead",
-        team: "Development",
-        status: "paused",
-        age: "25",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-        email: "zoey.lang@example.com",
-    },
-    {
-        id: 3,
-        name: "Jane Fisher",
-        role: "Sr. Dev",
-        team: "Development",
-        status: "active",
-        age: "22",
-        avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-        email: "jane.fisher@example.com",
-    },
-    {
-        id: 4,
-        name: "William Howard",
-        role: "C.M.",
-        team: "Marketing",
-        status: "vacation",
-        age: "28",
-        avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
-        email: "william.howard@example.com",
-    },
-    {
-        id: 5,
-        name: "Kristen Copper",
-        role: "S. Manager",
-        team: "Sales",
-        status: "active",
-        age: "24",
-        avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-        email: "kristen.cooper@example.com",
-    },
-    {
-        id: 6,
-        name: "Brian Kim",
-        role: "P. Manager",
-        team: "Management",
-        age: "29",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-        email: "brian.kim@example.com",
-        status: "Active",
-    },
-    {
-        id: 7,
-        name: "Michael Hunt",
-        role: "Designer",
-        team: "Design",
-        status: "paused",
-        age: "27",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29027007d",
-        email: "michael.hunt@example.com",
-    },
-    {
-        id: 8,
-        name: "Samantha Brooks",
-        role: "HR Manager",
-        team: "HR",
-        status: "active",
-        age: "31",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e27027008d",
-        email: "samantha.brooks@example.com",
-    },
-    {
-        id: 9,
-        name: "Frank Harrison",
-        role: "F. Manager",
-        team: "Finance",
-        status: "vacation",
-        age: "33",
-        avatar: "https://i.pravatar.cc/150?img=4",
-        email: "frank.harrison@example.com",
-    },
-    {
-        id: 10,
-        name: "Emma Adams",
-        role: "Ops Manager",
-        team: "Operations",
-        status: "active",
-        age: "35",
-        avatar: "https://i.pravatar.cc/150?img=5",
-        email: "emma.adams@example.com",
-    },
-    {
-        id: 11,
-        name: "Brandon Stevens",
-        role: "Jr. Dev",
-        team: "Development",
-        status: "active",
-        age: "22",
-        avatar: "https://i.pravatar.cc/150?img=8",
-        email: "brandon.stevens@example.com",
-    },
-    {
-        id: 12,
-        name: "Megan Richards",
-        role: "P. Manager",
-        team: "Product",
-        status: "paused",
-        age: "28",
-        avatar: "https://i.pravatar.cc/150?img=10",
-        email: "megan.richards@example.com",
-    },
-    {
-        id: 13,
-        name: "Oliver Scott",
-        role: "S. Manager",
-        team: "Security",
-        status: "active",
-        age: "37",
-        avatar: "https://i.pravatar.cc/150?img=12",
-        email: "oliver.scott@example.com",
-    },
-    {
-        id: 14,
-        name: "Grace Allen",
-        role: "M. Specialist",
-        team: "Marketing",
-        status: "active",
-        age: "30",
-        avatar: "https://i.pravatar.cc/150?img=16",
-        email: "grace.allen@example.com",
-    },
-    {
-        id: 15,
-        name: "Noah Carter",
-        role: "IT Specialist",
-        team: "I. Technology",
-        status: "paused",
-        age: "31",
-        avatar: "https://i.pravatar.cc/150?img=15",
-        email: "noah.carter@example.com",
-    },
-    {
-        id: 16,
-        name: "Ava Perez",
-        role: "Manager",
-        team: "Sales",
-        status: "active",
-        age: "29",
-        avatar: "https://i.pravatar.cc/150?img=20",
-        email: "ava.perez@example.com",
-    },
-    {
-        id: 17,
-        name: "Liam Johnson",
-        role: "Data Analyst",
-        team: "Analysis",
-        status: "active",
-        age: "28",
-        avatar: "https://i.pravatar.cc/150?img=33",
-        email: "liam.johnson@example.com",
-    },
-    {
-        id: 18,
-        name: "Sophia Taylor",
-        role: "QA Analyst",
-        team: "Testing",
-        status: "active",
-        age: "27",
-        avatar: "https://i.pravatar.cc/150?img=29",
-        email: "sophia.taylor@example.com",
-    },
-    {
-        id: 19,
-        name: "Lucas Harris",
-        role: "Administrator",
-        team: "Information Technology",
-        status: "paused",
-        age: "32",
-        avatar: "https://i.pravatar.cc/150?img=50",
-        email: "lucas.harris@example.com",
-    },
-    {
-        id: 20,
-        name: "Mia Robinson",
-        role: "Coordinator",
-        team: "Operations",
-        status: "active",
-        age: "26",
-        avatar: "https://i.pravatar.cc/150?img=45",
-        email: "mia.robinson@example.com",
-    },
-];
-
-export const comments = [
-    {
-        objuser: {
-            vchname: "Juan Pérez",
-            vchphoto: "https://randomuser.me/api/portraits/men/1.jpg",
-        },
-        vchcomment: "Esta propiedad es increíble, definitivamente la recomendaría a mis amigos. El lugar tiene una vista espectacular y la atención fue excelente.",
-    },
-    {
-        objuser: {
-            vchname: "María González",
-            vchphoto: "https://randomuser.me/api/portraits/women/2.jpg",
-        },
-        vchcomment: "Un lugar muy acogedor. Me encantó todo, desde la decoración hasta la tranquilidad del entorno. ¡Volveré pronto!",
-    },
-    {
-        objuser: {
-            vchname: "Carlos Martínez",
-            vchphoto: "https://randomuser.me/api/portraits/men/3.jpg",
-        },
-        vchcomment: "Excelente ubicación, cerca de todo. Las instalaciones son de primera calidad y todo estaba muy limpio. Muy recomendable.",
-    },
-    {
-        objuser: {
-            vchname: "Laura Fernández",
-            vchphoto: "https://randomuser.me/api/portraits/women/4.jpg",
-        },
-        vchcomment: "El servicio fue increíble y las vistas desde la propiedad son impresionantes. Definitivamente una experiencia de 5 estrellas.",
-    },
-];
-
-export const reviews = [
-    {
-        id: 1,
-        author: "María García",
-        avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-        date: "15 de mayo, 2023",
-        rating: 5,
-        comment: "¡Excelente propiedad! La ubicación es perfecta y las instalaciones son de primera clase. Definitivamente volveré."
-    },
-    {
-        id: 2,
-        author: "Juan Pérez",
-        avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-        date: "3 de abril, 2023",
-        rating: 4,
-        comment: "Muy buena experiencia en general. La propiedad estaba limpia y bien mantenida. Solo un pequeño problema con el aire acondicionado, pero se solucionó rápidamente."
-    },
-    {
-        id: 3,
-        author: "Ana Martínez",
-        // avatar: "/placeholder.svg?text=AM",
-        avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-        date: "20 de marzo, 2023",
-        rating: 5,
-        comment: "¡Increíble! La vista desde el balcón es espectacular y la atención del anfitrión fue excelente. Altamente recomendado."
-    }
 ];
 
 export const ARRENDADOR = 2;

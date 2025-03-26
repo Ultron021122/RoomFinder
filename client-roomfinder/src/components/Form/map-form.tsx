@@ -12,7 +12,7 @@ import { MapPin } from 'lucide-react';
 
 //Corrige el problema de los iconos de Leaflet en Next.js
 const icon = new Icon({
-  iconUrl: '/images/property.png',
+  iconUrl: '/images/property1.png',
   // iconRetinaUrl: '/marker-icon-2x.png',
   // shadowUrl: '/marker-shadow.png',
   iconSize: [52, 52],
