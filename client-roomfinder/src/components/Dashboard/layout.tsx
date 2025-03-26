@@ -25,7 +25,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const dropdownItems = [
         { text: 'Perfil', onClick: () => router.push('/dashboard/profile'), color: 'primary' },
         { text: 'Configuraciones', onClick: () => router.push('/dashboard/settings'), color: 'primary' },
-        { text: 'Cerrar sesión ', onClick: () => signOut(), color: 'error' },
+        { text: 'Cerrar sesión ', onClick: async () => { await signOut({
+            redirect: true,
+            callbackUrl: '/users/login'
+        }) }, color: 'error' },
     ];
 
     useEffect(() => {

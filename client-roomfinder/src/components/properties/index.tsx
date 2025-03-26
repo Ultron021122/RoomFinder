@@ -105,19 +105,20 @@ export const SectionProperty = () => {
         <div className="max-w-6xl mx-auto min-h-screen p-2 sm:p-0">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-5">
                 <Input
-                    placeholder="Buscar propiedades..."
+                    type="text"
+                    placeholder="Busca propiedad por título. Ej. Casa atlas"
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    className="mb-4 sm:mb-0 border-gray-700 sm:mr-2"
+                    className="mb-4 sm:mb-0 sm:mr-2 border-gray-300 shadow focus-visible:ring-0 focus:border-blue-400"
                 />
                 <Select
                     value={filterType}
                     onValueChange={(value) => setFilterType(value)}
                 >
-                    <SelectTrigger className="border-gray-700">
+                    <SelectTrigger className="border-gray-300 shadow focus:ring-0 focus:border-blue-400">
                         <SelectValue placeholder="Filtrar por tipo" />
                     </SelectTrigger>
-                    <SelectContent className="dark:bg-gray-950">
+                    <SelectContent className="dark:bg-gray-900">
                         <SelectItem value="0">Todos</SelectItem>
                         <SelectItem value="3">Apartamento</SelectItem>
                         <SelectItem value="1">Casa</SelectItem>

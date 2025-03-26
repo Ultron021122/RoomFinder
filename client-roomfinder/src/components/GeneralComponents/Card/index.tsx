@@ -1,85 +1,67 @@
 import Image from 'next/image'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Bed, Bath, MapPin, Maximize } from 'lucide-react'
+import { Bed, Bath, MapPin, DoorOpen } from 'lucide-react'
+import { Properties } from '@/utils/interfaces'
+import { Galeria } from '../Galeria'
+import Link from 'next/link'
 
-interface PropiedadProps {
-    id: string
-    titulo: string
-    descripcion: string
-    precio: number | null
-    imagen: string
-    ubicacion: string
-    habitaciones: number
-    banos: number
-    superficie: number
-    tipo: 'Apartamento' | 'Casa' | 'Estudio'
+interface TarjetaPropiedadProps {
+    data: Properties
 }
 
-export default function TarjetaPropiedad({
-    id,
-    titulo,
-    descripcion,
-    precio,
-    imagen,
-    ubicacion,
-    habitaciones,
-    banos,
-    superficie,
-    tipo
-}: PropiedadProps) {
+export default function TarjetaPropiedad({data}: TarjetaPropiedadProps) {
     const formatPrecio = (precio: number | null) => {
         if (precio === null || precio === undefined) {
             return 'Precio no disponible'
         }
-        return precio.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
+        return precio.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
     }
+
+    const imagenes = data.objphotos.map(photo => <div key={photo.photoid} className='relative min-w-full h-full'>
+            <Image
+                width={800}
+                height={600}
+                src={photo.url}
+                className='absolute inset-0 object-cover w-full h-full'
+                alt={`imagen de propiedad ${photo.photoid}`}
+            />
+        </div>
+    )
 
     return (
         <Card className="w-full mx-auto max-w-sm overflow-hidden bg-gray-950">
-            <CardHeader className="p-0">
-                <div className="relative h-48 w-full">
-                    <Image
-                        src="/background/interior1.jpg"
-                        alt={titulo}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className='absolute inset-0 object-cover w-full h-full'
-                    />
-                    <Badge className="absolute top-2 right-2 bg-primary text-primary-foreground">
-                        {tipo}
-                    </Badge>
-                </div>
+            <CardHeader className="p-0 h-56 w-full">
+            <Galeria imagenes={imagenes}/>
             </CardHeader>
             <CardContent className="p-4">
-                <CardTitle className="text-xl font-bold mb-2">{titulo}</CardTitle>
+                <CardTitle className="text-xl font-bold mb-2">{data.vchtitle}</CardTitle>
                 <div className="flex items-center text-muted-foreground mb-2">
                     <MapPin className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{ubicacion}</span>
+                    <span className="text-sm">{`${data.vchstreet}, ${data.vchmunicipality}`}</span>
                 </div>
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{descripcion}</p>
+                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{data.vchdescription}</p>
                 <div className="flex justify-between items-center text-sm text-muted-foreground mb-4">
                     <div className="flex items-center">
-                        <Bed className="h-4 w-4 mr-1" />
-                        <span>{habitaciones} hab.</span>
+                        <DoorOpen className="h-4 w-4 mr-1" />
+                        <span>{data.intnumberrooms} hab.</span>
                     </div>
                     <div className="flex items-center">
                         <Bath className="h-4 w-4 mr-1" />
-                        <span>{banos} baños</span>
+                        <span>{data.intnumberbathrooms} baños</span>
                     </div>
                     <div className="flex items-center">
-                        <Maximize className="h-4 w-4 mr-1" />
-                        <span>{superficie} m²</span>
+                        <Bed className="h-4 w-4 mr-1" />
+                        <span>{data.intnumberbeds} camas</span>
                     </div>
                 </div>
             </CardContent>
             <CardFooter className="flex justify-between items-center p-4 bg-muted bg-gray-800">
                 <div className="text-2xl font-bold">
-                    {formatPrecio(precio)}
-                    {precio !== null && precio !== undefined && <span className="text-sm font-normal">/mes</span>}
+                    {formatPrecio(parseFloat(data.decrentalcost))}
+                    {data.decrentalcost !== null && data.decrentalcost !== undefined && <span className="text-sm font-normal">/mes</span>}
                 </div>
-                <Button variant="default">Ver detalles</Button>
+                <Link href={`/dashboard/propertyDetails/${data.propertyid}`}>Ver propiedad</Link>
             </CardFooter>
         </Card>
     )
