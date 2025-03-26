@@ -8,7 +8,7 @@ import "leaflet-defaulticon-compatibility";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 const customIcon = new Icon({
-    iconUrl: "/images/property.png",
+    iconUrl: "/images/property1.png",
     iconSize: [52, 52]
 });
 

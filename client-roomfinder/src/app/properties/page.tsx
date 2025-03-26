@@ -16,7 +16,7 @@ const Banner = () => {
     const backgroundImage = `url('/images/city.jpg')`;
 
     return (
-        <section className="relative">
+        <section className="relative mb-20">
             <div className="bg-no-repeat bg-cover bg-center bg-blend-multiply bg-gray-500 p-4 h-[550px] pt-10"
                 style={{ backgroundImage }}
             >

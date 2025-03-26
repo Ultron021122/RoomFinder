@@ -36,14 +36,12 @@ const validacionNumero = (campo: any, mensaje: string): boolean | string => {
     return esNumero(campo) ? true : mensaje;
 };
 
-
 export const NUM_MIN_RESTRICCIONES = 4;
 
 type FuncionValidacion = (inmueble: Inmueble) => boolean | string;
 
 const validaciones: Record<number, FuncionValidacion> = {
     1: ({ tipoInmueble }) => validacionGeneral(tipoInmueble, 'Selecciona una opción para continuar'),
-    // 2: ({ servicios }) => (servicios) ? true : 'Selecciona al menos un servicio',
     2: ({ fotos }) => (fotos.length >= 5 && fotos.length <= 8) ? true : 'Sube entre 5 y 8 fotos',
     3: ({ titulo, descripcion, precio }) => {
         if (titulo.length <= 10) return 'El título es muy corto';
@@ -74,7 +72,6 @@ const validaciones: Record<number, FuncionValidacion> = {
             ? true
             : 'Ingresa la dirección de tu inmueble';
     },
-
     7: ({ ubicacion: { numExt, numInt } }) => {
         const validNumExt = validacionGeneral(numExt, 'El número exterior es obligatorio');
         if (validNumExt !== true) return validNumExt;
@@ -91,10 +88,22 @@ const validaciones: Record<number, FuncionValidacion> = {
         }
         return reglas.every(regla => regla.length >= 8) ? true : 'Las reglas deben ser más detalladas';
     },
-
     9: () => true, // Confirmación final
 };
 
+const handleToastError = (message: string) => {
+    toast.error(message, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+    });
+};
 
 export default function Wizar() {
     const [actual, setActual] = useState<number>(1);
@@ -111,42 +120,19 @@ export default function Wizar() {
         if (salida === true) {
             setActual(prev => prev + 1);
         } else {
-            toast.error(salida, {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                style: { fontSize: '0.9rem' },
-                transition: Bounce,
-            });
+            handleToastError(salida as string);
         }
     };
 
-    // Errores
     useEffect(() => {
         if (errorSystem) {
-            toast.error(errorSystem, {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            });
+            handleToastError(errorSystem);
         }
     }, [errorSystem]);
 
     const handleClick = async () => {
         setInmueble({ lessorId: user.usuarioid, ...inmueble });
         if (actual < 9) return siguiente();
-        console.log('Inmueble a enviar:', inmueble);
         // Enviar formulario
         const submit = async () => {
             setIsLoading(true);
@@ -197,57 +183,56 @@ export default function Wizar() {
                             <CardTitle className="text-2xl font-bold">Publicar propiedad</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            {
-                                isLoading ? (
-                                    <div className="flex items-center justify-center h-96">
-                                        <Spinner color="primary" />
+                            {isLoading ? (
+                                <div className="flex items-center justify-center h-96">
+                                    <Spinner color="primary" />
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="w-full md:w-3/4 px-3 md:px-0 mt-8 mx-auto h-auto overflow-hidden overflow-y-auto">
+                                        {actual === 1 && <TipoInmueble />}
+                                        {actual === 2 && <Fotos />}
+                                        {actual === 3 && <AddProperty />}
+                                        {actual === 4 && <ServiciosAmenidades />}
+                                        {actual === 5 && <InformacionGeneral />}
+                                        {actual === 6 && <Ubicacion />}
+                                        {actual === 7 && <ConfirmarUbicacion />}
+                                        {actual === 8 && <Restricciones />}
+                                        {actual === 9 && <Confirmar />}
                                     </div>
-                                ) : (
-                                    <>
-                                        <div className="w-full md:w-3/4 px-3 md:px-0 mt-8 mx-auto h-auto overflow-hidden overflow-y-auto">
-                                            {actual === 1 && <TipoInmueble />}
-                                            {actual === 2 && <Fotos />}
-                                            {actual === 3 && <AddProperty />}
-                                            {actual === 4 && <ServiciosAmenidades />}
-                                            {actual === 5 && <InformacionGeneral />}
-                                            {actual === 6 && <Ubicacion />}
-                                            {actual === 7 && <ConfirmarUbicacion />}
-                                            {actual === 8 && <Restricciones />}
-                                            {actual === 9 && <Confirmar />}
-                                        </div>
-                                        <div className="w-full md:w-3/4 px-3 md:px-0 mx-auto pt-5 pb-10">
-                                            <Progress
-                                                size="sm"
-                                                aria-label="Loading..."
-                                                classNames={{
-                                                    label: "font-medium text-default-700 dark:text-gray-200",
-                                                    value: "text-gray-700 dark:text-gray-200",
+                                    <div className="w-full md:w-3/4 px-3 md:px-0 mx-auto pt-5 pb-10">
+                                        <Progress
+                                            size="sm"
+                                            aria-label="Loading..."
+                                            classNames={{
+                                                label: "font-medium text-default-700 dark:text-gray-200",
+                                                value: "text-gray-700 dark:text-gray-200",
+                                            }}
+                                            value={(actual / 9) * 100}
+                                            label={`Paso ${actual} de 9`}
+                                            showValueLabel={true}
+                                        />
+                                        <div className="flex justify-between mt-5 mb-10">
+                                            <Button
+                                                onClick={anterior}
+                                                style={{
+                                                    backgroundColor: actual === 1 ? '#64748b' : '#1e293b',
+                                                    color: actual === 1 ? '#fff' : '#fff',
                                                 }}
-                                                value={(actual / 9) * 100}
-                                                label={`Paso ${actual} de 9`}
-                                                showValueLabel={true}
-                                            />
-                                            <div className="flex justify-between mt-5 mb-10">
-                                                <Button
-                                                    onClick={anterior}
-                                                    style={{
-                                                        backgroundColor: actual === 1 ? '#64748b' : '#1e293b',
-                                                        color: actual === 1 ? '#fff' : '#fff',
-                                                    }}
-                                                    disabled={actual === 1}
-                                                >
-                                                    Anterior
-                                                </Button>
-                                                <Button
-                                                    color={actual < 9 ? 'primary' : 'success'}
-                                                    onClick={handleClick}
-                                                >
-                                                    {actual < 9 ? "Siguiente" : "Enviar"}
-                                                </Button>
-                                            </div>
+                                                disabled={actual === 1}
+                                            >
+                                                Anterior
+                                            </Button>
+                                            <Button
+                                                color={actual < 9 ? 'primary' : 'success'}
+                                                onClick={handleClick}
+                                            >
+                                                {actual < 9 ? "Siguiente" : "Enviar"}
+                                            </Button>
                                         </div>
-                                    </>
-                                )}
+                                    </div>
+                                </>
+                            )}
                         </CardContent>
                     </Card>
                 </div>

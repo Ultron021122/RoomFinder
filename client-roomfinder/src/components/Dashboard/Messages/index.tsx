@@ -64,12 +64,13 @@ export default function MessageMainComponent() {
 
   const filteredUsers = users ? users.data.filter(user =>
     user.vchname2?.toLowerCase().includes(name.toLowerCase()) ||
-    (user.vchpaternalsurname2 + ' ' + user.vchmaternalsurname2).toLowerCase().includes(name.toLowerCase())
+    (user.vchpaternalsurname2 + ' ' + user.vchmaternalsurname2).toLowerCase().includes(name.toLowerCase()) ||
+    (user.vchname2 + ' ' + user.vchpaternalsurname2 + ' ' + user.vchmaternalsurname2).toLowerCase().includes(name.toLowerCase())
   ) : [];
 
   return (
     <div>
-      <section className="h-[calc(100vh-200px)] flex flex-col mr-1">
+      <section className="h-[calc(100vh-150px)] flex flex-col mr-1">
         <div className="flex flex-col md:flex-row h-full max-w-8xl border rounded-lg overflow-hidden border-stroke bg-white shadow-md dark:bg-gray-950">
           <div className="w-full md:w-1/3 border-r overflow-y-auto custom-scrollbar">
             <div className="p-4 flex items-center justify-between border-b">

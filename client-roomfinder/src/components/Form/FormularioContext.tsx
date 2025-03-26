@@ -52,6 +52,13 @@ export interface Inmueble {
     descripcion: string;//
     reglas: string[];//
     precio: number;
+    vchbuildingsecurity: string;
+    vchtransportationaccess: string,
+    bnfurnished: boolean;
+    vchfurnituretype: string;
+    bnStudyZone: boolean;
+    intmincontractduration: number;
+    intmaxcontractduration: number;
     [key: string]: any
 }
 
@@ -103,6 +110,13 @@ const valoresDefectoInmueble: Inmueble = {
     descripcion: '',
     reglas: [],
     precio: 0,
+    vchbuildingsecurity: '',
+    vchtransportationaccess: '',
+    bnfurnished: false,
+    vchfurnituretype: '',
+    bnStudyZone: false,
+    intmincontractduration: 1,
+    intmaxcontractduration: 2
 }
 
 // Interfaz para el contexto

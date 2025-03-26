@@ -1,15 +1,18 @@
-import History from "@/components/Dashboard/history";
+import HistorialProperties from "@/components/Dashboard/historial";
 import { BreadcrumbWithCustomSeparator } from "@/components/GeneralComponents/Breadcrumbs";
+import { Metadata } from "next";
 
-const HistoryPage = () => {
-    return(
-    <div className="h-full max-w-screen-2xl mx-auto">
-        <BreadcrumbWithCustomSeparator pageName="Historial"/>
-        <div className="mx-auto">
-            <History />
+export const metadata: Metadata = {
+    title: 'Historial',
+};
+
+export default function History() {
+    return (
+        <div className="h-full max-w-screen-2xl mx-auto">
+            <BreadcrumbWithCustomSeparator pageName="Historial" />
+            <div className="mx-auto">
+                <HistorialProperties />
+            </div>
         </div>
-    </div>
-    )
+    );
 }
-
-export default HistoryPage;

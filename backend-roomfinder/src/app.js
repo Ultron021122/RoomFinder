@@ -20,6 +20,8 @@ import { createUtilsRouter } from './routes/utils.js'
 import { createLeasesRouter } from './routes/leases.js'
 import { createReviewsRouter } from './routes/reviews.js'
 import { createRequestsRouter } from './routes/request.js'
+import { createStatusRouter } from './routes/request-status.js'
+import { createRentalHistoryRouter } from './routes/rental-history.js'
 // Importar el modelo de la base de datos
 // PostgreSQL
 import { UsersModel } from './model/postgresql/user.js'
@@ -33,6 +35,8 @@ import { PropertyTypeModel } from './model/postgresql/typeproperty.js'
 import { LeasesModel } from './model/postgresql/leases.js'
 import { ReviewsModel } from './model/postgresql/reviews.js'
 import { RequestModel } from './model/postgresql/request.js'
+import { StatusModel } from './model/postgresql/request-status.js'
+import { RentalHistoryModel } from './model/postgresql/rental-history.js'
 //MySQL 
 // import { UsersModel } from './model/mysql/user.js'
 // import { PropertiesModel } from './model/mysql/propertie.js'
@@ -69,12 +73,14 @@ app.use('/api/recovery', verificarJWT, createRecoveryPassRouter({ recoveryPassMo
 app.use('/api/leases', verificarJWT, createLeasesRouter({ leasesModel: LeasesModel }))
 app.use('/api/reviews', verificarJWT, createReviewsRouter({reviewModel: ReviewsModel}))
 app.use('/api/request', verificarJWT, createRequestsRouter({requestModel: RequestModel}))
+app.use('/api/request-status', verificarJWT, createStatusRouter({statusModel: StatusModel}))
+app.use('/api/rental-history', verificarJWT, createRentalHistoryRouter({ rentalHistoryModel: RentalHistoryModel}))
 app.use('/api/utils', verificarJWT, createUtilsRouter())
 
 app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swagger)) // Documentation of the API
 app.use(errorHandler) // Middleware for error handling
 app.use((req, res) => {
-    res.status(404).json({ message: 'Not found' });
+    res.status(404).json({ message: 'Not found API' });
 });
 
 export default app

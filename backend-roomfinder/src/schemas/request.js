@@ -10,7 +10,7 @@ const requestSchema = z.object({
     statusid: z.number({
         required_error: 'Status ID is required.'
     }), 
-    dtrequest: z.string(), 
+    dtrequest: z.string().optional(), 
     vchmessage: z.string().min(25), 
     intnumguests: z.number().min(1), 
     bnhaspets: z.boolean(), 

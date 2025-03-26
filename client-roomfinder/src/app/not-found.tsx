@@ -36,7 +36,7 @@ const NotFound = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" className="flex items-center justify-center dark:bg-gray-950">
-                <Link href="/buscar">
+                <Link href="/properties">
                   <Search className="mr-2 h-4 w-4" />
                   Buscar propiedades
                 </Link>

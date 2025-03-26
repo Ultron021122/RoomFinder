@@ -77,17 +77,28 @@ export class RequestModel {
     }
 
     static async create({ input }) {
-        const { propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate } = input
+        const { propertyid, studentid, statusid, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate } = input
 
         const db = new Database();
         const client = await db.pool.connect();
         try {
-            const result = await client.query(
-                `INSERT INTO "Usuario"."LeaseRequests" (propertyid, studentid, decrating, vchcomment) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`,
-                [propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate]
+            await client.query(
+                `INSERT INTO "Usuario"."LeaseRequests" (propertyid, studentid, statusid, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;`,
+                [propertyid, studentid, statusid, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate]
             );
 
-            return new RequestModel(result.rows[0]);
+            const infoemail = await client.query(
+                `
+                SELECT l.*,
+                    p.*
+                FROM "Usuario"."vwLessorGET" l
+                INNER JOIN "Usuario"."Propiedades" p
+                    on p.lessorid = l.usuarioid
+                WHERE P.propertyid = $1;
+                `, [propertyid]
+            );
+
+            return infoemail.rows[0];
         } finally {
             client.release();
         }
@@ -121,14 +132,14 @@ export class RequestModel {
             if (!review) return null;
 
             const requestFields = [
-                'propertyid', 
-                'studentid', 
-                'statusid', 
-                'dtrequest', 
-                'vchmessage', 
-                'intnumguests', 
-                'bnhaspets', 
-                'dtstartdate', 
+                'propertyid',
+                'studentid',
+                'statusid',
+                'dtrequest',
+                'vchmessage',
+                'intnumguests',
+                'bnhaspets',
+                'dtstartdate',
                 'dtenddate'
             ];
 
@@ -160,7 +171,9 @@ export class RequestModel {
                     client.release();
                 }
             }
-        } catch(error) {
+
+            return await this.getById({ id });
+        } catch (error) {
             throw new Error(`Error updating request: ${error.message}`);
         }
     }

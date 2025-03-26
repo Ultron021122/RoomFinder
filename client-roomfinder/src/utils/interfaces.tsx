@@ -1892,3 +1892,197 @@ export interface LessorEdit extends UserEdit {
      */
     vchstate: string;
 }
+
+/**
+ * Interface to manage the request from the user
+ * @interface
+ */
+export interface LeaseRequest {
+    /**
+     * Request id
+     * @example
+     * requestid: 1
+     */
+    requestid: number;
+    /**
+     * Property id
+     * @example
+     * propertyid: 1
+     */
+    propertyid: number;
+    /**
+     * Student id
+     * @example
+     * studentid: 1
+     */
+    studentid: number;
+    /**
+     * Status id
+     * @example
+     * statusid: 2
+     */
+    statusid: number;
+    /**
+     * Request date
+     * @example
+     * dtrequest: '2025-01-01'
+     */
+    dtrequest: string;
+    /**
+     * Message content
+     * @example
+     * vchmessage: 'Solicitud'
+     */
+    vchmessage: string;
+    /**
+     * Number guests
+     * @example
+     * intnumguests: 2
+     */
+    intnumguests: number;
+    /**
+     * Has pets
+     * @example
+     * bnhaspets: true
+     */
+    bnhaspets: boolean;
+    /**
+     * Start date
+     * @example
+     * dtstartdate: '2025-01-01'
+     */
+    dtstartdate: string;
+    /**
+     * End date
+     * @example
+     * dtenddate: '2025-01-01'
+     */
+    dtenddate: string;
+    /**
+     * Created at
+     * @example
+     * created_at: '2025-01-01'
+     */
+    created_at: string;
+    /**
+     * Updated at
+     * @example
+     * updated_at: '2025-01-01'
+     */
+    updated_at: string;
+}
+
+/**
+ * Interface representing property type details.
+ */
+export interface RequestStatus {
+    /**
+     * Status id
+     * @example
+     * statusid: 1
+     */
+    statusid: number;
+    /**
+     * Status name
+     * @example
+     * vchstatusid: 'Aceptado'
+     */
+    vchstatusname: string;
+    /**
+     * Active
+     * @example
+     * bnactive: true
+     */
+    bnactive: boolean;
+    /**
+     * Created date
+     * @example
+     * created_at: '1990-01-01'
+     */
+    created_at: string;
+    /**
+     * Updated date
+     * @example
+     * update_at: '1990-01-01'
+     */
+    update_at: string;
+}
+
+/**
+ * Interface representing property opinions
+ */
+export interface PropertyOpinions {
+    /**
+     * Review ID
+     * @example
+     * reviewid: 1
+     */
+    reviewid: number | null;
+    /**
+     * Property ID
+     * @example
+     * propertyid: 1
+     */
+    propertyid: number;
+    /**
+     * Student id
+     * @example
+     * studentid: 1
+     */
+    studentid: number;
+    /**
+     * Rating
+     * @example
+     * decrating: 1.1
+     */
+    decrating: number;
+    /**
+     * Comment
+     * @example
+     * vchcomment: 'Comentario'
+     */
+    vchcomment: string;
+    /**
+     * Created
+     * @example
+     * created_at = '2025-01-01'
+     */
+    created_at: string;
+    /**
+     * Updated
+     * @example
+     * updated_at = '2025-01-01'
+     */
+    updated_at: string;
+    /**
+     * Name
+     * @example
+     * vchname: 'Name'
+     */
+    vchname: string; 
+    /**
+     * Paternal surname
+     * @example
+     * vchpaternalsurname: 'Paternalsurname'
+     */
+    vchpaternalsurname: string;
+    /**
+     * Maternal surname
+     * @example
+     * vchmaternalsurname: 'Maternal surname';
+     */
+    vchmaternalsurname: string;
+    /**
+     * Image
+     * @example
+     * vchimage: 'http://url.com'
+     */
+    vchimage: string;
+    /**
+     * Role ID
+     * @example
+     * roleid: 1;
+     */
+    roleid: number;
+
+}

@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Header() {
     return (
-        <div className="relative isolate overflow-hidden bg-white dark:bg-gray-900 px-6 pb-5 pt-8 sm:pt-10 lg:overflow-visible lg:px-0">
+        <div className="relative isolate overflow-hidden bg-white dark:bg-gray-900 px-6 pt-8 sm:pt-10 lg:overflow-visible lg:px-0">
             <div className="absolute inset-0 -z-10 overflow-hidden">
                 <svg
                     aria-hidden="true"
@@ -55,8 +55,8 @@ export default function Header() {
                         alt="Imagen de propiedad"
                         width={768}
                         height={432}
-                        src="https://res.cloudinary.com/dal8aivch/image/upload/v1726123951/resources/zwkpszsuzphalw4ge38l.jpg"
-                        className="w-[28rem] max-w-none rounded-xl bg-gray-900 shadow-xl ring-1 ring-gray-400/10 sm:w-[44rem]"
+                        src="/images/search.svg"
+                        className="w-[28rem] max-w-none rounded-xl sm:w-[40rem]"
                         priority
                     />
                 </div>

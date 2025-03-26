@@ -93,7 +93,14 @@ export default function AdminProperties() {
     const handleGuardarCambios = async () => {
         if (propertyEdit) {
             try {
-                const response = await axios.patch(`/api/properties/${propertyEdit.propertyid}`, propertyEdit);
+                const response = await axios.patch(`/api/properties/${propertyEdit.propertyid}`, 
+                    propertyEdit,
+                    {
+                        headers: {
+                            'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                        }
+                    }
+                );
                 refetchProperties();
                 setDialogoAbierto(false);
                 toast.success(response.data.message.message, {
@@ -127,7 +134,11 @@ export default function AdminProperties() {
     const handleEliminarPropietario = async (id: number) => {
         setIsLoading(true);
         try {
-            const response = await axios.delete(`/api/properties/${id}`);
+            const response = await axios.delete(`/api/properties/${id}`, {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            });
             refetchProperties();
             if (response.status === 200) {
                 toast.success(response.data.message.message, {
@@ -305,6 +316,7 @@ export default function AdminProperties() {
                 </CardContent>
             </Card>
 
+            {/* Editar propiedad */}
             <Dialog
                 open={dialogoAbierto}
                 onOpenChange={setDialogoAbierto}
@@ -404,7 +416,8 @@ export default function AdminProperties() {
                     </ScrollArea>
                 </DialogContent>
             </Dialog>
-
+            
+            {/* Crear propiedad */}
             <Dialog
                 open={createProperty}
                 onOpenChange={setCreateProperty}

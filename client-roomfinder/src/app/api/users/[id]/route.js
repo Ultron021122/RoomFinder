@@ -66,3 +66,65 @@ export async function DELETE(request, { params }) {
         );
     }
 }
+
+export async function PATCH(request, { params }) {
+    const id = params.id;
+    const secretKey = request.headers.get('x-secret-key');
+    if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const {
+        vchname,
+        vchpaternalsurname,
+        vchmaternalsurname,
+        dtbirthdate,
+        bnstatus,
+        bnverified,
+        vchimage,
+        vchcoverimage,
+        vchbiography
+    } = await request.json();
+
+    try {
+        const response = await axios.patch(`${process.env.REST_URL}/users/${id}`, {
+            vchname,
+            vchpaternalsurname,
+            vchmaternalsurname,
+            dtbirthdate,
+            bnstatus,
+            bnverified,
+            vchimage,
+            vchcoverimage,
+            vchbiography
+        }
+            , {
+                headers: {
+                    Authorization: `Bearer ${process.env.REST_SECRET}`
+                }
+            });
+
+        const statusMessageMap = {
+            200: { message: 'Exitoso', data: response.data },
+            400: { message: response.data.message },
+            404: { message: response.data.message },
+            default: { message: 'Error al actualizar informacion' },
+        };
+
+        const message = statusMessageMap[response.status] || statusMessageMap.default;
+        return NextResponse.json(
+            { message },
+            { status: response.status },
+            { data: response.data }
+        );
+
+    } catch (error) {
+        const status = error.response ? error.response.status : 500;
+        const message = error.response ? error.response.data.message : error.message;
+
+        return NextResponse.json(
+            { message: `Error updating request: ${message}` },
+            { status }
+        );
+    }
+}

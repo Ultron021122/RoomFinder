@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Mail, MailIcon, MessageCircleMore, Smartphone } from "lucide-react";
 
 const CardItem = ({ data }: { data: LessorInfo; }) => {
-    const { usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchimage, vchemail, vchphone } = data;
+    const { usuarioid, vchname, vchpaternalsurname, vchmaternalsurname, vchimage, vchemail, vchphone, vchbiography } = data;
 
     return (
         <Card
@@ -27,9 +27,7 @@ const CardItem = ({ data }: { data: LessorInfo; }) => {
                 <h4 className="dark:text-gray-100 font-bold text-xl mt-10">{vchname + ' ' + vchpaternalsurname + ' ' + vchmaternalsurname}</h4>
                 <hr className="w-full border-gray-300 dark:border-gray-700 my-2" />
                 <p className="dark:text-gray-200 text-sm text-default-500">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Blanditiis, voluptatem officiis delectus eum et odit, commodi
-                    praesentium ex hic officia quod, accusantium assumenda modi ratione!
+                    {vchbiography}
                 </p>
                 <div className="my-2">
                     <div className="flex items-center pt-2 rounded-lg group">
