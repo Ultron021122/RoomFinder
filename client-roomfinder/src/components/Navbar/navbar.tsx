@@ -6,6 +6,7 @@ import DropdownUser from "./dropdown";
 import { ModeToggle } from "../mode-toggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useTheme } from "next-themes";
+import { Button, Link as LinkUI } from "@nextui-org/react";
 
 function Navbar({
     isOpen,
@@ -24,7 +25,7 @@ function Navbar({
 
     return (
         <>
-            <nav className="w-full max-w-screen-2xl bg-white border-b border-white dark:bg-gray-900 dark:border-gray-800 md:dark:border-gray-900 absolute top-0 z-50 shadow-lg">
+            <nav className="w-full max-w-screen-2xl bg-white border-b border-white dark:bg-gray-900 dark:border-gray-800 md:dark:border-gray-900 absolute top-0 z-50">
                 <div className="max-w-screen-2xl p-4 sm:py-4">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center justify-center h-auto">
@@ -51,9 +52,9 @@ function Navbar({
                             {session ? (
                                 <DropdownUser />
                             ) : (
-                                <Link href="/users/login" className="font-normal p-1.5 rounded-md bg-primary text-white transition active:opacity-80 ease-in duration-200">
-                                    Iniciar sesión
-                                </Link>
+                                <Button as={LinkUI} href="/users/login" size="sm" color="primary" variant="solid" className="font-normal">
+                                     Iniciar sesión
+                                 </Button>
                             )
                             }
                             <button
@@ -95,12 +96,12 @@ function Navbar({
                                 <DropdownUser />
                             ) : (
                                 <div className="hidden md:flex items-center space-x-2">
-                                    <Link href="/users/signup" className="font-normal p-2 rounded-md bg-white text-blue-600 border-blue-600 border-2 transition active:opacity-80 ease-in duration-200">
-                                        Registrar
-                                    </Link>
-                                    <Link href="/users/login" className="font-normal p-2 rounded-md bg-primary text-white transition active:opacity-80 ease-in duration-200">
-                                        Iniciar sesión
-                                    </Link>
+                                    <Button as={LinkUI} href="/users/signup" size='sm' color="primary" variant="bordered" className="font-normal">
+                                         Registrar
+                                     </Button>
+                                     <Button as={LinkUI} href="/users/login" size='sm' color="primary" variant="solid" className="font-normal">
+                                         Iniciar sesión
+                                     </Button>
                                 </div>
                             )}
                         </div>
