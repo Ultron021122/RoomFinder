@@ -5,7 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { rolesMapping } from "@/utils/constants";
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal, MoreVerticalIcon, Users, Plus, HousePlus, History, CreditCard, NotebookIcon, ClipboardList } from "lucide-react";
+import { LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal, MoreVerticalIcon, Users, Plus, HousePlus, History, CreditCard, NotebookIcon, ClipboardList, Search } from "lucide-react";
 import { HomeIcon } from "@radix-ui/react-icons";
 import { UserProfile } from "@/utils/interfaces";
 import Link from "next/link";
@@ -92,7 +92,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         onClickSidebar={handleSidebarItemClick}
                     />
                     <SidebarItem
-                        icon={<HomeIcon className="w-[22px] h-[22px]" />}
+                        icon={<Search className="w-[22px] h-[22px]" />}
                         text="Inmuebles"
                         url="/dashboard/inmuebles"
                         onClickSidebar={handleSidebarItemClick}
@@ -135,7 +135,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 onClickSidebar={handleSidebarItemClick}
                             />
                             <SidebarItem
-                                icon={<HousePlus className="w-[22px] h-[22px]" />}
+                                icon={<HomeIcon className="w-[22px] h-[22px]" />}
                                 text="Publicar"
                                 url="/dashboard/publish"
                                 onClickSidebar={handleSidebarItemClick}

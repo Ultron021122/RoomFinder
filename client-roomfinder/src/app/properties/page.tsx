@@ -2,6 +2,7 @@ import Layout from "@/components/layout";
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import SectionProperty from "@/components/properties";
+import Link from "next/link";
 
 function PropertiesView() {
     return (
@@ -25,7 +26,7 @@ const Banner = () => {
                         <h1 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-white lg:text-4xl">
                             Busca la Propiedad de tus Sueños
                         </h1>
-                        <p className="mb-6 text-lg font-medium lg:text-xl sm:px-6 xl:px-48 text-gray-400">
+                        <p className="mb-6 text-lg font-medium lg:text-xl sm:px-6 xl:px-48 text-gray-300">
                             Utiliza nuestro buscador avanzado para encontrar la propiedad perfecta para ti. Filtra por ubicación, precio, tipo de propiedad y más.
                         </p>
 
@@ -35,11 +36,12 @@ const Banner = () => {
                             >
                                 Información
                             </Button>
-                            <p
+                            <Link
+                                href={'/properties/map'}
                                 className="py-2.5 px-3.5 text-sm font-medium text-center rounded-lg border text-white border-gray-700 hover:bg-gray-700 focus:ring-gray-800"
                             >
                                 Mapa <span aria-hidden="true">→</span>
-                            </p>
+                            </Link>
                         </div>
                     </div>
                 </div>

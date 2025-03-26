@@ -575,7 +575,7 @@ function PropertyComponent({ id }: { id: string }) {
                             )}
 
                             {/* Comentarios */}
-                            {propertyOpinions && (
+                            {propertyOpinions && userProfileData?.roleid == 1 && (
                                 <PropertyReviews
                                     reviews={propertyOpinions}
                                     comment={hasStayed}
@@ -593,7 +593,7 @@ function PropertyComponent({ id }: { id: string }) {
                             <DynamicMap
                                 position={[property.lat, property.lng]}
                                 zoom={16}
-                                style="rounded-md shadow-lg h-96 w-96 w-full mx-auto mt-6"
+                                style="rounded-md shadow-lg h-96 w-96 w-full mx-auto mt-6 z-10"
                             />
                         </section>
                         {/* Sobre el arrendador */}
