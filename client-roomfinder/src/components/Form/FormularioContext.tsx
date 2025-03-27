@@ -59,7 +59,22 @@ export interface Inmueble {
     bnStudyZone: boolean;
     intmincontractduration: number;
     intmaxcontractduration: number;
+    additionalFeatures: AdditionalFeatures;
     [key: string]: any
+}
+
+export interface AdditionalFeatures {
+    decarea: number;
+    fldistanceuniversity: number;
+    vchadditionalfeatures: string;
+    vchuniversity: string;
+}
+
+const valoresAdditionalFeatures: AdditionalFeatures = {
+    decarea: 0,
+    fldistanceuniversity: 0,
+    vchadditionalfeatures: '',
+    vchuniversity: ''
 }
 
 // valores por defecto para el inmueble
@@ -116,7 +131,8 @@ const valoresDefectoInmueble: Inmueble = {
     vchfurnituretype: '',
     bnStudyZone: false,
     intmincontractduration: 1,
-    intmaxcontractduration: 2
+    intmaxcontractduration: 2,
+    additionalFeatures: valoresAdditionalFeatures
 }
 
 // Interfaz para el contexto
