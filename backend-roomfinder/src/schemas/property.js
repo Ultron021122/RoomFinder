@@ -45,6 +45,13 @@ const locationSchema = z.object({
     lng: z.number().min(-180).max(180, 'La longitud debe ser menor o igual a 180'),
 });
 
+const additionalFeatures = z.object({
+    decarea: z.number().min(0),
+    fldistanceuniversity: z.number().min(0),
+    vchadditionalfeatures: z.string(),
+    vchuniversity: z.string(),
+});
+
 const propertySchema = z.object({
     propertyid: z.number().optional(),
     lessorid: z.number(),
@@ -74,6 +81,7 @@ const propertySchema = z.object({
     bnStudyZone: z.boolean(),
     vchpropertyrules: z.array(z.string()).min(1, { message: 'Must have at least one rule' }),
     dtavailabilitydate: z.string().datetime(),
+    objaddition: additionalFeatures,
 })
 
 export function validateProperty(input) {

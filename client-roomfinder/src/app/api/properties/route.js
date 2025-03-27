@@ -47,7 +47,8 @@ export async function POST(req, res) {
         titulo,
         descripcion,
         reglas, // Array de reglas
-        precio
+        precio,
+        additionalFeatures
     } = await req.json();
 
     // Array para almacenar las URLs de las imágenes subidas
@@ -134,6 +135,12 @@ export async function POST(req, res) {
         vchfurnituretype: '',
         bnStudyZone: false,
         dtavailabilitydate: new Date().toISOString(),
+        objaddition: {
+            decarea: additionalFeatures.decarea, 
+            fldistanceuniversity: additionalFeatures.fldistanceuniversity, 
+            vchadditionalfeatures: additionalFeatures.vchadditionalfeatures,
+            vchuniversity: additionalFeatures.vchuniversity,
+        }
     };
     // Realizar la solicitud POST para guardar la información
     try {

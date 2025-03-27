@@ -56,7 +56,7 @@ export default function Header() {
                         width={768}
                         height={432}
                         src="/images/search.svg"
-                        className="w-[16rem] max-w-none rounded-xl md:w-[40rem]"
+                        className="w-[16rem] max-w-none rounded-xl md:w-[30rem]"
                         priority
                     />
                 </div>

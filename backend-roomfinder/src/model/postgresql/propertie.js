@@ -13,7 +13,7 @@ export class PropertiesModel {
         bndiningroom, bncoolerincluded, bngardenincluded, bnwashingarea, intaccountparking,
         objphotos, vchexteriornumber, vchinteriornumber, vchstreet,
         vchaddresscomplement, vchneighborhood, vchmunicipality,
-        vchstateprovince, intzip, vchcountry, lat, lng,
+        vchstateprovince, intzip, vchcountry, lat, lng, objaddition,
         vchpropertyrules, vchdescription, created_at }) {
         this.lessorid = lessorid;
         this.vchtitle = vchtitle;
@@ -67,6 +67,7 @@ export class PropertiesModel {
         this.vchcountry = vchcountry;
         this.lat = lat;
         this.lng = lng;
+        this.objaddition = objaddition;
         this.created_at = created_at;
     }
 
@@ -176,7 +177,6 @@ export class PropertiesModel {
         try {
             const property = await this.getById({ id })
             if (property === null) return false;
-            console.log('Modelo: ', input)
             const db = new Database();
             const client = await db.pool.connect();
             try {
