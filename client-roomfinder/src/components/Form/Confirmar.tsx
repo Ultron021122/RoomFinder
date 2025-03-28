@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from "react";
 import { useFormulario } from "./FormularioContext";
 import Image from 'next/image';
 import { inputVacio } from "./Wizar";
@@ -13,6 +14,9 @@ import Autoplay from "embla-carousel-autoplay"
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { ImageOverlay } from "../Propiedades/image-overlay";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 const DynamicMap = dynamic(() => import("@/components/Form/Map"),
     {
@@ -43,9 +47,10 @@ function getIcon(inmueble: string) {
     return iconos[inmueble] || { icon: '', serviceName: 'Servicio no encontrado' };
 }
 
-
 export default function Confirmar() {
-    const { inmueble } = useFormulario();
+    const { inmueble, setInmueble } = useFormulario();
+    const [valor, setValor] = useState<number | null>(null);
+    const [dialogoAbierto, setDialogoAbierto] = useState<boolean>(false);
 
     const {
         tipoInmueble,
@@ -75,8 +80,6 @@ export default function Confirmar() {
         longitud
     } = ubicacion;
 
-    const Imagen1 = fotos[0];
-
     const plugin = useRef(
         Autoplay({ delay: 2000, stopOnInteraction: true })
     )
@@ -86,7 +89,18 @@ export default function Confirmar() {
         photoid: index + 1
     }));
 
-    console.log(objphotos);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        const precio = value ? parseFloat(value) : 0;
+        setValor(precio);
+    };
+
+    const handleConfirm = () => {
+        if (valor !== null && !isNaN(valor)) {
+            setInmueble({ ...inmueble, precio: valor });
+            setDialogoAbierto(false);
+        }
+    };
 
     return (
         <section className="w-full mx-auto p-2">
@@ -99,6 +113,9 @@ export default function Confirmar() {
                 >
                     Por favor revisa los datos del inmueble antes de continuar
                 </p>
+                <Button onClick={() => setDialogoAbierto(true)}>
+                    Agregar precio
+                </Button>
             </div>
             <div className="bg-gradient-to-b min-h-screen">
                 {/* Hero Section */}
@@ -294,6 +311,41 @@ export default function Confirmar() {
                     </section>
                 </div>
             </div>
-        </section >
+            <Dialog open={dialogoAbierto} onOpenChange={setDialogoAbierto}>
+                <DialogContent
+                    aria-describedby="update_element"
+                    className="w-screen sm:w-full max-w-lg"
+                >
+                    <DialogHeader>
+                        <DialogTitle>Renta mensual</DialogTitle>
+                        <DialogDescription>
+                            Ingresa un valor para el precio del inmueble
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="precio" className="text-right">
+                            Precio
+                        </Label>
+                        <Input
+                            id="precio"
+                            type="number"
+                            value={valor !== null ? valor.toString() : ''}
+                            className="col-span-3"
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <DialogFooter>
+                        <Button variant="secondary" onClick={() => setDialogoAbierto(false)}>
+                            Cancelar
+                        </Button>
+                        <Button onClick={handleConfirm}>
+                            Confirmar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </section>
     );
 }

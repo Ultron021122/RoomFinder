@@ -13,7 +13,8 @@ export class PropertiesModel {
         bndiningroom, bncoolerincluded, bngardenincluded, bnwashingarea, intaccountparking,
         objphotos, vchexteriornumber, vchinteriornumber, vchstreet,
         vchaddresscomplement, vchneighborhood, vchmunicipality,
-        vchstateprovince, intzip, vchcountry, lat, lng, objaddition,
+        vchstateprovince, intzip, vchcountry, lat, lng, decarea, fldistanceuniversity, vchadditionalfeatures,
+        vchuniversity, 
         vchpropertyrules, vchdescription, created_at }) {
         this.lessorid = lessorid;
         this.vchtitle = vchtitle;
@@ -67,7 +68,10 @@ export class PropertiesModel {
         this.vchcountry = vchcountry;
         this.lat = lat;
         this.lng = lng;
-        this.objaddition = objaddition;
+        this.decarea = decarea;
+        this.fldistanceuniversity = fldistanceuniversity;
+        this.vchadditionalfeatures = vchadditionalfeatures;
+        this.vchuniversity = vchuniversity;
         this.created_at = created_at;
     }
 
@@ -142,7 +146,6 @@ export class PropertiesModel {
 
                 const propertyid = result.rows[0].property_id;
                 const newProperty = await this.getById({ id: propertyid });
-
                 return newProperty;
             } finally {
                 client.release();

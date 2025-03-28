@@ -2,6 +2,7 @@ import { Spinner } from "@nextui-org/react";
 import { ESTUDIANTE, ARRENDADOR } from "./constants";
 import { messages } from "./constants";
 import { subYears } from "date-fns";
+import { Coordinate, searchDistance, UniversityData } from "./interfaces";
 
 interface fullName {
     vchname: string;
@@ -57,3 +58,45 @@ export function generatePassword(length: number = 12): string {
 
 
 export default getFullName;
+
+export function arrayToCoordinate(arr: [number, number]): Coordinate {
+    return { lat: arr[0], lng: arr[1] };
+}
+
+export function haversineDistance(coord1: Coordinate, coord2: Coordinate): number {
+    const toRadians = (degree: number): number => degree * (Math.PI / 180);
+    const R = 6371; // Radio de la Tierra en kilómetros
+    const dLat = toRadians(coord2.lat - coord1.lat);
+    const dLon = toRadians(coord2.lng - coord1.lng);
+    const lat1 = toRadians(coord1.lat);
+    const lat2 = toRadians(coord2.lat);
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2); 
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+    return R * c; // Distancia en kilómetros
+}
+
+export function findClosestCoordinate(target: Coordinate, coordinates: UniversityData[]): searchDistance | null {
+    let closest: searchDistance | null = null;
+    let minDistance = Infinity;
+
+    coordinates.forEach((coord) => {
+        let value = arrayToCoordinate(coord.geocode)
+        const distance = haversineDistance(target, value);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closest = {
+                name: coord.name,
+                geocode: coord.geocode,
+                popUp: coord.popUp,
+                description: coord.description,
+                imageUrl: coord.imageUrl,
+                website: coord.website,
+                fldistanceuniversity: distance
+            }
+        }
+    });
+
+    return closest;
+}

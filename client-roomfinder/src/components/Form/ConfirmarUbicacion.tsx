@@ -1,8 +1,11 @@
 'use client';
 
+import { useEffect, useRef } from "react";
 import { Spinner } from "@nextui-org/react";
 import { useFormulario } from "./FormularioContext";
 import dynamic from "next/dynamic";
+import { findClosestCoordinate } from "@/utils/functions";
+import { universities } from "@/utils/constants";
 
 export function getInput(tipoInput: string): string {
     const inputs: Record<string, string> = {
@@ -13,15 +16,14 @@ export function getInput(tipoInput: string): string {
     return inputs[tipoInput];
 }
 
-const DynamicMap = dynamic(() => import("@/components/Form/Map"),
-    {
-        ssr: false,
-        loading: () => <Spinner />,
-    });
+const DynamicMap = dynamic(() => import("@/components/Form/Map"), {
+    ssr: false,
+    loading: () => <Spinner />,
+});
 
 export default function ConfirmarUbicacion() {
     const { inmueble, setInmueble } = useFormulario();
-    let {
+    const {
         pais,
         direccion,
         estado,
@@ -32,6 +34,27 @@ export default function ConfirmarUbicacion() {
         latitud,
         longitud
     } = inmueble.ubicacion;
+
+    const previousClosestRef = useRef<{ name: string, fldistanceuniversity: number } | null>(null);
+
+    useEffect(() => {
+        const closest = findClosestCoordinate({ lat: latitud, lng: longitud }, universities);
+        if (closest && (
+            !previousClosestRef.current ||
+            closest.name !== previousClosestRef.current.name ||
+            closest.fldistanceuniversity !== previousClosestRef.current.fldistanceuniversity
+        )) {
+            setInmueble({
+                additionalFeatures: {
+                    ...inmueble.additionalFeatures,
+                    fldistanceuniversity: closest.fldistanceuniversity || 0,
+                    vchuniversity: closest.name || ''
+                }
+            });
+            previousClosestRef.current = closest;
+            console.log('La coordenada más cercana es:', closest);
+        }
+    }, [latitud, longitud, setInmueble, inmueble.additionalFeatures]);
 
     // fijar los datos directamente en el contexto
     function handleInput(name: string, value: number | string) {
