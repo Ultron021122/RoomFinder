@@ -19,15 +19,28 @@ export default function AddProperty() {
         setInmueble({ descripcion: value });
     }, []);
 
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const value = e.target.value;
+    //     // Asegurarse de que el valor sea un número, o establecer un valor vacío o 0 si no lo es
+    //     const precio = value ? parseFloat(value) : 0;
+
+    //     // Solo actualizar si es un número válido (evita NaN)
+    //     if (!isNaN(precio)) {
+    //         setInmueble({ precio: precio });
+    //     }
+    // };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        // Asegurarse de que el valor sea un número, o establecer un valor vacío o 0 si no lo es
-        const precio = value ? parseFloat(value) : 0;
+        // Permitir que el valor sea vacío o un número positivo
+        const decarea = value ? parseFloat(value) : 0;
 
-        // Solo actualizar si es un número válido (evita NaN)
-        if (!isNaN(precio)) {
-            setInmueble({ precio: precio });
-        }
+        setInmueble({
+            additionalFeatures: {
+                ...inmueble.additionalFeatures,
+                decarea: decarea,
+            }
+        });
     };
 
     return (
@@ -40,7 +53,7 @@ export default function AddProperty() {
                     Por favor, llena los siguientes campos para publicar tu inmueble.
                 </p>
             </div>
-            <div className="p-4">
+            {/* <div className="p-4">
                 <h2 className="font-semibold text-sm sm:text-lg md:text-xl text-neutral-900 dark:text-gray-100">
                     Precio por mes
                 </h2>
@@ -63,6 +76,35 @@ export default function AddProperty() {
                         className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                     >
                         Precio
+                    </label>
+                </div>
+            </div> */}
+            <div className="p-4">
+                <h2 className="font-semibold text-sm sm:text-lg md:text-xl text-neutral-900 dark:text-gray-100">
+                    Medidas de la propiedad
+                </h2>
+                <p className="text-xs italic mb-5 text-neutral-800 dark:text-gray-400">
+                    ¿Cuál es el área del inmueble?
+                </p>
+                <div className="relative col-span-1 md:col-span-2 z-0 w-full mb-5 group flex items-center">
+                    <input
+                        type="number"
+                        name="decarea"
+                        id="decarea"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=""
+                        step="any" // Permitir decimales
+                        min="0"   // Solo permitir números positivos
+                        autoComplete="off"
+                        value={inmueble.additionalFeatures.decarea || ''}  // Mostrar vacío si el precio no está definido
+                        onChange={handleChange}
+                    />
+                    <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">m²</span>
+                    <label
+                        htmlFor="decarea"
+                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-ocus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                    >
+                        Área
                     </label>
                 </div>
             </div>

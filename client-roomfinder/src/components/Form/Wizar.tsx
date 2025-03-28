@@ -41,12 +41,19 @@ export const NUM_MIN_RESTRICCIONES = 4;
 type FuncionValidacion = (inmueble: Inmueble) => boolean | string;
 
 const validaciones: Record<number, FuncionValidacion> = {
-    1: ({ tipoInmueble }) => validacionGeneral(tipoInmueble, 'Selecciona una opción para continuar'),
+    1: ({ tipoInmueble, additionalFeatures }) => {
+        const { decarea } = additionalFeatures
+
+        // if (!decarea) return 'Ingresa el área';
+        return validacionGeneral(tipoInmueble, 'Selecciona una opción para continuar')
+    },
     2: ({ fotos }) => (fotos.length >= 5 && fotos.length <= 8) ? true : 'Sube entre 5 y 8 fotos',
-    3: ({ titulo, descripcion, precio }) => {
+    3: ({ titulo, descripcion, additionalFeatures }) => {
+        const { decarea } = additionalFeatures;
         if (titulo.length <= 10) return 'El título es muy corto';
         if (descripcion.length <= 20) return 'La descripción es muy corta';
-        if (precio <= 0) return 'El precio debe ser mayor que 0';
+        if (decarea <= 0) return 'Ingresa el área';
+        // if (precio <= 0) return 'El precio debe ser mayor que 0';
         return true;
     },
     4: ({ servicios }) => {
@@ -68,6 +75,7 @@ const validaciones: Record<number, FuncionValidacion> = {
     },
     6: ({ ubicacion }) => {
         const { pais, direccion, estado, codigoPostal, ciudad_municipio, latitud, longitud } = ubicacion;
+
         return (pais && direccion && estado && codigoPostal && ciudad_municipio && latitud && longitud)
             ? true
             : 'Ingresa la dirección de tu inmueble';
@@ -88,7 +96,10 @@ const validaciones: Record<number, FuncionValidacion> = {
         }
         return reglas.every(regla => regla.length >= 8) ? true : 'Las reglas deben ser más detalladas';
     },
-    9: () => true, // Confirmación final
+    9: ({ precio }) => {
+        if (precio <= 0) return 'El precio debe ser mayor que 0';
+        return true;
+    }, // Confirmación final
 };
 
 const handleToastError = (message: string) => {
@@ -104,6 +115,7 @@ const handleToastError = (message: string) => {
         transition: Bounce,
     });
 };
+
 
 export default function Wizar() {
     const [actual, setActual] = useState<number>(1);
@@ -131,45 +143,56 @@ export default function Wizar() {
     }, [errorSystem]);
 
     const handleClick = async () => {
+        // Validar el paso actual antes de continuar
+        const fnValidar = validaciones[actual];
+        const salida = fnValidar(inmueble);
+        if (salida !== true) {
+            return handleToastError(salida as string);
+        }
+
         setInmueble({ lessorId: user.usuarioid, ...inmueble });
-        if (actual < 9) return siguiente();
-        // Enviar formulario
-        const submit = async () => {
-            setIsLoading(true);
-            setErrorSystem(null);
-            // Intentar enviar la información
-            try {
-                const response = await axios.post('/api/properties',
-                    inmueble, {
-                    headers: {
-                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
-                    }
-                });
-                setIsLoading(false);
-                if (response.status === 201) {
-                    toast.success(response.data.message.message, {
-                        position: "top-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "colored",
-                        style: { fontSize: '0.9rem' },
-                        transition: Slide,
+
+        if (actual < 9) {
+            siguiente();
+        } else {
+            // Enviar formulario
+            const submit = async () => {
+                setIsLoading(true);
+                setErrorSystem(null);
+                // Intentar enviar la información
+                try {
+                    const response = await axios.post('/api/properties',
+                        inmueble, {
+                        headers: {
+                            'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                        }
                     });
-                    router.push('/dashboard/properties');
-                } else {
-                    setErrorSystem(response.data.message);
+                    setIsLoading(false);
+                    if (response.status === 201) {
+                        toast.success(response.data.message.message, {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            style: { fontSize: '0.9rem' },
+                            transition: Slide,
+                        });
+                        router.push('/dashboard/properties');
+                    } else {
+                        setErrorSystem(response.data.message);
+                    }
+                } catch (Error: any) {
+                    setErrorSystem(Error.response.data.message);
+                } finally {
+                    setIsLoading(false);
                 }
-            } catch (Error: any) {
-                setErrorSystem(Error.response.data.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        await submit();
+            };
+            await submit();
+        }
     };
 
     const anterior = () => setActual(prev => prev - 1);

@@ -400,6 +400,10 @@ export interface UniversityData {
     website: string;
 }
 
+export interface searchDistance extends UniversityData {
+    fldistanceuniversity: number;
+}
+
 /**
  * Interface to manage the roles data
  * @interface
@@ -2085,4 +2089,22 @@ export interface PropertyOpinions {
      */
     roleid: number;
 
+}
+
+/**
+ * Interface representing coordinates
+ */
+export interface Coordinate {
+    /**
+     * Latitude
+     * @example
+     * lat: 12.25
+     */
+    lat: number;
+    /**
+     * Longitute
+     * @example
+     * lng: 12.25
+     */
+    lng: number;
 }
