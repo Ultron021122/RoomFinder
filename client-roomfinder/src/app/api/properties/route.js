@@ -142,6 +142,7 @@ export async function POST(req, res) {
             vchuniversity: additionalFeatures.vchuniversity,
         }
     };
+
     // Realizar la solicitud POST para guardar la información
     try {
         const response = await axios.post(`${process.env.REST_URL}/properties/`,
@@ -153,7 +154,7 @@ export async function POST(req, res) {
             });
 
         const statusMessageMap = {
-            201: { message: 'Propiedad creada correctamente', data: response.data },
+            201: { message: 'Propiedad creada correctamente', data: response?.data },
             409: { message: 'Conflicto en la creación' },
             400: { message: response.data.message },
             default: { message: 'Error al crear la propiedad' },
