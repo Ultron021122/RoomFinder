@@ -377,9 +377,6 @@ function PropertyComponent({ id }: { id: string }) {
                             <p className="mt-4 text-sm leading-6 col-start-1 sm:col-span-2 lg:mt-4 lg:row-start-4 lg:col-span-1 dark:text-slate-300">
                                 {property?.vchdescription}
                             </p>
-                            {/* <Button className='col-start-1 row-start-6 mt-4 lg:-mt-10 lg:max-w-[70%] lg:ml-16 shadow-lg'>
-                                Contactar al arrendador
-                            </Button> */}
                         </div>
                     </main>
 
