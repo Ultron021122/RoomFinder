@@ -19,6 +19,7 @@ const webhookHandler = async (req, res) => {
     return res.status(400).send('Webhook Error: No stripe-signature header value was provided.');
   }
 
+  console.log(req.body)
   let event = req.body;
 
   try {
