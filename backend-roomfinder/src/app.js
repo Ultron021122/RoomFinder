@@ -49,6 +49,8 @@ import { PaymentModel } from './model/postgresql/payments.js'
 const swagger = swaggerJSDoc(options)
 const app = express()
 
+// Configuración de Express
+app.set('trust proxy', 1); // Habilitar 'trust proxy' para proxies
 app.use(corsMiddleware())
 app.use(morgan("dev"))
 app.disable('x-powered-by')
