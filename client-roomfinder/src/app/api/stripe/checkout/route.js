@@ -9,23 +9,33 @@ export async function POST(req) {
   try {
     const { origin } = new URL(req.url);
 
+    // Obtener la fecha y hora actual
+    const currentDate = new Date();
+    const dtpayment = currentDate.toISOString(); // Formato ISO 8601
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
-            currency: 'usd',
+            currency: 'mxn',
             product_data: {
-              name: 'T-shirt',
+              name: 'Propiedad',
             },
-            unit_amount: 2000,
+            unit_amount: 3000,
           },
           quantity: 1,
         },
       ],
+      client_reference_id: '15',
       mode: 'payment',
       success_url: `${origin}/success`,
       cancel_url: `${origin}/cancel`,
+      metadata: {
+        leasesid: 1,   // ID del arrendamiento
+        paymentmethodid: 1,
+        dtpayment: dtpayment
+      }
     });
 
     return NextResponse.json({ id: session.id });

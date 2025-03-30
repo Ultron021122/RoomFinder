@@ -1317,6 +1317,30 @@ export interface Properties {
      * @example "2025-01-01T12:00:00Z"
      */
     created_at: string;
+
+    /**
+     * Área
+     * @example "15"
+     */
+    decarea: number;
+
+    /**
+     * Distance university
+     * @example 6.87
+     */
+    fldistanceuniversity: number;
+
+    /**
+     * Additional features
+     * @example "Additional features"
+     */
+    vchadditionalfeatures: string;
+
+    /**
+     * University
+     * @example "Centro Universitario"
+     */
+    vchuniversity: string;
 }
 
 /**
@@ -1422,7 +1446,7 @@ export interface ChatUsers {
      * @example
      * biography: estudiante dedicado del cucei
     */
-        vchbiography?: string;
+    vchbiography?: string;
 
     /**
      * URL de la imagen del usuario
@@ -1740,7 +1764,7 @@ export interface UserEdit {
      * @example
      * usuarioid: 1
      */
-        usuarioid: number | null;
+    usuarioid: number | null;
     /**
      * User name
      * @example
@@ -1765,11 +1789,11 @@ export interface UserEdit {
      * dtbirthdate: '1999-11-22'
      */
     dtbirthdate: string;
-        /**
-     * User type
-     * @example
-     * roleid: 1
-    */
+    /**
+ * User type
+ * @example
+ * roleid: 1
+*/
     roleid: number;
     /**
      * User biography
@@ -2063,7 +2087,7 @@ export interface PropertyOpinions {
      * @example
      * vchname: 'Name'
      */
-    vchname: string; 
+    vchname: string;
     /**
      * Paternal surname
      * @example
