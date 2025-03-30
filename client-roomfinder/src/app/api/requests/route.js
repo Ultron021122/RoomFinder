@@ -39,6 +39,8 @@ export async function POST(req, res) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
+    console.log('La validación de llaves se pasó correctamente!')
+
     const {
         propertyid,
         studentid,
@@ -50,7 +52,10 @@ export async function POST(req, res) {
         dtenddate
     } = await req.json();
 
+    console.log('los datos de la recuest se recuperaron correctamente!')
+
     try {
+        console.log('preparando la consulta con la API interna....')
         const response = await axios.post(`${process.env.REST_URL}/request`, {
             propertyid,
             studentid,
@@ -66,6 +71,8 @@ export async function POST(req, res) {
             }
         });
 
+        console.log('Por el momento no hubo error en la respuesta del servidor de express')
+
         const statusMessageMap = {
             201: { message: 'Solicitud creada correctamente', data: response.data },
             409: { message: 'La solicitud ya fue creada' },
@@ -80,6 +87,7 @@ export async function POST(req, res) {
         );
 
     } catch(error) {
+        console.log('ocurrió un error en la consulta de express', error)
         return NextResponse.json(
             { message: error.response.data.message },
             { status: error.response.status || 503 }

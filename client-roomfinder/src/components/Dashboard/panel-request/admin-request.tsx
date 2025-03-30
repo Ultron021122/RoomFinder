@@ -331,10 +331,10 @@ export default function AdminRequests() {
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>
-                                                                ¿Estás seguro de eliminar este solicitud?
+                                                                ¿Estás seguro de eliminar esta solicitud?
                                                             </AlertDialogTitle>
                                                             <AlertDialogDescription>
-                                                                Esta acción no se puede deshacer. Este usuario será eliminado permanentemente.
+                                                                Esta acción no se puede deshacer. Esta solicitud será eliminada permanentemente.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
