@@ -6,7 +6,8 @@ import { corsMiddleware } from './middlewares/cors.js'
 import morgan from "morgan"
 import { errorHandler } from './middlewares/errors.js'
 import { rateLimit } from 'express-rate-limit'
-import { verificarJWT } from './auth.js'
+import { verificarJWT } from './auth.js';
+import webhookHandler from './routes/webhook.js';
 // Importar las rutas
 import { createUsersRouter } from './routes/users.js'
 import { createPropertiesRouter } from './routes/properties.js'
@@ -22,6 +23,7 @@ import { createReviewsRouter } from './routes/reviews.js'
 import { createRequestsRouter } from './routes/request.js'
 import { createStatusRouter } from './routes/request-status.js'
 import { createRentalHistoryRouter } from './routes/rental-history.js'
+import { createPaymentRouter } from './routes/payments.js'
 // Importar el modelo de la base de datos
 // PostgreSQL
 import { UsersModel } from './model/postgresql/user.js'
@@ -37,6 +39,7 @@ import { ReviewsModel } from './model/postgresql/reviews.js'
 import { RequestModel } from './model/postgresql/request.js'
 import { StatusModel } from './model/postgresql/request-status.js'
 import { RentalHistoryModel } from './model/postgresql/rental-history.js'
+import { PaymentModel } from './model/postgresql/payments.js'
 //MySQL 
 // import { UsersModel } from './model/mysql/user.js'
 // import { PropertiesModel } from './model/mysql/propertie.js'
@@ -48,7 +51,6 @@ const app = express()
 
 app.use(corsMiddleware())
 app.use(morgan("dev"))
-app.use(json())
 app.disable('x-powered-by')
 
 const apiLimiter = rateLimit({
@@ -62,6 +64,8 @@ const apiLimiter = rateLimit({
 // apply to all requests
 app.use('/api/', apiLimiter);
 
+app.use('/api/webhook', express.raw({ type: 'application/json' }), webhookHandler);
+app.use(json())
 app.use('/api/users', verificarJWT, createUsersRouter({ userModel: UsersModel }))
 app.use('/api/properties', verificarJWT, createPropertiesRouter({ propertieModel: PropertiesModel }))
 app.use('/api/typeproperty', verificarJWT, createTypePropertyRouter({ typePropertyModel: PropertyTypeModel }))
@@ -71,10 +75,11 @@ app.use('/api/messages', verificarJWT, createMessagesRouter({ messageModel: Mess
 app.use('/api/chats', verificarJWT, createChatsRouter({ chatsModel: ChatsModel }))
 app.use('/api/recovery', verificarJWT, createRecoveryPassRouter({ recoveryPassModel: RecoveryPassModel }))
 app.use('/api/leases', verificarJWT, createLeasesRouter({ leasesModel: LeasesModel }))
-app.use('/api/reviews', verificarJWT, createReviewsRouter({reviewModel: ReviewsModel}))
-app.use('/api/request', verificarJWT, createRequestsRouter({requestModel: RequestModel}))
-app.use('/api/request-status', verificarJWT, createStatusRouter({statusModel: StatusModel}))
-app.use('/api/rental-history', verificarJWT, createRentalHistoryRouter({ rentalHistoryModel: RentalHistoryModel}))
+app.use('/api/reviews', verificarJWT, createReviewsRouter({ reviewModel: ReviewsModel }))
+app.use('/api/request', verificarJWT, createRequestsRouter({ requestModel: RequestModel }))
+app.use('/api/request-status', verificarJWT, createStatusRouter({ statusModel: StatusModel }))
+app.use('/api/rental-history', verificarJWT, createRentalHistoryRouter({ rentalHistoryModel: RentalHistoryModel }))
+app.use('/api/payments', verificarJWT, createPaymentRouter({ paymentModel: PaymentModel }))
 app.use('/api/utils', verificarJWT, createUtilsRouter())
 
 app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swagger)) // Documentation of the API

@@ -10,7 +10,8 @@ const ACCEPTED_ORIGINS = [
     'https://www.roomfinder.site',
     'https://www.roomfinder.website',
     'https://api.roomfinder.website',
-    'https://socket.roomfinder.website/'
+    'https://socket.roomfinder.website/',
+    'https://api.stripe.com'
 ]
 
 export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => cors({

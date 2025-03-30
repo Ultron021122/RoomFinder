@@ -10,9 +10,9 @@ export class ReviewsModel {
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.vchname = vchname;
-        this.vchpaternalsurname = vchpaternalsurname; 
+        this.vchpaternalsurname = vchpaternalsurname;
         this.vchmaternalsurname = vchmaternalsurname;
-        this.vchimage = vchimage; 
+        this.vchimage = vchimage;
         this.roleid = roleid;
     }
 
@@ -170,7 +170,9 @@ export class ReviewsModel {
                     client.release();
                 }
             }
-        } catch(error) {
+
+            return await this.getById({ id });
+        } catch (error) {
             throw new Error(`Error updating review: ${error.message}`);
         }
     }

@@ -1,20 +1,19 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormulario } from "./FormularioContext";
 import Image from 'next/image';
 import { inputVacio } from "./Wizar";
-import { Chip, Spinner } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react";
 import dynamic from "next/dynamic";
-import { Bath, Bed, Car, DoorClosed, DoorOpen, Home, MapPin, Sparkles, Star, Text, Users } from "lucide-react";
+import { DoorClosed, DoorOpen, MapPin, Star, Text } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
 import { Badge } from "../ui/badge";
 import { useRef } from "react";
 import Autoplay from "embla-carousel-autoplay"
 import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { ImageOverlay } from "../Propiedades/image-overlay";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
@@ -49,7 +48,7 @@ function getIcon(inmueble: string) {
 
 export default function Confirmar() {
     const { inmueble, setInmueble } = useFormulario();
-    const [valor, setValor] = useState<number | null>(null);
+    const [valor, setValor] = useState<number | null>(inmueble.precio);
     const [dialogoAbierto, setDialogoAbierto] = useState<boolean>(false);
 
     const {
@@ -96,15 +95,17 @@ export default function Confirmar() {
     };
 
     const handleConfirm = () => {
-        if (valor !== null && !isNaN(valor)) {
+        if (valor !== null && !isNaN(valor) && valor > 0) {
             setInmueble({ ...inmueble, precio: valor });
+            setDialogoAbierto(false);
+        } else {
             setDialogoAbierto(false);
         }
     };
 
     return (
         <section className="w-full mx-auto p-2">
-            <div className='mb-12'>
+            <div className="mb-4">
                 <h2 className="font-semibold text-base sm:text-xl md:text-2xl text-neutral-900 dark:text-gray-100">
                     Confirmar los datos del inmueble
                 </h2>
@@ -113,7 +114,10 @@ export default function Confirmar() {
                 >
                     Por favor revisa los datos del inmueble antes de continuar
                 </p>
-                <Button onClick={() => setDialogoAbierto(true)}>
+                <Button
+                    onClick={() => setDialogoAbierto(true)}
+                    className="w-full"
+                >
                     Agregar precio
                 </Button>
             </div>
@@ -263,7 +267,7 @@ export default function Confirmar() {
                         <CarouselNext />
                     </Carousel>
                 </div>
-                <div className="container mx-auto px-4 pb-6 md:py-5 max-w-5xl lg:max-w-7xl">
+                <div className="container mx-auto px-4 pb-S6 md:py-5 max-w-5xl lg:max-w-7xl">
                     <div className="mt-6 px-2">
                         <h3
                             className="font-semibold text-base sm:text-lg mb-2 text-blue-600 dark:text-blue-400">
