@@ -517,6 +517,10 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = ({ userData })
                                 <Label htmlFor="vchbiography">Biografía</Label>
                                 <Textarea
                                     {...register('vchbiography', {
+                                        required: {
+                                            value: true,
+                                            message: messages.vchbiography.required
+                                        },
                                         minLength: {
                                             value: 50,
                                             message: messages.vchbiography.min

@@ -42,6 +42,14 @@ export default function ServiciosAmenidades() {
         setInmueble({ servicios: nuevosServicios });
     };
 
+    const handleFurniture = () => {
+        setInmueble({ bnfurnished: !inmueble.bnfurnished });
+    }
+
+    const handleStudyZone = () => {
+        setInmueble({ bnStudyZone: !inmueble.bnStudyZone });
+    }
+
     const handleAmenidad = (variable: keyof ServicesAmenities) => {
         // Actualizamos las amenidades con el cambio
         const nuevasAmenidades = { ...inmueble.servicios }; // Usamos `inmueble.servicios` porque `amenidades` ya es un objeto
@@ -56,7 +64,7 @@ export default function ServiciosAmenidades() {
             </h2>
             <div>
                 <p className="text-base mb-8 text-neutral-800 dark:text-gray-300">Selecciona los servicios que incluye el inmueble</p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-4 gap-x-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-4 gap-x-2">
                     {
                         ServiciosData.map((data, index) =>
                             <div
@@ -75,6 +83,32 @@ export default function ServiciosAmenidades() {
                             </div>
                         )
                     }
+                    <div
+                        onClick={handleFurniture}
+                        className={`rounded-md text-center text-xs md:text-sm px-5 py-3 flex flex-col items-center ${inmueble.bnfurnished ? 'bg-blue-500 text-white' : 'text-neutral-900 bg-gray-200 dark:text-gray-200 dark:bg-gray-600'}`}
+                    >
+                        <Image
+                            src={'/icon/furniture.png'}
+                            width={35}
+                            height={35}
+                            alt={`Icono de muebles`}
+                            className={`filter dark:invert ${inmueble.bnfurnished ? 'invert' : ''}`}
+                        />
+                        Amueblado
+                    </div>
+                    <div
+                        onClick={handleStudyZone}
+                        className={`rounded-md text-center text-xs md:text-sm px-5 py-3 flex flex-col items-center ${inmueble.bnStudyZone ? 'bg-blue-500 text-white' : 'text-neutral-900 bg-gray-200 dark:text-gray-200 dark:bg-gray-600'}`}
+                    >
+                        <Image
+                            src={'/icon/study.png'}
+                            width={35}
+                            height={35}
+                            alt={`Icono de zona de estudio`}
+                            className={`filter dark:invert ${inmueble.bnStudyZone ? 'invert' : ''}`}
+                        />
+                        Zona de estudio
+                    </div>
                 </div>
             </div>
             <div>

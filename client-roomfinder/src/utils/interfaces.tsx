@@ -995,9 +995,9 @@ export interface Message {
     created_at: Date;
 }
 
-
 /**
  * Interface representing property details.
+ * @interface
  */
 export interface Properties {
     /**
@@ -1345,6 +1345,7 @@ export interface Properties {
 
 /**
  * Interface representing property type details.
+ * @interface
  */
 export interface PropertyType {
     /**
@@ -1790,17 +1791,17 @@ export interface UserEdit {
      */
     dtbirthdate: string;
     /**
- * User type
- * @example
- * roleid: 1
-*/
+     * User type
+     * @example
+     * roleid: 1
+    */
     roleid: number;
     /**
      * User biography
      * @example
      * biography: estudiante dedicado del cucei
     */
-    vchbiography?: string;
+    vchbiography: string;
 }
 
 /**

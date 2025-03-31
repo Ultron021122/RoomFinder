@@ -38,6 +38,16 @@ export class RequestController {
             .catch(next);
     }
 
+    getByLeasor = async (req, res, next) => {
+        const { leasorid } = req.params
+        await this.requestModel.getByLeasor({ leasorid })
+            .then(request => {
+                if (request) return res.json(request)
+                return res.status(404).json({ message: 'Request not found' })
+            })
+            .catch(next);
+    }
+
     getByProperty = async (req, res, next) => {
         const { propertyid } = req.params
         await this.requestModel.getByProperty({ propertyid })
@@ -58,7 +68,7 @@ export class RequestController {
             const newRequest = await this.requestModel.create({ input: result.data });
             if (newRequest === false) return res.status(409).json({ message: 'Request already exists' });
 
-            await this.EmailService.sendRequestLeasor({input: newRequest});
+            await this.EmailService.sendRequestLeasor({ input: newRequest });
             return res.status(201).json(newRequest)
         } catch (err) {
             next(err);
@@ -81,9 +91,9 @@ export class RequestController {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
         const { id } = req.params
-        await this.requestModel.update({ id, input: result.data})
+        await this.requestModel.update({ id, input: result.data })
             .then(updateRequest => {
-                if (!updateRequest)  return res.status(404).json({ message: 'Request not found'})
+                if (!updateRequest) return res.status(404).json({ message: 'Request not found' })
                 return res.json(updateRequest)
             })
             .catch(next);

@@ -5,6 +5,9 @@ import pickle
 from sqlalchemy import create_engine
 from sklearn.linear_model import LinearRegression
 from dotenv import load_dotenv
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import mean_squared_error, r2_score
 
 # Cargar variables de entorno
 load_dotenv()
@@ -15,7 +18,26 @@ os.makedirs(MODEL_DIR, exist_ok=True)  # Crear la carpeta si no existe
 
 # 📌 Ruta de archivos
 MODEL_PATH = os.path.join(MODEL_DIR, "modelo_regresion.pkl")
-DATA_PATH = os.path.join(MODEL_DIR, "datos_preprocesados.pkl")
+DATA_PATH = os.path.join(MODEL_DIR, "datos_preprocesados_lineal.pkl")
+
+def plot_scatter(y, y_pred):
+    # 1. **Gráfico de dispersión entre valores reales vs predicciones**
+    plt.figure(figsize=(10, 6))
+    plt.scatter(y, y_pred, alpha=0.3)
+    plt.plot([min(y), max(y)], [min(y), max(y)], color="red", linestyle="--")
+    plt.title("Predicción vs Valor Real")
+    plt.xlabel("Valor Real")
+    plt.ylabel("Valor Predicho")
+    plt.show()
+
+def hisplot(residuals):
+    # 2. **Gráfico de residuos**
+    plt.figure(figsize=(10, 6))
+    sns.histplot(residuals, kde=True, color="blue")
+    plt.title("Distribución de los Residuos")
+    plt.xlabel("Residuos")
+    plt.ylabel("Frecuencia")
+    plt.show()
 
 # 🔹 Conectar a PostgreSQL con el parámetro de codificación LATIN1
 db_url = os.getenv("DB_URL")
@@ -34,7 +56,7 @@ numerical_features = ['propertytypeid', 'intnumberrooms', 'intnumberbathrooms', 
                       'intmincontractduration', 'bnwaterincluded', 'bnelectricityincluded', 'bninternetincluded', 'bngasincluded', 
                       'bnheatingincluded', 'bnairconditioningincluded', 'bnlaundryincluded', 'bnparkingincluded', 'bncleaningincluded', 
                       'bncabletvincluded', 'bnwashingmachineincluded', 'bnkitchen', 'bnlivingroom', 'bndiningroom', 'bncoolerincluded', 
-                      'bngardenincluded', 'intaccountparking']
+                      'bngardenincluded', 'intaccountparking', 'decarea', 'fldistanceuniversity', 'bnfurnished']
 
 # 📌 Revisar si ya existen el modelo y los datos preprocesados
 if os.path.exists(MODEL_PATH) and os.path.exists(DATA_PATH):
@@ -53,8 +75,8 @@ else:
 
     # 🔹 Consultar datos desde la vista "Usuario"."RentalHistory"
     query = f"""
-        SELECT propertyid, vchmunicipality, vchneighborhood, {', '.join(numerical_features)}
-        FROM "Usuario"."RentalHistory";
+        SELECT propertyid, vchmunicipality, vchneighborhood, vchuniversity, {', '.join(numerical_features)}
+        FROM "Usuario"."vwPropertiesGet";
     """
 
     try:
@@ -65,7 +87,7 @@ else:
         exit()
 
     # 🔹 Aplicar One-Hot Encoding a 'vchmunicipality' y 'vchneighborhood'
-    df_encoded = pd.get_dummies(df, columns=['vchmunicipality', 'vchneighborhood'], prefix=['municipality', 'neighborhood'])
+    df_encoded = pd.get_dummies(df, columns=['vchmunicipality', 'vchneighborhood', 'vchuniversity'], prefix=['municipality', 'neighborhood', 'vchuniversity'])
 
     # 🔹 Obtener la nueva lista de características después del One-Hot Encoding
     all_features = [col for col in df_encoded.columns if col not in ['propertyid', 'decrentalcost']]  # Eliminar 'propertyid' y 'decrentalcost'
@@ -88,13 +110,19 @@ else:
 
     print("✅ Modelo y datos guardados correctamente.")
 
-    # 🔹 Hacer predicción para una propiedad específica (ejemplo)
-    property_id = 40  # Reemplazar con el ID de la propiedad para la que quieres hacer la predicción
+    # 🔹 Predicciones y evaluación
+    y_pred = model.predict(X)
 
-    # Obtener las características de la propiedad para la predicción
-    property_features = df_encoded[df_encoded['propertyid'] == property_id][all_features]
+    # 1. **Gráfico de dispersión entre valores reales vs predicciones**
+    plot_scatter(y, y_pred)
 
-    # Realizar la predicción del precio de alquiler
-    predicted_price = model.predict(property_features)
+    # 2. **Gráfico de residuos**
+    residuals = y - y_pred
+    # hisplot(residuals)
 
-    print(f"💲 El precio recomendado para la propiedad {property_id} es: {predicted_price[0]}")
+    # 3. **Métricas de evaluación**
+    mse = mean_squared_error(y, y_pred)
+    r2 = r2_score(y, y_pred)
+
+    print(f"🔹 Error Cuadrático Medio (MSE): {mse}")
+    print(f"🔹 R2: {r2}")

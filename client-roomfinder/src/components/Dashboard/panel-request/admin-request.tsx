@@ -22,7 +22,7 @@ import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight, Edit, Search, Trash2, UserIcon } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast, Bounce, Slide } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AdminRequests() {
     const { request, requestStatus, isLoading, error, refetchRequest } = useRequestContext();
@@ -58,6 +58,10 @@ export default function AdminRequests() {
 
     const debouncedBusquedaChange = useMemo(() => debounce(handleBusquedaChange, 300), []);
     const filterRequests = useCallback(() => {
+        // Verificar que request sea un array antes de usar filter
+        if (!Array.isArray(request)) {
+            return [];
+        }
         return request.filter(req => {
             const matchesBusqueda = req.vchmessage.toLowerCase().includes(busqueda.toLowerCase());
             const matchesVerificado = status === 'all' || (status === req.statusid.toString());
@@ -79,7 +83,6 @@ export default function AdminRequests() {
         setPaginaActual(1);
     }, [busqueda]);
 
-
     useEffect(() => {
         return () => {
             debouncedBusquedaChange.cancel();
@@ -92,7 +95,6 @@ export default function AdminRequests() {
     };
 
     const handleGuardarCambios = async () => {
-        console.log(requestEdit)
         if (requestEdit) {
             try {
                 const response = await axios.patch(`/api/requests/${requestEdit.requestid}`,

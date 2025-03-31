@@ -78,7 +78,7 @@ export default function ConfirmarUbicacion() {
                     Por favor, verifica que los datos de la ubicación del inmueble sean correctos
                 </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mx-auto px-8 py-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mx-auto py-4">
                 {/* Campos de la ubicación */}
                 {/* Dirección */}
                 <div>
@@ -232,7 +232,7 @@ export default function ConfirmarUbicacion() {
 
             <DynamicMap
                 position={[latitud, longitud]}
-                zoom={16}
+                zoom={14}
                 style="rounded-sm shadow-lg h-96 w-96 w-full mx-auto"
             />
         </div>

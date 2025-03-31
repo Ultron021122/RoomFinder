@@ -179,8 +179,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         url="/dashboard"
                         onClickSidebar={handleSidebarItemClick}
                         dropdownItems={dropdownItems}
-                        color='active'
-                        alert
+                        // color='active'
+                        // alert
                     />
                 </Sidebar>
                 <main className={`flex-1 pt-4 ${windowWidth <= 640 && expanded ? 'opacity-50 dark:bg-gray-950 w-full h-full' : ''}`}>

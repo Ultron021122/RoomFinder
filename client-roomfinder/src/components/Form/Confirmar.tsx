@@ -64,7 +64,8 @@ export default function Confirmar() {
         titulo,
         descripcion,
         reglas,
-        precio
+        precio,
+        additionalFeatures
     } = inmueble;
 
     const {
@@ -78,6 +79,11 @@ export default function Confirmar() {
         latitud,
         longitud
     } = ubicacion;
+
+    const {
+        decarea,
+        vchuniversity
+    } = additionalFeatures
 
     const plugin = useRef(
         Autoplay({ delay: 2000, stopOnInteraction: true })
@@ -104,7 +110,7 @@ export default function Confirmar() {
     };
 
     return (
-        <section className="w-full mx-auto p-2">
+        <section className="w-full md:w-4/5 mx-auto p-2">
             <div className="mb-4">
                 <h2 className="font-semibold text-base sm:text-xl md:text-2xl text-neutral-900 dark:text-gray-100">
                     Confirmar los datos del inmueble
@@ -181,6 +187,11 @@ export default function Confirmar() {
                             <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors">
                                 {`Tipo ${tipoInmueble === 1 ? 'Casa' : tipoInmueble === 2 ? 'Habitación' : 'Departamento'}`}
                             </Badge>
+                            { vchuniversity.trim() !== '' &&
+                                    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors">
+                                        {vchuniversity}
+                                    </Badge>
+                                }
                         </div>
                         <p className="mt-4 text-sm leading-6 col-start-1 sm:col-span-2 lg:mt-4 lg:row-start-4 lg:col-span-1 dark:text-slate-300">
                             {descripcion}

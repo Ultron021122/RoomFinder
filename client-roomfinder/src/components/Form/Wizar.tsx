@@ -212,7 +212,7 @@ export default function Wizar() {
                                 </div>
                             ) : (
                                 <>
-                                    <div className="w-full md:w-3/4 px-3 md:px-0 mt-8 mx-auto h-auto overflow-hidden overflow-y-auto">
+                                    <div className="w-full px-1 md:px-0 mt-8 mx-auto h-auto overflow-hidden overflow-y-auto">
                                         {actual === 1 && <TipoInmueble />}
                                         {actual === 2 && <Fotos />}
                                         {actual === 3 && <AddProperty />}
@@ -223,7 +223,7 @@ export default function Wizar() {
                                         {actual === 8 && <Restricciones />}
                                         {actual === 9 && <Confirmar />}
                                     </div>
-                                    <div className="w-full md:w-3/4 px-3 md:px-0 mx-auto pt-5 pb-10">
+                                    <div className="w-full px-1 md:px-0 mx-auto pt-5 pb-10">
                                         <Progress
                                             size="sm"
                                             aria-label="Loading..."
