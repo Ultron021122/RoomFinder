@@ -21,6 +21,9 @@ DATA_PATH_LR = os.path.join(BASE_DIR, "modelo_guardado", "datos_preprocesados_li
 
 # 🔹 Conectar a PostgreSQL
 DB_URL = os.getenv("DB_URL")
+if not DB_URL:
+    raise ValueError("DB_URL no está definida en el archivo .env")
+
 engine = create_engine(DB_URL)
 
 # 🔹 Variables globales para el modelo KNN
@@ -185,8 +188,3 @@ def predict_price(features: dict = Body(...)):
 # 🔹 Cargar los modelos y datos al iniciar
 load_knn_model_and_data()
 load_lr_model_and_data()
-
-# 🔹 Ejecutar FastAPI
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
