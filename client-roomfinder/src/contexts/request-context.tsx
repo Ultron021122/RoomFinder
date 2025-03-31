@@ -30,9 +30,8 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 }
             });
             setRequest(response.data.data);
-        } catch(err) {
-            const error = err as any;
-            setError(error.response?.data.message || 'An error occurred');
+        } catch(err: any) {
+            setError(err.response?.data.message || 'An error occurred');
         } finally {
             setIsLoading(false);
         }

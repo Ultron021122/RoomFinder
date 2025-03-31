@@ -114,7 +114,13 @@ export default function Map({ position, zoom, name, typeProperty, rating }: MapD
         <>
             {!isLoading ? (
                 <div>
-                    <MapContainer center={position} zoom={zoom} className="h-screen w-screen max-w-screen-2xl z-10 relative float-left" zoomControl={false}>
+                    <MapContainer 
+                        center={position} 
+                        zoom={zoom} 
+                        className="h-screen w-screen max-w-screen-2xl z-10 relative float-left" 
+                        zoomControl={false}
+                        minZoom={8}
+                    >
                         <SetMapRef />
                         <TileLayer
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

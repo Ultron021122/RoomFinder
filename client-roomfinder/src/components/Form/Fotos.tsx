@@ -90,7 +90,7 @@ function ImageUploader() {
 
     return (
         <div>
-            <div className="max-w-4xl mx-auto">
+            <div className="w-full mx-auto">
                 <div {...getRootProps()} className={`p-4 border-2 border-dashed ${isDragActive ? 'border-blue-400' : 'border-gray-400'} rounded-lg hover:cursor-pointer`}>
                     <input {...getInputProps()} />
                     <div className="flex flex-col items-center justify-center mx-auto gap-2 text-gray-600 dark:text-gray-400">

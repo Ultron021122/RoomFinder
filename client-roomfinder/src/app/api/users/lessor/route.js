@@ -68,7 +68,7 @@ export async function POST(req, res) {
             roleid,
             vchphone,
             vchstreet,
-            intzip,
+            intzip: parseInt(intzip),
             vchsuburb,
             vchmunicipality,
             vchstate,
@@ -80,7 +80,7 @@ export async function POST(req, res) {
         });
 
         const statusMessageMap = {
-            201: { message: 'Estudiante creado correctamente', data: response.data },
+            201: { message: 'Arrendador creado correctamente', data: response.data },
             409: { message: 'El correo ya está registrado' },
             400: { message: response.data.message },
             default: { message: 'Error al crear el estudiante' },

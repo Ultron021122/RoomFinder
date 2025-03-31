@@ -85,6 +85,7 @@ export const messages = {
         required: "El campo Estado es requerido",
     },
     vchbiography: {
+        required: "El campo Biografia es requerido",
         min: "La biografía debe contener mínimo 50 caracteres",
         max: "Número de caracteres excedido. Máximo 255"
     }

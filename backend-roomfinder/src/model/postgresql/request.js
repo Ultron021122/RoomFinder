@@ -65,9 +65,29 @@ export class RequestModel {
         const db = new Database();
         const client = await db.pool.connect();
         try {
-            const requests = await client.connect.query(
+            const requests = await client.query(
                 `SELECT * FROM "Usuario"."LeaseRequests" WHERE propertyid = $1;`,
                 [propertyid]
+            );
+
+            return requests.rowCount > 0 ? new RequestModel(requests.rows[0]) : null;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async getByLeasor({ leasorid }) {
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const requests = await client.query(
+                `SELECT ls.* FROM "Usuario"."LeaseRequests" ls
+                    inner join "Usuario"."Propiedades" p
+                        on ls.propertyid = p.propertyid
+                    inner join "Usuario"."Arrendadores" a
+                        on a.usuarioid = p.lessorid
+                    where a.usuarioid = $1;`,
+                [leasorid]
             );
 
             return requests.rowCount > 0 ? new RequestModel(requests.rows[0]) : null;

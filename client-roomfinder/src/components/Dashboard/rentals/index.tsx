@@ -75,7 +75,7 @@ const Rentals = () => {
             fetchLeasingRequests(userData.usuarioid);
         }
     }, [status])
-    //export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+
     return(
         <>
             <Card>
@@ -98,7 +98,7 @@ const Rentals = () => {
                             { loading ?
                                 <TableRow className='bg-transparent hover:bg-slate-100'>
                                     <TableCell colSpan={5}>
-                                        <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto h-[40vh] lg:py-0'>
+                                        <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-0'>
                                             <Spinner />
                                         </div>
                                     </TableCell>

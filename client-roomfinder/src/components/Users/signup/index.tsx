@@ -120,7 +120,6 @@ const Registrar = () => {
             setIsLoading(true);
             setErrorSystem(null);
 
-            console.log(userInfo)
             if (userInfo.roleid === ESTUDIANTE) {
                 const data = userInfo as StudentInfo;
                 try {

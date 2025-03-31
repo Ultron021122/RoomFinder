@@ -48,6 +48,8 @@ export async function POST(req, res) {
         descripcion,
         reglas, // Array de reglas
         precio,
+        bnfurnished,
+        bnStudyZone,
         additionalFeatures
     } = await req.json();
 
@@ -131,9 +133,9 @@ export async function POST(req, res) {
         vchtransportationaccess: '',
         intmincontractduration: 1,
         intmaxcontractduration: 2,
-        bnfurnished: false,
+        bnfurnished: bnfurnished,
         vchfurnituretype: '',
-        bnStudyZone: false,
+        bnStudyZone: bnStudyZone,
         dtavailabilitydate: new Date().toISOString(),
         objaddition: {
             decarea: additionalFeatures.decarea, 
