@@ -16,6 +16,7 @@ import { ImageOverlay } from "../Propiedades/image-overlay";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import axios from "axios";
 
 const DynamicMap = dynamic(() => import("@/components/Form/Map"),
     {
@@ -48,6 +49,7 @@ function getIcon(inmueble: string) {
 
 export default function Confirmar() {
     const { inmueble, setInmueble } = useFormulario();
+    const [valueRecommended, setValueRecommended] = useState<number | null>(null);
     const [valor, setValor] = useState<number | null>(inmueble.precio);
     const [dialogoAbierto, setDialogoAbierto] = useState<boolean>(false);
 
@@ -108,6 +110,28 @@ export default function Confirmar() {
             setDialogoAbierto(false);
         }
     };
+
+    useEffect(() => {
+        const fetchPredictPrice = async () => {
+            try {
+                const response = await axios.post(`/api/predict`,
+                    inmueble,
+                    {
+                        headers: {
+                            'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                        }
+                    });
+                if (response.status === 200) {
+                    const roundedPrice = parseFloat(response.data.data.predicted_price.toFixed(2));
+                    setValueRecommended(roundedPrice);
+                }
+            } catch (error) {
+                console.log("Error al llamar la API de predicción:", error);
+            }
+        };
+
+        fetchPredictPrice();
+    }, [inmueble]);
 
     return (
         <section className="w-full md:w-4/5 mx-auto p-2">
@@ -187,11 +211,11 @@ export default function Confirmar() {
                             <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors">
                                 {`Tipo ${tipoInmueble === 1 ? 'Casa' : tipoInmueble === 2 ? 'Habitación' : 'Departamento'}`}
                             </Badge>
-                            { vchuniversity.trim() !== '' &&
-                                    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors">
-                                        {vchuniversity}
-                                    </Badge>
-                                }
+                            {vchuniversity.trim() !== '' &&
+                                <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors">
+                                    {vchuniversity}
+                                </Badge>
+                            }
                         </div>
                         <p className="mt-4 text-sm leading-6 col-start-1 sm:col-span-2 lg:mt-4 lg:row-start-4 lg:col-span-1 dark:text-slate-300">
                             {descripcion}
@@ -337,7 +361,9 @@ export default function Confirmar() {
                             Ingresa un valor para el precio del inmueble
                         </DialogDescription>
                     </DialogHeader>
-
+                    <div>
+                        Precio recomendado {valueRecommended}
+                    </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="precio" className="text-right">
                             Precio

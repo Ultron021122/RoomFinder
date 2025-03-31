@@ -22,10 +22,10 @@ const Banner = () => {
             >
                 <div className="lg:grid-cols-3 lg:gap-4 lg:grid">
                     <div className="md:col-span-2 px-4 mx-auto max-w-screen-2xlxl text-center py-36 md:py-40 lg:py-48">
-                        <h1 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-white lg:text-4xl dark:text-gray-400">
+                        <h1 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-white lg:text-4xl">
                             Busca la Propiedad de tus Sueños
                         </h1>
-                        <p className="mb-6 text-lg font-medium text-white lg:text-xl sm:px-6 xl:px-48 dark:text-gray-400">
+                        <p className="mb-6 text-lg font-medium text-white lg:text-xl sm:px-6 xl:px-48">
                             Utiliza nuestro buscador avanzado para encontrar la propiedad perfecta para ti. Filtra por ubicación, precio, tipo de propiedad y más.
                         </p>
 
