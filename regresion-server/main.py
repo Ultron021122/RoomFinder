@@ -185,6 +185,10 @@ def predict_price(features: dict = Body(...)):
     
     return {"predicted_price": predicted_price[0]}
 
+@app.get("/")
+async def root():
+    return {"message": "FASTAPI funcionando - Roomfinder"}
+
 # 🔹 Cargar los modelos y datos al iniciar
 load_knn_model_and_data()
 load_lr_model_and_data()
