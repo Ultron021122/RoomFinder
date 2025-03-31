@@ -27,6 +27,8 @@ export const createPropertiesRouter = ({ propertieModel }) => {
         propertyController.getById
     ])
 
+    propertiesRouter.post('/predict', propertyController.getByIds)
+
     propertiesRouter.get('/owner/:lessorid', [
         param('lessorid').isInt().withMessage('lessorid must be an integer'),
         (req, res, next) => {

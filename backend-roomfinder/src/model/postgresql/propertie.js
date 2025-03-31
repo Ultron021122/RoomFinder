@@ -14,7 +14,7 @@ export class PropertiesModel {
         objphotos, vchexteriornumber, vchinteriornumber, vchstreet,
         vchaddresscomplement, vchneighborhood, vchmunicipality,
         vchstateprovince, intzip, vchcountry, lat, lng, decarea, fldistanceuniversity, vchadditionalfeatures,
-        vchuniversity, 
+        vchuniversity,
         vchpropertyrules, vchdescription, created_at }) {
         this.lessorid = lessorid;
         this.vchtitle = vchtitle;
@@ -116,7 +116,22 @@ export class PropertiesModel {
         }
     }
 
-    static async getFeaturedProperties(){
+    static async getByIds({ input }) {
+        const { idU, idD, idT } = input
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const properties = await client.query(
+                `SELECT vp.* FROM "Usuario"."vwPropertiesGet" as vp WHERE vp.propertyid IN ($1, $2, $3);`,
+                [idU, idD, idT]
+            );
+            return properties.rows.map((property) => new PropertiesModel(property));
+        } finally {
+            client.release();
+        }
+    }
+
+    static async getFeaturedProperties() {
         const db = new Database();
         const client = await db.pool.connect();
         try {

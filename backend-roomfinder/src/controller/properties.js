@@ -24,6 +24,16 @@ export class PropertyController {
             .catch(next);
     }
 
+    getByIds = async (req, res, next) => {
+        const input = req.body
+        await this.propertieModel.getByIds({ input })
+            .then(propertie => {
+                if (propertie) return res.json(propertie)
+                return res.status(404).json({ message: 'Properties not found' })
+            })
+            .catch(next);
+    }
+
     getByLessor = async (req, res, next) => {
         const { lessorid } = req.params
         try {

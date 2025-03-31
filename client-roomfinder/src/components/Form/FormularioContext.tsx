@@ -114,7 +114,7 @@ const valoresDefectoServiciosAmenidades: ServicesAmenities = {
 const valoresDefectoInmueble: Inmueble = {
     tipoInmueble: 1,
     servicios: valoresDefectoServiciosAmenidades,
-    numRecamaras: 0,
+    numRecamaras: 1,
     numCamas: 0,
     numBanos: 0,
     numHuespedes: 0,

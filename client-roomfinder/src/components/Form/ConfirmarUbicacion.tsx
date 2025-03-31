@@ -52,7 +52,6 @@ export default function ConfirmarUbicacion() {
                 }
             });
             previousClosestRef.current = closest;
-            console.log('La coordenada más cercana es:', closest);
         }
     }, [latitud, longitud, setInmueble, inmueble.additionalFeatures]);
 

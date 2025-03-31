@@ -2,23 +2,35 @@
 
 import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
-import { Properties } from '@/utils/interfaces';
+import { Properties, UserProfile } from '@/utils/interfaces';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import CardOwner from "@/components/Main/Card";
+import { useSession } from "next-auth/react";
+import { Spinner } from "@nextui-org/react";
+import { Separator } from "../ui/separator";
 
 const ITEMS_PER_PAGE = 12;
 
+export interface Predict {
+    recommended_property_id: number;
+    distance: number;
+}
+
 export const SectionProperty = () => {
     const [allProperties, setAllProperties] = useState<Properties[]>([]);
+    const [allPropertiesPredict, setAllPropertiesPredict] = useState<Properties[]>([]);
     const [filteredProperties, setFilteredProperties] = useState<Properties[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoadingPredict, setIsLoadingPredict] = useState<boolean>(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [filterType, setFilterType] = useState<string>('');
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const { data, status } = useSession();
+    const userProfileData = data?.user as UserProfile;
 
     const count = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -30,7 +42,7 @@ export const SectionProperty = () => {
                 const response = await axios.get(`/api/properties`, {
                     headers: {
                         'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
-                    } 
+                    }
                 });
                 if (response.status === 200) {
                     setAllProperties(response.data.data);
@@ -50,6 +62,25 @@ export const SectionProperty = () => {
 
         fetchProperties();
     }, []);
+
+    const fetchPredict = async (userId: number) => {
+        setIsLoadingPredict(true);
+        try {
+            const response = await axios.get(`/api/predict/${userId}`, {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            });
+
+            if (response.status === 200) {
+                setAllPropertiesPredict(response.data.data);
+            }
+        } catch (error) {
+            console.log("Error al llamar la API de predicción:", error);
+        } finally {
+            setIsLoadingPredict(false);
+        }
+    };
 
     useEffect(() => {
         const filtered = allProperties.filter(property => {
@@ -101,6 +132,13 @@ export const SectionProperty = () => {
         }
     };
 
+    useEffect(() => {
+        if (status === 'authenticated') {
+            const userData = data.user as UserProfile;
+            fetchPredict(userData.usuarioid);
+        }
+    }, [status]);
+
     return (
         <div className="max-w-6xl mx-auto min-h-screen p-2 sm:p-0">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-5">
@@ -126,6 +164,25 @@ export const SectionProperty = () => {
                     </SelectContent>
                 </Select>
             </div>
+
+            {/* Mostrar los resultados de la predicción aquí */}
+            {!isLoadingPredict && userProfileData?.roleid === 1 && status === 'authenticated' &&
+                <div className="mt-5">
+                    <h3 className="text-xl font-semibold mb-4">Propiedades Recomendadas para Ti</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 p-2">
+                        {allPropertiesPredict.length > 0 ? (
+                            allPropertiesPredict.map((property, index) => (
+                                <CardOwner key={index} {...property} />
+                            ))
+                        ) : (
+                            <p>No se encontraron propiedades recomendadas.</p>
+                        )}
+                    </div>
+                </div>
+            }
+
+            <Separator className="bg-gray-300 dark:bg-gray-500" />
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 p-2">
                 {content}
             </div>
