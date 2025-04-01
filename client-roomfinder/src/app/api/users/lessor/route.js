@@ -131,6 +131,8 @@ export async function PATCH(req) {
         usuarioid
     } = await req.json();
 
+    const input = await req.json();
+
     try {
         const response = await axios.patch(`${process.env.REST_URL}/lessors/${usuarioid}`, {
             vchname,

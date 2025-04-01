@@ -16,6 +16,7 @@ export async function POST(req) {
         colonia = input.ubicacion.colonia
     }
 
+
     try {
         const response = await axios.post(`${process.env.PREDIC_URL}/predict_price/`, {
             "propertytypeid": input.tipoInmueble,
