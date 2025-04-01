@@ -104,10 +104,10 @@ except Exception as e:
 
 # 🔹 Definir las columnas numéricas
 numerical_features = ['propertytypeid', 'intnumberrooms', 'intnumberbathrooms', 'intmaxoccupancy', 'decrentalcost', 'bnstudyzone',
-                      'intmincontractduration', 'intnumberrooms', 'bnwaterincluded', 'bnelectricityincluded',
+                      'intmincontractduration', 'bnwaterincluded', 'bnelectricityincluded',
                       'bninternetincluded', 'bngasincluded', 'bnheatingincluded', 'bnairconditioningincluded', 'bnlaundryincluded',
                       'bnparkingincluded', 'bncleaningincluded', 'bncabletvincluded', 'bnwashingmachineincluded', 'bnkitchen',
-                      'bnlivingroom', 'bndiningroom', 'bncoolerincluded', 'bngardenincluded', 'intaccountparking', 'bnwashingmachineincluded', 'bnfurnished']
+                      'bnlivingroom', 'bndiningroom', 'bncoolerincluded', 'bngardenincluded', 'intaccountparking', 'bnfurnished']
 
 # 📌 Revisar si ya existen el modelo y los datos preprocesados
 if os.path.exists(MODEL_PATH) and os.path.exists(DATA_PATH):
