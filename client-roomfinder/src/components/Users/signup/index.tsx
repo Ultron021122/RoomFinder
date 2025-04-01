@@ -155,6 +155,9 @@ const Registrar = () => {
                 }
 
             } else { // Arrendador
+                userInfo.vchmunicipality = municipality.city
+                userInfo.vchstate = municipality.state
+                
                 const data = userInfo as LessorInfo;
                 try {
                     const response = await axios.post("/api/users/lessor", data, {
