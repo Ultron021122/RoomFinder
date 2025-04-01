@@ -56,7 +56,7 @@ numerical_features = ['propertytypeid', 'intnumberrooms', 'intnumberbathrooms', 
                       'intmincontractduration', 'bnwaterincluded', 'bnelectricityincluded', 'bninternetincluded', 'bngasincluded', 
                       'bnheatingincluded', 'bnairconditioningincluded', 'bnlaundryincluded', 'bnparkingincluded', 'bncleaningincluded', 
                       'bncabletvincluded', 'bnwashingmachineincluded', 'bnkitchen', 'bnlivingroom', 'bndiningroom', 'bncoolerincluded', 
-                      'bngardenincluded', 'intaccountparking', 'decarea', 'fldistanceuniversity', 'bnfurnished']
+                      'bngardenincluded', 'intaccountparking', 'decarea', 'bnfurnished']
 
 # 📌 Revisar si ya existen el modelo y los datos preprocesados
 if os.path.exists(MODEL_PATH) and os.path.exists(DATA_PATH):

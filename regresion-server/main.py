@@ -42,7 +42,7 @@ numerical_features_lineal = ['propertytypeid', 'intnumberrooms', 'intnumberbathr
                       'intmincontractduration', 'bnwaterincluded', 'bnelectricityincluded', 'bninternetincluded', 'bngasincluded', 
                       'bnheatingincluded', 'bnairconditioningincluded', 'bnlaundryincluded', 'bnparkingincluded', 'bncleaningincluded', 
                       'bncabletvincluded', 'bnwashingmachineincluded', 'bnkitchen', 'bnlivingroom', 'bndiningroom', 'bncoolerincluded', 
-                      'bngardenincluded', 'intaccountparking', 'decarea', 'fldistanceuniversity']
+                      'bngardenincluded', 'intaccountparking', 'decarea']
 
 numerical_features_knn = ['propertytypeid', 'intnumberrooms', 'intnumberbathrooms', 'intmaxoccupancy', 'decrentalcost', 'bnstudyzone',
                       'intmincontractduration', 'intnumberrooms', 'bnwaterincluded', 'bnelectricityincluded',
