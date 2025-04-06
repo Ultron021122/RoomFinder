@@ -10,14 +10,10 @@ import { Button, Spinner, Image } from "@nextui-org/react";
 // Utilidades
 import { messages, patterns } from "@/utils/constants";
 import { UserInfo } from "@/utils/interfaces";
-import Footer from "@/components/Footer";
 import { Alert } from "@/utils/alert";
 // Estilos de algunos componentes
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { Checkbox, FormControlLabel } from "@mui/material";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 

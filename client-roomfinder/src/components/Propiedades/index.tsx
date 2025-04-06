@@ -27,34 +27,7 @@ import { Calendar } from "../ui/calendar"
 import { es } from "date-fns/locale"
 import { useSession } from "next-auth/react"
 import {
-    MapPin,
-    Star,
-    Wifi,
-    Tv,
-    CookingPotIcon as Kitchen,
-    Bed,
-    Bath,
-    AirVentIcon,
-    Sparkles,
-    Refrigerator,
-    Utensils,
-    Zap,
-    Fence,
-    Flame,
-    DropletsIcon,
-    Car,
-    DoorOpen,
-    Heater,
-    PaintBucket,
-    ParkingCircle,
-    Sofa,
-    WashingMachine,
-    Users,
-    CalendarIcon,
-    Home,
-    User,
-    Phone,
-    LucideProps,
+    MapPin, Star, Wifi, Tv, CookingPotIcon as Kitchen, Bed, Bath, AirVentIcon, Sparkles, Refrigerator, Utensils, Zap, Fence, Flame, DropletsIcon, Car, DoorOpen, Heater, PaintBucket, ParkingCircle, Sofa, WashingMachine, Users, CalendarIcon, Home, User, Phone, LucideProps,
 } from "lucide-react"
 import dynamic from "next/dynamic"
 
@@ -366,11 +339,11 @@ function PropertyComponent({ id }: { id: string }) {
                             </dl>
                             <div className="mt-4 col-start-1 row-start-3 self-center sm:mt-0 sm:col-start-2 sm:row-start-2 sm:row-span-2 lg:mt-4 lg:col-start-1 lg:row-start-3 lg:row-end-4">
                                 <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors mr-2">
-                                    {property.vchtypename}
+                                    {property?.vchtypename}
                                 </Badge>
-                                { property.vchuniversity.trim() !== '' &&
+                                {property?.vchuniversity.trim() !== '' &&
                                     <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors">
-                                        {property.vchuniversity}
+                                        {property?.vchuniversity}
                                     </Badge>
                                 }
                             </div>
