@@ -20,11 +20,12 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 */
-
+/*
 export async function middleware(req: NextRequest) {
   const ip = req.ip || req.headers.get('x-forwarded-for');
   return NextResponse.next();
 }
+*/
 
 export const config = {
   matcher: [
