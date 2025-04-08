@@ -430,7 +430,7 @@ export default function AdminRequests() {
                                     <Label htmlFor="bnhaspets">Mascotas</Label>
                                 </div>
                                 <div>
-                                    <Label htmlFor="tipo">Tipo de inmueble</Label>
+                                    <Label htmlFor="tipo">Estado de solicitud</Label>
                                     <Select
                                         value={requestEdit.statusid.toString()}
                                         onValueChange={(value) => setRequestEdit({ ...requestEdit, statusid: parseInt(value) })}
