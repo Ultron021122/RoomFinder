@@ -85,6 +85,23 @@ def plot_recommended_properties(user_id, distances, indices, df):
     plt.ylabel('Distancia')
     plt.show()
 
+def plot_feature_distribution(df, feature):
+    # Graficar la distribución de una característica específica
+    plt.figure(figsize=(8, 6))
+    sns.histplot(df[feature], kde=True, bins=20, color="purple")
+    plt.title(f"Distribución de la característica '{feature}'")
+    plt.xlabel(feature)
+    plt.ylabel("Frecuencia")
+    plt.show()
+
+def plot_relationship(df, feature_x, feature_y):
+    # Graficar la relación entre dos características
+    plt.figure(figsize=(8, 6))
+    sns.scatterplot(x=df[feature_x], y=df[feature_y])
+    plt.title(f"Relación entre {feature_x} y {feature_y}")
+    plt.xlabel(feature_x)
+    plt.ylabel(feature_y)
+    plt.show()
 
 # 🔹 Conectar a PostgreSQL con el parámetro de codificación LATIN1
 db_url = os.getenv("DB_URL")
@@ -129,8 +146,6 @@ else:
         SELECT studentid, propertyid, vchmunicipality, vchneighborhood, {', '.join(numerical_features)}
         FROM "Usuario"."RentalHistory";
     """
-
-    # print("🔍 Consultando base de datos...", query)
 
     try:
         # Leer datos desde la base de datos
@@ -187,4 +202,3 @@ else:
 
     # Graficar la matriz de correlación entre características
     plot_correlation_matrix(df_encoded, numerical_features)
-
