@@ -11,9 +11,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import CopyText from '@/components/ui/copy-text';
 import { format } from 'date-fns';
-import { Button as ButtonUI , Link as LinkUI} from "@nextui-org/react";
 import { Button } from '@/components/ui/button';
 import {ChevronLeft, ChevronRight} from "lucide-react"
+import CheckoutButton from "@/app/checkout/page";
 
 const Rentals = () => {
 
@@ -132,13 +132,8 @@ const Rentals = () => {
                                         </Badge>
                                         </TableCell>
                                         <TableCell>
-                                            {/* Si la solicitud ha sido aceptada: proceder al pago
-                                                Si la solicitud ha sido eliminada: por lo tanto no se muestra
-                                            */}
-                                            {request.statusid === 1 ? (
-                                                <ButtonUI as={LinkUI} href="" size="sm" color="primary" variant="solid" className="font-normal">
-                                                    Proceder al pago
-                                                </ButtonUI>
+                                            {request.statusid === 1 ? ( // proceder al pago porque el arrendador aceptó la solicitud de arrendamiento
+                                                <CheckoutButton property={properties[index]} leaseRequest={request}/>
                                             ) : (
                                                 <p className="text-red-500">Pago no disponible por el momento</p>
                                             )}

@@ -342,11 +342,7 @@ function PropertyComponent({ id }: { id: string }) {
                                 <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors mr-2">
                                     {property?.vchtypename}
                                 </Badge>
-<<<<<<< HEAD
                                 { property.vchuniversity !== '' &&
-=======
-                                {property?.vchuniversity.trim() !== '' &&
->>>>>>> 012575d95d497f831b1602c3d9dfdd2cf166af74
                                     <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors">
                                         {property?.vchuniversity}
                                     </Badge>

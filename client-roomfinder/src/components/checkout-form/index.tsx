@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 import './CheckoutForm.css'; // Importa el archivo CSS
