@@ -55,8 +55,6 @@ const webhookHandler = async(req, res) => {
       break;
     case 'checkout.session.completed':{
       const sessionCompleted = event.data.object;
-      console.log('Session completed.');
-      // console.log('Event data: ', sessionCompleted)
 
       // crear el arrendamiento e informacion de pago
       try {
