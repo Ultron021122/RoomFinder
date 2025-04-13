@@ -104,10 +104,10 @@ const SettingsComponent: React.FC = () => {
                             onValueChange={handleThemeChange}
                             value={theme}
                         >
-                            <SelectTrigger className="bg-none border-none shadow-none bg-gray-200 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-700 focus:ring-0">
-                                <SelectValue placeholder="Theme" />
+                            <SelectTrigger className="border-none shadow-none bg-gray-200 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-700 focus:ring-0">
+                                <SelectValue placeholder="Theme"/>
                             </SelectTrigger>
-                            <SelectContent className="bg-gray-300 dark:bg-gray-800">
+                            <SelectContent className="bg-gray-50 dark:bg-gray-800">
                                 <SelectItem value="light" className="hover:bg-gray-100 dark:hover:bg-gray-700">Claro</SelectItem>
                                 <SelectItem value="dark" className="hover:bg-gray-100 dark:hover:bg-gray-700">Oscuro</SelectItem>
                                 <SelectItem value="system" className="hover:bg-gray-100 dark:hover:bg-gray-700">Sistema</SelectItem>

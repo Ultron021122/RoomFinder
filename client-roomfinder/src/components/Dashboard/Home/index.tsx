@@ -12,9 +12,9 @@ export default function Home() {
 
     const { data, status } = useSession()
 
-    if(status === 'loading'){
+    if (status === 'loading') {
         return (
-            <Spinner/>
+            <Spinner />
         )
     }
 
@@ -22,12 +22,12 @@ export default function Home() {
     const role = userProfileData.roleid
 
     return (
-        <div className="h-full max-w-screen-2xl mx-auto dark:bg-gray-950">
-            <BreadcrumbWithCustomSeparator pageName={ role === ESTUDIANTE ? "Inicio" : "Panel de Control"} />
+        <div className="h-full max-w-screen-2xl mx-auto">
+            <BreadcrumbWithCustomSeparator pageName={role === ESTUDIANTE ? "Inicio" : "Panel de Control"} />
             <aside className="mx-auto">
                 <section>
                     {role === ESTUDIANTE ? (
-                        <StudentHomePage/>
+                        <StudentHomePage />
                     ) : (
                         <Bento />
                     )}

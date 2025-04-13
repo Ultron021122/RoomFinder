@@ -133,7 +133,7 @@ export const SectionProperty = () => {
     };
 
     useEffect(() => {
-        if (status === 'authenticated') {
+        if (status === 'authenticated' && userProfileData?.roleid === 1) {
             const userData = data.user as UserProfile;
             fetchPredict(userData.usuarioid);
         }
