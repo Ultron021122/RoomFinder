@@ -10,108 +10,41 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Calendar, Check, Clock, Home, MapPin, Search, Star, X } from "lucide-react"
-
-// Definición de tipos
-interface RentalProperty {
-  id: string
-  title: string
-  image: string
-  address: string
-  startDate: string
-  endDate: string
-  rating: number | null
-  price: number
-  status: "active" | "completed" | "cancelled"
-  propertyType: string
-}
+import { Properties, UserProfile } from "@/utils/interfaces"
+import { useSession } from "next-auth/react"
+import axios from "axios"
 
 export default function RentalHistory() {
-  const [rentals, setRentals] = useState<RentalProperty[]>([])
-  const [filteredRentals, setFilteredRentals] = useState<RentalProperty[]>([])
+  const { data: session, status } = useSession();
+  const userData = session?.user as UserProfile;
+  const [rentals, setRentals] = useState<Properties[]>([])
+  const [filteredRentals, setFilteredRentals] = useState<Properties[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
 
-  useEffect(() => {
-    // Simular una llamada a la API
-    const fetchRentals = async () => {
-      setIsLoading(true)
-      try {
-        // Aquí normalmente harías una llamada a tu API
-        // Por ahora, usaremos datos de ejemplo
-        const mockData: RentalProperty[] = [
-          {
-            id: "1",
-            title: "Apartamento acogedor en el centro",
-            image: "/placeholder.svg?text=Apartamento+1",
-            address: "Calle Principal 123, Ciudad",
-            startDate: "2023-01-15",
-            endDate: "2023-01-22",
-            rating: 4.5,
-            price: 800,
-            status: "completed",
-            propertyType: "Apartamento",
-          },
-          {
-            id: "2",
-            title: "Casa de playa con vista al mar",
-            image: "/placeholder.svg?text=Casa+Playa",
-            address: "Avenida Costera 456, Playa del Carmen",
-            startDate: "2023-03-10",
-            endDate: "2023-03-17",
-            rating: 5,
-            price: 1200,
-            status: "completed",
-            propertyType: "Casa",
-          },
-          {
-            id: "3",
-            title: "Loft moderno en zona financiera",
-            image: "/placeholder.svg?text=Loft+Moderno",
-            address: "Calle Reforma 789, Ciudad de México",
-            startDate: "2023-06-05",
-            endDate: "2023-07-05",
-            rating: null,
-            price: 950,
-            status: "active",
-            propertyType: "Loft",
-          },
-          {
-            id: "4",
-            title: "Cabaña en el bosque",
-            image: "/placeholder.svg?text=Cabana+Bosque",
-            address: "Camino del Bosque 234, Valle de Bravo",
-            startDate: "2023-02-10",
-            endDate: "2023-02-15",
-            rating: 3.5,
-            price: 600,
-            status: "cancelled",
-            propertyType: "Cabaña",
-          },
-          {
-            id: "5",
-            title: "Penthouse con terraza panorámica",
-            image: "/placeholder.svg?text=Penthouse",
-            address: "Avenida Principal 567, Guadalajara",
-            startDate: "2023-08-01",
-            endDate: "2023-08-15",
-            rating: null,
-            price: 1500,
-            status: "active",
-            propertyType: "Penthouse",
-          },
-        ]
-        setRentals(mockData)
-        setFilteredRentals(mockData)
-      } catch (error) {
-        console.error("Error fetching rental history:", error)
-      } finally {
-        setIsLoading(false)
-      }
+  const fetchRentals = async () => {
+    setIsLoading(true)
+    try {
+      const response = await axios.get(`/api/rental-history/${userData?.usuarioid}`, {
+        headers: {
+          'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+        }
+      });
+      setRentals(response.data.data)
+      setFilteredRentals(response.data.data)
+    } catch (error) {
+      console.error("Error fetching rental history:", error)
+    } finally {
+      setIsLoading(false)
     }
+  }
 
-    fetchRentals()
-  }, [])
+  useEffect(() => {
+    if (status === 'authenticated') {
+      fetchRentals()
+    }
+  }, [status])
 
   useEffect(() => {
     // Filtrar rentals basado en searchTerm y filterStatus
@@ -120,15 +53,15 @@ export default function RentalHistory() {
     if (searchTerm) {
       filtered = filtered.filter(
         (rental) =>
-          rental.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          rental.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          rental.propertyType.toLowerCase().includes(searchTerm.toLowerCase()),
+          rental.vchtitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          rental.vchaddresscomplement.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          rental.propertytypeid.toString().toLowerCase().includes(searchTerm.toLowerCase()),
       )
     }
 
-    if (filterStatus !== "all") {
-      filtered = filtered.filter((rental) => rental.status === filterStatus)
-    }
+    // if (filterStatus !== "all") {
+    //   filtered = filtered.filter((rental) => rental.status === filterStatus)
+    // }
 
     setFilteredRentals(filtered)
   }, [searchTerm, filterStatus, rentals])
@@ -209,60 +142,60 @@ export default function RentalHistory() {
               </div>
             ) : (
               filteredRentals.map((rental) => (
-                <Card key={rental.id} className="overflow-hidden">
+                <Card key={rental.propertyid} className="overflow-hidden">
                   <CardContent className="p-0">
                     <div className="flex flex-col md:flex-row">
                       <div className="relative w-full md:w-48 h-48 md:h-auto">
                         <Image
-                          src={rental.image || "/placeholder.svg"}
-                          alt={rental.title}
+                          src={rental.objphotos[0].url || "/placeholder.svg"}
+                          alt={rental.vchtitle}
                           layout="fill"
                           objectFit="cover"
                         />
                       </div>
                       <div className="p-4 flex-1">
                         <div className="flex flex-col md:flex-row justify-between mb-2">
-                          <h3 className="text-xl font-semibold">{rental.title}</h3>
-                          {getStatusBadge(rental.status)}
+                          <h3 className="text-xl font-semibold">{rental.vchtitle}</h3>
+                          {getStatusBadge("active")}
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
                           <p className="text-sm text-gray-600 flex items-center">
                             <MapPin className="w-4 h-4 mr-1" />
-                            {rental.address}
+                            {rental.vchaddresscomplement}
                           </p>
                           <p className="text-sm text-gray-600 flex items-center">
                             <Home className="w-4 h-4 mr-1" />
-                            {rental.propertyType}
+                            {rental.propertytypeid}
                           </p>
                           <p className="text-sm text-gray-600 flex items-center">
                             <Calendar className="w-4 h-4 mr-1" />
-                            {formatDate(rental.startDate)} - {formatDate(rental.endDate)}
+                            {formatDate(rental.dtavailabilitydate)} - {formatDate(rental.created_at)}
                           </p>
-                          <p className="text-sm font-semibold">${rental.price} / noche</p>
+                          <p className="text-sm font-semibold">${rental.decrentalcost} / mensuales</p>
                         </div>
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
                           <div>
-                            {rental.rating ? (
+                            {rental.decpropertyrating ? (
                               <div className="flex items-center">
                                 <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                                <span>{rental.rating} / 5</span>
+                                <span className="text-sm">{rental.decpropertyrating} / 5</span>
                               </div>
                             ) : (
                               <span className="text-sm text-gray-500">Sin calificación</span>
                             )}
                           </div>
                           <div className="flex gap-2 mt-3 md:mt-0">
-                            <Link href={`/propiedades/${rental.id}`}>
+                            <Link href={`/propiedades/${rental.propertyid}`}>
                               <Button variant="outline" size="sm">
                                 Ver propiedad
                               </Button>
                             </Link>
-                            {rental.status === "completed" && !rental.rating && (
+                            {rental.propertyid.toString() === "completed" && !rental.decpropertyrating && (
                               <Button variant="secondary" size="sm">
                                 Calificar estancia
                               </Button>
                             )}
-                            {rental.status === "active" && (
+                            {rental.propertyid.toString() === "active" && (
                               <Button variant="default" size="sm">
                                 Extender estancia
                               </Button>
@@ -284,46 +217,46 @@ export default function RentalHistory() {
               </div>
             ) : (
               filteredRentals.map((rental) => (
-                <Card key={rental.id} className="overflow-hidden">
+                <Card key={rental.propertyid} className="overflow-hidden">
                   <div className="relative h-48">
                     <Image
-                      src={rental.image || "/placeholder.svg"}
-                      alt={rental.title}
+                      src={rental.objphotos[0].url || "/placeholder.svg"}
+                      alt={rental.vchtitle}
                       layout="fill"
                       objectFit="cover"
                     />
-                    <div className="absolute top-2 right-2">{getStatusBadge(rental.status)}</div>
+                    <div className="absolute top-2 right-2">{getStatusBadge("active")}</div>
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="text-lg font-semibold mb-2 line-clamp-1">{rental.title}</h3>
+                    <h3 className="text-lg font-semibold mb-2 line-clamp-1">{rental.vchtitle}</h3>
                     <p className="text-sm text-gray-600 mb-1 flex items-center">
                       <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-                      <span className="line-clamp-1">{rental.address}</span>
+                      <span className="line-clamp-1">{rental.vchaddresscomplement}</span>
                     </p>
                     <p className="text-sm text-gray-600 mb-1 flex items-center">
                       <Calendar className="w-4 h-4 mr-1 flex-shrink-0" />
                       <span className="line-clamp-1">
-                        {formatDate(rental.startDate)} - {formatDate(rental.endDate)}
+                        {formatDate(rental.dtavailabilitydate)} - {formatDate(rental.created_at)}
                       </span>
                     </p>
                     <div className="flex justify-between items-center mt-3 mb-4">
-                      {rental.rating ? (
+                      {rental.decpropertyrating ? (
                         <div className="flex items-center">
                           <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                          <span>{rental.rating}</span>
+                          <span>{rental.decpropertyrating}</span>
                         </div>
                       ) : (
                         <span className="text-sm text-gray-500">Sin calificación</span>
                       )}
-                      <span className="font-bold">${rental.price} / noche</span>
+                      <span className="font-bold">${rental.decrentalcost} / mensuales</span>
                     </div>
                     <div className="flex justify-between gap-2">
-                      <Link href={`/propiedades/${rental.id}`} className="flex-1">
+                      <Link href={`/propiedades/${rental.propertyid}`} className="flex-1">
                         <Button variant="outline" size="sm" className="w-full">
                           Ver detalles
                         </Button>
                       </Link>
-                      {rental.status === "completed" && (
+                      {rental.propertyid.toString() === "completed" && (
                         <Button variant="secondary" size="sm" className="flex-1">
                           Reservar de nuevo
                         </Button>
@@ -345,21 +278,21 @@ export default function RentalHistory() {
               <Check className="w-5 h-5 text-green-600 dark:text-green-400 mr-2" />
               <h3 className="font-semibold">Arrendamientos Activos</h3>
             </div>
-            <p className="text-2xl font-bold">{rentals.filter((r) => r.status === "active").length}</p>
+            <p className="text-2xl font-bold">{rentals.filter((r) => r.propertyid.toString() === "active").length}</p>
           </div>
           <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
             <div className="flex items-center mb-2">
               <Clock className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" />
               <h3 className="font-semibold">Arrendamientos Completados</h3>
             </div>
-            <p className="text-2xl font-bold">{rentals.filter((r) => r.status === "completed").length}</p>
+            <p className="text-2xl font-bold">{rentals.filter((r) => r.propertyid.toString() === "completed").length}</p>
           </div>
           <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-100 dark:border-red-800">
             <div className="flex items-center mb-2">
               <X className="w-5 h-5 text-red-600 dark:text-red-400 mr-2" />
               <h3 className="font-semibold">Arrendamientos Cancelados</h3>
             </div>
-            <p className="text-2xl font-bold">{rentals.filter((r) => r.status === "cancelled").length}</p>
+            <p className="text-2xl font-bold">{rentals.filter((r) => r.propertyid.toString() === "cancelled").length}</p>
           </div>
         </div>
       </div>

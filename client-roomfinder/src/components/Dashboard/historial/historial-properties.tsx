@@ -53,7 +53,7 @@ export default function RentalHistory() {
     <div className="p-2 md:p-8 h-screen overflow-hidden">
       <Card className="overflow-hidden w-auto sm:w-full mx-auto bg-gray-100 dark:bg-gray-950">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Historial de arrendamientos</CardTitle>
+          <CardTitle className="text-xl font-bold">Historial de arrendamientos</CardTitle>
         </CardHeader>
         <CardContent>
           {rentals.length === 0 ? (
