@@ -6,7 +6,7 @@ export async function POST(request) {
     try {
         let transformationOptions = [
             { width: width, crop: "scale" },
-            { quality: "auto" },
+            { quality: "auto:best" },
             { fetch_format: "auto" }
         ];
 

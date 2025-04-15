@@ -5,10 +5,15 @@ import app from '../app.js';
 describe('API Integration Tests', () => {
   it('GET /api/users - success', async () => {
     const { statusCode, body } = await request(app)
-    .get('/api/users')
-    .set('Authorization', `Bearer ${process.env.REST_SECRET}`);
+      .get('/api/users')
+      .set('Authorization', `Bearer ${process.env.REST_SECRET}`);
     expect(statusCode).toBe(200);
-    expect(body).toEqual(expect.arrayContaining([expect.objectContaining({ name: expect.any(String) })]));
+    expect(body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ vchname: expect.any(String) })
+      ])
+    );
+
   });
 });
 

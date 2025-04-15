@@ -1,7 +1,7 @@
 import { Database } from "./database.js"
 
 export class RequestModel {
-    constructor({ requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at }) {
+    constructor({ requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, intmonths, bnhaspets, dtstartdate, dtenddate, created_at, updated_at }) {
         this.requestid = requestid;
         this.propertyid = propertyid;
         this.studentid = studentid;
@@ -9,6 +9,7 @@ export class RequestModel {
         this.dtrequest = dtrequest;
         this.vchmessage = vchmessage;
         this.intnumguests = intnumguests;
+        this.intmonths = intmonths;
         this.bnhaspets = bnhaspets;
         this.dtstartdate = dtstartdate;
         this.dtenddate = dtenddate;
@@ -97,14 +98,14 @@ export class RequestModel {
     }
 
     static async create({ input }) {
-        const { propertyid, studentid, statusid, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate } = input
+        const { propertyid, studentid, statusid, vchmessage, intnumguests, intmonths, bnhaspets, dtstartdate, dtenddate } = input
 
         const db = new Database();
         const client = await db.pool.connect();
         try {
             await client.query(
-                `INSERT INTO "Usuario"."LeaseRequests" (propertyid, studentid, statusid, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;`,
-                [propertyid, studentid, statusid, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate]
+                `INSERT INTO "Usuario"."LeaseRequests" (propertyid, studentid, statusid, vchmessage, intnumguests, intmonths, bnhaspets, dtstartdate, dtenddate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`,
+                [propertyid, studentid, statusid, vchmessage, intnumguests, intmonths, bnhaspets, dtstartdate, dtenddate]
             );
 
             const infoemail = await client.query(
@@ -114,8 +115,8 @@ export class RequestModel {
                 FROM "Usuario"."vwLessorGET" l
                 INNER JOIN "Usuario"."Propiedades" p
                     on p.lessorid = l.usuarioid
-                WHERE P.propertyid = $1;
-                `, [propertyid]
+                WHERE P.propertyid = $1;`,
+                [propertyid]
             );
 
             return infoemail.rows[0];
@@ -158,6 +159,7 @@ export class RequestModel {
                 'dtrequest',
                 'vchmessage',
                 'intnumguests',
+                'intmonths',
                 'bnhaspets',
                 'dtstartdate',
                 'dtenddate'

@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import Navigate from "@/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "@/components/Footer";
+
 // import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Instrument_Sans({ subsets: ["latin"] });

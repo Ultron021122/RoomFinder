@@ -142,10 +142,10 @@ export default function MessageMainComponent() {
                 <div className="max-w-lg w-full space-y-8 text-center">
                   <div className="flex justify-center items-center">
                     <Image
-                      src="/images/planet.svg"
+                      src="/utils/messages.webp"
                       alt="Ilustración de búsqueda"
-                      width={256}
-                      height={124}
+                      width={537}
+                      height={358}
                       priority
                     />
                   </div>

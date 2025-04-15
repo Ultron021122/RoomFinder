@@ -1,5 +1,6 @@
 import { UniversityData, Roles, MapCoordenada, Folder } from '@/utils/interfaces';
 import { url } from 'inspector';
+import { z } from 'zod';
 
 // Iconos
 // ...
@@ -543,23 +544,6 @@ export const propertiesHome = [
     },
 ]
 
-export const columns = [
-    { name: "Id", uid: "id", sortable: true },
-    { name: "Nombre", uid: "name", sortable: true },
-    { name: "Edad", uid: "age", sortable: true },
-    { name: "Role", uid: "role", sortable: true },
-    { name: "Team", uid: "team" },
-    { name: "Email", uid: "email" },
-    { name: "Status", uid: "status", sortable: true },
-    { name: "Actions", uid: "actions" },
-];
-
-export const statusOptions = [
-    { name: "Active", uid: "active" },
-    { name: "Paused", uid: "paused" },
-    { name: "Vacation", uid: "vacation" },
-];
-
 export const itemDataImage = [
     {
         img: 'https://images.unsplash.com/photo-1549388604-817d15aa0110?w=500',
@@ -630,3 +614,35 @@ export const AboutUs = [
         "photoid": 326
     },
 ]
+
+export const requestFormSchema = z.object({
+    propertyid: z.number().positive(),
+    studentid: z.number().positive(),
+    statusid: z.number().positive(),
+    vchmessage: z
+        .string({
+            message: "El mensaje es requerido",
+        })
+        .min(25, {
+            message: "El mensaje debe tener al menos 25 caracteres",
+        }),
+    intnumguests: z
+        .number({
+            message: "El número de huéspedes es requerido",
+        })
+        .positive()
+        .min(1),
+    intmonths: z.number(
+        {
+            message: "El número de meses es requerido",
+        }).min(1).max(12),
+    bnhaspets: z.boolean({
+        message: "El campo de mascotas",
+    }),
+    dtstartdate: z.date({
+        message: "La fecha de inicio es requerida",
+    }),
+    dtenddate: z.date({
+        message: "La fecha de fin es requerida",
+    }),
+})

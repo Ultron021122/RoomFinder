@@ -6,7 +6,7 @@ export default function Header() {
             <div className="absolute inset-0 -z-10 overflow-hidden">
                 <svg
                     aria-hidden="true"
-                    className="absolute left-[max(50%,25rem)] top-0 h-[64rem] w-[128rem] -translate-x-1/2 stroke-gray-200 dark:stroke-gray-900 [mask-image:radial-gradient(64rem_64rem_at_top,white,transparent)]"
+                    className="absolute left-[max(50%,25rem)] top-0 h-[64rem] w-[128rem] -translate-x-1/2 stroke-gray-200 dark:stroke-gray-800 [mask-image:radial-gradient(64rem_64rem_at_top,white,transparent)]"
                 >
                     <defs>
                         <pattern
@@ -56,7 +56,7 @@ export default function Header() {
                         width={768}
                         height={432}
                         src="/utils/image3D.webp"
-                        className="w-[20rem] max-w-none rounded-xl md:w-[35rem]"
+                        className="w-[24rem] max-w-none rounded-xl md:w-[35rem]"
                         priority
                     />
                 </div>
