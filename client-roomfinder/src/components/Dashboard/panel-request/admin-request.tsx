@@ -1,5 +1,5 @@
 'use client';
-import {CheckoutButton} from '@/app/checkout/page';
+import {CheckoutButton} from '@/components/checkout';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
