@@ -107,8 +107,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         alert
                         onClickSidebar={handleSidebarItemClick}
                     />
-                    {/* {roleName === 'Estudiante' && (
-                        <> */}
                     <SidebarItem
                         icon={<History size={22} />}
                         text="Historial"
@@ -127,8 +125,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         url="/dashboard/rentals"
                         onClickSidebar={handleSidebarItemClick}
                     />
-                    {/* </>
-                    )} */}
+                    <SidebarItem
+                        icon={<ClipboardList size={22} />}
+                        text="Solicitudes"
+                        url="/dashboard/request"
+                        alert
+                        onClickSidebar={handleSidebarItemClick}
+                    />
                     {roleName === 'Arrendador' && (
                         <>
                             <SidebarItem
@@ -147,13 +150,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 icon={<Users className="w-[22px] h-[22px]" />}
                                 text="Usuarios"
                                 url="/dashboard/users"
-                                onClickSidebar={handleSidebarItemClick}
-                            />
-                            <SidebarItem
-                                icon={<ClipboardList size={22} />}
-                                text="Solicitudes"
-                                url="/dashboard/request"
-                                alert
                                 onClickSidebar={handleSidebarItemClick}
                             />
                         </>

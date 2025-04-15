@@ -89,8 +89,7 @@ export class RequestModel {
                     where a.usuarioid = $1;`,
                 [leasorid]
             );
-
-            return requests.rowCount > 0 ? new RequestModel(requests.rows[0]) : null;
+            return requests.rowCount > 0 ? requests.rows.map(request => new RequestModel(request)) : null;
         } finally {
             client.release();
         }

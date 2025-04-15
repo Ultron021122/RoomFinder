@@ -16,7 +16,7 @@ interface CheckoutButtonProps {
   leaseRequest: LeaseRequest
 }
 
-const CheckoutButton = ({property, leaseRequest} : CheckoutButtonProps) => {
+export const CheckoutButton = ({property, leaseRequest} : CheckoutButtonProps) => {
 
   const [loading, setLoading] = useState(false)
   const session = useSession()
@@ -61,13 +61,11 @@ const CheckoutButton = ({property, leaseRequest} : CheckoutButtonProps) => {
         onClick={handleClick}
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
       >
-        Proceder al pago
+        Pagar
       </button>
     ) : (
       <Spinner/>
     )}
     </>
   );
-};
-
-export default CheckoutButton;
+}
