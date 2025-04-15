@@ -12,7 +12,23 @@ export const createLeasesRouter = ({ leasesModel }) => {
      *  name: Leases
      *  description: Leases manage.
      */
-
+    /**
+     * @swagger
+     * /api/leases:
+     *  get:
+     *      summary: Get all leases.
+     *      tags: [Leases]
+     *      description: List of leases in database
+     *      responses:
+     *          '200':
+     *              description: A JSON array of lease data
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          type: array
+     *                          items:
+     *                              type: object
+     */
     leasesRouter.get('/', leasesController.getAll)
 
     leasesRouter.get('/:id', [

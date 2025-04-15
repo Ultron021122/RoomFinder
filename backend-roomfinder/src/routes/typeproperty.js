@@ -12,7 +12,14 @@ export const createTypePropertyRouter = ({ typePropertyModel }) => {
      *  name: TypeProperties
      *  description: TypeProperties manage.
      */
-    
+
+    /**
+     * @swagger
+     * /api/typeproperties/:
+     *  get:
+     *      summary: Get all type properties.
+     *      tags: [TypeProperties]
+     */
     typePropertyRouter.get('/', typePropertyController.getAll)
 
     return typePropertyRouter

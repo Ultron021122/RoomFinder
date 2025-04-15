@@ -12,7 +12,8 @@ const requestSchema = z.object({
     }), 
     dtrequest: z.string().optional(), 
     vchmessage: z.string().min(25), 
-    intnumguests: z.number().min(1), 
+    intnumguests: z.number().min(1),
+    intmonths: z.number().min(1).max(12),
     bnhaspets: z.boolean(), 
     dtstartdate: z.string(), 
     dtenddate: z.string()

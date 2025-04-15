@@ -45,6 +45,7 @@ export async function POST(req, res) {
         statusid,
         vchmessage,
         intnumguests,
+        intmonths,
         bnhaspets,
         dtstartdate,
         dtenddate
@@ -57,6 +58,7 @@ export async function POST(req, res) {
             statusid,
             vchmessage,
             intnumguests,
+            intmonths,
             bnhaspets,
             dtstartdate,
             dtenddate
