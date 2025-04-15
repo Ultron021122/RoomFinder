@@ -319,7 +319,7 @@ export default function AdminUsers() {
     };
 
     return (
-        <div className="p-2 md:p-8 h-screen overflow-hidden">
+        <div className="p-2 md:p-8">
             <Card className="overflow-hidden w-auto sm:w-full mx-auto bg-gray-100 dark:bg-gray-950">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold">Administración de Usuarios</CardTitle>
@@ -356,7 +356,7 @@ export default function AdminUsers() {
                             <span className='hidden md:inline'>Agregar Usuario (Admin)</span>
                         </Button>
                     </div>
-                    <ScrollArea className="w-full overflow-x-auto">
+                    <ScrollArea className="w-full overflow-x-auto h-full">
                         <Table className='w-full max-w-7xl'>
                             <TableHeader>
                                 <TableRow>

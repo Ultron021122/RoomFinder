@@ -11,7 +11,6 @@ import { toast, Bounce } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { Spinner } from "@nextui-org/react"
 import { ImageOverlay } from "./image-overlay"
-import { Separator } from "../ui/separator"
 import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import z from "zod"
 import { useForm } from "react-hook-form"
@@ -30,6 +29,7 @@ import {
     MapPin, Star, Wifi, Tv, CookingPotIcon as Kitchen, Bed, Bath, AirVentIcon, Sparkles, Refrigerator, Utensils, Zap, Fence, Flame, DropletsIcon, Car, DoorOpen, Heater, PaintBucket, ParkingCircle, Sofa, WashingMachine, Users, CalendarIcon, Home, User, Phone, LucideProps,
 } from "lucide-react"
 import dynamic from "next/dynamic"
+import { requestFormSchema } from "@/utils/constants"
 
 type Amenity = {
     text: string
@@ -48,61 +48,10 @@ type LessorData = {
     phone: string
 }
 
-const requestFormSchema = z.object({
-    propertyid: z.number().positive(),
-    studentid: z.number().positive(),
-    statusid: z.number().positive(),
-    vchmessage: z
-        .string({
-            message: "El mensaje es requerido",
-        })
-        .min(25, {
-            message: "El mensaje debe tener al menos 25 caracteres",
-        }),
-    intnumguests: z
-        .number({
-            message: "El número de huéspedes es requerido",
-        })
-        .positive()
-        .min(1),
-    bnhaspets: z.boolean({
-        message: "El campo de mascotas",
-    }),
-    dtstartdate: z.date({
-        message: "La fecha de inicio es requerida",
-    }),
-    dtenddate: z.date({
-        message: "La fecha de fin es requerida",
-    }),
-})
-
-const reviewsFormSchema = z.object({
-    propertyid: z
-        .number({
-            message: "La propiedad es requerida",
-        })
-        .positive(),
-    studentid: z
-        .number({
-            message: "El estudiante es requerido",
-        })
-        .positive(),
-    decrating: z
-        .number({
-            message: "La calificación es requerida",
-        })
-        .positive()
-        .max(5),
-    vchcomment: z
-        .string({
-            message: "El comentario es requerido",
-        })
-        .min(25),
-})
 
 const DynamicMap = dynamic(() => import("@/components/Form/Map"),
     {
-        ssr: false,
+        ssr: true,
         loading: () => <Spinner />,
     });
 
@@ -125,14 +74,18 @@ function PropertyComponent({ id }: { id: string }) {
             propertyid: Number(id),
             statusid: 2,
             intnumguests: 1,
+            intmonths: 1,
             bnhaspets: false,
         },
     })
 
     const handleDateChange = (dates: { from: Date | null; to: Date | null }) => {
         const { from: startDate, to: endDate } = dates
+        const months = Number(form.getValues("intmonths"))
+
         if (startDate) {
-            const newEndDate = addMonths(startDate, 1)
+            const newEndDate = addMonths(startDate, months)
+            console.log("New End Date:", newEndDate)
             setStartDate(startDate)
             setEndDate(newEndDate)
             form.setValue("dtstartdate", startDate)
@@ -465,6 +418,33 @@ function PropertyComponent({ id }: { id: string }) {
 
                                                 <FormField
                                                     control={form.control}
+                                                    name="intmonths"
+                                                    render={({ field }) => (
+                                                        <FormItem className="flex flex-col">
+                                                            <FormLabel className="text-gray-800 dark:text-gray-200">
+                                                                <Users className="inline mr-2 h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                                                Número de meses
+                                                            </FormLabel>
+                                                            <FormControl>
+                                                                <Input
+                                                                    type="number"
+                                                                    placeholder="Número de meses"
+                                                                    className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:focus:border-blue-400 dark:bg-gray-700 dark:text-white"
+                                                                    {...field}
+                                                                    min={1}
+                                                                    max={12}
+                                                                />
+                                                            </FormControl>
+                                                            <FormDescription className="text-gray-500 dark:text-gray-400">
+                                                                Ingrese el número de meses de la reserva
+                                                            </FormDescription>
+                                                            <FormMessage className="text-red-600" />
+                                                        </FormItem>
+                                                    )}
+                                                />
+
+                                                <FormField
+                                                    control={form.control}
                                                     name="vchmessage"
                                                     render={({ field }) => (
                                                         <FormItem className="flex flex-col">
@@ -527,13 +507,10 @@ function PropertyComponent({ id }: { id: string }) {
                                                         </PopoverTrigger>
                                                         <PopoverContent className="w-auto p-0" align="start">
                                                             <Calendar
-                                                                mode="range"
+                                                                mode="single"
                                                                 locale={es}
-                                                                className="border-gray-200 dark:border-gray-700 dark:bg-gray-800"
-                                                                selected={{ from: startDate || undefined, to: endDate || undefined }}
-                                                                onSelect={(range) =>
-                                                                    handleDateChange({ from: range?.from || null, to: range?.to || null })
-                                                                }
+                                                                selected={startDate || undefined}
+                                                                onSelect={(date) => handleDateChange({ from: date || null, to: null })}
                                                                 disabled={(date) => date < new Date()}
                                                                 initialFocus
                                                             />

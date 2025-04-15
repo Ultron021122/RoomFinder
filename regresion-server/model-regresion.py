@@ -21,7 +21,6 @@ MODEL_PATH = os.path.join(MODEL_DIR, "modelo_regresion.pkl")
 DATA_PATH = os.path.join(MODEL_DIR, "datos_preprocesados_lineal.pkl")
 
 def plot_scatter(y, y_pred):
-    # 1. **Gráfico de dispersión entre valores reales vs predicciones**
     plt.figure(figsize=(10, 6))
     plt.scatter(y, y_pred, alpha=0.3)
     plt.plot([min(y), max(y)], [min(y), max(y)], color="red", linestyle="--")
@@ -30,8 +29,7 @@ def plot_scatter(y, y_pred):
     plt.ylabel("Valor Predicho")
     plt.show()
 
-def hisplot(residuals):
-    # 2. **Gráfico de residuos**
+def plot_residuals(residuals):
     plt.figure(figsize=(10, 6))
     sns.histplot(residuals, kde=True, color="blue")
     plt.title("Distribución de los Residuos")
@@ -39,7 +37,49 @@ def hisplot(residuals):
     plt.ylabel("Frecuencia")
     plt.show()
 
-# 🔹 Conectar a PostgreSQL con el parámetro de codificación LATIN1
+def plot_rent_distribution(y):
+    plt.figure(figsize=(10, 6))
+    sns.histplot(y, kde=True, color="green")
+    plt.title("Distribución de Precios de Renta")
+    plt.xlabel("Precio de Renta")
+    plt.ylabel("Frecuencia")
+    plt.show()
+
+def plot_feature_importance(features, model):
+    importance = pd.Series(model.coef_, index=features)
+    importance = importance.sort_values(ascending=False)
+    plt.figure(figsize=(12, 8))
+    importance.plot(kind="bar", color="skyblue")
+    plt.title("Importancia de las Características")
+    plt.xlabel("Características")
+    plt.ylabel("Coeficiente")
+    plt.show()
+
+def plot_residuals_vs_predictions(y_pred, residuals):
+    plt.figure(figsize=(10, 6))
+    plt.scatter(y_pred, residuals, alpha=0.5)
+    plt.axhline(0, color="red", linestyle="--")
+    plt.title("Residuos vs Predicciones")
+    plt.xlabel("Predicciones")
+    plt.ylabel("Residuos")
+    plt.show()
+
+def plot_correlation_matrix(df):
+    plt.figure(figsize=(12, 10))
+    correlation_matrix = df.corr()
+    sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap="coolwarm")
+    plt.title("Matriz de Correlación")
+    plt.show()
+
+def plot_feature_relationship(df, feature1, feature2):
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(x=df[feature1], y=df[feature2])
+    plt.title(f"Relación entre {feature1} y {feature2}")
+    plt.xlabel(feature1)
+    plt.ylabel(feature2)
+    plt.show()
+
+# 🔹 Conectar a PostgreSQL con el parámetro de codificación UTF8
 db_url = os.getenv("DB_URL")
 engine = create_engine(db_url, connect_args={'client_encoding': 'UTF8'})
 
@@ -51,12 +91,14 @@ except Exception as e:
     print(f"❌ Error de conexión a la base de datos: {e}")
     exit()
 
-# 🔹 Definir las columnas numéricas relevantes para el modelo (eliminamos 'studentid')
-numerical_features = ['propertytypeid', 'intnumberrooms', 'intnumberbathrooms', 'intmaxoccupancy', 'decrentalcost', 'bnstudyzone',
-                      'intmincontractduration', 'bnwaterincluded', 'bnelectricityincluded', 'bninternetincluded', 'bngasincluded', 
-                      'bnheatingincluded', 'bnairconditioningincluded', 'bnlaundryincluded', 'bnparkingincluded', 'bncleaningincluded', 
-                      'bncabletvincluded', 'bnwashingmachineincluded', 'bnkitchen', 'bnlivingroom', 'bndiningroom', 'bncoolerincluded', 
-                      'bngardenincluded', 'intaccountparking', 'decarea', 'bnfurnished']
+# 🔹 Definir las columnas numéricas relevantes para el modelo
+numerical_features = [
+    'propertytypeid', 'intnumberrooms', 'intnumberbathrooms', 'intmaxoccupancy', 'decrentalcost', 'bnstudyzone',
+    'intmincontractduration', 'bnwaterincluded', 'bnelectricityincluded', 'bninternetincluded', 'bngasincluded',
+    'bnheatingincluded', 'bnairconditioningincluded', 'bnlaundryincluded', 'bnparkingincluded', 'bncleaningincluded',
+    'bncabletvincluded', 'bnwashingmachineincluded', 'bnkitchen', 'bnlivingroom', 'bndiningroom', 'bncoolerincluded',
+    'bngardenincluded', 'intaccountparking', 'decarea', 'bnfurnished'
+]
 
 # 📌 Revisar si ya existen el modelo y los datos preprocesados
 if os.path.exists(MODEL_PATH) and os.path.exists(DATA_PATH):
@@ -73,7 +115,7 @@ if os.path.exists(MODEL_PATH) and os.path.exists(DATA_PATH):
 else:
     print("🔄 Entrenando modelo y guardando datos preprocesados...")
 
-    # 🔹 Consultar datos desde la vista "Usuario"."RentalHistory"
+    # 🔹 Consultar datos desde la vista "Usuario"."vwPropertiesGet"
     query = f"""
         SELECT propertyid, vchmunicipality, vchneighborhood, vchuniversity, {', '.join(numerical_features)}
         FROM "Usuario"."vwPropertiesGet";
@@ -86,43 +128,42 @@ else:
         print(f"Error al leer desde la base de datos: {e}")
         exit()
 
-    # 🔹 Aplicar One-Hot Encoding a 'vchmunicipality' y 'vchneighborhood'
-    df_encoded = pd.get_dummies(df, columns=['vchmunicipality', 'vchneighborhood', 'vchuniversity'], prefix=['municipality', 'neighborhood', 'vchuniversity'])
+    # 🔹 Aplicar One-Hot Encoding a columnas categóricas
+    df_encoded = pd.get_dummies(df, columns=['vchmunicipality', 'vchneighborhood', 'vchuniversity'], 
+                                prefix=['municipality', 'neighborhood', 'university'])
 
-    # 🔹 Obtener la nueva lista de características después del One-Hot Encoding
-    all_features = [col for col in df_encoded.columns if col not in ['propertyid', 'decrentalcost']]  # Eliminar 'propertyid' y 'decrentalcost'
-
-    # 🔹 Definir las características (X) y el target (y)
-    X = df_encoded[all_features]  # Características de las propiedades
-    y = df_encoded['decrentalcost']  # Precio de alquiler (target)
+    # 🔹 Definir las características y el target
+    all_features = [col for col in df_encoded.columns if col not in ['propertyid', 'decrentalcost']]
+    X = df_encoded[all_features]
+    y = df_encoded['decrentalcost']
 
     # 🔹 Entrenar el modelo de regresión lineal
     model = LinearRegression()
     model.fit(X, y)
 
-    # 🔹 Guardar el modelo entrenado
+    # 🔹 Guardar el modelo entrenado y los datos preprocesados
     with open(MODEL_PATH, "wb") as model_file:
         pickle.dump(model, model_file)
-
-    # 🔹 Guardar los datos preprocesados
     with open(DATA_PATH, "wb") as data_file:
         pickle.dump((df_encoded, all_features), data_file)
 
     print("✅ Modelo y datos guardados correctamente.")
 
-    # 🔹 Predicciones y evaluación
-    y_pred = model.predict(X)
+# 🔹 Generar predicciones y evaluar el modelo
+y_pred = model.predict(X)
+residuals = y - y_pred
 
-    # 1. **Gráfico de dispersión entre valores reales vs predicciones**
-    plot_scatter(y, y_pred)
+# 🔹 Métricas de evaluación
+mse = mean_squared_error(y, y_pred)
+r2 = r2_score(y, y_pred)
 
-    # 2. **Gráfico de residuos**
-    residuals = y - y_pred
-    # hisplot(residuals)
+print(f"🔹 Error Cuadrático Medio (MSE): {mse}")
+print(f"🔹 R2: {r2}")
 
-    # 3. **Métricas de evaluación**
-    mse = mean_squared_error(y, y_pred)
-    r2 = r2_score(y, y_pred)
-
-    print(f"🔹 Error Cuadrático Medio (MSE): {mse}")
-    print(f"🔹 R2: {r2}")
+# 🔹 Generar gráficos
+plot_scatter(y, y_pred)
+plot_residuals(residuals)
+plot_rent_distribution(y)
+plot_residuals_vs_predictions(y_pred, residuals)
+plot_feature_importance(all_features, model)
+plot_correlation_matrix(df_encoded)

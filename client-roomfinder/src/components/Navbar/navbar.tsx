@@ -111,22 +111,22 @@ function Navbar({
                         isOpen && (
                             <div className="md:hidden text-sm mt-2 transition-opacity">
                                 <ul>
-                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-100 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/' ? 'dark:bg-gray-800' : ''}`}>
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-50 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/' ? 'dark:bg-gray-800' : ''}`}>
                                         <Link href="/" className={`block lg:inline-block hover:text-black dark:hover:text-white ${pathname === '/' ? 'text-blue-900 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                             Inicio
                                         </Link>
                                     </li>
-                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-100 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/properties/map' ? 'dark:bg-gray-800' : ''}`}>
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-50 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/properties/map' ? 'dark:bg-gray-800' : ''}`}>
                                         <Link href="/properties/map" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties/map' ? 'text-blue-900 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                             Mapa
                                         </Link>
                                     </li>
-                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-100 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/arrendadores' ? 'dark:bg-gray-800' : ''}`}>
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-50 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/arrendadores' ? 'dark:bg-gray-800' : ''}`}>
                                         <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-900 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                             Arrendadores
                                         </Link>
                                     </li>
-                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-100 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/arrendadores' ? 'dark:bg-gray-800' : ''}`}>
+                                    <li className={`block mt-2 py-2 pl-3 pr-4 text-gray-900 rounded bg-gray-50 hover:bg-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 ${pathname === '/arrendadores' ? 'dark:bg-gray-800' : ''}`}>
                                         <Link href="/properties" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-900 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                             Propiedades
                                         </Link>

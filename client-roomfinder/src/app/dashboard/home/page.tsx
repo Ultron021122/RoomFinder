@@ -8,10 +8,6 @@ export const metadata: Metadata = {
 
 export default function DashboardHome() {
     return (
-        <div className="h-full max-w-screen-2xl mx-auto">
-            <div className="mx-auto">
-                <Home />
-            </div>
-        </div>
+        <Home />
     );
 }
