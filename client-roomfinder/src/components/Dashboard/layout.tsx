@@ -84,7 +84,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             <div className="flex flex-1 mt-16">
                 <Sidebar expanded={expanded}>
-<<<<<<< HEAD
                     <SidebarItem
                         icon={<LayoutDashboard size={22} />}
                         text="Inicio"
@@ -149,21 +148,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 url="/dashboard/users"
                                 onClickSidebar={handleSidebarItemClick}
                             />
-=======
-                    <SidebarItem icon={<LayoutDashboard size={22} />} text="Inicio" url="/dashboard/home" onClickSidebar={handleSidebarItemClick} />
-                    <SidebarItem icon={<Search size={22} />} text="Inmuebles" url="/dashboard/inmuebles" onClickSidebar={handleSidebarItemClick} />
-                    <SidebarItem icon={<Mail size={22} />} text="Mensajes" url="/dashboard/messages" alert onClickSidebar={handleSidebarItemClick} />
-                    <SidebarItem icon={<History size={22} />} text="Historial" url="/dashboard/history" onClickSidebar={handleSidebarItemClick} />
-                    <SidebarItem icon={<CreditCard size={22} />} text="Pagos" url="/dashboard/payments" onClickSidebar={handleSidebarItemClick} />
-                    <SidebarItem icon={<NotebookIcon size={22} />} text="Rentas" url="/dashboard/rentals" onClickSidebar={handleSidebarItemClick} />
-
-                    {roleName === 'Arrendador' && (
-                        <>
-                            <SidebarItem icon={<Folder size={22} />} text="Propiedades" url="/dashboard/properties" onClickSidebar={handleSidebarItemClick} />
-                            <SidebarItem icon={<HomeIcon size={22} />} text="Publicar" url="/dashboard/publish" onClickSidebar={handleSidebarItemClick} />
-                            <SidebarItem icon={<Users size={22} />} text="Usuarios" url="/dashboard/users" onClickSidebar={handleSidebarItemClick} />
-                            <SidebarItem icon={<ClipboardList size={22} />} text="Solicitudes" url="/dashboard/request" alert onClickSidebar={handleSidebarItemClick} />
->>>>>>> 212ad3faf3abc32a1a1caea6754e2b16f535305b
                         </>
                     )}
 
