@@ -1,41 +1,97 @@
 'use client';
+
+import { useSession } from 'next-auth/react';
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { LeaseRequest, RequestStatus } from '@/utils/interfaces';
+import { LeaseRequest, RequestStatus, UserProfile, Property } from '@/utils/interfaces';
+import { ADMIN, ARRENDADOR, ESTUDIANTE } from '@/utils/constants';
 
 interface RequestContextProps {
-    request: LeaseRequest[];
+    leasingRequests: LeaseRequest[];
+    properties: Property[]
     requestStatus: RequestStatus[];
     isLoading: boolean;
     error: string | null;
-    refetchRequest: () => void;
-    refetchRequestStatus: () => void;
+    reload: () => void
 }
 
 const RequestContext = createContext<RequestContextProps | undefined>(undefined);
 
 export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [request, setRequest] = useState<LeaseRequest[]>([]);
+    const session = useSession()
+    const [leasingRequests, setLeasingRequests] = useState<LeaseRequest[]>([])
+    const [properties, setProperties] = useState<Property[]>([])
     const [requestStatus, setRequestStatus] = useState<RequestStatus[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    
+    const fetchPropertyData = async(propertyId : number) => {
+        try {
+            const {data:{data}} = await axios.get(`/api/properties/${propertyId}`,{
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            })
+            
+            return data
+        } catch (error) {
+            console.log(error)
+            return null
+        }
+    };
 
-    const fetchRequest = async () => {
+    // trae todas las solicitudes de arrendamiento (capacidad del administrador)
+    const fetchLeasingRequests = async () => {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await axios.get(`/api/requests`, {
+            const {data: {data}} = await axios.get(`/api/requests`, {
                 headers: {
                     'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
                 }
             });
-            setRequest(response.data.data);
+            const dataAsArray = [...data];
+            const properties = await Promise.all(dataAsArray.map(leaseRequest => fetchPropertyData(leaseRequest.propertyid)))
+            
+            setLeasingRequests(dataAsArray);
+            setProperties(properties);
         } catch(err: any) {
             setError(err.response?.data.message || 'An error occurred');
         } finally {
             setIsLoading(false);
         }
     };
+
+    // solicitudes de arrendamiento del usuario (estudiante | arrendador)
+    const fetchUserLeasingRequests =  async(role: number ,userId: number) => {
+        let url : string;
+        switch(role) {
+            case ESTUDIANTE: url = `/api/requests/user/${userId}`; break;
+            case ARRENDADOR: url = `/api/requests/leasor/${userId}`; break;
+            default: url=''; break;
+        }
+
+        setIsLoading(true)
+        setError(null)
+        try {
+            console.log('api a consultar: ', url);
+            const {data: {data}} = await axios.get(url, {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            })
+            const dataAsArray = [...data]; // por si la respuesta no es un arreglo
+            const propertiesData = await Promise.all(dataAsArray.map(leaseRequest => fetchPropertyData(leaseRequest.propertyid)))
+
+            setLeasingRequests(data)
+            setProperties(propertiesData)
+
+        } catch (error) {
+            console.log(error)
+        }finally{
+            setIsLoading(false)
+        }
+    }
 
     const fetchRequestStatus = async () => {
         try {
@@ -50,20 +106,37 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
     };
 
+    const reload = () => {
+        const sessionData = session.data?.user as UserProfile;
+        if(sessionData.roleid === ADMIN){
+            fetchLeasingRequests();
+        } else {
+            fetchUserLeasingRequests(sessionData.roleid, sessionData.usuarioid)
+        }
+    }
+
     useEffect(() => {
-        fetchRequest();
-        fetchRequestStatus();
-    }, []);
+        if(session.status === 'authenticated'){
+            const sessionData = session.data.user as UserProfile;
+            if(sessionData.roleid === ADMIN){
+                fetchLeasingRequests();
+            } else {
+                fetchUserLeasingRequests(sessionData.roleid, sessionData.usuarioid)
+            }
+            
+            fetchRequestStatus();
+        }       
+    }, [session]);
 
     return (
         <RequestContext.Provider
             value={{
-                request,
+                leasingRequests,
+                properties,
                 requestStatus,
                 isLoading,
                 error,
-                refetchRequest: fetchRequest,
-                refetchRequestStatus: fetchRequestStatus,
+                reload
             }}
         >
             {children}

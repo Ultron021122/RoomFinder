@@ -1,4 +1,5 @@
 'use client';
+import {CheckoutButton} from '@/components/checkout';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,42 +16,32 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useRequestContext } from '@/contexts/request-context';
 import { debounce } from '@/lib/debounce';
-import { LeaseRequest } from '@/utils/interfaces';
+import { ESTUDIANTE } from '@/utils/constants';
+import { LeaseRequest, UserProfile } from '@/utils/interfaces';
 import { Spinner } from '@nextui-org/react';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight, Edit, Search, Trash2, UserIcon } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Edit, Search, Trash2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast, Bounce, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function AdminRequests() {
-    const { request, requestStatus, isLoading, error, refetchRequest } = useRequestContext();
+
+    const session = useSession()
+    const { leasingRequests, properties, requestStatus, isLoading, error, reload } = useRequestContext();
     const [requestEdit, setRequestEdit] = useState<LeaseRequest | null>(null);
     const [status, setStatus] = useState<string>('all');
     const [dialogoAbierto, setDialogoAbierto] = useState<boolean>(false);
     const [busqueda, setBusqueda] = useState<string>('');
     const [usersPerPage] = useState<number>(10);
     const [paginaActual, setPaginaActual] = useState<number>(1);
-    const [isLoadingState, setIsLoading] = useState<boolean>(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
-    // Errores
-    useEffect(() => {
-        if (errorSystem) {
-            toast.error(errorSystem, {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            });
-        }
-    }, [errorSystem]);
+    /* ACCIONES BARRA DE BÚSQUEDA Y FILTRO */
 
     const handleBusquedaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBusqueda(e.target.value);
@@ -59,16 +50,16 @@ export default function AdminRequests() {
     const debouncedBusquedaChange = useMemo(() => debounce(handleBusquedaChange, 300), []);
     const filterRequests = useCallback(() => {
         // Verificar que request sea un array antes de usar filter
-        if (!Array.isArray(request)) {
+        if (!Array.isArray(leasingRequests)) {
             return [];
         }
-        return request.filter(req => {
+        return leasingRequests.filter(req => {
             const matchesBusqueda = req.vchmessage.toLowerCase().includes(busqueda.toLowerCase());
             const matchesVerificado = status === 'all' || (status === req.statusid.toString());
 
             return matchesBusqueda && matchesVerificado;
         });
-    }, [request, busqueda, status]);
+    }, [leasingRequests, busqueda, status]);
 
     const requestFiltrados = filterRequests();
     const totalPaginas = Math.ceil(requestFiltrados.length / usersPerPage);
@@ -79,15 +70,7 @@ export default function AdminRequests() {
         return requestFiltrados.slice(indiceInicio, indiceFin);
     }, [paginaActual, requestFiltrados, usersPerPage]);
 
-    useEffect(() => {
-        setPaginaActual(1);
-    }, [busqueda]);
-
-    useEffect(() => {
-        return () => {
-            debouncedBusquedaChange.cancel();
-        };
-    }, [debouncedBusquedaChange]);
+    /* ACCIONES VENTANA MODAL */
 
     const handleEditarRequest = (request: LeaseRequest) => {
         setRequestEdit(request);
@@ -96,6 +79,7 @@ export default function AdminRequests() {
 
     const handleGuardarCambios = async () => {
         if (requestEdit) {
+            setLoading(true)
             try {
                 const response = await axios.patch(`/api/requests/${requestEdit.requestid}`,
                     requestEdit,
@@ -105,7 +89,7 @@ export default function AdminRequests() {
                         }
                     }
                 );
-                refetchRequest();
+                reload()
                 setDialogoAbierto(false);
                 toast.success(response.data.message.message, {
                     position: "bottom-right",
@@ -131,19 +115,20 @@ export default function AdminRequests() {
                     theme: "colored",
                     transition: Bounce,
                 });
+            } finally {
+                setLoading(false)
             }
         }
     };
 
     const handleEliminarRequest = async (id: number) => {
-        setIsLoading(true);
         try {
             const response = await axios.delete(`/api/requests/${id}`, {
                 headers: {
                     'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
                 }
             });
-            refetchRequest();
+            reload()
             if (response.status === 200) {
                 toast.success(response.data.message.message, {
                     position: "bottom-right",
@@ -182,14 +167,48 @@ export default function AdminRequests() {
                 theme: "colored",
                 transition: Bounce,
             });
-        } finally {
-            setIsLoading(false);
         }
     };
 
     const handleStatusChange = (value: string) => {
         setStatus(value);
     };
+
+    const getUserType = () => {
+        if(session.status === 'authenticated'){
+            const userData = session.data.user as UserProfile;
+            return userData.roleid;
+        }
+
+        return null;
+    }
+
+    // Errores
+    useEffect(() => {
+        if (errorSystem) {
+            toast.error(errorSystem, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            });
+        }
+    }, [errorSystem]);
+    
+    useEffect(() => {
+        setPaginaActual(1);
+    }, [busqueda]);
+
+    useEffect(() => {
+        return () => {
+            debouncedBusquedaChange.cancel();
+        };
+    }, [debouncedBusquedaChange]);
 
     return (
         <div className='p-2 md:p-8'>
@@ -200,6 +219,7 @@ export default function AdminRequests() {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
+                    {/* BÚSQUEDA Y FILTROS */}
                     <div className='flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6'>
                         <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-4'>
                             <div className="relative w-full sm:w-auto">
@@ -232,19 +252,13 @@ export default function AdminRequests() {
                                 </Select>
                             </div>
                         </div>
-                        {/* <Button
-                            className='flex flex-row items-center justify-center w-full sm:w-auto sm:justify-start'
-                        // onClick={() => setCreateUser(true)}
-                        >
-                            <UserIcon className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
-                            <span className='hidden md:inline'>Agregar Solicitud</span>
-                        </Button> */}
                     </div>
-                    <ScrollArea className="w-full overflow-x-auto h-full">
+                    {/* TABLA DE CONTENIDOS */}
+                    <ScrollArea className="w-full overflow-x-auto">
                         <Table className='w-full max-w-7xl'>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Propiedad ID</TableHead>
+                                    <TableHead>Propiedad</TableHead>
                                     <TableHead>Estatus</TableHead>
                                     <TableHead>Mensaje</TableHead>
                                     <TableHead>Mascotas</TableHead>
@@ -255,17 +269,17 @@ export default function AdminRequests() {
                             <TableBody>
                                 {isLoading ?
                                     <TableRow className='bg-transparent hover:bg-slate-100'>
-                                        <TableCell colSpan={5}>
+                                        <TableCell colSpan={6}>
                                             <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto h-[40vh] lg:py-0'>
                                                 <Spinner />
                                             </div>
                                         </TableCell>
                                     </TableRow>
                                     :
-                                    getRequestPaginated().map((request) => (
+                                    getRequestPaginated().map((request, index) => (
                                         <TableRow key={request.requestid}>
                                             <TableCell>
-                                                <CopyText text={request.propertyid.toString()} />
+                                                <Link href={`/dashboard/propertyDetails/${request.propertyid}`}>{properties[index].vchtitle}</Link>
                                             </TableCell>
                                             <TableCell>
                                                 <Badge
@@ -298,7 +312,6 @@ export default function AdminRequests() {
                                                 {format(new Date(request.dtrequest), 'yyyy-MM-dd HH:mm:ss')}
                                             </TableCell>
                                             <TableCell>
-                                                {/* <CopyText text={} /> */}
                                                 {format(new Date(request.dtstartdate), 'yyyy-MM-dd') + ' - ' + format(new Date(request.dtenddate), 'yyyy-MM-dd')}
                                             </TableCell>
                                             <TableCell>
@@ -350,12 +363,20 @@ export default function AdminRequests() {
                                                     </AlertDialogContent>
                                                 </AlertDialog>
                                             </TableCell>
+                                            <TableCell>
+                                                { getUserType() !== null && getUserType() === ESTUDIANTE && (
+                                                    request.statusid === 1 ? 
+                                                    <CheckoutButton property={properties[index]} leaseRequest={request}/> :
+                                                    <p className="text-red-500">Pago no disponible por el momento</p>
+                                                )}
+                                            </TableCell>
                                         </TableRow>
                                     ))
                                 }
                             </TableBody>
                         </Table>
                     </ScrollArea>
+                    {/* PAGINACIÓN */}
                     <div className="flex items-center justify-between mt-4">
                         <div className="text-sm text-muted-foreground">
                             Mostrando {((paginaActual - 1) * usersPerPage) + 1} - {Math.min(paginaActual * usersPerPage, requestFiltrados.length)} de {requestFiltrados.length} solicitudes
@@ -392,6 +413,7 @@ export default function AdminRequests() {
                 </CardContent>
             </Card>
 
+            {/* VENTANA MODAL */}
             <Dialog
                 open={dialogoAbierto}
                 onOpenChange={setDialogoAbierto}
@@ -409,55 +431,59 @@ export default function AdminRequests() {
                                 onSubmit={(e) => { e.preventDefault(); handleGuardarCambios(); }}
                                 className="space-y-4 pl-2 pr-3"
                             >
-                                <div>
-                                    <Label htmlFor="vchmessage">Mensaje</Label>
-                                    <Textarea
-                                        id="vchmessage"
-                                        placeholder='Mensaje de solicitud'
-                                        className='h-24'
-                                        value={requestEdit.vchmessage}
-                                        onChange={(e) => setRequestEdit({ ...requestEdit, vchmessage: e.target.value })}
-                                    />
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Input
-                                        id="bnhaspets"
-                                        type="checkbox"
-                                        className='form-checkbox h-4 w-4 text-blue-600'
-                                        checked={requestEdit.bnhaspets}
-                                        onChange={(e) => setRequestEdit({ ...requestEdit, bnhaspets: e.target.checked })}
-                                    />
-                                    <Label htmlFor="bnhaspets">Mascotas</Label>
-                                </div>
-                                <div>
-                                    <Label htmlFor="tipo">Tipo de inmueble</Label>
-                                    <Select
-                                        value={requestEdit.statusid.toString()}
-                                        onValueChange={(value) => setRequestEdit({ ...requestEdit, statusid: parseInt(value) })}
-                                        defaultValue={requestEdit.statusid.toString()}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Selecciona el tipo de usuario" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {
-                                                requestStatus.map((request) => (
-                                                    <SelectItem
-                                                        key={request.statusid}
-                                                        value={request.statusid.toString()}
-                                                    >
-                                                        {request.vchstatusname}
-                                                    </SelectItem>
-                                                ))
-                                            }
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <Button
-                                    type="submit"
-                                >
-                                    Guardar Cambios
-                                </Button>
+                                { getUserType() !== null && (
+                                    getUserType() === ESTUDIANTE ? <>
+                                    <div>
+                                        <Label htmlFor="vchmessage">Mensaje</Label>
+                                        <Textarea
+                                            id="vchmessage"
+                                            placeholder='Mensaje de solicitud'
+                                            className='h-24'
+                                            value={requestEdit.vchmessage}
+                                            onChange={(e) => setRequestEdit({ ...requestEdit, vchmessage: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Input
+                                            id="bnhaspets"
+                                            type="checkbox"
+                                            className='form-checkbox h-4 w-4 text-blue-600'
+                                            checked={requestEdit.bnhaspets}
+                                            onChange={(e) => setRequestEdit({ ...requestEdit, bnhaspets: e.target.checked })}
+                                        />
+                                        <Label htmlFor="bnhaspets">Mascotas</Label>
+                                    </div>
+                                    </>:
+                                    <div>
+                                        <Label htmlFor="tipo">Estado de solicitud</Label>
+                                        <Select
+                                            value={requestEdit.statusid.toString()}
+                                            onValueChange={(value) => setRequestEdit({ ...requestEdit, statusid: parseInt(value) })}
+                                            defaultValue={requestEdit.statusid.toString()}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecciona el tipo de usuario" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {
+                                                    requestStatus.map((request) => (
+                                                        <SelectItem
+                                                            key={request.statusid}
+                                                            value={request.statusid.toString()}
+                                                        >
+                                                            {request.vchstatusname}
+                                                        </SelectItem>
+                                                    ))
+                                                }
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                )
+                                }
+                                {loading ? 
+                                    <Spinner/> :
+                                    <Button type="submit"> Guardar Cambios </Button>
+                                }
                             </form>
                         )}
                     </ScrollArea>

@@ -163,6 +163,7 @@ function PropertyComponent({ id }: { id: string }) {
                     },
                 })
                 const data = lessorResponse.data.data
+                console.log('datos de la propiedad: ', response.data.data);
                 setProperty(response.data.data)
                 setLessor({
                     image: data.vchimage,
@@ -294,7 +295,7 @@ function PropertyComponent({ id }: { id: string }) {
                                 <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors mr-2">
                                     {property?.vchtypename}
                                 </Badge>
-                                {property?.vchuniversity.trim() !== '' &&
+                                { property.vchuniversity !== '' &&
                                     <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors">
                                         {property?.vchuniversity}
                                     </Badge>

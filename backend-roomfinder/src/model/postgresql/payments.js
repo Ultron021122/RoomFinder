@@ -55,7 +55,7 @@ export class PaymentModel {
         }
     }
 
-    static async create({ input }) {
+    static async create(input) {
         try {
             const { leasesid, paymentmethodid, dtpayment, decamount, vchpaymentstatus, stripesessionid, stripe_payment_intent_id, client_reference_id } = input
             const db = new Database();

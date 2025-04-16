@@ -8,6 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 export async function POST(req) {
   try {
     const { origin } = new URL(req.url);
+    const {property, userId, leaseRequest} = await req.json();
 
     // Obtener la fecha y hora actual
     const currentDate = new Date();
@@ -15,27 +16,31 @@ export async function POST(req) {
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
+      mode: 'payment',
       line_items: [
         {
           price_data: {
             currency: 'mxn',
             product_data: {
-              name: 'Propiedad',
+              name: property.vchtitle,
+              images: [property.objphotos[0].url]
             },
-            unit_amount: 3000,
+            unit_amount: (parseInt(property.decrentalcost) * 100)
           },
-          quantity: 1,
-        },
+          quantity: 1
+        }
       ],
-      client_reference_id: '15',
-      mode: 'payment',
       success_url: `${origin}/success`,
       cancel_url: `${origin}/cancel`,
       metadata: {
-        leasesid: 1,   // ID del arrendamiento
+        propertyid: property.propertyid,
+        studentid: userId,
+        dtstartdate: leaseRequest.dtstartdate,
+        dtenddate: leaseRequest.dtenddate,
+        decmonthlycost: property.decrentalcost,
         paymentmethodid: 1,
         dtpayment: dtpayment
-      }
+      },
     });
 
     return NextResponse.json({ id: session.id });
