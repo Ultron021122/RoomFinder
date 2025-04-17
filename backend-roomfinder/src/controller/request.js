@@ -58,6 +58,16 @@ export class RequestController {
             .catch(next);
     }
 
+    getByStudentAndProperty = async (req, res, next) => {
+        const { studentid, propertyid } = req.params
+        await this.requestModel.getByStudentAndProperty({ studentid, propertyid })
+            .then(request => {
+                if (request) return res.json(request)
+                return res.status(404).json({ message: 'Request not found' })
+            })
+            .catch(next);
+    }
+
     create = async (req, res, next) => {
         const result = validateRequest(req.body)
         if (result.error) {
