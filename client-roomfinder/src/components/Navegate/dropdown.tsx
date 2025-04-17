@@ -1,6 +1,7 @@
 import { Avatar } from '@nextui-org/react';
 import { useEffect, useRef } from 'react';
 import useDropdownStore from '@/stores/useDropdownStore';
+import { User } from 'lucide-react';
 
 interface DropdownItem {
   text: string;
@@ -54,13 +55,24 @@ const Dropdown: React.FC<DropdownProps> = ({ usuarioName, vchimage, vchemail, it
              group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 bg-white border-gray-300 dark:bg-gray-950
              dark:border-gray-900 shadow-lg`}
         >
-          <li className="px-4 py-2 text-xs sm:text-sm text-black dark:text-gray-100 hover:bg-blue-100 dark:hover:bg-gray-700 cursor-pointer flex flex-col">
-            <p>
-              {usuarioName}
-            </p>
-            <span className='text-xs'>
-              {vchemail}
-            </span>
+          <li className="px-4 py-2 text-xs sm:text-sm text-black dark:text-gray-100 hover:bg-blue-100 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-2">
+            <Avatar
+              src={vchimage}
+              size='sm'
+              color='primary'
+              classNames={{
+                base: "ring-offset-gray-900 mr-2"
+              }}
+              isBordered
+            />
+            <div className='flex flex-col'>
+              <p>
+                {usuarioName}
+              </p>
+              <span className='text-xs'>
+                {vchemail}
+              </span>
+            </div>
           </li>
           {items.map((item, index) => (
             <li

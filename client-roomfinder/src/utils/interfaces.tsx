@@ -2133,3 +2133,89 @@ export interface Coordinate {
      */
     lng: number;
 }
+
+/**
+ * Interface representing the request history
+ * @interface
+ */
+export interface RequestHistory {
+    /**
+     * Request id
+     * @example
+     * requestid: 1
+     */
+    requestid: number;
+    /**
+     * Property id
+     * @example
+     * propertyid: 1
+     */
+    propertyid: number;
+    /**
+     * Student id
+     * @example
+     * studentid: 1
+     */
+    studentid: number;
+    /**
+     * Status id
+     * @example
+     * statusid: 1
+     */
+    statusid: number;
+    /**
+     * Request date
+     * @example
+     * dtrequest: '2025-01-01'
+     */
+    dtrequest: string;
+    /**
+     * Message content
+     * @example
+     * vchmessage: 'Solicitud'
+     */
+    vchmessage: string;
+    /**
+     * Number guests
+     * @example
+     * intnumguests: 2
+     */
+    intnumguests: number;
+    /**
+     * Has pets
+     * @example
+     * bnhaspets: true
+     */
+    intmonths: number;
+    /**
+     * Has pets
+     * @example
+     * bnhaspets: true
+     */
+    bnhaspets: boolean;
+    /**
+     * Start date
+     * @example
+     * dtstartdate: '2025-01-01'
+     */
+    dtstartdate: string;
+    /**
+     * End date
+     * @example
+     * dtenddate: '2025-01-01'
+     */
+    dtenddate: string;
+    /**
+     * Created date
+     * @example
+     * created_at: '2025-01-01'
+     */
+    created_at: string;
+    /**
+     * Updated date
+     * @example
+     * updated_at: '2025-01-01'
+     */
+    updated_at: string;
+
+}
