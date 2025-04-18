@@ -21,7 +21,7 @@ import { Textarea } from "../ui/textarea"
 import { Switch } from "../ui/switch"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { cn } from "@/lib/utils"
-import { format, addMonths } from "date-fns"
+import { format, addMonths, isBefore, isAfter } from "date-fns"
 import { Calendar } from "../ui/calendar"
 import { es } from "date-fns/locale"
 import { useSession } from "next-auth/react"
@@ -66,7 +66,7 @@ function PropertyComponent({ id }: { id: string }) {
     const [endDate, setEndDate] = useState<Date | null>(null)
     const [hasStayed, setHasStayed] = useState<boolean>(false)
     const [statusRequest, setStatusRequest] = useState<boolean>(false)
-    const [requestHistory, setRequestHistory] = useState<RequestHistory[]>()  
+    const [requestHistory, setRequestHistory] = useState<RequestHistory[]>()
 
     const userProfileData = session?.user as UserProfile
 
@@ -146,6 +146,25 @@ function PropertyComponent({ id }: { id: string }) {
         }
     }, [errorSystem])
 
+    const isRequestBlocked = useMemo(() => {
+        if (requestHistory) {
+            const now = new Date()
+            return requestHistory.some(request => {
+                if (request.statusid === 1) { // Aceptado
+                    const startDate = new Date(request.dtstartdate)
+                    const endDate = new Date(request.dtenddate)
+
+                    // Verificar si hoy está dentro del rango de fechas activas
+                    return isBefore(now, endDate) && isAfter(now, startDate)
+                }
+
+                // Bloquear si hay una solicitud pendiente
+                return request.statusid === 2
+            })
+        }
+        return false
+    }, [requestHistory])
+
     useEffect(() => {
         const fetchProperty = async () => {
             setIsLoading(true)
@@ -197,15 +216,11 @@ function PropertyComponent({ id }: { id: string }) {
                         "x-secret-key": `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`,
                     },
                 })
-                console.log(response.data)
-
-                if(response) {
-
+                if (response.data.data.length > 0) {
+                    setRequestHistory(response.data.data)
+                    setStatusRequest(true)
                 }
-
-                // setHasStayed(response.data.data.length > 0)
-            } catch(Error: any) {
-                console.log(Error.response?.data.message)
+            } catch (Error: any) {
                 if (Error.response?.status !== 404) {
                     setErrorSystem(Error.response?.data.message || Error.message)
                 }
@@ -380,15 +395,27 @@ function PropertyComponent({ id }: { id: string }) {
                                     </div>
                                 </CardContent>
                             </Card>
-
+                            {isRequestBlocked ? (
+                                <div className="text-center text-red-600">
+                                    {requestHistory?.some(request => request.statusid === 2)
+                                        ? <p>Ya tienes una solicitud pendiente para esta propiedad.</p>
+                                        : <p>Ya tienes una solicitud aceptada activa para esta propiedad.</p>
+                                    }
+                                </div>
+                            ) : (
+                                <div className="text-center text-green-600">
+                                    <p>¡Puedes reservar esta propiedad!</p>
+                                </div>
+                            )}
                             {/* Reservación */}
-                            {userProfileData?.roleid == 1 && status === "authenticated" && (
+                            {userProfileData?.roleid == 1 && status === "authenticated" && !isRequestBlocked && (
                                 <Card className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-md rounded-xl overflow-hidden lg:row-span-2 lg:sticky lg:top-20">
                                     <CardHeader className="bg-gradient-to-r from-blue-50 to-white dark:from-gray-800 dark:to-gray-800 border-b border-gray-100 dark:border-gray-700">
                                         <CardTitle className="text-blue-800 dark:text-blue-300">Reserva tu estancia</CardTitle>
                                         {/* <Separator className="dark:bg-gray-600" /> */}
                                     </CardHeader>
                                     <CardContent className="p-6">
+
                                         <Form {...form}>
                                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                                                 <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800 flex items-center justify-between">
@@ -618,12 +645,13 @@ function PropertyComponent({ id }: { id: string }) {
                             </div>
                         </section>
                     </div>
-                </div>
+                </div >
             ) : (
                 <div className="flex justify-center items-center h-1/2">
                     <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">No se encontró la propiedad</h4>
                 </div>
-            )}
+            )
+            }
         </>
     )
 }
