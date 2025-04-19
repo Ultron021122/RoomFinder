@@ -39,6 +39,32 @@ export const createPaymentRouter = ({ paymentModel }) => {
         paymentController.getByLeases
     ])
 
+    paymentRouter.get('/student/:id', [
+        param('id').isInt().withMessage('ID must be an integer')
+        .custom(value => value > 0).withMessage('id not valid'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if(!errors.isEmpty()){
+                return res.status(400).json({errors: errors.array()})
+            }
+            next()
+        },
+        paymentController.getByStudent
+    ])
+
+    paymentRouter.get('/lessor/:id', [
+        param('id').isInt().withMessage('ID must be an integer')
+        .custom(value => value > 0).withMessage('id not valid'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if(!errors.isEmpty()){
+                return res.status(400).json({errors: errors.array()})
+            }
+            next()
+        },
+        paymentController.getByLessor
+    ])
+
     paymentRouter.post('/', paymentController.create)
 
     paymentRouter.delete('/:id', [

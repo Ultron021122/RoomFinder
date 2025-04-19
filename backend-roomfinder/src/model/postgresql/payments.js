@@ -55,6 +55,69 @@ export class PaymentModel {
         }
     }
 
+    static async getByStudent({ id }) {
+        try {
+            const db = new Database();
+            const client = await db.pool.connect();
+            const payments = await client.query(
+                `SELECT
+		            p.paymentid,
+		            p.client_reference_id AS usuario,
+		            p.dtpayment AS fecha_pago,
+		            p.decamount AS total,
+		            pr.vchtitle AS titulo,
+		            pr.vchdescription AS descripcion,
+		            ph.vchurl AS foto
+                FROM "Usuario"."Payments" AS p
+                INNER JOIN "Usuario"."Arrendamientos" AS a ON p.leasesid = a.leasesid
+                INNER JOIN "Usuario"."Propiedades" AS pr ON a.propertyid = pr.propertyid
+                INNER JOIN (
+                	SELECT DISTINCT ON (propertyid) ph.propertyid, ph.vchurl
+                	FROM "Usuario"."Photos" AS ph
+                ) AS ph ON ph.propertyid = pr.propertyid
+                WHERE p.client_reference_id = $1;
+            `, [id]
+            )
+
+            client.release()
+            return payments.rowCount > 0 ? payments.rows : null
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
+    static async getByLessor({ id }) {
+        try {
+            const db = new Database();
+            const client = await db.pool.connect();
+            const payments = await client.query(
+                `SELECT 
+                    p.paymentid,
+                    CONCAT(u.vchname, ' ', u.vchpaternalsurname, ' ', u.vchmaternalsurname) AS estudiante,
+                    p.dtpayment AS fecha_pago,
+                    p.decamount AS total,
+                    pr.vchtitle AS titulo,
+                    pr.vchdescription AS descripcion,
+                    ph.vchurl AS foto
+                FROM "Usuario"."Payments" AS p
+                INNER JOIN "Usuario"."Usuario" AS u ON p.client_reference_id = u.usuarioid
+                INNER JOIN "Usuario"."Arrendamientos" AS a ON p.leasesid = a.leasesid
+                INNER JOIN "Usuario"."Propiedades" AS pr ON a.propertyid = pr.propertyid
+                INNER JOIN (
+                    SELECT DISTINCT ON (propertyid) ph.propertyid, ph.vchurl
+                    FROM "Usuario"."Photos" AS ph
+                ) AS ph ON pr.propertyid = ph.propertyid
+                WHERE pr.lessorid = $1;
+            `, [id]
+            )
+
+            client.release()
+            return payments.rowCount > 0 ? payments.rows : null
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
     static async create(input) {
         try {
             const { leasesid, paymentmethodid, dtpayment, decamount, vchpaymentstatus, stripesessionid, stripe_payment_intent_id, client_reference_id } = input

@@ -36,6 +36,26 @@ export class PaymentController {
             .catch(next);
     }
 
+    getByStudent = async (req, res, next) => {
+        const {id} = req.params
+        await this.paymentModel.getByUser({id})
+            .then(payments => {
+                if(payments) return res.status(200).json({data: payments})
+                return res.status(404).json({message: 'No Payments were found'})
+            })
+            .catch(next)
+    }
+
+    getByLessor = async (req, res, next) => {
+        const {id} = req.params
+        await this.paymentModel.getByLessor({id})
+            .then(payments => {
+                if(payments) return res.status(200).json({data: payments})
+                return res.status(404).json({message: 'No Payments were found'})
+            })
+            .catch(next)
+    }
+
     create = async (req, res, next) => {
         const result = validatePayment(req.body)
         if (result.error) {
