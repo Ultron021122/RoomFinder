@@ -9,10 +9,12 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar, Check, Clock, Home, MapPin, Search, Star, X } from "lucide-react"
+import { Calendar, Check, Clock, Grid, Home, LayoutGrid, List, MapPin, Search, Star, X } from "lucide-react"
 import { Properties, UserProfile } from "@/utils/interfaces"
 import { useSession } from "next-auth/react"
 import axios from "axios"
+import { HomeIcon } from "@radix-ui/react-icons"
+import { Spinner } from "@nextui-org/react"
 
 export default function RentalHistory() {
   const { data: session, status } = useSession();
@@ -69,11 +71,11 @@ export default function RentalHistory() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
-        return <Badge className="bg-green-100 text-green-800 border-green-300">Activo</Badge>
+        return <Badge className="bg-green-100 hover:text-green-800 hover:border-green-300 border-green-500 text-green-600 hover:bg-transparent">Activo</Badge>
       case "completed":
-        return <Badge className="bg-blue-100 text-blue-800 border-blue-300">Completado</Badge>
+        return <Badge className="bg-blue-100 hover:text-blue-800 hover:border-blue-300 hover:bg-transparent border-blue-500 text-blue-500">Completado</Badge>
       case "cancelled":
-        return <Badge className="bg-red-100 text-red-800 border-red-300">Cancelado</Badge>
+        return <Badge className="bg-red-100 hover:text-red-800 hover:border-red-300 hover:bg-transparent border-red-500 text-red-500">Cancelado</Badge>
       default:
         return null
     }
@@ -87,28 +89,28 @@ export default function RentalHistory() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <Spinner />
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <h1 className="text-3xl font-bold">Historial de Arrendamientos</h1>
+        <h1 className="text-2xl font-bold">Historial de Arrendamientos</h1>
         <div className="mt-4 md:mt-0">
           <Button variant="outline">Exportar historial</Button>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white dark:bg-transparent rounded-lg shadow-md p-6 mb-8">
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Buscar por título, dirección o tipo de propiedad"
-                className="pl-8"
+                className="dark:border-gray-400 pl-8"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -116,7 +118,7 @@ export default function RentalHistory() {
           </div>
           <div className="w-full md:w-48">
             <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger>
+              <SelectTrigger className="border border-gray-300 dark:border-gray-400">
                 <SelectValue placeholder="Filtrar por estado" />
               </SelectTrigger>
               <SelectContent>
@@ -130,12 +132,18 @@ export default function RentalHistory() {
         </div>
 
         <Tabs defaultValue="list" className="w-full">
-          <TabsList className="mb-4">
-            <TabsTrigger value="list">Lista</TabsTrigger>
-            <TabsTrigger value="grid">Cuadrícula</TabsTrigger>
+          <TabsList className="mb-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md">
+            <TabsTrigger value="list" className="dark:data-[state=active]:bg-gray-950">
+              <List className="w-4 h-4 mr-2" />
+              Lista
+            </TabsTrigger>
+            <TabsTrigger value="grid" className="dark:data-[state=active]:bg-gray-950">
+              <LayoutGrid className="w-4 h-4 mr-2" />
+              Cuadrícula
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="list" className="space-y-4">
+          <TabsContent value="list" className="space-y-4 ">
             {filteredRentals.length === 0 ? (
               <div className="text-center py-8">
                 <p className="text-muted-foreground">No se encontraron arrendamientos con los filtros seleccionados.</p>
@@ -143,7 +151,7 @@ export default function RentalHistory() {
             ) : (
               filteredRentals.map((rental) => (
                 <Card key={rental.propertyid} className="overflow-hidden">
-                  <CardContent className="p-0">
+                  <CardContent className="p-0 bg-gray-900/5 dark:bg-gray-800 dark:border-gray-800">
                     <div className="flex flex-col md:flex-row">
                       <div className="relative w-full md:w-48 h-48 md:h-auto">
                         <Image
@@ -159,15 +167,15 @@ export default function RentalHistory() {
                           {getStatusBadge("active")}
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
-                          <p className="text-sm text-gray-600 flex items-center">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
                             <MapPin className="w-4 h-4 mr-1" />
                             {rental.vchaddresscomplement}
                           </p>
-                          <p className="text-sm text-gray-600 flex items-center">
-                            <Home className="w-4 h-4 mr-1" />
+                          <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
+                            <HomeIcon className="w-4 h-4 mr-1" />
                             {rental.propertytypeid}
                           </p>
-                          <p className="text-sm text-gray-600 flex items-center">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
                             <Calendar className="w-4 h-4 mr-1" />
                             {formatDate(rental.dtavailabilitydate)} - {formatDate(rental.created_at)}
                           </p>
@@ -185,8 +193,8 @@ export default function RentalHistory() {
                             )}
                           </div>
                           <div className="flex gap-2 mt-3 md:mt-0">
-                            <Link href={`/propiedades/${rental.propertyid}`}>
-                              <Button variant="outline" size="sm">
+                            <Link href={`/property/${rental.propertyid}`}>
+                              <Button variant="outline" size="sm" className="dark:bg-gray-950 dark:border-gray-900">
                                 Ver propiedad
                               </Button>
                             </Link>
@@ -210,7 +218,7 @@ export default function RentalHistory() {
             )}
           </TabsContent>
 
-          <TabsContent value="grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <TabsContent value="grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredRentals.length === 0 ? (
               <div className="text-center py-8 col-span-full">
                 <p className="text-muted-foreground">No se encontraron arrendamientos con los filtros seleccionados.</p>
@@ -227,13 +235,13 @@ export default function RentalHistory() {
                     />
                     <div className="absolute top-2 right-2">{getStatusBadge("active")}</div>
                   </div>
-                  <CardContent className="p-4">
+                  <CardContent className="p-4 bg-gray-900/5 dark:bg-gray-800 dark:border-gray-800">
                     <h3 className="text-lg font-semibold mb-2 line-clamp-1">{rental.vchtitle}</h3>
-                    <p className="text-sm text-gray-600 mb-1 flex items-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1 flex items-center">
                       <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
                       <span className="line-clamp-1">{rental.vchaddresscomplement}</span>
                     </p>
-                    <p className="text-sm text-gray-600 mb-1 flex items-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1 flex items-center">
                       <Calendar className="w-4 h-4 mr-1 flex-shrink-0" />
                       <span className="line-clamp-1">
                         {formatDate(rental.dtavailabilitydate)} - {formatDate(rental.created_at)}
@@ -252,7 +260,7 @@ export default function RentalHistory() {
                     </div>
                     <div className="flex justify-between gap-2">
                       <Link href={`/propiedades/${rental.propertyid}`} className="flex-1">
-                        <Button variant="outline" size="sm" className="w-full">
+                        <Button variant="outline" size="sm" className="w-full dark:bg-blue-950 dark:border-gray-900">
                           Ver detalles
                         </Button>
                       </Link>
@@ -270,7 +278,7 @@ export default function RentalHistory() {
         </Tabs>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <div className="bg-white dark:bg-transparent rounded-lg shadow-md p-6">
         <h2 className="text-xl font-bold mb-4">Resumen de Arrendamientos</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-100 dark:border-green-800">

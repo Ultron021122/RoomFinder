@@ -26,12 +26,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const roleName = rolesMapping[user?.roleid] || 'Desconocido';
 
     const dropdownItems = [
-        { text: 'Perfil', onClick: () => router.push('/dashboard/profile') },
-        { text: 'Configuraciones', onClick: () => router.push('/dashboard/settings') },
+        { text: 'Perfil', onClick: () => router.push('/dashboard/profile'), color: 'secondary' },
+        { text: 'Configuraciones', onClick: () => router.push('/dashboard/settings'), color: 'secondary' },
         {
             text: 'Cerrar sesión', onClick: async () => {
                 await signOut({ redirect: true, callbackUrl: '/users/login' });
-            }
+            },
+            color: 'error',
         },
     ];
 
@@ -166,7 +167,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </Sidebar>
 
                 <main className={`flex-1 transition-opacity ${windowWidth <= 640 && expanded ? 'opacity-50 pointer-events-none' : ''}`}>
-                    <ScrollArea className="h-[calc(100dvh-4rem)] px-4 pt-10 pb-5">
+                    <ScrollArea className="h-[calc(100dvh-4rem)] px-4 pt-5 pb-5">
                         {children}
                     </ScrollArea>
                 </main>

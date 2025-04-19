@@ -98,7 +98,7 @@ const PropertyReviews: React.FC<PropertyReviewsProps> = ({ reviews: initialRevie
             </div>
           ))
         ) : (
-          <p>No hay comentarios disponibles.</p> // Mensaje si no hay comentarios
+          <p className='my-2 text-sm'>No hay comentarios disponibles.</p> // Mensaje si no hay comentarios
         )}
         <Card className='mt-6 dark:bg-gray-700 dark:border-gray-600'>
           <CardHeader>

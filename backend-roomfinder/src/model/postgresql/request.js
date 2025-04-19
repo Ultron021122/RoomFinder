@@ -96,6 +96,21 @@ export class RequestModel {
         }
     }
 
+    static async getByStudentAndProperty({ studentid, propertyid }) {
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const requests = await client.query(
+                `SELECT ls.* FROM "Usuario"."LeaseRequests" as ls WHERE ls.studentid = $1 AND ls.propertyid = $2;`,
+                [studentid, propertyid]
+            );
+
+            return requests.rowCount > 0 ? requests.rows.map(request => new RequestModel(request)) : [];
+        } finally {
+            client.release();
+        }
+    }
+
     static async create({ input }) {
         const { propertyid, studentid, statusid, vchmessage, intnumguests, intmonths, bnhaspets, dtstartdate, dtenddate } = input
 

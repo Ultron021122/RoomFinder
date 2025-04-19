@@ -628,15 +628,21 @@ export const requestFormSchema = z.object({
             message: "El mensaje debe tener al menos 25 caracteres",
         }),
     intnumguests: z
-        .number({
-            message: "El número de huéspedes es requerido",
-        })
-        .positive()
-        .min(1),
-    intmonths: z.number(
-        {
-            message: "El número de meses es requerido",
-        }).min(1).max(12),
+        .string()
+        .transform((val) => parseInt(val, 10))
+        .pipe(
+            z.number({
+                message: "El número de huéspedes es requerido",
+            }).positive().min(1),
+        ),
+    intmonths: z
+        .string()
+        .transform((val) => parseInt(val, 10))
+        .pipe(
+            z.number({
+                message: "El número de meses es requerido",
+            }),
+        ),
     bnhaspets: z.boolean({
         message: "El campo de mascotas",
     }),

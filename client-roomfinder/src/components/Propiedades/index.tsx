@@ -1,5 +1,5 @@
 "use client"
-import type { Properties, PropertyOpinions, UserProfile } from "@/utils/interfaces"
+import type { Properties, PropertyOpinions, RequestHistory, UserProfile } from "@/utils/interfaces"
 import Image from "next/image"
 import { type ForwardRefExoticComponent, type RefAttributes, useEffect, useMemo, useState } from "react"
 import axios from "axios"
@@ -65,6 +65,8 @@ function PropertyComponent({ id }: { id: string }) {
     const [startDate, setStartDate] = useState<Date | null>(null)
     const [endDate, setEndDate] = useState<Date | null>(null)
     const [hasStayed, setHasStayed] = useState<boolean>(false)
+    const [statusRequest, setStatusRequest] = useState<boolean>(false)
+    const [requestHistory, setRequestHistory] = useState<RequestHistory[]>()  
 
     const userProfileData = session?.user as UserProfile
 
@@ -73,8 +75,6 @@ function PropertyComponent({ id }: { id: string }) {
         defaultValues: {
             propertyid: Number(id),
             statusid: 2,
-            intnumguests: 1,
-            intmonths: 1,
             bnhaspets: false,
         },
     })
@@ -85,7 +85,6 @@ function PropertyComponent({ id }: { id: string }) {
 
         if (startDate) {
             const newEndDate = addMonths(startDate, months)
-            console.log("New End Date:", newEndDate)
             setStartDate(startDate)
             setEndDate(newEndDate)
             form.setValue("dtstartdate", startDate)
@@ -186,9 +185,29 @@ function PropertyComponent({ id }: { id: string }) {
                     },
                 })
                 setPropertyOpinions(response.data.data)
-                console.log(response.data.data)
             } catch (Error: any) {
                 if (Error.response.status !== 404) {
+                    setErrorSystem(Error.response?.data.message || Error.message)
+                }
+            }
+        }
+        const fetchRequest = async () => {
+            try {
+                const response = await axios.get(`/api/requests/search/${userProfileData.usuarioid}/${id}`, {
+                    headers: {
+                        "x-secret-key": `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`,
+                    },
+                })
+                console.log(response.data)
+
+                if(response) {
+
+                }
+
+                // setHasStayed(response.data.data.length > 0)
+            } catch(Error: any) {
+                console.log(Error.response?.data.message)
+                if (Error.response?.status !== 404) {
                     setErrorSystem(Error.response?.data.message || Error.message)
                 }
             }
@@ -196,7 +215,11 @@ function PropertyComponent({ id }: { id: string }) {
 
         fetchProperty()
         fetchPropertyOpinions()
-    }, [id])
+        if (userProfileData?.usuarioid) {
+            fetchRequest()
+        }
+
+    }, [id, userProfileData])
 
     const amenities: Amenity[] = useMemo(() => {
         return [
@@ -422,7 +445,7 @@ function PropertyComponent({ id }: { id: string }) {
                                                     render={({ field }) => (
                                                         <FormItem className="flex flex-col">
                                                             <FormLabel className="text-gray-800 dark:text-gray-200">
-                                                                <Users className="inline mr-2 h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                                                <CalendarIcon className="inline mr-2 h-4 w-4 text-blue-600 dark:text-blue-400" />
                                                                 Número de meses
                                                             </FormLabel>
                                                             <FormControl>
@@ -431,8 +454,8 @@ function PropertyComponent({ id }: { id: string }) {
                                                                     placeholder="Número de meses"
                                                                     className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:focus:border-blue-400 dark:bg-gray-700 dark:text-white"
                                                                     {...field}
-                                                                    min={1}
-                                                                    max={12}
+                                                                    min={property?.intmincontractduration}
+                                                                    max={property.intmaxcontractduration}
                                                                 />
                                                             </FormControl>
                                                             <FormDescription className="text-gray-500 dark:text-gray-400">
@@ -517,10 +540,10 @@ function PropertyComponent({ id }: { id: string }) {
                                                         </PopoverContent>
                                                     </Popover>
                                                 </div>
-
                                                 <Button
                                                     className="w-full bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                                                     type="submit"
+                                                    disabled={!form.formState.isValid} // Desactiva si el formulario no es válido
                                                 >
                                                     Reservar ahora
                                                 </Button>

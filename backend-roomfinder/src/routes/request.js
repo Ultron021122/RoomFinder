@@ -63,6 +63,19 @@ export const createRequestsRouter = ({ requestModel }) => {
         requestController.getByProperty
     ])
 
+    requestRouter.get('/search/:studentid/:propertyid', [
+        param('studentid').isInt().withMessage('Student id must be an integer'),
+        param('propertyid').isInt().withMessage('Property id must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        requestController.getByStudentAndProperty
+    ])
+
     requestRouter.post('/', requestController.create)
 
     requestRouter.delete('/:id', [
