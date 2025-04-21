@@ -9,8 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import CardOwner from "@/components/Main/Card";
 import { useSession } from "next-auth/react";
-import { Spinner } from "@nextui-org/react";
 import { Separator } from "../ui/separator";
+import { universities } from "@/utils/constants";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -31,9 +31,11 @@ export const SectionProperty = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const { data, status } = useSession();
     const userProfileData = data?.user as UserProfile;
+    const [filterUniversity, setFilterUniversity] = useState<string>('0');
 
     const count = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+    // Fetch properties when the component mounts
     useEffect(() => {
         const fetchProperties = async () => {
             setIsLoading(true);
@@ -63,6 +65,7 @@ export const SectionProperty = () => {
         fetchProperties();
     }, []);
 
+    // Fetch predict data based on user ID
     const fetchPredict = async (userId: number) => {
         setIsLoadingPredict(true);
         try {
@@ -82,16 +85,18 @@ export const SectionProperty = () => {
         }
     };
 
+    // Fetch properties based on filters and search query
     useEffect(() => {
         const filtered = allProperties.filter(property => {
             return (
                 (filterType === '' || property.propertytypeid === parseInt(filterType) || parseInt(filterType) === 0) &&
-                (searchQuery === '' || property.vchtitle.toLowerCase().includes(searchQuery.toLowerCase()))
+                (searchQuery === '' || property.vchtitle.toLowerCase().includes(searchQuery.toLowerCase())) &&
+                (filterUniversity === '' || property.vchuniversity === filterUniversity || filterUniversity === '0')
             );
         });
         setFilteredProperties(filtered);
         setCurrentPage(1); // Reset to first page on filter change
-    }, [allProperties, searchQuery, filterType]);
+    }, [allProperties, searchQuery, filterType, filterUniversity]);
 
     const paginatedProperties = useMemo(() => {
         const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -141,7 +146,7 @@ export const SectionProperty = () => {
 
     return (
         <div className="max-w-6xl mx-auto min-h-screen p-2 sm:p-0">
-            <div className="flex flex-col sm:flex-row justify-between items-center mb-5">
+            <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 justify-between items-center gap-2 mb-5">
                 <Input
                     type="text"
                     placeholder="Busca propiedad por título. Ej. Casa atlas"
@@ -161,6 +166,24 @@ export const SectionProperty = () => {
                         <SelectItem value="3">Apartamento</SelectItem>
                         <SelectItem value="1">Casa</SelectItem>
                         <SelectItem value="2">Habitación</SelectItem>
+                    </SelectContent>
+                </Select>
+                <Select
+                    value={filterUniversity}
+                    onValueChange={(value) => setFilterUniversity(value)}
+                >
+                    <SelectTrigger className="border-gray-300 shadow focus:ring-0 focus:border-blue-400">
+                        <SelectValue placeholder="Filtrar por universidad" />
+                    </SelectTrigger>
+                    <SelectContent className="dark:bg-gray-900">
+                        <SelectItem value="0">Todas</SelectItem>
+                        {
+                            universities.map((university, index) => (
+                                <SelectItem key={index} value={university.name}>
+                                    {university.name}
+                                </SelectItem>
+                            ))
+                        }
                     </SelectContent>
                 </Select>
             </div>
@@ -208,7 +231,6 @@ export const SectionProperty = () => {
     );
 };
 
-export default SectionProperty;
 
 export function SkeletonCard({ index }: { index: number }) {
     return (
@@ -221,3 +243,5 @@ export function SkeletonCard({ index }: { index: number }) {
         </div>
     );
 }
+
+export default SectionProperty;

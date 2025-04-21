@@ -27,9 +27,14 @@ import { es } from "date-fns/locale"
 import { useSession } from "next-auth/react"
 import {
     MapPin, Star, Wifi, Tv, CookingPotIcon as Kitchen, Bed, Bath, AirVentIcon, Sparkles, Refrigerator, Utensils, Zap, Fence, Flame, DropletsIcon, Car, DoorOpen, Heater, PaintBucket, ParkingCircle, Sofa, WashingMachine, Users, CalendarIcon, Home, User, Phone, LucideProps,
+    AlertCircle,
 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { requestFormSchema } from "@/utils/constants"
+import { HomeIcon } from "@radix-ui/react-icons"
+import { useRouter } from "next/navigation"
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
+import Link from "next/link"
 
 type Amenity = {
     text: string
@@ -49,13 +54,14 @@ type LessorData = {
 }
 
 
-const DynamicMap = dynamic(() => import("@/components/Form/Map"),
-    {
-        ssr: true,
-        loading: () => <Spinner />,
-    });
+const DynamicMap = dynamic(() => import("@/components/Form/Map"), {
+    ssr: false,
+    loading: () => <Spinner />,
+});
 
 function PropertyComponent({ id }: { id: string }) {
+
+    const router = useRouter()
     const { data: session, status, update } = useSession()
     const [Lessor, setLessor] = useState<LessorData>()
     const [property, setProperty] = useState<Properties>()
@@ -122,6 +128,9 @@ function PropertyComponent({ id }: { id: string }) {
                     transition: Bounce,
                 })
             }
+
+            form.reset()
+            router.push("/dashboard/request")
         } catch (Error: any) {
             setErrorSystem(Error.response?.data.message || Error.message)
         } finally {
@@ -273,6 +282,21 @@ function PropertyComponent({ id }: { id: string }) {
                 </div>
             ) : property ? (
                 <div className="bg-gradient-to-b min-h-screen">
+                    {userProfileData?.roleid === 1 && status === "authenticated" && isRequestBlocked && (
+                        <Alert className="border-green-500 bg-green-200 dark:bg-green-900/20 max-w-4xl mx-auto lg:max-w-7xl mt-2">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Solicitud</AlertTitle>
+                            <AlertDescription>
+                                <p>
+                                    {requestHistory?.some(request => request.statusid === 2)
+                                        ? "Ya tienes una solicitud pendiente para esta propiedad."
+                                        : "Ya tienes una solicitud aceptada activa para esta propiedad."
+                                    } <Link href="/dashboard/request" className="text-blue-600 hover:underline dark:text-blue-400">Ver solicitudes</Link>
+                                </p>
+                            </AlertDescription>
+                        </Alert>
+                    )}
+
                     {/* Hero Section */}
                     <main className="py-6 px-4 sm:p-6 md:py-10 md:px-8">
                         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-x-20 lg:grid-cols-2">
@@ -352,11 +376,12 @@ function PropertyComponent({ id }: { id: string }) {
                                     <CardTitle className="text-blue-800 dark:text-blue-300">Características y Amenidades</CardTitle>
                                     {/* <Separator className="dark:bg-gray-600" /> */}
                                 </CardHeader>
+                                {/* Contenido de la tarjeta */}
                                 <CardContent className="p-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-4">
                                             <h4 className="font-semibold text-gray-800 dark:text-gray-200 flex items-center">
-                                                <Home className="mr-2 h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                                <HomeIcon className="mr-2 h-5 w-5 text-blue-600 dark:text-blue-400" />
                                                 Detalles de la propiedad
                                             </h4>
                                             <div className="flex flex-wrap gap-2">
@@ -376,6 +401,7 @@ function PropertyComponent({ id }: { id: string }) {
                                                 })}
                                             </div>
                                         </div>
+                                        {/* Amenidades */}
                                         <div className="space-y-4">
                                             <h4 className="font-semibold text-gray-800 dark:text-gray-200 flex items-center">
                                                 <Sparkles className="mr-2 h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -395,18 +421,6 @@ function PropertyComponent({ id }: { id: string }) {
                                     </div>
                                 </CardContent>
                             </Card>
-                            {isRequestBlocked ? (
-                                <div className="text-center text-red-600">
-                                    {requestHistory?.some(request => request.statusid === 2)
-                                        ? <p>Ya tienes una solicitud pendiente para esta propiedad.</p>
-                                        : <p>Ya tienes una solicitud aceptada activa para esta propiedad.</p>
-                                    }
-                                </div>
-                            ) : (
-                                <div className="text-center text-green-600">
-                                    <p>¡Puedes reservar esta propiedad!</p>
-                                </div>
-                            )}
                             {/* Reservación */}
                             {userProfileData?.roleid == 1 && status === "authenticated" && !isRequestBlocked && (
                                 <Card className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-md rounded-xl overflow-hidden lg:row-span-2 lg:sticky lg:top-20">
