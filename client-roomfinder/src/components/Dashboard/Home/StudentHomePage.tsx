@@ -24,11 +24,11 @@ export const SectionProperty = () => {
     const [filterType, setFilterType] = useState<string>('');
     const [currentPage, setCurrentPage] = useState<number>(1);
     const { data, status } = useSession();
-    const userProfileData = data?.user as UserProfile;
     const [filterUniversity, setFilterUniversity] = useState<string>();
 
     const count = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; // For skeleton loading
 
+    // Fetch university data based on user ID
     const fetchUniversity = async (userId: number) => {
         try {
             const response = await axios.get(`/api/users/student/${userId}`, {
@@ -52,6 +52,7 @@ export const SectionProperty = () => {
         }
     };
 
+    // Fetch all properties when the component mounts
     useEffect(() => {
         const fetchProperties = async () => {
             setIsLoading(true);
@@ -132,6 +133,7 @@ export const SectionProperty = () => {
         }
     };
 
+    // Fetch university data when the user is authenticated
     useEffect(() => {
         if (status === 'authenticated') {
             const userData = data.user as UserProfile;
@@ -211,8 +213,6 @@ export const SectionProperty = () => {
     );
 };
 
-export default SectionProperty;
-
 export function SkeletonCard({ index }: { index: number }) {
     return (
         <div className="flex flex-col space-y-3" key={index}>
@@ -224,3 +224,5 @@ export function SkeletonCard({ index }: { index: number }) {
         </div>
     );
 }
+
+export default SectionProperty;

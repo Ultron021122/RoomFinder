@@ -36,7 +36,8 @@ export function ImageOverlay({ images }: ImageOverlayProps) {
                         alt={`Property image ${currentIndex + 1}`}
                         width={800}
                         height={600}
-                        className="object-cover rounded-lg max-h-[80vh] w-auto"
+                        className="object-cover rounded-lg max-h-[80vh] w-screen md:w-[80vw] lg:w-[50vw] xl:w-[33vw]"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     <Button
                         variant="ghost"

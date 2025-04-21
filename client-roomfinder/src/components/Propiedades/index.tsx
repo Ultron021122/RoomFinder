@@ -21,15 +21,20 @@ import { Textarea } from "../ui/textarea"
 import { Switch } from "../ui/switch"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { cn } from "@/lib/utils"
-import { format, addMonths } from "date-fns"
+import { format, addMonths, isBefore, isAfter } from "date-fns"
 import { Calendar } from "../ui/calendar"
 import { es } from "date-fns/locale"
 import { useSession } from "next-auth/react"
 import {
     MapPin, Star, Wifi, Tv, CookingPotIcon as Kitchen, Bed, Bath, AirVentIcon, Sparkles, Refrigerator, Utensils, Zap, Fence, Flame, DropletsIcon, Car, DoorOpen, Heater, PaintBucket, ParkingCircle, Sofa, WashingMachine, Users, CalendarIcon, Home, User, Phone, LucideProps,
+    AlertCircle,
 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { requestFormSchema } from "@/utils/constants"
+import { HomeIcon } from "@radix-ui/react-icons"
+import { useRouter } from "next/navigation"
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
+import Link from "next/link"
 
 type Amenity = {
     text: string
@@ -49,13 +54,14 @@ type LessorData = {
 }
 
 
-const DynamicMap = dynamic(() => import("@/components/Form/Map"),
-    {
-        ssr: true,
-        loading: () => <Spinner />,
-    });
+const DynamicMap = dynamic(() => import("@/components/Form/Map"), {
+    ssr: false,
+    loading: () => <Spinner />,
+});
 
 function PropertyComponent({ id }: { id: string }) {
+
+    const router = useRouter()
     const { data: session, status, update } = useSession()
     const [Lessor, setLessor] = useState<LessorData>()
     const [property, setProperty] = useState<Properties>()
@@ -66,7 +72,7 @@ function PropertyComponent({ id }: { id: string }) {
     const [endDate, setEndDate] = useState<Date | null>(null)
     const [hasStayed, setHasStayed] = useState<boolean>(false)
     const [statusRequest, setStatusRequest] = useState<boolean>(false)
-    const [requestHistory, setRequestHistory] = useState<RequestHistory[]>()  
+    const [requestHistory, setRequestHistory] = useState<RequestHistory[]>()
 
     const userProfileData = session?.user as UserProfile
 
@@ -122,6 +128,9 @@ function PropertyComponent({ id }: { id: string }) {
                     transition: Bounce,
                 })
             }
+
+            form.reset()
+            router.push("/dashboard/request")
         } catch (Error: any) {
             setErrorSystem(Error.response?.data.message || Error.message)
         } finally {
@@ -145,6 +154,25 @@ function PropertyComponent({ id }: { id: string }) {
             })
         }
     }, [errorSystem])
+
+    const isRequestBlocked = useMemo(() => {
+        if (requestHistory) {
+            const now = new Date()
+            return requestHistory.some(request => {
+                if (request.statusid === 1) { // Aceptado
+                    const startDate = new Date(request.dtstartdate)
+                    const endDate = new Date(request.dtenddate)
+
+                    // Verificar si hoy está dentro del rango de fechas activas
+                    return isBefore(now, endDate) && isAfter(now, startDate)
+                }
+
+                // Bloquear si hay una solicitud pendiente
+                return request.statusid === 2
+            })
+        }
+        return false
+    }, [requestHistory])
 
     useEffect(() => {
         const fetchProperty = async () => {
@@ -198,15 +226,11 @@ function PropertyComponent({ id }: { id: string }) {
                         "x-secret-key": `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`,
                     },
                 })
-                console.log(response.data)
-
-                if(response) {
-
+                if (response.data.data.length > 0) {
+                    setRequestHistory(response.data.data)
+                    setStatusRequest(true)
                 }
-
-                // setHasStayed(response.data.data.length > 0)
-            } catch(Error: any) {
-                console.log(Error.response?.data.message)
+            } catch (Error: any) {
                 if (Error.response?.status !== 404) {
                     setErrorSystem(Error.response?.data.message || Error.message)
                 }
@@ -259,6 +283,21 @@ function PropertyComponent({ id }: { id: string }) {
                 </div>
             ) : property ? (
                 <div className="bg-gradient-to-b min-h-screen">
+                    {userProfileData?.roleid === 1 && status === "authenticated" && isRequestBlocked && (
+                        <Alert className="border-green-500 bg-green-200 dark:bg-green-900/20 max-w-4xl mx-auto lg:max-w-7xl mt-2">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Solicitud</AlertTitle>
+                            <AlertDescription>
+                                <p>
+                                    {requestHistory?.some(request => request.statusid === 2)
+                                        ? "Ya tienes una solicitud pendiente para esta propiedad."
+                                        : "Ya tienes una solicitud aceptada activa para esta propiedad."
+                                    } <Link href="/dashboard/request" className="text-blue-600 hover:underline dark:text-blue-400">Ver solicitudes</Link>
+                                </p>
+                            </AlertDescription>
+                        </Alert>
+                    )}
+
                     {/* Hero Section */}
                     <main className="py-6 px-4 sm:p-6 md:py-10 md:px-8">
                         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-x-20 lg:grid-cols-2">
@@ -338,11 +377,12 @@ function PropertyComponent({ id }: { id: string }) {
                                     <CardTitle className="text-blue-800 dark:text-blue-300">Características y Amenidades</CardTitle>
                                     {/* <Separator className="dark:bg-gray-600" /> */}
                                 </CardHeader>
+                                {/* Contenido de la tarjeta */}
                                 <CardContent className="p-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-4">
                                             <h4 className="font-semibold text-gray-800 dark:text-gray-200 flex items-center">
-                                                <Home className="mr-2 h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                                <HomeIcon className="mr-2 h-5 w-5 text-blue-600 dark:text-blue-400" />
                                                 Detalles de la propiedad
                                             </h4>
                                             <div className="flex flex-wrap gap-2">
@@ -362,6 +402,7 @@ function PropertyComponent({ id }: { id: string }) {
                                                 })}
                                             </div>
                                         </div>
+                                        {/* Amenidades */}
                                         <div className="space-y-4">
                                             <h4 className="font-semibold text-gray-800 dark:text-gray-200 flex items-center">
                                                 <Sparkles className="mr-2 h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -381,15 +422,15 @@ function PropertyComponent({ id }: { id: string }) {
                                     </div>
                                 </CardContent>
                             </Card>
-
                             {/* Reservación */}
-                            {userProfileData?.roleid == 1 && status === "authenticated" && (
+                            {userProfileData?.roleid == 1 && status === "authenticated" && !isRequestBlocked && (
                                 <Card className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-md rounded-xl overflow-hidden lg:row-span-2 lg:sticky lg:top-20">
                                     <CardHeader className="bg-gradient-to-r from-blue-50 to-white dark:from-gray-800 dark:to-gray-800 border-b border-gray-100 dark:border-gray-700">
                                         <CardTitle className="text-blue-800 dark:text-blue-300">Reserva tu estancia</CardTitle>
                                         {/* <Separator className="dark:bg-gray-600" /> */}
                                     </CardHeader>
                                     <CardContent className="p-6">
+
                                         <Form {...form}>
                                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                                                 <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800 flex items-center justify-between">
@@ -619,12 +660,13 @@ function PropertyComponent({ id }: { id: string }) {
                             </div>
                         </section>
                     </div>
-                </div>
+                </div >
             ) : (
                 <div className="flex justify-center items-center h-1/2">
                     <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">No se encontró la propiedad</h4>
                 </div>
-            )}
+            )
+            }
         </>
     )
 }

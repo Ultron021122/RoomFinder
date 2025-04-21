@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Map from './map';
 
 export const metadata: Metadata = {
-    title: "Propiedades",
+    title: "Mapa Propiedades",
 };
 
 export default function Propiedades() {

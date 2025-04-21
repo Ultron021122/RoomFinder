@@ -2,6 +2,36 @@ import Layout from "@/components/layout";
 import React from 'react';
 import Link from "next/link";
 import SectionProperty from "@/components/properties";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Propiedades',
+    description: 'Encuentra la propiedad de tus sueños con nuestro buscador avanzado. Filtra por ubicación, precio y más.',
+    openGraph: {   
+        title: 'Propiedades',
+        description: 'Encuentra la propiedad de tus sueños con nuestro buscador avanzado. Filtra por ubicación, precio y más.',
+        url: 'https://roomfinder.com/properties',
+        images: [
+            {
+                url: '/images/city.jpg',
+                width: 800,
+                height: 600,
+                alt: 'Propiedades',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Propiedades',
+        description: 'Encuentra la propiedad de tus sueños con nuestro buscador avanzado. Filtra por ubicación, precio y más.',
+        images: '/images/city.jpg',
+    },
+    icons: {
+        icon: '/favicon.ico',
+        shortcut: '/favicon.ico',
+        apple: '/apple-touch-icon.png',
+    },
+};
 
 function PropertiesView() {
     return (

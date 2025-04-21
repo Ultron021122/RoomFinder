@@ -12,28 +12,28 @@ export const CardOwner = (cardProps: Properties) => {
     const route = useRouter();
     // Si objphotos es null o está vacío, usar 'No_image.png' como fallback
     const listaImagenes = (cardProps.objphotos && cardProps.objphotos.length > 0)
-    ? cardProps.objphotos.map((imagen, index) => (
-        <div key={index} className="relative min-w-full h-full">
-            <Image
-                width={800}
-                height={600}
-                src={imagen?.url || "/No_image.png"} // <- Validación aquí
-                alt={`Imagen de inmueble ${imagen?.photoid || "No disponible"}`}
-                className="absolute inset-0 object-cover w-full h-full"
-            />
-        </div>
-    ))
-    : [
-        <div key="fallback" className="relative min-w-full h-full">
-            <Image
-                width={800}
-                height={600}
-                src="/No_image.png"
-                alt="Imagen no disponible"
-                className="absolute inset-0 object-cover w-full h-full"
-            />
-        </div>
-    ];
+        ? cardProps.objphotos.map((imagen, index) => (
+            <div key={index} className="relative min-w-full h-full">
+                <Image
+                    width={800}
+                    height={600}
+                    src={imagen?.url || "/No_image.png"} // <- Validación aquí
+                    alt={`Imagen de inmueble ${imagen?.photoid || "No disponible"}`}
+                    className="absolute inset-0 object-cover w-full h-full"
+                />
+            </div>
+        ))
+        : [
+            <div key="fallback" className="relative min-w-full h-full">
+                <Image
+                    width={800}
+                    height={600}
+                    src="/No_image.png"
+                    alt="Imagen no disponible"
+                    className="absolute inset-0 object-cover w-full h-full"
+                />
+            </div>
+        ];
 
     return (
         <Card
@@ -64,7 +64,13 @@ export const CardOwner = (cardProps: Properties) => {
                             {cardProps.vchaddresscomplement}
                         </dd>
                     </dl>
-                    <p className={`mt-4 text-sm leading-6 col-start-1 sm:col-span-2 lg:row-start-4 lg:col-span-1 dark:text-slate-400`}>
+                    <p
+                        className="mt-4 text-sm leading-6 col-start-1 sm:col-span-2 lg:row-start-4 lg:col-span-1 dark:text-slate-400 line-clamp-none max-h-24 overflow-hidden relative"
+                        style={{
+                            WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                            maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)'
+                        }}
+                    >
                         {cardProps.vchdescription}
                     </p>
                 </CardContent>
