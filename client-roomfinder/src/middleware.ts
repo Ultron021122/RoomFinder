@@ -1,37 +1,53 @@
-export { default } from "next-auth/middleware";
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+import { getToken } from "next-auth/jwt"
 
-/**
-export function middleware(request: NextRequest) {
+const roleMap: Record<number, "student" | "lessor" | "admin"> = {
+  1: "student",
+  2: "lessor",
+  3: "admin",
+};
+
+const roleAccessMap: Record<"admin" | "student" | "lessor", string[]> = {
+  "admin": ["/admin", "/dashboard/users", "/dashboard/settings"],
+  "student": ["/dashboard/profile"],
+  "lessor": ["/dashboard/publish", "/dashboard/properties"],
+};
+
+export async function middleware(request: NextRequest) {
+  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+
+  if (!token) {
+    return NextResponse.redirect(new URL("/users/login", request.url));
+  }
+
   const { pathname } = request.nextUrl;
-  console.log('Middleware:', pathname)
-  // Block access to /api routes
-  if (pathname.startsWith('/api')) {
-    console.log(request.headers)
-    const internalHeader = request.headers.get('x-internal-request');
-    console.log(internalHeader)
-    console.log(process.env.INTERNAL_REQUEST_SECRET)
-    if (internalHeader !== process.env.INTERNAL_REQUEST_SECRET) {
-      console.log('Access denied')
-      //return NextResponse.json({ error: 'Access denied' }, { status: 403 });
-    }
+  const roleId = token.role as number; // token.user viene del callback jwt
+  const role = roleMap[roleId];
+
+  if (!role) {
+    console.error("Role not found for user:", roleId);
+    return NextResponse.redirect(new URL("/403", request.url));
+  }
+
+  const allowedPaths = roleAccessMap[role] || [];
+
+  const isAllowed = allowedPaths.some((path) =>
+    pathname === path || pathname.startsWith(`${path}/`)
+  );
+
+  if (!isAllowed) {
+    return NextResponse.redirect(new URL("/403", request.url));
   }
 
   return NextResponse.next();
 }
-*/
-
-// export async function middleware(req: NextRequest) {
-//   const ip = req.ip || req.headers.get('x-forwarded-for');
-//   return NextResponse.next();
-// }
 
 export const config = {
   matcher: [
     "/dashboard/:path*",
     "/admin",
     "/user/:path*",
-    "/checkout"
-    //'/api/:path*',
+    "/checkout",
   ],
 };

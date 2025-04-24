@@ -96,8 +96,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <>
                             <SidebarItem icon={<Folder size={22} />} text="Propiedades" url="/dashboard/properties" onClickSidebar={handleSidebarItemClick} />
                             <SidebarItem icon={<HomeIcon size={22} />} text="Publicar" url="/dashboard/publish" onClickSidebar={handleSidebarItemClick} />
-                            <SidebarItem icon={<Users size={22} />} text="Usuarios" url="/dashboard/users" onClickSidebar={handleSidebarItemClick} />
                             <SidebarItem icon={<ClipboardList size={22} />} text="Solicitudes" url="/dashboard/request" alert onClickSidebar={handleSidebarItemClick} />
+                        </>
+                    )}
+                    {roleName === 'Inquilino' && (
+                        <>
+                            <SidebarItem icon={<ClipboardList size={22} />} text="Solicitudes" url="/dashboard/request" alert onClickSidebar={handleSidebarItemClick} />
+                            <SidebarItem icon={<Users size={22} />} text="Arrendadores" url="/dashboard/landlords" onClickSidebar={handleSidebarItemClick} />
+                            <SidebarItem icon={<Users size={22} />} text="Usuarios" url="/dashboard/users" onClickSidebar={handleSidebarItemClick} />
                         </>
                     )}
 

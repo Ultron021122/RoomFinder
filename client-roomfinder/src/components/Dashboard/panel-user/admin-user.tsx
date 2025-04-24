@@ -318,6 +318,13 @@ export default function AdminUsers() {
         form.setValue('vchpassword', newPassword);
     };
 
+    // useEffect(() => {
+    //     if (status === 'authenticated') {
+    //         const userData = data.user as UserProfile
+    //         fetchLeasingRequests(userData.usuarioid);
+    //     }
+    // }, [status])
+
     return (
         <div className="p-2 md:p-8">
             <Card className="overflow-hidden w-auto sm:w-full mx-auto bg-gray-100 dark:bg-gray-950">

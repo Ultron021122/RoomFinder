@@ -283,6 +283,11 @@ export const roles: Roles[] = [
         roleid: 2,
         vchname: "Arrendador",
         vchdescription: "Usuario tipo Arrendador",
+    },
+    {
+        roleid: 3,
+        vchname: "Administrador",
+        vchdescription: "Usuario tipo Administrador",
     }
 ]
 // Mapeo de roles

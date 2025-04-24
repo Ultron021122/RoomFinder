@@ -69,7 +69,10 @@ const handler = NextAuth({
             if (trigger === "update") {
                 return { ...token, user: { ...session.user } };
             }
-            if (user) token.user = user;
+            if (user) {
+                token.user = user;
+                token.role = (user as any).roleid;
+            }
             return token;
         },
         async session({ session, token }) {
