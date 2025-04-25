@@ -134,7 +134,7 @@ export default function Confirmar() {
     }, [inmueble]);
 
     return (
-        <section className="w-full md:w-4/5 mx-auto p-2">
+        <section className="w-full md:w-11/12 mx-auto p-2">
             <div className="mb-4">
                 <h2 className="font-semibold text-base sm:text-xl md:text-2xl text-neutral-900 dark:text-gray-100">
                     Confirmar los datos del inmueble

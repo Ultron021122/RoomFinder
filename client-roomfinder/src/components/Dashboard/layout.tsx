@@ -7,7 +7,8 @@ import { rolesMapping } from "@/utils/constants";
 import {
     LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal,
     MoreVerticalIcon, Users, History, CreditCard, NotebookIcon,
-    ClipboardList, Search, HomeIcon
+    ClipboardList, Search,
+    BookOpenCheck
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -16,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import useSidebarStore from "@/stores/useSideStore";
 import { ScrollArea } from "../ui/scroll-area";
 import { UserProfile } from "@/utils/interfaces";
+import { HomeIcon } from "@radix-ui/react-icons";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const { expanded, toggleSidebar } = useSidebarStore();
@@ -95,17 +97,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     {roleName === 'Arrendador' && (
                         <>
                             <SidebarItem icon={<Folder size={22} />} text="Propiedades" url="/dashboard/properties" onClickSidebar={handleSidebarItemClick} />
-                            <SidebarItem icon={<HomeIcon size={22} />} text="Publicar" url="/dashboard/publish" onClickSidebar={handleSidebarItemClick} />
+                            <SidebarItem icon={<HomeIcon className="w-[22px] h-[22px]" />} text="Publicar" url="/dashboard/publish" onClickSidebar={handleSidebarItemClick} />
                             <SidebarItem icon={<ClipboardList size={22} />} text="Solicitudes" url="/dashboard/request" alert onClickSidebar={handleSidebarItemClick} />
                         </>
                     )}
-                    {roleName === 'Inquilino' && (
+                    {roleName === 'Estudiante' && (
                         <>
                             <SidebarItem icon={<ClipboardList size={22} />} text="Solicitudes" url="/dashboard/request" alert onClickSidebar={handleSidebarItemClick} />
                             <SidebarItem icon={<Users size={22} />} text="Arrendadores" url="/dashboard/landlords" onClickSidebar={handleSidebarItemClick} />
                             <SidebarItem icon={<Users size={22} />} text="Usuarios" url="/dashboard/users" onClickSidebar={handleSidebarItemClick} />
                         </>
                     )}
+
+                    <SidebarItem icon={<BookOpenCheck size={22} />} text="Arrendamientos" url="/dashboard/leases" onClickSidebar={handleSidebarItemClick} />
 
                     <hr className="my-2 border-gray-300 dark:border-gray-700" />
                     <SidebarItem icon={<UserCircle size={22} />} text="Perfil" url="/dashboard/profile" onClickSidebar={handleSidebarItemClick} />
