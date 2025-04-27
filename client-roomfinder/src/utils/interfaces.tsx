@@ -2008,6 +2008,102 @@ export interface LeaseRequest {
 }
 
 /**
+ * Interface to manage the request from the user
+ * @interface
+ */
+export interface vwLeaseRequest {
+    /**
+     * Request id
+     * @example
+     * requestid: 1
+     */
+    requestid: number;
+    /**
+     * Property id
+     * @example
+     * propertyid: 1
+     */
+    propertyid: number;
+    /**
+     * Student id
+     * @example
+     * studentid: 1
+     */
+    studentid: number;
+    /**
+     * Status id
+     * @example
+     * statusid: 2
+     */
+    statusid: number;
+    /**
+     * Request date
+     * @example
+     * dtrequest: '2025-01-01'
+     */
+    dtrequest: string;
+    /**
+     * Message content
+     * @example
+     * vchmessage: 'Solicitud'
+     */
+    vchmessage: string;
+    /**
+     * Number guests
+     * @example
+     * intnumguests: 2
+     */
+    intnumguests: number;
+    /**
+     * Number months
+     * @example
+     * intmonths: 2
+     */
+    intmonths: number;
+    /**
+     * Has pets
+     * @example
+     * bnhaspets: true
+     */
+    bnhaspets: boolean;
+    /**
+     * Start date
+     * @example
+     * dtstartdate: '2025-01-01'
+     */
+    dtstartdate: string;
+    /**
+     * End date
+     * @example
+     * dtenddate: '2025-01-01'
+     */
+    dtenddate: string;
+    /**
+     * Created at
+     * @example
+     * created_at: '2025-01-01'
+     */
+    created_at: string;
+    /**
+     * Updated at
+     * @example
+     * updated_at: '2025-01-01'
+     */
+    updated_at: string;
+    vchtitle: string;
+    vchdescription: string;
+    propertytypeid: number;
+    lessorid: number;
+    vchname: string;
+    vchpaternalsurname: string;
+    vchmaternalsurname: string;
+    decrentalcost: number;
+    vchstudentname: string;
+    vchstudentpaternalsurname: string;
+    vchstudentmaternalsurname: string;
+}
+
+/**
  * Interface representing property type details.
  */
 export interface RequestStatus {

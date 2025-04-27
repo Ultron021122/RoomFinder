@@ -1,41 +1,98 @@
 'use client';
+
+import { useSession } from 'next-auth/react';
+import { LeaseRequest, Property, RequestStatus, UserProfile } from '@/utils/interfaces';
 import { createContext, useContext, useState, useEffect } from 'react';
+import { ADMIN, ARRENDADOR, ESTUDIANTE } from '@/utils/constants';
 import axios from 'axios';
-import { LeaseRequest, RequestStatus } from '@/utils/interfaces';
 
 interface RequestContextProps {
     request: LeaseRequest[];
     requestStatus: RequestStatus[];
+    properties: Property[];
     isLoading: boolean;
     error: string | null;
     refetchRequest: () => void;
     refetchRequestStatus: () => void;
+    reload: () => void;
 }
 
 const RequestContext = createContext<RequestContextProps | undefined>(undefined);
 
 export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const session = useSession();
+    const [properties, setProperties] = useState<Property[]>([])
     const [request, setRequest] = useState<LeaseRequest[]>([]);
     const [requestStatus, setRequestStatus] = useState<RequestStatus[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
+    const fetchPropertyData = async (propertyId: number) => {
+        try {
+            const { data: { data } } = await axios.get(`/api/properties/${propertyId}`, {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            })
+
+            return data;
+        } catch (err: any) {
+            setError(err.response?.data.message || 'An error occurred');
+            return null;
+        }
+    };
+
     const fetchRequest = async () => {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await axios.get(`/api/requests`, {
+            const { data: { data } } = await axios.get(`/api/requests`, {
                 headers: {
                     'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
                 }
             });
-            setRequest(response.data.data);
-        } catch(err: any) {
+            const dataAsArray = [...data];
+            const properties = await Promise.all(dataAsArray.map(leaseRequest => fetchPropertyData(leaseRequest.propertyid)))
+
+            setRequest(dataAsArray);
+            setProperties(properties);
+
+        } catch (err: any) {
             setError(err.response?.data.message || 'An error occurred');
         } finally {
             setIsLoading(false);
         }
     };
+
+    const fetchUserLeasingRequests = async (role: number, userId: number) => {
+        let url: string;
+        switch (role) {
+            case ESTUDIANTE: url = `/api/requests/user/${userId}`; break;
+            case ARRENDADOR: url = `/api/requests/leasor/${userId}`; break;
+            default: url = ''; break;
+        }
+
+        setIsLoading(true)
+        setError(null)
+        try {
+            console.log('api a consultar: ', url);
+            const { data: { data } } = await axios.get(url, {
+                headers: {
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                }
+            })
+            const dataAsArray = [...data]; // por si la respuesta no es un arreglo
+            const propertiesData = await Promise.all(dataAsArray.map(leaseRequest => fetchPropertyData(leaseRequest.propertyid)))
+
+            setRequest(data)
+            setProperties(propertiesData)
+
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
 
     const fetchRequestStatus = async () => {
         try {
@@ -45,25 +102,44 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 }
             });
             setRequestStatus(response.data.data);
-        } catch(err: any) {
+        } catch (err: any) {
             setError(err.response?.data.message || 'An error occurred');
         }
     };
 
+    const reload = () => {
+        const sessionData = session.data?.user as UserProfile;
+        if (sessionData.roleid === ADMIN) {
+            fetchRequest();
+        } else {
+            fetchUserLeasingRequests(sessionData.roleid, sessionData.usuarioid)
+        }
+    }
+
     useEffect(() => {
-        fetchRequest();
-        fetchRequestStatus();
-    }, []);
+        if (session.status === 'authenticated') {
+            const sessionData = session.data.user as UserProfile;
+            if (sessionData.roleid === ADMIN) {
+                fetchRequest();
+            } else {
+                fetchUserLeasingRequests(sessionData.roleid, sessionData.usuarioid)
+            }
+
+            fetchRequestStatus();
+        }
+    }, [session]);
 
     return (
         <RequestContext.Provider
             value={{
                 request,
                 requestStatus,
+                properties,
                 isLoading,
                 error,
                 refetchRequest: fetchRequest,
                 refetchRequestStatus: fetchRequestStatus,
+                reload,
             }}
         >
             {children}
