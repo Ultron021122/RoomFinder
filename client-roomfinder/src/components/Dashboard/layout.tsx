@@ -87,13 +87,50 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             <div className="flex flex-1 mt-16">
                 <Sidebar expanded={expanded}>
-                    <SidebarItem icon={<LayoutDashboard size={22} />} text="Inicio" url="/dashboard/home" onClickSidebar={handleSidebarItemClick} />
-                    <SidebarItem icon={<Search size={22} />} text="Inmuebles" url="/dashboard/inmuebles" onClickSidebar={handleSidebarItemClick} />
-                    <SidebarItem icon={<Mail size={22} />} text="Mensajes" url="/dashboard/messages" alert onClickSidebar={handleSidebarItemClick} />
-                    <SidebarItem icon={<History size={22} />} text="Historial" url="/dashboard/history" onClickSidebar={handleSidebarItemClick} />
-                    <SidebarItem icon={<CreditCard size={22} />} text="Pagos" url="/dashboard/payments" onClickSidebar={handleSidebarItemClick} />
-                    <SidebarItem icon={<NotebookIcon size={22} />} text="Rentas" url="/dashboard/rentals" onClickSidebar={handleSidebarItemClick} />
-
+                    <SidebarItem
+                        icon={<LayoutDashboard size={22} />}
+                        text="Inicio"
+                        url="/dashboard/home"
+                        onClickSidebar={handleSidebarItemClick}
+                    />
+                    <SidebarItem
+                        icon={<Search className="w-[22px] h-[22px]" />}
+                        text="Inmuebles"
+                        url="/dashboard/inmuebles"
+                        onClickSidebar={handleSidebarItemClick}
+                    />
+                    <SidebarItem
+                        icon={<Mail size={22} />}
+                        text="Mensajes"
+                        url="/dashboard/messages"
+                        alert
+                        onClickSidebar={handleSidebarItemClick}
+                    />
+                    <SidebarItem
+                        icon={<History size={22} />}
+                        text="Historial"
+                        url="/dashboard/history"
+                        onClickSidebar={handleSidebarItemClick}
+                    />
+                    <SidebarItem
+                        icon={<CreditCard size={22} />}
+                        text="Pagos"
+                        url="/dashboard/payments"
+                        onClickSidebar={handleSidebarItemClick}
+                    />
+                    <SidebarItem
+                        icon={<NotebookIcon size={22} />}
+                        text="Rentas"
+                        url="/dashboard/rentals"
+                        onClickSidebar={handleSidebarItemClick}
+                    />
+                    <SidebarItem
+                        icon={<ClipboardList size={22} />}
+                        text="Solicitudes"
+                        url="/dashboard/request"
+                        alert
+                        onClickSidebar={handleSidebarItemClick}
+                    />
                     {roleName === 'Arrendador' && (
                         <>
                             <SidebarItem icon={<Folder size={22} />} text="Propiedades" url="/dashboard/properties" onClickSidebar={handleSidebarItemClick} />

@@ -38,7 +38,7 @@ export class LeasesModel {
         }
     }
 
-    static async create({ input }) {
+    static async create(input) {
         try {
             const db = new Database();
             const client = await db.pool.connect();
