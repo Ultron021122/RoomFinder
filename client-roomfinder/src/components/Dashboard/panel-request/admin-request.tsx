@@ -21,7 +21,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose, DialogDescription } from "@/components/ui/dialog"
 import {
   Pagination,
   PaginationContent,
@@ -44,7 +44,6 @@ import {
   Clock,
   XCircle,
   AlertCircle,
-  Home,
   User,
   FileText,
   Eye,
@@ -67,32 +66,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Spinner } from "@nextui-org/react"
+import { useRouter } from "next/navigation"
+import { HomeIcon } from "@radix-ui/react-icons"
+import { REQUEST_STATUS } from "@/utils/constants"
 
-// Tipos de estado con colores y nombres
-const REQUEST_STATUS = {
-  1: {
-    name: "Aceptada",
-    color:
-      "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800",
-    icon: CheckCircle,
-  },
-  2: {
-    name: "Pendiente",
-    color:
-      "bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800",
-    icon: Clock,
-  },
-  3: {
-    name: "En revisión",
-    color: "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800",
-    icon: AlertCircle,
-  },
-  4: {
-    name: "Rechazada",
-    color: "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800",
-    icon: XCircle,
-  },
-}
 
 export default function AdminRequests() {
   // Contexto y estado
@@ -113,6 +90,8 @@ export default function AdminRequests() {
     end: "",
   })
   const [activeTab, setActiveTab] = useState<string>("all")
+  const [sortOrder, setSortOrder] = useState<string>("asc")
+  const router = useRouter()
 
   // Estadísticas
   const stats = useMemo(() => {
@@ -169,8 +148,8 @@ export default function AdminRequests() {
       // Filtro de búsqueda
       const matchesBusqueda =
         req.vchmessage.toLowerCase().includes(busqueda.toLowerCase()) ||
-        req.propertyid.toString().includes(busqueda.toLowerCase()) 
-        // || (req.studentName && req.studentName.toLowerCase().includes(busqueda.toLowerCase()))
+        req.propertyid.toString().includes(busqueda.toLowerCase())
+      // || (req.studentName && req.studentName.toLowerCase().includes(busqueda.toLowerCase()))
 
       // Filtro de estado
       const matchesStatus = status === "all" || status === req.statusid.toString()
@@ -364,7 +343,7 @@ export default function AdminRequests() {
               <Download className="h-4 w-4" />
               Exportar
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1" onClick={() => router.refresh()}>
               <RefreshCcw className="h-4 w-4" />
               Actualizar
             </Button>
@@ -504,9 +483,8 @@ export default function AdminRequests() {
               </Button>
 
               <Button
-                variant="ghost"
+                variant="refresh"
                 onClick={resetFilters}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
               >
                 <RefreshCcw className="h-4 w-4 mr-1" />
                 Resetear
@@ -708,14 +686,16 @@ export default function AdminRequests() {
       </div>
 
       {/* Diálogo de edición */}
-      <Dialog open={dialogoAbierto} onOpenChange={setDialogoAbierto}>
+      <Dialog open={dialogoAbierto} onOpenChange={(open) => setDialogoAbierto(open)}>
         <DialogContent
           className="w-screen sm:w-full max-w-lg"
-          onOpenAutoFocus={(e) => e.preventDefault()}
-          onCloseAutoFocus={(e) => e.preventDefault()}
+          aria-describedby="dialog-description"
         >
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">Editar Solicitud</DialogTitle>
+            <DialogDescription>
+              Modifica tu solicitud aqui. Guarda los cambios cuando termines.
+            </DialogDescription>
           </DialogHeader>
           <ScrollArea className="h-[500px]">
             {requestEdit && (
@@ -817,9 +797,14 @@ export default function AdminRequests() {
                 </div>
 
                 <DialogFooter className="pt-4">
-                  <Button type="button" variant="outline" onClick={() => setDialogoAbierto(false)} className="mr-2">
+                  {/* <DialogClose asChild>
+                    <Button type="button" variant="secondary" onClick={() => setDialogoAbierto(false)}>
+                      Close
+                    </Button>
+                  </DialogClose> */}
+                  {/* <Button type="button" variant="outline" onClick={() => setDialogoAbierto(false)} className="mr-2">
                     Cancelar
-                  </Button>
+                  </Button> */}
                   <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white" disabled={isLoadingState}>
                     {isLoadingState ? (
                       <>
@@ -838,16 +823,18 @@ export default function AdminRequests() {
       </Dialog>
 
       {/* Diálogo de visualización */}
-      <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
+      <Dialog open={viewDialogOpen} onOpenChange={(open) => setViewDialogOpen(open)}>
         <DialogContent
           className="w-screen sm:w-full max-w-lg"
-          onOpenAutoFocus={(e) => e.preventDefault()}
-          onCloseAutoFocus={(e) => e.preventDefault()}
+          aria-describedby="dialog-description"
         >
-          <DialogHeader>
+          <DialogHeader id="dialog-description">
             <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
               Detalles de la Solicitud
             </DialogTitle>
+            <DialogDescription>
+              Visualiza los detalles de la solicitud seleccionada.
+            </DialogDescription>
           </DialogHeader>
           {viewRequest && (
             <ScrollArea className="h-[500px]">
@@ -864,7 +851,7 @@ export default function AdminRequests() {
                     </Badge>
                   </div>
                 </div>
-{/* 
+                {/*
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Propiedad</h3>
                   <div className="mt-1 flex items-center">
@@ -961,10 +948,10 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete }: A
   return (
     <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
       <CardContent className="p-0">
-        <ScrollArea className="w-full overflow-x-auto">
+        <ScrollArea className="overflow-x-auto">
           <Table className="w-full">
             <TableHeader>
-              <TableRow className="bg-gray-50 dark:bg-gray-800/60">
+              <TableRow className="bg-gray-50 dark:bg-gray-800/60 border-gray-200 dark:border-gray-700">
                 <TableHead className="font-semibold">ID</TableHead>
                 <TableHead className="font-semibold">Propiedad</TableHead>
                 <TableHead className="font-semibold">Estado</TableHead>
@@ -977,7 +964,9 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete }: A
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <TableRow className="bg-transparent hover:bg-slate-100 dark:hover:bg-gray-800/60">
+                <TableRow
+                  className="bg-transparent hover:bg-slate-100 dark:hover:bg-gray-800/60"
+                >
                   <TableCell colSpan={8}>
                     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[40vh] lg:py-0">
                       <Spinner className="h-8 w-8 text-blue-600" />
@@ -1007,7 +996,7 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete }: A
                       <TableCell className="font-medium">{request.requestid}</TableCell>
                       <TableCell>
                         <div className="flex items-center">
-                          <Home className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
+                          <HomeIcon className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
                           <CopyText text={request.propertyid.toString()} />
                         </div>
                       </TableCell>
@@ -1018,7 +1007,7 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete }: A
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <div className="max-w-xs truncate">
+                        <div className="max-w-xs">
                           <CopyText text={request.vchmessage} /> {/* maxLength={30} /> */}
                         </div>
                       </TableCell>
@@ -1037,28 +1026,43 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete }: A
                         {format(new Date(request.dtenddate), "dd MMM yyyy", { locale: es })}
                       </TableCell>
                       <TableCell className="text-right">
-                        <DropdownMenu>
+                        <DropdownMenu modal={false}>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0" aria-label="Opciones de solicitud">
+                            <Button
+                              variant="ghost"
+                              className="h-8 w-8 p-0 cursor-pointer" // Agrega cursor-pointer
+                              aria-label="Opciones de solicitud"
+                            >
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" sideOffset={5} collisionPadding={10}>
+                          <DropdownMenuContent
+                            align="end"
+                            sideOffset={5}
+                            collisionPadding={10}
+                            className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm"
+                          >
                             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                            <DropdownMenuItem onSelect={() => onView(request)}>
+                            <DropdownMenuItem
+                              className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white" // Hover para "Ver detalles"
+                              onSelect={() => onView(request)}
+                            >
                               <Eye className="h-4 w-4 mr-2" />
                               Ver detalles
                             </DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => onEdit(request)}>
+                            <DropdownMenuItem
+                              className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white" // Hover para "Editar"
+                              onSelect={() => onEdit(request)}
+                            >
                               <Edit className="h-4 w-4 mr-2" />
                               Editar
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
-                              className="text-red-600 dark:text-red-400"
+                              className="cursor-pointer text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-800 hover:text-red-800 dark:hover:text-red-300" // Hover para "Eliminar"
                               onSelect={() => {
                                 if (request.requestid) {
-                                  onDelete(request.requestid)
+                                  onDelete(request.requestid);
                                 }
                               }}
                             >

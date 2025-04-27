@@ -9,9 +9,9 @@ const roleMap: Record<number, "student" | "lessor" | "admin"> = {
 };
 
 const roleAccessMap: Record<"admin" | "student" | "lessor", string[]> = {
-  "admin": ["/admin", "/dashboard/users", "/dashboard/settings", "/dashboard/home", "/dashboard/messages","/dashboard/settings", "/dashboard/payments", "/dashboard/leases"],
-  "student": ["/dashboard/profile", "/dashboard/home", "/dashboard/messages", "/dashboard/settings", "/dashboard/profile", "/dashboard/rentals", "/dashboard/request", "/dashboard/payments", "/dashboard/leases"],
-  "lessor": ["/dashboard/publish", "/dashboard/properties", "/dashboard/home", "/dashboard/messages", "/dashboard/settings", "/dashboard/profile", "/dashboard/rentals", "/dashboard/request", "/dashboard/payments", "/dashboard/leases"],
+  "admin": ["/admin", "/dashboard/users", "/dashboard/settings", "/dashboard/home", "/dashboard/messages","/dashboard/settings", "/dashboard/payments", "/dashboard/leases","/dashboard/test"],
+  "student": ["/dashboard/profile", "/dashboard/home", "/dashboard/messages", "/dashboard/settings", "/dashboard/profile", "/dashboard/rentals", "/dashboard/request", "/dashboard/payments", "/dashboard/leases", "/dashboard/test"],
+  "lessor": ["/dashboard/publish", "/dashboard/properties", "/dashboard/home", "/dashboard/messages", "/dashboard/settings", "/dashboard/profile", "/dashboard/rentals", "/dashboard/request", "/dashboard/payments", "/dashboard/leases","/dashboard/test"],
 };
 
 export async function middleware(request: NextRequest) {

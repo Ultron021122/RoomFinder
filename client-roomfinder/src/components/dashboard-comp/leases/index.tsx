@@ -44,6 +44,7 @@ import {
   User,
 } from "lucide-react"
 import { Spinner } from "@nextui-org/react"
+import { LEASE_STATUSES } from "@/utils/constants"
 
 // Tipos
 interface Arrendamiento {
@@ -69,28 +70,6 @@ interface ArrendamientoStats {
   pendientes: number
   ingresos_totales: number
   duracion_promedio: number
-}
-
-// Estados de arrendamiento
-const LEASE_STATUSES = {
-  1: {
-    name: "Pendiente",
-    color:
-      "bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800",
-  },
-  2: {
-    name: "Activo",
-    color:
-      "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800",
-  },
-  3: {
-    name: "Finalizado",
-    color: "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800",
-  },
-  4: {
-    name: "Cancelado",
-    color: "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800",
-  },
 }
 
 export default function ArrendamientosPage() {
@@ -418,9 +397,8 @@ export default function ArrendamientosPage() {
               </Button>
 
               <Button
-                variant="ghost"
+                variant="refresh"
                 onClick={resetFilters}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
               >
                 <RefreshCcw className="h-4 w-4 mr-1" />
                 Resetear
@@ -509,67 +487,71 @@ export default function ArrendamientosPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedArrendamientos.map((arrendamiento) => (
-                  <TableRow
-                    key={arrendamiento.leasesid}
-                    className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/60"
-                  >
-                    <TableCell className="font-medium">{arrendamiento.lease_number}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center">
-                        <Home className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
-                        {arrendamiento.property_title}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center">
-                        <User className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
-                        {arrendamiento.student_name}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
-                        <span className="whitespace-nowrap">
-                          {formatDate(arrendamiento.dtstartdate)} - {formatDate(arrendamiento.dtenddate)}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium">{formatCurrency(arrendamiento.decmonthlycost)}</TableCell>
-                    <TableCell>
-                      <Badge
-                        className={LEASE_STATUSES[arrendamiento.leasestatusid as keyof typeof LEASE_STATUSES].color}
-                      >
-                        {LEASE_STATUSES[arrendamiento.leasestatusid as keyof typeof LEASE_STATUSES].name}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-gray-500 dark:text-gray-400 text-sm">
-                      {formatDate(arrendamiento.created_at)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Abrir menú</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                          <DropdownMenuItem>Ver detalles</DropdownMenuItem>
-                          <DropdownMenuItem>Editar contrato</DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem>Generar PDF</DropdownMenuItem>
-                          <DropdownMenuItem>Enviar recordatorio</DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600 dark:text-red-400">
-                            Cancelar contrato
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {paginatedArrendamientos.map((arrendamiento) => {
+                  const StatusIcon = LEASE_STATUSES[arrendamiento.leasestatusid as keyof typeof LEASE_STATUSES].icon
+                  return (
+                    <TableRow
+                      key={arrendamiento.leasesid}
+                      className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/60"
+                    >
+                      <TableCell className="font-medium">{arrendamiento.lease_number}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center">
+                          <Home className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
+                          {arrendamiento.property_title}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center">
+                          <User className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
+                          {arrendamiento.student_name}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center">
+                          <Calendar className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
+                          <span className="whitespace-nowrap">
+                            {formatDate(arrendamiento.dtstartdate)} - {formatDate(arrendamiento.dtenddate)}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium">{formatCurrency(arrendamiento.decmonthlycost)}</TableCell>
+                      <TableCell>
+                        <Badge
+                          className={LEASE_STATUSES[arrendamiento.leasestatusid as keyof typeof LEASE_STATUSES].color}
+                        >
+                          <StatusIcon className="h-3 w-3 mr-1" />
+                          {LEASE_STATUSES[arrendamiento.leasestatusid as keyof typeof LEASE_STATUSES].name}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-gray-500 dark:text-gray-400 text-sm">
+                        {formatDate(arrendamiento.created_at)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <span className="sr-only">Abrir menú</span>
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                            <DropdownMenuItem>Ver detalles</DropdownMenuItem>
+                            <DropdownMenuItem>Editar contrato</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>Generar PDF</DropdownMenuItem>
+                            <DropdownMenuItem>Enviar recordatorio</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="text-red-600 dark:text-red-400">
+                              Cancelar contrato
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           </div>

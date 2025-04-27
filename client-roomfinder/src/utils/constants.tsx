@@ -1,5 +1,7 @@
 import { UniversityData, Roles, MapCoordenada, Folder } from '@/utils/interfaces';
 import { url } from 'inspector';
+import { icon } from 'leaflet';
+import { AlertCircle, Calendar, CheckCircle, Clock, XCircle } from 'lucide-react';
 import { z } from 'zod';
 
 // Iconos
@@ -657,3 +659,66 @@ export const requestFormSchema = z.object({
         message: "La fecha de fin es requerida",
     }),
 })
+
+
+// Tipos de estado con colores y nombres
+export const REQUEST_STATUS = {
+  1: {
+    name: "Aceptada",
+    color:
+      "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800 hover:bg-green-200 hover:dark:bg-green-800/50",
+    icon: CheckCircle,
+  },
+  2: {
+    name: "Pendiente",
+    color:
+      "bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800 hover:bg-yellow-200 hover:dark:bg-yellow-800/50",
+    icon: Clock,
+  },
+  3: {
+    name: "En revisión",
+    color:
+      "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 hover:bg-blue-200 hover:dark:bg-blue-800/50",
+    icon: AlertCircle,
+  },
+  4: {
+    name: "Rechazada",
+    color:
+      "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800 hover:bg-red-200 hover:dark:bg-red-800/50",
+    icon: XCircle,
+  },
+  5: {
+    name: "Cancelada",
+    color:
+      "bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-800 hover:bg-gray-200 hover:dark:bg-gray-800/50",
+    icon: XCircle,
+  },
+};
+
+// Estados de arrendamiento
+export const LEASE_STATUSES = {
+  1: {
+    name: "Pendiente",
+    color:
+      "bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800 hover:bg-yellow-200 hover:dark:bg-yellow-800/50",
+    icon: Clock, // Icono para "Pendiente"
+  },
+  2: {
+    name: "Activo",
+    color:
+      "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800 hover:bg-green-200 hover:dark:bg-green-800/50",
+    icon: CheckCircle, // Icono para "Activo"
+  },
+  3: {
+    name: "Finalizado",
+    color:
+      "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 hover:bg-blue-200 hover:dark:bg-blue-800/50",
+    icon: Calendar, // Icono para "Finalizado"
+  },
+  4: {
+    name: "Cancelado",
+    color:
+      "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800 hover:bg-red-200 hover:dark:bg-red-800/50",
+    icon: XCircle, // Icono para "Cancelado"
+  },
+};
