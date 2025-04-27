@@ -1970,6 +1970,12 @@ export interface LeaseRequest {
      */
     intnumguests: number;
     /**
+     * Number months
+     * @example
+     * intmonths: 2
+     */
+    intmonths: number;
+    /**
      * Has pets
      * @example
      * bnhaspets: true
