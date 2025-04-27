@@ -21,6 +21,7 @@ const excludedRoutes = [
     '/dashboard/payments',
     '/dashboard/request',
     '/dashboard/settings',
+    '/dashboard/leases',
     '/test',
     '/checkout'
 ];

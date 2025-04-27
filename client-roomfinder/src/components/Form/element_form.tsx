@@ -41,13 +41,19 @@ export const NUM_MIN_RESTRICCIONES = 4;
 type FuncionValidacion = (inmueble: Inmueble) => boolean | string;
 
 const validaciones: Record<number, FuncionValidacion> = {
-    1: ({ tipoInmueble }) => validacionGeneral(tipoInmueble, 'Selecciona una opción para continuar'),
-    // 2: ({ servicios }) => (servicios) ? true : 'Selecciona al menos un servicio',
+    1: ({ tipoInmueble, additionalFeatures }) => {
+        const { decarea } = additionalFeatures
+
+        // if (!decarea) return 'Ingresa el área';
+        return validacionGeneral(tipoInmueble, 'Selecciona una opción para continuar')
+    },
     2: ({ fotos }) => (fotos.length >= 5 && fotos.length <= 8) ? true : 'Sube entre 5 y 8 fotos',
-    3: ({ titulo, descripcion, precio }) => {
+    3: ({ titulo, descripcion, additionalFeatures }) => {
+        const { decarea } = additionalFeatures;
         if (titulo.length <= 10) return 'El título es muy corto';
         if (descripcion.length <= 20) return 'La descripción es muy corta';
-        if (precio <= 0) return 'El precio debe ser mayor que 0';
+        if (decarea <= 0) return 'Ingresa el área';
+        // if (precio <= 0) return 'El precio debe ser mayor que 0';
         return true;
     },
     4: ({ servicios }) => {
@@ -68,12 +74,12 @@ const validaciones: Record<number, FuncionValidacion> = {
         return esValido ? true : 'Llene todos los campos para continuar';
     },
     6: ({ ubicacion }) => {
-        const { pais, direccion, estado, codigoPostal, ciudad_municipio, latitud, longitud } = ubicacion;
-        return (pais && direccion && estado && codigoPostal !== -1 && ciudad_municipio && latitud && longitud)
+        const { pais, direccion, estado, codigoPostal, ciudad_municipio, latitud, longitud, colonia } = ubicacion;
+
+        return (pais && direccion && estado && codigoPostal && ciudad_municipio && latitud && longitud && colonia)
             ? true
             : 'Ingresa la dirección de tu inmueble';
     },
-
     7: ({ ubicacion: { numExt, numInt } }) => {
         const validNumExt = validacionGeneral(numExt, 'El número exterior es obligatorio');
         if (validNumExt !== true) return validNumExt;
@@ -90,8 +96,24 @@ const validaciones: Record<number, FuncionValidacion> = {
         }
         return reglas.every(regla => regla.length >= 8) ? true : 'Las reglas deben ser más detalladas';
     },
+    9: ({ precio }) => {
+        if (precio <= 0) return 'El precio debe ser mayor que 0';
+        return true;
+    }, // Confirmación final
+};
 
-    9: () => true, // Confirmación final
+const handleToastError = (message: string) => {
+    toast.error(message, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+    });
 };
 
 
@@ -110,79 +132,67 @@ export default function ElementForm() {
         if (salida === true) {
             setActual(prev => prev + 1);
         } else {
-            toast.error(salida, {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                style: { fontSize: '0.9rem' },
-                transition: Bounce,
-            });
+            handleToastError(salida as string);
         }
     };
 
     // Errores
     useEffect(() => {
         if (errorSystem) {
-            toast.error(errorSystem, {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            });
+            handleToastError(errorSystem);
         }
     }, [errorSystem]);
 
     const handleClick = async () => {
+        // Validar el paso actual antes de continuar
+        const fnValidar = validaciones[actual];
+        const salida = fnValidar(inmueble);
+        if (salida !== true) {
+            return handleToastError(salida as string);
+        }
+
         setInmueble({ lessorId: user.usuarioid, ...inmueble });
-        if (actual < 9) return siguiente();
-        console.log('Inmueble a enviar:', inmueble);
-        // Enviar formulario
-        const submit = async () => {
-            setIsLoading(true);
-            setErrorSystem(null);
-            // Intentar enviar la información
-            try {
-                const response = await axios.post('/api/properties',
-                    inmueble, {
-                    headers: {
-                        'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
-                    }
-                });
-                setIsLoading(false);
-                if (response.status === 201) {
-                    toast.success(response.data.message.message, {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "colored",
-                        style: { fontSize: '0.9rem' },
-                        transition: Slide,
+        if (actual < 9) {
+            siguiente();
+        } else {
+            // Enviar formulario
+            const submit = async () => {
+                setIsLoading(true);
+                setErrorSystem(null);
+                // Intentar enviar la información
+                try {
+                    const response = await axios.post('/api/properties',
+                        inmueble, {
+                        headers: {
+                            'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
+                        }
                     });
-                    router.refresh();
-                } else {
-                    setErrorSystem(response.data.message);
+                    setIsLoading(false);
+                    if (response.status === 201) {
+                        toast.success(response.data.message.message, {
+                            position: "bottom-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            style: { fontSize: '0.9rem' },
+                            transition: Slide,
+                        });
+                        router.refresh();
+                    } else {
+                        setErrorSystem(response.data.message);
+                    }
+                } catch (Error: any) {
+                    setErrorSystem(Error.response.data.message);
+                } finally {
+                    setIsLoading(false);
                 }
-            } catch (Error: any) {
-                setErrorSystem(Error.response.data.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        await submit();
+            };
+            await submit();
+        }
     };
 
     const anterior = () => setActual(prev => prev - 1);
