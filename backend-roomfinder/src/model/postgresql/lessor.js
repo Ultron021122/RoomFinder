@@ -273,7 +273,7 @@ export class LessorsModel extends UsersModel {
             ];
 
             const studentData = this.createDataObject(input, studentFields);
-
+            
             const user = await UsersModel.update({ id, input })
             if (user === false) return false;
             if (!user) return null;
