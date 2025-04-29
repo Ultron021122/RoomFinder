@@ -114,10 +114,10 @@ export default function Map({ position, zoom, name, typeProperty, rating }: MapD
         <>
             {!isLoading ? (
                 <div>
-                    <MapContainer 
-                        center={position} 
-                        zoom={zoom} 
-                        className="h-screen w-screen max-w-screen-2xl z-10 relative float-left" 
+                    <MapContainer
+                        center={position}
+                        zoom={zoom}
+                        className="h-screen w-full max-w-screen-2xl z-10 relative float-left"
                         zoomControl={false}
                         minZoom={8}
                     >
@@ -206,7 +206,13 @@ export default function Map({ position, zoom, name, typeProperty, rating }: MapD
                                                     <span>{propertie.vchaddresscomplement}</span>
                                                 </dd>
                                             </dl>
-                                            <p className="mt-1 text-xs leading-4 col-start-1 sm:col-span-2 lg:row-start-4 lg:col-span-1">
+                                            <p
+                                                className="mt-4 text-sm col-start-1 sm:col-span-2 lg:row-start-4 lg:col-span-1 line-clamp-none max-h-24 overflow-hidden relative"
+                                                style={{
+                                                    WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                                                    maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)'
+                                                }}
+                                            >
                                                 {propertie.vchdescription}
                                             </p>
                                             {propertie && (

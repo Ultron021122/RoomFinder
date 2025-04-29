@@ -66,7 +66,7 @@ export async function PATCH(request, { params }) {
             vchbiography,
             vchphone,
             vchstreet,
-            intzip,
+            intzip: parseInt(intzip),
             vchsuburb,
             vchmunicipality,
             vchstate
@@ -86,7 +86,7 @@ export async function PATCH(request, { params }) {
         const message = error.response ? error.response.data.message : error.message;
 
         return NextResponse.json(
-            { message: `Error updating user: ${message}` },
+            { message: `Error updating user lessor: ${message}` },
             { status }
         );
     }
