@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { signIn, useSession } from "next-auth/react";
 // Componentes
@@ -16,6 +16,7 @@ import { toast, Bounce, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+// import ReCAPTCHA from "react-google-recaptcha";
 
 function Login() {
     const { status } = useSession();
@@ -25,6 +26,12 @@ function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const [errorSystem, setErrorSystem] = useState<string | null>(null);
     const [rememberMe, setRememberMe] = useState(false);
+    // const recaptchaRef = useRef<ReCAPTCHA | null>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true); // Solo para cliente
+    }, []);
 
     // Función para enviar los datos del formulario
     const onSubmit = async (userInfo: UserInfo) => {
@@ -37,9 +44,21 @@ function Login() {
         };
 
         try {
+            // Verifica que reCAPTCHA esté listo
+            // if (!recaptchaRef.current || typeof recaptchaRef.current.executeAsync !== "function") {
+            //     setErrorSystem("Error al inicializar reCAPTCHA.");
+            //     setIsLoading(false);
+            //     return;
+            // }
+
+            // const token = await recaptchaRef.current.executeAsync();
+            // recaptchaRef.current.reset();
+            // console.log('intento 2:', token)
+
             const response = await signIn("credentials", {
                 vchemail: data.vchemail,
                 vchpassword: data.vchpassword,
+                // recaptchaToken: token,
                 redirect: false
             });
 
@@ -211,6 +230,16 @@ function Login() {
                                     <p className="text-xs text-gray-500 dark:text-gray-400">
                                         ¿No tienes una cuenta? <Link href='/users/signup' className="text-sky-600 hover:underline dark:text-sky-500">Crear una cuenta</Link>
                                     </p>
+                                    {/* Invisible reCAPTCHA */}
+                                    {/*<ReCAPTCHA
+                                    //     ref={(el: any) => {
+                                    //         if (el) recaptchaRef.current = el;
+                                    //     }}
+                                    //     size="invisible"
+                                    //     sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                                    // />
+                                    */}
+
                                 </form>
                             </div>
                         </div>

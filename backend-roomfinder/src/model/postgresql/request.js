@@ -50,7 +50,7 @@ export class RequestModel {
         try {
             const requests = await client.query(
                 `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname
-                        FROM "Usuario"."vwLeasesRequest" studentid = $1;`,
+                        FROM "Usuario"."vwLeasesRequest" WHERE studentid = $1;`,
                 // `SELECT * FROM "Usuario"."LeaseRequests" WHERE studentid = $1;`,
                 [studentid]
             );
@@ -67,7 +67,7 @@ export class RequestModel {
         try {
             const request = await client.query(
                 `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname
-                    FROM "Usuario"."vwLeasesRequest" requestid = $1;`,
+                    FROM "Usuario"."vwLeasesRequest" WHERE requestid = $1;`,
                 // `SELECT * FROM "Usuario"."LeaseRequests" WHERE requestid = $1;`,
                 [id]
             );
@@ -84,7 +84,7 @@ export class RequestModel {
         try {
             const requests = await client.query(
                 `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname
-                    FROM "Usuario"."vwLeasesRequest" propertyid = $1;`,
+                    FROM "Usuario"."vwLeasesRequest" WHERE propertyid = $1;`,
                 // `SELECT * FROM "Usuario"."LeaseRequests" WHERE propertyid = $1;`,
                 [propertyid]
             );
@@ -101,7 +101,7 @@ export class RequestModel {
         try {
             const requests = await client.query(
                 `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname
-                    FROM "Usuario"."vwLeasesRequest" lessorid = $1;`,
+                    FROM "Usuario"."vwLeasesRequest" WHERE lessorid = $1;`,
                 // `SELECT ls.* FROM "Usuario"."LeaseRequests" ls
                 //     inner join "Usuario"."Propiedades" p
                 //         on ls.propertyid = p.propertyid
@@ -122,7 +122,7 @@ export class RequestModel {
         try {
             const requests = await client.query(
                 `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname
-                    FROM "Usuario"."vwLeasesRequest" studentid = $1 AND propertyid = $2;`,
+                    FROM "Usuario"."vwLeasesRequest" WHERE studentid = $1 AND propertyid = $2;`,
                 // `SELECT ls.* FROM "Usuario"."LeaseRequests" as ls WHERE ls.studentid = $1 AND ls.propertyid = $2;`,
                 [studentid, propertyid]
             );

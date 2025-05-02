@@ -5,7 +5,9 @@ const leasesSchema = z.object({
     studentid: z.number(),
     dtstartdate: z.string(),
     dtenddate: z.string(),
-    decmonthlycost: z.number().positive()
+    decmonthlycost: z.number().positive(),
+    leasestatusid: z.number().optional(),
+    lease_number: z.string()
 })
 
 export function validateLeases(input) {

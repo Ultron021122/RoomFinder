@@ -26,10 +26,24 @@ const handler = NextAuth({
             id: "credentials",
             credentials: {
                 vchemail: { label: "Email", type: "text", placeholder: "jsmith" },
-                vchpassword: { label: "Password", type: "password" },
+                vchpassword: { label: "Password", type: "password" }
+                // ,recaptchaToken: { label: "reCAPTCHA", type: "text" }
             },
             async authorize(credentials) {
                 try {
+                    // const recaptcha = credentials?.recaptchaToken;
+                    // console.log(recaptcha)
+                    // const captchaRes = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+                    //     method: "POST",
+                    //     headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    //     body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptcha}`
+                    // });
+
+                    // const data = await captchaRes.json();
+                    // if (!data.success || data.score < 0.5) {
+                    //     throw new Error("reCAPTCHA fallido. Inténtalo de nuevo.");
+                    // }
+
                     const login = await fetch(`${process.env.REST_URL}/users/login`, {
                         method: "POST",
                         headers: {

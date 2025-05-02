@@ -309,7 +309,7 @@ export class EmailService {
         }
     }
 
-    async sendRequestLeasor({ input}) {
+    async sendRequestLeasor({ input }) {
         try {
             const { vchname, vchemail } = input;
             const info = {
@@ -575,4 +575,58 @@ export class EmailService {
             throw new Error(`Error sending mail: ${error.message}`);
         }
     }
+
+    async sendLeaseStatusNotification(usuarioid, vchname, vchemail, leaseNumber, nuevoEstatus, fechaInicio, fechaFin) {
+        try {
+            const info = {
+                from: `"RoomFinder" <${process.env.EMAIL_USER}>`,
+                to: [vchemail],
+                subject: 'Actualización de estado de tu solicitud de arrendamiento',
+                html: `
+                    <!DOCTYPE html>
+                    <html lang="es">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+                        <style>
+                        body { font-family: 'Roboto Mono', monospace; background: #f4f4f7; margin: 0; padding: 0; }
+                        .container { max-width: 600px; margin: auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+                        .header { background: #0f172a; padding: 20px; text-align: center; color: #fff; }
+                        .content { padding: 20px; color: #333; }
+                        .footer { padding: 20px; text-align: center; font-size: 14px; color: #999; background: #f4f4f7; }
+                        .btn { display: inline-block; padding: 10px 20px; background: #0f172a; color: #fff; text-decoration: none; border-radius: 5px; }
+                        .btn:hover { background: #334155; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                        <div class="header">
+                            <h1>Actualización de Arrendamiento</h1>
+                        </div>
+                        <div class="content">
+                            <p>Hola ${vchname},</p>
+                            <p>Tu arrendamiento <strong>${leaseNumber}</strong> ha cambiado de estado a: <strong>${nuevoEstatus}</strong>.</p>
+                            <p><strong>Inicio:</strong> ${fechaInicio}<br/>
+                            <strong>Fin:</strong> ${fechaFin}</p>
+                            <p>Puedes consultar más detalles ingresando a tu cuenta.</p>
+                            <p><a class="btn" href="https://roomfinder.website/dashboard/leases">Ver arrendamiento</a></p>
+                        </div>
+                        <div class="footer">
+                            ¿Tienes preguntas? <a href="mailto:support@roomfinder.website">Contáctanos</a><br/>
+                            Gracias por usar RoomFinder.
+                        </div>
+                        </div>
+                    </body>
+                    </html>
+                `,
+            };
+
+            const result = await this.transporter.sendMail(info);
+            return result.messageId;
+        } catch (error) {
+            throw new Error(`Error al enviar correo: ${error.message}`);
+        }
+    }
+
 }

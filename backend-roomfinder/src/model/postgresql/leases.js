@@ -1,7 +1,8 @@
 import { Database } from "./database.js";
+import { v4 as uuidv4 } from 'uuid'
 
 export class LeasesModel {
-    constructor({ leasesid, propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, created_at }) {
+    constructor({ leasesid, propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, created_at, leasestatusid, lease_number }) {
         this.leasesid = leasesid;
         this.propertyid = propertyid;
         this.studentid = studentid;
@@ -9,6 +10,8 @@ export class LeasesModel {
         this.dtenddate = dtenddate;
         this.decmonthlycost = decmonthlycost;
         this.created_at = created_at;
+        this.leasestatusid = leasestatusid;
+        this.lease_number = lease_number;
     }
 
     static async getAll() {
@@ -42,11 +45,11 @@ export class LeasesModel {
         try {
             const db = new Database();
             const client = await db.pool.connect();
-            const { propertyid, studentid, dtstartdate, dtenddate, decmonthlycost } = input
+            const { propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, leasestatusid, lease_number } = input
             try {
                 const newLeases = await client.query(
-                    `INSERT INTO "Usuario"."Arrendamientos" (propertyid, studentid, dtstartdate, dtenddate, decmonthlycost ) VALUES ($1, $2, $3, $4, $5) RETURNING *;`,
-                    [propertyid, studentid, dtstartdate, dtenddate, decmonthlycost]
+                    `INSERT INTO "Usuario"."Arrendamientos" (propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, leasestatusid, lease_number ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;`,
+                    [propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, leasestatusid, lease_number]
                 );
 
                 return new LeasesModel(newLeases.rows[0]);
@@ -87,7 +90,9 @@ export class LeasesModel {
 
             const leasesFields = [
                 'dtenddate',
-                'decmonthlycost'
+                'decmonthlycost',
+                'leasestatusid', 
+                'lease_number'
             ];
 
             const leasesData = this.createDataObject(input, leasesFields);
