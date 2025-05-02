@@ -112,25 +112,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         url="/dashboard/history"
                         onClickSidebar={handleSidebarItemClick}
                     />
-                    <SidebarItem
-                        icon={<CreditCard size={22} />}
-                        text="Pagos"
-                        url="/dashboard/payments"
-                        onClickSidebar={handleSidebarItemClick}
-                    />
-                    <SidebarItem
-                        icon={<NotebookIcon size={22} />}
-                        text="Rentas"
-                        url="/dashboard/rentals"
-                        onClickSidebar={handleSidebarItemClick}
-                    />
-                    <SidebarItem
-                        icon={<ClipboardList size={22} />}
-                        text="Solicitudes"
-                        url="/dashboard/request"
-                        alert
-                        onClickSidebar={handleSidebarItemClick}
-                    />
                     {roleName === 'Arrendador' && (
                         <>
                             <SidebarItem icon={<Folder size={22} />} text="Propiedades" url="/dashboard/properties" onClickSidebar={handleSidebarItemClick} />
@@ -140,9 +121,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     )}
                     {roleName === 'Estudiante' && (
                         <>
+                            <SidebarItem
+                                icon={<CreditCard size={22} />}
+                                text="Pagos"
+                                url="/dashboard/payments"
+                                onClickSidebar={handleSidebarItemClick}
+                            />
+                            <SidebarItem
+                                icon={<NotebookIcon size={22} />}
+                                text="Rentas"
+                                url="/dashboard/rentals"
+                                onClickSidebar={handleSidebarItemClick}
+                            />
                             <SidebarItem icon={<ClipboardList size={22} />} text="Solicitudes" url="/dashboard/request" alert onClickSidebar={handleSidebarItemClick} />
-                            <SidebarItem icon={<Users size={22} />} text="Arrendadores" url="/dashboard/landlords" onClickSidebar={handleSidebarItemClick} />
+                        </>
+                    )}
+
+                    {roleName === 'Administrador' && (
+                        <>
+                            <SidebarItem icon={<ClipboardList size={22} />} text="Solicitudes" url="/dashboard/request" alert onClickSidebar={handleSidebarItemClick} />
                             <SidebarItem icon={<Users size={22} />} text="Usuarios" url="/dashboard/users" onClickSidebar={handleSidebarItemClick} />
+                            <SidebarItem icon={<Users size={22} />} text="Arrendadores" url="/dashboard/landlords" onClickSidebar={handleSidebarItemClick} />
                         </>
                     )}
 

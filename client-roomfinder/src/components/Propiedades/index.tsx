@@ -85,18 +85,41 @@ function PropertyComponent({ id }: { id: string }) {
         },
     })
 
-    const handleDateChange = (dates: { from: Date | null; to: Date | null }) => {
-        const { from: startDate, to: endDate } = dates
-        const months = Number(form.getValues("intmonths"))
+    // const handleDateChange = (dates: { from: Date | null; to: Date | null }) => {
+    //     const { from: startDate, to: endDate } = dates
+    //     const months = Number(form.getValues("intmonths"))
 
-        if (startDate) {
-            const newEndDate = addMonths(startDate, months)
-            setStartDate(startDate)
-            setEndDate(newEndDate)
-            form.setValue("dtstartdate", startDate)
-            form.setValue("dtenddate", newEndDate)
+    //     if (startDate) {
+    //         const newEndDate = addMonths(startDate, months)
+    //         setStartDate(startDate)
+    //         setEndDate(newEndDate)
+    //         form.setValue("dtstartdate", startDate)
+    //         form.setValue("dtenddate", newEndDate)
+    //     }
+    // }
+
+    const handleDateChange = (dates: { from: Date | null }) => {
+        const { from: startDate } = dates;
+        const months = Number(form.getValues("intmonths"));
+
+        if (startDate && months > 0) {
+            const newEndDate = addMonths(startDate, months);
+            setStartDate(startDate);
+            setEndDate(newEndDate);
+            form.setValue("dtstartdate", startDate);
+            form.setValue("dtenddate", newEndDate);
         }
-    }
+    };
+
+    // Nueva función para manejar el cambio en número de meses
+    const handleMonthsChange = (months: number) => {
+        form.setValue("intmonths", months);
+        if (startDate && months > 0) {
+            const newEndDate = addMonths(startDate, months);
+            setEndDate(newEndDate);
+            form.setValue("dtenddate", newEndDate);
+        }
+    };
 
     useEffect(() => {
         if (userProfileData?.usuarioid) {
@@ -357,7 +380,7 @@ function PropertyComponent({ id }: { id: string }) {
                                 <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors mr-2">
                                     {property?.vchtypename}
                                 </Badge>
-                                { property.vchuniversity.trim() !== '' &&
+                                {property.vchuniversity.trim() !== '' &&
                                     <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 transition-colors">
                                         {property?.vchuniversity}
                                     </Badge>
@@ -495,8 +518,9 @@ function PropertyComponent({ id }: { id: string }) {
                                                                     placeholder="Número de meses"
                                                                     className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:focus:border-blue-400 dark:bg-gray-700 dark:text-white"
                                                                     {...field}
-                                                                    min={property?.intmincontractduration}
-                                                                    max={property.intmaxcontractduration}
+                                                                    min={property?.intmincontractduration || 1}
+                                                                    max={property?.intmaxcontractduration || 12}
+                                                                    onChange={(e) => handleMonthsChange(Number(e.target.value))}
                                                                 />
                                                             </FormControl>
                                                             <FormDescription className="text-gray-500 dark:text-gray-400">
@@ -559,7 +583,9 @@ function PropertyComponent({ id }: { id: string }) {
                                                                 className={cn(
                                                                     "w-full pl-3 text-left font-normal border-gray-300 hover:border-blue-500 dark:border-gray-600 dark:hover:border-blue-400 dark:bg-gray-700 dark:text-white",
                                                                     !startDate && "text-muted-foreground",
+                                                                    form.getValues("intmonths") <= 0 && "cursor-not-allowed opacity-50"
                                                                 )}
+                                                                disabled={form.getValues("intmonths") <= 0}
                                                             >
                                                                 {startDate ? (
                                                                     `${format(startDate, "PPP", { locale: es })} - ${format(endDate!, "PPP", { locale: es })}`
@@ -574,8 +600,8 @@ function PropertyComponent({ id }: { id: string }) {
                                                                 mode="single"
                                                                 locale={es}
                                                                 selected={startDate || undefined}
-                                                                onSelect={(date) => handleDateChange({ from: date || null, to: null })}
-                                                                disabled={(date) => date < new Date()}
+                                                                onSelect={(date) => handleDateChange({ from: date || null })}
+                                                                disabled={(date) => date < new Date() || form.getValues("intmonths") <= 0}
                                                                 initialFocus
                                                             />
                                                         </PopoverContent>

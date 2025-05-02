@@ -54,7 +54,7 @@ import {
 // Contexto y utilidades
 import { useRequestContext } from "@/contexts/request-context"
 import { debounce } from "@/lib/debounce"
-import type { LeaseRequest } from "@/utils/interfaces"
+import type { LeaseRequest, UserProfile, vwLeaseRequest } from "@/utils/interfaces"
 
 // Componentes adicionales
 import {
@@ -65,20 +65,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Spinner } from "@nextui-org/react"
+import { Spinner, user } from "@nextui-org/react"
 import { useRouter } from "next/navigation"
 import { HomeIcon } from "@radix-ui/react-icons"
 import { REQUEST_STATUS } from "@/utils/constants"
+import { useSession } from "next-auth/react"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
+const estadosPermitidos = [1, 3];
 
 export default function AdminRequests() {
+  const { data: session } = useSession();
+  const userProfileData = session?.user as UserProfile;
+
   // Contexto y estado
   const { request, requestStatus, isLoading, error, refetchRequest } = useRequestContext()
   const [requestEdit, setRequestEdit] = useState<LeaseRequest | null>(null)
   const [status, setStatus] = useState<string>("all")
   const [dialogoAbierto, setDialogoAbierto] = useState<boolean>(false)
   const [viewDialogOpen, setViewDialogOpen] = useState<boolean>(false)
-  const [viewRequest, setViewRequest] = useState<LeaseRequest | null>(null)
+  const [viewRequest, setViewRequest] = useState<vwLeaseRequest | null>(null)
   const [busqueda, setBusqueda] = useState<string>("")
   const [usersPerPage, setUsersPerPage] = useState<number>(10)
   const [paginaActual, setPaginaActual] = useState<number>(1)
@@ -200,7 +207,7 @@ export default function AdminRequests() {
   }, [debouncedBusquedaChange])
 
   // Acciones de solicitud
-  const handleViewRequest = (request: LeaseRequest) => {
+  const handleViewRequest = (request: vwLeaseRequest) => {
     setViewRequest(request)
     setViewDialogOpen(true)
   }
@@ -208,6 +215,30 @@ export default function AdminRequests() {
   const handleEditarRequest = (request: LeaseRequest) => {
     setRequestEdit(request)
     setDialogoAbierto(true)
+  }
+
+  const exportarSolicitudes = async (solicitudes: vwLeaseRequest[]) => {
+    try {
+      const response = await axios.post('/api/csv', solicitudes, {
+        headers: {
+          'Content-Type': 'application/json',
+          "x-secret-key": `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`,
+        },
+        responseType: 'blob',
+      })
+
+      const blob = new Blob([response.data], { type: 'text/csv' })
+      const url = window.URL.createObjectURL(blob)
+
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'solicitudes.csv')
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } catch (err) {
+      console.error('Error al exportar CSV: ', err);
+    }
   }
 
   const handleGuardarCambios = async () => {
@@ -339,7 +370,11 @@ export default function AdminRequests() {
             <p className="text-gray-500 dark:text-gray-400 mt-1">Gestiona todas las solicitudes de arrendamiento</p>
           </div>
           <div className="mt-4 md:mt-0 flex gap-2">
-            <Button variant="outline" className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              className="flex items-center gap-1"
+              onClick={() => exportarSolicitudes(request)}
+            >
               <Download className="h-4 w-4" />
               Exportar
             </Button>
@@ -352,6 +387,7 @@ export default function AdminRequests() {
 
         {/* Dashboard de estadísticas */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+          {/* Total Solicitudes */}
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium text-gray-700 dark:text-gray-300">Total Solicitudes</CardTitle>
@@ -366,7 +402,7 @@ export default function AdminRequests() {
               </div>
             </CardContent>
           </Card>
-
+          {/* Aceptada */}
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium text-gray-700 dark:text-gray-300">Aceptadas</CardTitle>
@@ -383,7 +419,7 @@ export default function AdminRequests() {
               </div>
             </CardContent>
           </Card>
-
+          {/* Pendiente */}
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium text-gray-700 dark:text-gray-300">Pendientes</CardTitle>
@@ -400,7 +436,7 @@ export default function AdminRequests() {
               </div>
             </CardContent>
           </Card>
-
+          {/* En revisión */}
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium text-gray-700 dark:text-gray-300">En Revisión</CardTitle>
@@ -417,7 +453,7 @@ export default function AdminRequests() {
               </div>
             </CardContent>
           </Card>
-
+          {/* Rechazada */}
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium text-gray-700 dark:text-gray-300">Rechazadas</CardTitle>
@@ -580,6 +616,7 @@ export default function AdminRequests() {
               onView={handleViewRequest}
               onEdit={handleEditarRequest}
               onDelete={handleEliminarRequest}
+              user={userProfileData}
             />
           </TabsContent>
 
@@ -590,6 +627,7 @@ export default function AdminRequests() {
               onView={handleViewRequest}
               onEdit={handleEditarRequest}
               onDelete={handleEliminarRequest}
+              user={userProfileData}
             />
           </TabsContent>
 
@@ -600,6 +638,7 @@ export default function AdminRequests() {
               onView={handleViewRequest}
               onEdit={handleEditarRequest}
               onDelete={handleEliminarRequest}
+              user={userProfileData}
             />
           </TabsContent>
 
@@ -610,6 +649,7 @@ export default function AdminRequests() {
               onView={handleViewRequest}
               onEdit={handleEditarRequest}
               onDelete={handleEliminarRequest}
+              user={userProfileData}
             />
           </TabsContent>
 
@@ -620,6 +660,7 @@ export default function AdminRequests() {
               onView={handleViewRequest}
               onEdit={handleEditarRequest}
               onDelete={handleEliminarRequest}
+              user={userProfileData}
             />
           </TabsContent>
         </Tabs>
@@ -688,7 +729,7 @@ export default function AdminRequests() {
       {/* Diálogo de edición */}
       <Dialog open={dialogoAbierto} onOpenChange={(open) => setDialogoAbierto(open)}>
         <DialogContent
-          className="w-screen sm:w-full max-w-lg"
+          className="w-screen sm:w-full max-w-lg bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm"
           aria-describedby="dialog-description"
         >
           <DialogHeader>
@@ -728,6 +769,7 @@ export default function AdminRequests() {
                     className="h-24 mt-1 border-gray-300 dark:border-gray-600 dark:bg-gray-700"
                     value={requestEdit.vchmessage}
                     onChange={(e) => setRequestEdit({ ...requestEdit, vchmessage: e.target.value })}
+                    disabled={userProfileData.roleid !== 1}
                   />
                 </div>
 
@@ -737,6 +779,7 @@ export default function AdminRequests() {
                     checked={requestEdit.bnhaspets}
                     onCheckedChange={(checked) => setRequestEdit({ ...requestEdit, bnhaspets: checked as boolean })}
                     className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                    disabled={userProfileData.roleid !== 1}
                   />
                   <Label htmlFor="bnhaspets" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Tiene mascotas
@@ -750,6 +793,7 @@ export default function AdminRequests() {
                   <Select
                     value={requestEdit.statusid.toString()}
                     onValueChange={(value) => setRequestEdit({ ...requestEdit, statusid: Number.parseInt(value) })}
+                    disabled={userProfileData.roleid === 1}
                   >
                     <SelectTrigger id="status" className="mt-1 border-gray-300 dark:border-gray-600 dark:bg-gray-700">
                       <SelectValue placeholder="Selecciona el estado" />
@@ -777,6 +821,7 @@ export default function AdminRequests() {
                       onChange={(e) =>
                         setRequestEdit({ ...requestEdit, dtstartdate: new Date(e.target.value).toISOString() })
                       }
+                      disabled={userProfileData.roleid !== 1}
                     />
                   </div>
 
@@ -792,23 +837,21 @@ export default function AdminRequests() {
                       onChange={(e) =>
                         setRequestEdit({ ...requestEdit, dtenddate: new Date(e.target.value).toISOString() })
                       }
+                      disabled={userProfileData.roleid !== 1}
                     />
                   </div>
                 </div>
 
                 <DialogFooter className="pt-4">
-                  {/* <DialogClose asChild>
-                    <Button type="button" variant="secondary" onClick={() => setDialogoAbierto(false)}>
-                      Close
+                  <DialogClose asChild>
+                    <Button type="button" variant="destructive" onClick={() => setDialogoAbierto(false)}>
+                      Cancelar
                     </Button>
-                  </DialogClose> */}
-                  {/* <Button type="button" variant="outline" onClick={() => setDialogoAbierto(false)} className="mr-2">
-                    Cancelar
-                  </Button> */}
+                  </DialogClose>
                   <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white" disabled={isLoadingState}>
                     {isLoadingState ? (
                       <>
-                        <Spinner className="mr-2 h-4 w-4" />
+                        <Spinner color="white" className="mr-2" />
                         Guardando...
                       </>
                     ) : (
@@ -825,7 +868,7 @@ export default function AdminRequests() {
       {/* Diálogo de visualización */}
       <Dialog open={viewDialogOpen} onOpenChange={(open) => setViewDialogOpen(open)}>
         <DialogContent
-          className="w-screen sm:w-full max-w-lg"
+          className="w-screen sm:w-full max-w-lg bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm"
           aria-describedby="dialog-description"
         >
           <DialogHeader id="dialog-description">
@@ -851,14 +894,14 @@ export default function AdminRequests() {
                     </Badge>
                   </div>
                 </div>
-                {/*
+
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Propiedad</h3>
                   <div className="mt-1 flex items-center">
-                    <Home className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
-                    <p className="text-base font-medium text-gray-900 dark:text-white">
-                      ID: {viewRequest.propertyid}
-                      {viewRequest.propertyTitle && ` - ${viewRequest.propertyTitle}`}
+                    <HomeIcon className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      {/* ID: {viewRequest.propertyid} */}
+                      {viewRequest.vchtitle && ` ${viewRequest.vchtitle}`}
                     </p>
                   </div>
                 </div>
@@ -867,17 +910,17 @@ export default function AdminRequests() {
                   <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Estudiante</h3>
                   <div className="mt-1 flex items-center">
                     <User className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
-                    <p className="text-base font-medium text-gray-900 dark:text-white">
-                      ID: {viewRequest.studentid}
-                      {viewRequest.studentName && ` - ${viewRequest.studentName}`}
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      {/* ID: {viewRequest.studentid} */}
+                      {viewRequest.vchstudentname && ` ${viewRequest.vchstudentname}`}
                     </p>
                   </div>
-                </div> */}
+                </div>
 
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Mensaje</h3>
                   <div className="mt-1 p-3 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
-                    <p className="text-gray-900 dark:text-gray-300">{viewRequest.vchmessage}</p>
+                    <p className="text-gray-900 dark:text-gray-300 text-sm">{viewRequest.vchmessage}</p>
                   </div>
                 </div>
 
@@ -912,7 +955,7 @@ export default function AdminRequests() {
                 </div>
 
                 <div className="pt-4 flex justify-end space-x-2">
-                  <Button variant="outline" onClick={() => setViewDialogOpen(false)}>
+                  <Button variant="close" onClick={() => setViewDialogOpen(false)}>
                     Cerrar
                   </Button>
                   <Button
@@ -922,7 +965,9 @@ export default function AdminRequests() {
                       setViewDialogOpen(false)
                       handleEditarRequest(viewRequest)
                     }}
+                    disabled={viewRequest.statusid !== 2 && userProfileData.roleid === 1}
                   >
+                    <Edit />
                     Editar
                   </Button>
                 </div>
@@ -937,14 +982,15 @@ export default function AdminRequests() {
 
 // Componente de tabla de solicitudes
 interface AdminRequestsTableProps {
-  requests: LeaseRequest[]
+  requests: vwLeaseRequest[]
   isLoading: boolean
-  onView: (request: LeaseRequest) => void
-  onEdit: (request: LeaseRequest) => void
+  onView: (request: vwLeaseRequest) => void
+  onEdit: (request: vwLeaseRequest) => void
   onDelete: (id: number) => void
+  user: UserProfile
 }
 
-function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete }: AdminRequestsTableProps) {
+function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete, user }: AdminRequestsTableProps) {
   return (
     <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
       <CardContent className="p-0">
@@ -996,8 +1042,8 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete }: A
                       <TableCell className="font-medium">{request.requestid}</TableCell>
                       <TableCell>
                         <div className="flex items-center">
-                          <HomeIcon className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
-                          <CopyText text={request.propertyid.toString()} />
+                          <HomeIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                          <CopyText text={request.vchtitle} />
                         </div>
                       </TableCell>
                       <TableCell>
@@ -1030,7 +1076,7 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete }: A
                           <DropdownMenuTrigger asChild>
                             <Button
                               variant="ghost"
-                              className="h-8 w-8 p-0 cursor-pointer" // Agrega cursor-pointer
+                              className="h-8 w-8 p-0 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900 border hover:border-gray-300 dark:hover:border-gray-800 shadow-sm" // Agrega cursor-pointer
                               aria-label="Opciones de solicitud"
                             >
                               <MoreHorizontal className="h-4 w-4" />
@@ -1053,22 +1099,52 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete }: A
                             <DropdownMenuItem
                               className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white" // Hover para "Editar"
                               onSelect={() => onEdit(request)}
+                              disabled={request.statusid !== 2 && user.roleid === 1}
                             >
                               <Edit className="h-4 w-4 mr-2" />
                               Editar
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              className="cursor-pointer text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-800 hover:text-red-800 dark:hover:text-red-300" // Hover para "Eliminar"
-                              onSelect={() => {
-                                if (request.requestid) {
-                                  onDelete(request.requestid);
-                                }
-                              }}
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Eliminar
-                            </DropdownMenuItem>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <DropdownMenuItem
+                                        className="cursor-pointer text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-800 hover:text-red-800 dark:hover:text-red-300"
+                                        disabled={estadosPermitidos.includes(request.statusid) || user.roleid !== 1}
+                                      >
+                                        <Trash2 className="h-4 w-4 mr-2" />
+                                        Eliminar
+                                      </DropdownMenuItem>
+                                    </TooltipTrigger>
+                                    <TooltipContent className="bg-red-800 text-xs" side="top">
+                                      <p>Eliminar solicitud</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>¿Estás seguro de eliminar esta solicitud?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Esta acción no se puede deshacer. La solicitud será eliminada permanentemente.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => {
+                                      if (request.requestid) {
+                                        onDelete(request.requestid);
+                                      }
+                                    }}
+                                  >
+                                    Continuar
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>

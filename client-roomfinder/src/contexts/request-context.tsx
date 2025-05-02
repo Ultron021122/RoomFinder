@@ -1,13 +1,13 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { LeaseRequest, Property, RequestStatus, UserProfile } from '@/utils/interfaces';
+import { LeaseRequest, Property, RequestStatus, UserProfile, vwLeaseRequest } from '@/utils/interfaces';
 import { createContext, useContext, useState, useEffect } from 'react';
 import { ADMIN, ARRENDADOR, ESTUDIANTE } from '@/utils/constants';
 import axios from 'axios';
 
 interface RequestContextProps {
-    request: LeaseRequest[];
+    request: vwLeaseRequest[];
     requestStatus: RequestStatus[];
     properties: Property[];
     isLoading: boolean;
@@ -22,7 +22,7 @@ const RequestContext = createContext<RequestContextProps | undefined>(undefined)
 export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const session = useSession();
     const [properties, setProperties] = useState<Property[]>([])
-    const [request, setRequest] = useState<LeaseRequest[]>([]);
+    const [request, setRequest] = useState<vwLeaseRequest[]>([]);
     const [requestStatus, setRequestStatus] = useState<RequestStatus[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -52,10 +52,10 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 }
             });
             const dataAsArray = [...data];
-            const properties = await Promise.all(dataAsArray.map(leaseRequest => fetchPropertyData(leaseRequest.propertyid)))
+            // const properties = await Promise.all(dataAsArray.map(leaseRequest => fetchPropertyData(leaseRequest.propertyid)))
 
-            setRequest(dataAsArray);
-            setProperties(properties);
+            setRequest(data);
+            // setProperties(properties);
 
         } catch (err: any) {
             setError(err.response?.data.message || 'An error occurred');
@@ -75,17 +75,16 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setIsLoading(true)
         setError(null)
         try {
-            console.log('api a consultar: ', url);
             const { data: { data } } = await axios.get(url, {
                 headers: {
                     'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
                 }
             })
             const dataAsArray = [...data]; // por si la respuesta no es un arreglo
-            const propertiesData = await Promise.all(dataAsArray.map(leaseRequest => fetchPropertyData(leaseRequest.propertyid)))
+            // const propertiesData = await Promise.all(dataAsArray.map(leaseRequest => fetchPropertyData(leaseRequest.propertyid)))
 
             setRequest(data)
-            setProperties(propertiesData)
+            // setProperties(propertiesData)
 
         } catch (error) {
             console.log(error)
