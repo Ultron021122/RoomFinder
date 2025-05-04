@@ -2005,6 +2005,12 @@ export interface LeaseRequest {
      * updated_at: '2025-01-01'
      */
     updated_at: string;
+    /**
+     * Confirmed
+     * @example
+     * bitConfirm: false
+     */
+    bitconfirm?: boolean;
 }
 
 /**
@@ -2090,6 +2096,12 @@ export interface vwLeaseRequest {
      * updated_at: '2025-01-01'
      */
     updated_at: string;
+    /**
+     * Confirmed
+     * @example
+     * bitConfirm: false
+     */
+    bitconfirm?: boolean;
     vchtitle: string;
     vchdescription: string;
     propertytypeid: number;

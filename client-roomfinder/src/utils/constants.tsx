@@ -1,7 +1,7 @@
 import { UniversityData, Roles, MapCoordenada, Folder } from '@/utils/interfaces';
 import { url } from 'inspector';
 import { icon } from 'leaflet';
-import { AlertCircle, Calendar, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { AlertCircle, Calendar, Check, CheckCircle, Clock, XCircle } from 'lucide-react';
 import { z } from 'zod';
 
 // Iconos
@@ -630,21 +630,28 @@ export const requestFormSchema = z.object({
             message: "El mensaje debe tener al menos 25 caracteres",
         }),
     intnumguests: z
-        .string()
+        .string({
+            message: "El número de huéspedes es requerido",
+        })
         .transform((val) => parseInt(val, 10))
         .pipe(
             z.number({
                 message: "El número de huéspedes es requerido",
             }).positive().min(1),
         ),
-    intmonths: z
-        .string()
-        .transform((val) => parseInt(val, 10))
-        .pipe(
-            z.number({
-                message: "El número de meses es requerido",
-            }),
-        ),
+    // intmonths: z
+    //     .string({
+    //         message: "El número de meses es requerido",
+    //     })
+    //     .transform((val) => parseInt(val, 10))
+    //     .pipe(
+    //         z.number({
+    //             message: "El número de meses es requerido",
+    //         }),
+    //     ),
+    intmonths: z.number({
+        "message": "El número de meses es requerido",
+    }).min(1, "El contrato debe durar al menos 1 mes").max(12, "El contrato no puede durar más de 12 meses"),
     bnhaspets: z.boolean({
         message: "El campo de mascotas",
     }),
@@ -688,6 +695,12 @@ export const REQUEST_STATUS = {
     color:
       "bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-800 hover:bg-gray-200 hover:dark:bg-gray-800/50",
     icon: XCircle,
+  },
+    6: {
+    name: "Confirmada",
+    color:
+      "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800 hover:bg-green-200 hover:dark:bg-green-800/50",
+    icon: Check,
   },
 };
 

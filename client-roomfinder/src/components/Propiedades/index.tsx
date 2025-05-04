@@ -85,19 +85,6 @@ function PropertyComponent({ id }: { id: string }) {
         },
     })
 
-    // const handleDateChange = (dates: { from: Date | null; to: Date | null }) => {
-    //     const { from: startDate, to: endDate } = dates
-    //     const months = Number(form.getValues("intmonths"))
-
-    //     if (startDate) {
-    //         const newEndDate = addMonths(startDate, months)
-    //         setStartDate(startDate)
-    //         setEndDate(newEndDate)
-    //         form.setValue("dtstartdate", startDate)
-    //         form.setValue("dtenddate", newEndDate)
-    //     }
-    // }
-
     const handleDateChange = (dates: { from: Date | null }) => {
         const { from: startDate } = dates;
         const months = Number(form.getValues("intmonths"));
@@ -112,10 +99,11 @@ function PropertyComponent({ id }: { id: string }) {
     };
 
     // Nueva función para manejar el cambio en número de meses
-    const handleMonthsChange = (months: number) => {
-        form.setValue("intmonths", months);
-        if (startDate && months > 0) {
-            const newEndDate = addMonths(startDate, months);
+    const handleMonthsChange = (months: string) => {
+        const parsedMonths = Number(months); // Convierte el valor a número
+        form.setValue("intmonths", parsedMonths || 0); // Si es NaN, usa 0
+        if (startDate && parsedMonths > 0) {
+            const newEndDate = addMonths(startDate, parsedMonths);
             setEndDate(newEndDate);
             form.setValue("dtenddate", newEndDate);
         }
@@ -161,6 +149,8 @@ function PropertyComponent({ id }: { id: string }) {
         }
     }
 
+    const statusBlocked = [1, 2, 3]
+
     // Errores
     useEffect(() => {
         if (errorSystem) {
@@ -185,13 +175,12 @@ function PropertyComponent({ id }: { id: string }) {
                 if (request.statusid === 1) { // Aceptado
                     const startDate = new Date(request.dtstartdate)
                     const endDate = new Date(request.dtenddate)
-
                     // Verificar si hoy está dentro del rango de fechas activas
                     return isBefore(now, endDate) && isAfter(now, startDate)
                 }
 
                 // Bloquear si hay una solicitud pendiente
-                return request.statusid === 2
+                return statusBlocked.includes(request.statusid)
             })
         }
         return false
@@ -213,7 +202,7 @@ function PropertyComponent({ id }: { id: string }) {
                     },
                 })
                 const data = lessorResponse.data.data
-                console.log('datos de la propiedad: ', response.data.data);
+
                 setProperty(response.data.data)
                 setLessor({
                     image: data.vchimage,
@@ -298,6 +287,19 @@ function PropertyComponent({ id }: { id: string }) {
         ]
     }, [property])
 
+    type StatusId = 1 | 2 | 3 | 4 | 5 | 6;
+
+    const statusMessages: Record<StatusId, string> = {
+        1: "Ya tienes una solicitud aceptada activa para esta propiedad.",
+        2: "Ya tienes una solicitud pendiente para esta propiedad.",
+        3: "Ya tienes una solicitud en revisión para esta propiedad.",
+        4: "Tu solicitud fue rechazada. Puedes crear una nueva si lo deseas.",
+        5: "Esta solicitud fue cancelada. Si necesitas realizar otra, puedes hacerlo.",
+        6: "Esperando respuesta del solicitante.",
+    };
+
+    const lastStatusId = requestHistory?.[0]?.statusid as StatusId | undefined;
+
     return (
         <>
             {isLoading ? (
@@ -306,20 +308,21 @@ function PropertyComponent({ id }: { id: string }) {
                 </div>
             ) : property ? (
                 <div className="bg-gradient-to-b min-h-screen">
-                    {userProfileData?.roleid === 1 && status === "authenticated" && isRequestBlocked && (
+                    {userProfileData?.roleid === 1 && status === "authenticated" && isRequestBlocked && lastStatusId && (
                         <Alert className="border-green-500 bg-green-200 dark:bg-green-900/20 max-w-4xl mx-auto lg:max-w-7xl mt-2">
                             <AlertCircle className="h-4 w-4" />
                             <AlertTitle>Solicitud</AlertTitle>
                             <AlertDescription>
                                 <p>
-                                    {requestHistory?.some(request => request.statusid === 2)
-                                        ? "Ya tienes una solicitud pendiente para esta propiedad."
-                                        : "Ya tienes una solicitud aceptada activa para esta propiedad."
-                                    } <Link href="/dashboard/request" className="text-blue-600 hover:underline dark:text-blue-400">Ver solicitudes</Link>
+                                    {statusMessages[lastStatusId] ?? "Ya tienes una solicitud registrada para esta propiedad."}{" "}
+                                    <Link href="/dashboard/request" className="text-blue-600 hover:underline dark:text-blue-400">
+                                        Ver solicitudes
+                                    </Link>
                                 </p>
                             </AlertDescription>
                         </Alert>
                     )}
+
 
                     {/* Hero Section */}
                     <main className="py-6 px-4 sm:p-6 md:py-10 md:px-8">
@@ -456,12 +459,12 @@ function PropertyComponent({ id }: { id: string }) {
 
                                         <Form {...form}>
                                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-                                                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800 flex items-center justify-between">
+                                                {/* <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800 flex items-center justify-between">
                                                     <p className="text-2xl font-bold text-blue-800 dark:text-blue-300">
                                                         ${property?.decrentalcost || 0}
                                                     </p>
                                                     <span className="text-blue-600 dark:text-blue-400 font-medium">mensuales</span>
-                                                </div>
+                                                </div> */}
 
                                                 <FormField
                                                     control={form.control}
@@ -473,7 +476,7 @@ function PropertyComponent({ id }: { id: string }) {
                                                                 <Input type="number" placeholder="Usuario" {...field} />
                                                             </FormControl>
                                                             <FormDescription>Indique el usuario que realiza la reserva</FormDescription>
-                                                            <FormMessage className="text-red-600" />
+                                                            <FormMessage className="text-red-600 dark:text-red-500" />
                                                         </FormItem>
                                                     )}
                                                 />
@@ -498,7 +501,7 @@ function PropertyComponent({ id }: { id: string }) {
                                                             <FormDescription className="text-gray-500 dark:text-gray-400">
                                                                 Ingrese el número de huéspedes que se hospedarán
                                                             </FormDescription>
-                                                            <FormMessage className="text-red-600" />
+                                                            <FormMessage className="text-red-600 dark:text-red-500" />
                                                         </FormItem>
                                                     )}
                                                 />
@@ -520,13 +523,13 @@ function PropertyComponent({ id }: { id: string }) {
                                                                     {...field}
                                                                     min={property?.intmincontractduration || 1}
                                                                     max={property?.intmaxcontractduration || 12}
-                                                                    onChange={(e) => handleMonthsChange(Number(e.target.value))}
+                                                                    onChange={(e) => handleMonthsChange(e.target.value)} // Pasa el valor como string
                                                                 />
                                                             </FormControl>
                                                             <FormDescription className="text-gray-500 dark:text-gray-400">
                                                                 Ingrese el número de meses de la reserva
                                                             </FormDescription>
-                                                            <FormMessage className="text-red-600" />
+                                                            <FormMessage className="text-red-600 dark:text-red-500" />
                                                         </FormItem>
                                                     )}
                                                 />
@@ -547,7 +550,7 @@ function PropertyComponent({ id }: { id: string }) {
                                                             <FormDescription className="text-gray-500 dark:text-gray-400">
                                                                 Deja un mensaje para el arrendador
                                                             </FormDescription>
-                                                            <FormMessage className="text-red-600" />
+                                                            <FormMessage className="text-red-600 dark:text-red-500" />
                                                         </FormItem>
                                                     )}
                                                 />
@@ -610,7 +613,7 @@ function PropertyComponent({ id }: { id: string }) {
                                                 <Button
                                                     className="w-full bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                                                     type="submit"
-                                                    disabled={!form.formState.isValid} // Desactiva si el formulario no es válido
+                                                // disabled={!form.formState.isValid} // Desactiva si el formulario no es válido
                                                 >
                                                     Reservar ahora
                                                 </Button>

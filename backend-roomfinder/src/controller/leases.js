@@ -27,6 +27,36 @@ export class LeasesController {
             .catch(next);
     }
 
+    getByPropertyId = async (req, res, next) => {
+        const { propertyid } = req.params
+        await this.leasesModel.getByPropertyId({ propertyid })
+            .then(leases => {
+                if (leases) return res.json(leases);
+                return res.status(404).json({ message: 'Lease not found ' })
+            })
+            .catch(next);
+    }
+
+    getByStudentId = async (req, res, next) => {
+        const { studentid } = req.params
+        await this.leasesModel.getByStudentId({ studentid })
+            .then(leases => {
+                if (leases) return res.json(leases);
+                return res.status(404).json({ message: 'Lease not found ' })
+            })
+            .catch(next);
+    }
+
+    getByLeaseNumber = async (req, res, next) => {
+        const { lease_number } = req.params
+        await this.leasesModel.getByLeaseNumber({ lease_number })
+            .then(leases => {
+                if (leases) return res.json(leases);
+                return res.status(404).json({ message: 'Lease not found ' })
+            })
+            .catch(next);
+    }
+
     create = async (req, res, next) => {
         const result = validateLeases(req.body)
         if (result.error) {

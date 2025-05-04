@@ -79,7 +79,8 @@ export async function PATCH(request, { params }) {
         intnumguests,
         bnhaspets,
         dtstartdate,
-        dtenddate
+        dtenddate,
+        bitconfirm
     } = await request.json();
 
     try {
@@ -90,7 +91,8 @@ export async function PATCH(request, { params }) {
             intnumguests,
             bnhaspets,
             dtstartdate,
-            dtenddate
+            dtenddate,
+            bitConfirm
         }
             , {
                 headers: {

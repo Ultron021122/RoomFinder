@@ -41,7 +41,6 @@ export default function MessageMainComponent() {
           }
         });
         if (response.status === 200) {
-          console.log(response)
           setUsers(response.data);
         } else {
           setErrorSystem('Error al cargar los usuarios');
