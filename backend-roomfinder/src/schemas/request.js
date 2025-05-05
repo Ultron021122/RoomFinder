@@ -16,7 +16,8 @@ const requestSchema = z.object({
     intmonths: z.number().min(1).max(12),
     bnhaspets: z.boolean(), 
     dtstartdate: z.string(), 
-    dtenddate: z.string()
+    dtenddate: z.string(),
+    bitConfirm: z.boolean().optional(),
 })
 
 export function validateRequest(input) {

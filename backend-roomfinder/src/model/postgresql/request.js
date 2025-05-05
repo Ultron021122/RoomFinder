@@ -1,7 +1,7 @@
 import { Database } from "./database.js"
 
 export class RequestModel {
-    constructor({ requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, intmonths, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname }) {
+    constructor({ requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, intmonths, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname, vchlessoremail, vchstudentemail, bitconfirm }) {
         this.requestid = requestid;
         this.propertyid = propertyid;
         this.studentid = studentid;
@@ -26,6 +26,9 @@ export class RequestModel {
         this.vchstudentname = vchstudentname;
         this.vchstudentpaternalsurname = vchstudentpaternalsurname;
         this.vchstudentmaternalsurname = vchstudentmaternalsurname;
+        this.vchlessoremail = vchlessoremail;
+        this.vchstudentemail = vchstudentemail;
+        this.bitconfirm = bitconfirm;
     }
 
     static async getAll() {
@@ -34,7 +37,7 @@ export class RequestModel {
 
         try {
             const requests = await client.query(
-                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname
+                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname, vchlessoremail, vchstudentemail, bitConfirm
                     FROM "Usuario"."vwLeasesRequest";`
             );
 
@@ -49,9 +52,8 @@ export class RequestModel {
         const client = await db.pool.connect();
         try {
             const requests = await client.query(
-                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname
+                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname, vchlessoremail, vchstudentemail, bitConfirm
                         FROM "Usuario"."vwLeasesRequest" WHERE studentid = $1;`,
-                // `SELECT * FROM "Usuario"."LeaseRequests" WHERE studentid = $1;`,
                 [studentid]
             );
 
@@ -66,9 +68,8 @@ export class RequestModel {
         const client = await db.pool.connect();
         try {
             const request = await client.query(
-                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname
+                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname, vchlessoremail, vchstudentemail, bitConfirm
                     FROM "Usuario"."vwLeasesRequest" WHERE requestid = $1;`,
-                // `SELECT * FROM "Usuario"."LeaseRequests" WHERE requestid = $1;`,
                 [id]
             );
 
@@ -83,9 +84,8 @@ export class RequestModel {
         const client = await db.pool.connect();
         try {
             const requests = await client.query(
-                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname
+                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname, vchlessoremail, vchstudentemail, bitConfirm
                     FROM "Usuario"."vwLeasesRequest" WHERE propertyid = $1;`,
-                // `SELECT * FROM "Usuario"."LeaseRequests" WHERE propertyid = $1;`,
                 [propertyid]
             );
 
@@ -100,14 +100,8 @@ export class RequestModel {
         const client = await db.pool.connect();
         try {
             const requests = await client.query(
-                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname
+                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname, vchlessoremail, vchstudentemail, bitConfirm
                     FROM "Usuario"."vwLeasesRequest" WHERE lessorid = $1;`,
-                // `SELECT ls.* FROM "Usuario"."LeaseRequests" ls
-                //     inner join "Usuario"."Propiedades" p
-                //         on ls.propertyid = p.propertyid
-                //     inner join "Usuario"."Arrendadores" a
-                //         on a.usuarioid = p.lessorid
-                //     where a.usuarioid = $1;`,
                 [leasorid]
             );
             return requests.rowCount > 0 ? requests.rows.map(request => new RequestModel(request)) : null;
@@ -121,7 +115,7 @@ export class RequestModel {
         const client = await db.pool.connect();
         try {
             const requests = await client.query(
-                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname
+                `SELECT requestid, propertyid, studentid, statusid, dtrequest, vchmessage, intnumguests, bnhaspets, dtstartdate, dtenddate, created_at, updated_at, intmonths, vchtitle, vchdescription, propertytypeid, lessorid, decrentalcost, vchname, vchpaternalsurname, vchmaternalsurname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname, vchlessoremail, vchstudentemail, bitConfirm
                     FROM "Usuario"."vwLeasesRequest" WHERE studentid = $1 AND propertyid = $2;`,
                 // `SELECT ls.* FROM "Usuario"."LeaseRequests" as ls WHERE ls.studentid = $1 AND ls.propertyid = $2;`,
                 [studentid, propertyid]
@@ -198,7 +192,8 @@ export class RequestModel {
                 'intmonths',
                 'bnhaspets',
                 'dtstartdate',
-                'dtenddate'
+                'dtenddate',
+                'bitConfirm'
             ];
 
             const requestData = this.createDataObject(input, requestFields);

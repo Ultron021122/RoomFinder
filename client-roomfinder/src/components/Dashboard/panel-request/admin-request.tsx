@@ -49,6 +49,8 @@ import {
   Eye,
   Download,
   MoreHorizontal,
+  Circle,
+  CircleCheck,
 } from "lucide-react"
 
 // Contexto y utilidades
@@ -71,9 +73,8 @@ import { HomeIcon } from "@radix-ui/react-icons"
 import { REQUEST_STATUS } from "@/utils/constants"
 import { useSession } from "next-auth/react"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
-const estadosPermitidos = [1, 3];
+const estadosPermitidos = [1, 3, 6];
 
 export default function AdminRequests() {
   const { data: session } = useSession();
@@ -97,7 +98,6 @@ export default function AdminRequests() {
     end: "",
   })
   const [activeTab, setActiveTab] = useState<string>("all")
-  const [sortOrder, setSortOrder] = useState<string>("asc")
   const router = useRouter()
 
   // Estadísticas
@@ -113,7 +113,7 @@ export default function AdminRequests() {
 
     return {
       total: request.length,
-      accepted: request.filter((req) => req.statusid === 1).length,
+      accepted: request.filter((req) => req.statusid === 1 || req.statusid === 6).length,
       pending: request.filter((req) => req.statusid === 2).length,
       review: request.filter((req) => req.statusid === 3).length,
       rejected: request.filter((req) => req.statusid === 4).length,
@@ -155,7 +155,7 @@ export default function AdminRequests() {
       // Filtro de búsqueda
       const matchesBusqueda =
         req.vchmessage.toLowerCase().includes(busqueda.toLowerCase()) ||
-        req.propertyid.toString().includes(busqueda.toLowerCase())
+        req.requestid.toString().includes(busqueda.toLowerCase())
       // || (req.studentName && req.studentName.toLowerCase().includes(busqueda.toLowerCase()))
 
       // Filtro de estado
@@ -164,7 +164,7 @@ export default function AdminRequests() {
       // Filtro de pestaña
       const matchesTab =
         activeTab === "all" ||
-        (activeTab === "accepted" && req.statusid === 1) ||
+        (activeTab === "accepted" && (req.statusid === 1 || req.statusid === 6)) ||
         (activeTab === "pending" && req.statusid === 2) ||
         (activeTab === "review" && req.statusid === 3) ||
         (activeTab === "rejected" && req.statusid === 4)
@@ -361,6 +361,48 @@ export default function AdminRequests() {
     return format(new Date(dateString), "dd MMM yyyy HH:mm", { locale: es })
   }
 
+  const handleUpdateRequestStatus = async (id: number, newStatusId: number, bitConfirm: boolean) => {
+    setIsLoading(true);
+    try {
+
+      const response = await axios.patch(
+        `/api/requests/${id}`,
+        { statusid: newStatusId, bitconfirm: bitConfirm },
+        {
+          headers: {
+            "x-secret-key": `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`,
+          },
+        }
+      );
+      toast.success(`Solicitud actualizada a ${newStatusId === 1 ? "confirmada" : "rechazada"} exitosamente.`, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+      refetchRequest(); // Actualiza la lista de solicitudes
+    } catch (error: any) {
+      toast.error(error.response?.data.message || "Error al actualizar la solicitud.", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="p-2 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -371,8 +413,8 @@ export default function AdminRequests() {
           </div>
           <div className="mt-4 md:mt-0 flex gap-2">
             <Button
-              variant="outline"
-              className="flex items-center gap-1"
+              // variant="outline"
+              className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white"
               onClick={() => exportarSolicitudes(request)}
             >
               <Download className="h-4 w-4" />
@@ -616,6 +658,7 @@ export default function AdminRequests() {
               onView={handleViewRequest}
               onEdit={handleEditarRequest}
               onDelete={handleEliminarRequest}
+              onUpdateStatus={handleUpdateRequestStatus}
               user={userProfileData}
             />
           </TabsContent>
@@ -627,6 +670,7 @@ export default function AdminRequests() {
               onView={handleViewRequest}
               onEdit={handleEditarRequest}
               onDelete={handleEliminarRequest}
+              onUpdateStatus={handleUpdateRequestStatus}
               user={userProfileData}
             />
           </TabsContent>
@@ -638,6 +682,7 @@ export default function AdminRequests() {
               onView={handleViewRequest}
               onEdit={handleEditarRequest}
               onDelete={handleEliminarRequest}
+              onUpdateStatus={handleUpdateRequestStatus}
               user={userProfileData}
             />
           </TabsContent>
@@ -649,6 +694,7 @@ export default function AdminRequests() {
               onView={handleViewRequest}
               onEdit={handleEditarRequest}
               onDelete={handleEliminarRequest}
+              onUpdateStatus={handleUpdateRequestStatus}
               user={userProfileData}
             />
           </TabsContent>
@@ -660,6 +706,7 @@ export default function AdminRequests() {
               onView={handleViewRequest}
               onEdit={handleEditarRequest}
               onDelete={handleEliminarRequest}
+              onUpdateStatus={handleUpdateRequestStatus}
               user={userProfileData}
             />
           </TabsContent>
@@ -772,18 +819,31 @@ export default function AdminRequests() {
                     disabled={userProfileData.roleid !== 1}
                   />
                 </div>
-
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="bnhaspets"
-                    checked={requestEdit.bnhaspets}
-                    onCheckedChange={(checked) => setRequestEdit({ ...requestEdit, bnhaspets: checked as boolean })}
-                    className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                    disabled={userProfileData.roleid !== 1}
-                  />
-                  <Label htmlFor="bnhaspets" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Tiene mascotas
-                  </Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Checkbox
+                      id="bnhaspets"
+                      checked={requestEdit.bnhaspets}
+                      onCheckedChange={(checked) => setRequestEdit({ ...requestEdit, bnhaspets: checked as boolean })}
+                      className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 mr-2"
+                      disabled={userProfileData.roleid !== 1}
+                    />
+                    <Label htmlFor="bnhaspets" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Tiene mascotas
+                    </Label>
+                  </div>
+                  <div>
+                    <Checkbox
+                      id="bitConfirm"
+                      checked={requestEdit.bitconfirm}
+                      onCheckedChange={(checked) => setRequestEdit({ ...requestEdit, bitconfirm: checked as boolean })}
+                      className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 mr-2"
+                      disabled={userProfileData.roleid === 1}
+                    />
+                    <Label htmlFor="bitConfirm" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Confirmar Solicitud
+                    </Label>
+                  </div>
                 </div>
 
                 <div>
@@ -953,6 +1013,14 @@ export default function AdminRequests() {
                     </p>
                   </div>
                 </div>
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Confirmado</h3>
+                    <p className="mt-1 text-base font-medium text-gray-900 dark:text-white">
+                      {viewRequest.bitconfirm ? "Sí" : "No"}
+                    </p>
+                  </div>
+                </div>
 
                 <div className="pt-4 flex justify-end space-x-2">
                   <Button variant="close" onClick={() => setViewDialogOpen(false)}>
@@ -982,15 +1050,18 @@ export default function AdminRequests() {
 
 // Componente de tabla de solicitudes
 interface AdminRequestsTableProps {
-  requests: vwLeaseRequest[]
-  isLoading: boolean
-  onView: (request: vwLeaseRequest) => void
-  onEdit: (request: vwLeaseRequest) => void
-  onDelete: (id: number) => void
-  user: UserProfile
+  requests: vwLeaseRequest[];
+  isLoading: boolean;
+  onView: (request: vwLeaseRequest) => void;
+  onEdit: (request: vwLeaseRequest) => void;
+  onDelete: (id: number) => void;
+  onUpdateStatus: (id: number, newStatusId: number, bitConfirm: boolean) => void;
+  user: UserProfile;
 }
 
-function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete, user }: AdminRequestsTableProps) {
+function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete, onUpdateStatus, user }: AdminRequestsTableProps) {
+  const statusRequest = [2]
+
   return (
     <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
       <CardContent className="p-0">
@@ -1099,32 +1170,105 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete, use
                             <DropdownMenuItem
                               className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white" // Hover para "Editar"
                               onSelect={() => onEdit(request)}
-                              disabled={request.statusid !== 2 && user.roleid === 1}
+                              disabled={!statusRequest.includes(request.statusid) && user.roleid === 1}
                             >
                               <Edit className="h-4 w-4 mr-2" />
                               Editar
                             </DropdownMenuItem>
+                            {
+                              user.roleid === 1 && request.statusid === 1 && (
+                                <>
+                                  <AlertDialog>
+                                    <AlertDialogTrigger
+                                      className="w-full"
+                                      disabled={request.statusid !== 1 && user.roleid === 1}
+                                    >
+                                      <DropdownMenuItem
+                                        onSelect={(e) => e.preventDefault()} // 👈 Evita el cierre automático
+                                        className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white w-full"
+                                        disabled={request.statusid !== 1 && user.roleid === 1}
+                                      >
+                                        <XCircle className="h-4 w-4 mr-2" />
+                                        Rechazar
+                                      </DropdownMenuItem>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>¿Estás seguro de rechazar esta solicitud?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          Esta acción no se puede deshacer. La solicitud será Rechazada permanentemente.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel
+                                          className="bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-800 border border-gray-300 dark:border-gray-800 shadow-sm"
+                                        >
+                                          Cancelar
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction
+                                          className="bg-red-600 hover:bg-red-700 text-white"
+                                          onClick={() => onUpdateStatus(request.requestid, 4, false)}
+                                        >
+                                          Rechazar
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                  <AlertDialog>
+                                    <AlertDialogTrigger
+                                      className="w-full"
+                                      disabled={request.statusid !== 1 && user.roleid === 1}
+                                    >
+                                      <DropdownMenuItem
+                                        onSelect={(e) => e.preventDefault()} // 👈 Evita el cierre automático
+                                        className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white w-full"
+                                        disabled={request.statusid !== 1 && user.roleid === 1}
+                                      >
+                                        <CircleCheck className="h-4 w-4 mr-2" />
+                                        Confirmar
+                                      </DropdownMenuItem>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>¿Estás seguro de confirmar esta solicitud?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          Esta acción no se puede deshacer. La solicitud será aceptada permanentemente.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel
+                                          className="bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-800 border border-gray-300 dark:border-gray-800 shadow-sm"
+                                        >
+                                          Cancelar
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction
+                                          className="bg-green-600 hover:bg-green-700 text-white dark:hover:bg-green-700 *:hover:bg-green-600 *:text-white"
+                                          onClick={() => onUpdateStatus(request.requestid, 6, true)}
+                                        >
+                                          Confirmar
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                </>
+                              )
+                            }
                             <DropdownMenuSeparator />
                             <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <DropdownMenuItem
-                                        className="cursor-pointer text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-800 hover:text-red-800 dark:hover:text-red-300"
-                                        disabled={estadosPermitidos.includes(request.statusid) || user.roleid !== 1}
-                                      >
-                                        <Trash2 className="h-4 w-4 mr-2" />
-                                        Eliminar
-                                      </DropdownMenuItem>
-                                    </TooltipTrigger>
-                                    <TooltipContent className="bg-red-800 text-xs" side="top">
-                                      <p>Eliminar solicitud</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
+                              <AlertDialogTrigger
+                                className="w-full"
+                                disabled={estadosPermitidos.includes(request.statusid) || user.roleid !== 1}
+                              >
+                                <DropdownMenuItem
+                                  onSelect={(e) => e.preventDefault()} // 👈 Evita el cierre automático
+                                  className="cursor-pointer text-red-600 dark:text-red-500 hover:bg-red-300 dark:hover:bg-red-800 hover:text-red-800 dark:hover:text-red-300 w-full"
+                                  disabled={estadosPermitidos.includes(request.statusid) || user.roleid !== 1}
+                                >
+                                  <Trash2 className="h-4 w-4 mr-2" />
+                                  Eliminar
+                                </DropdownMenuItem>
                               </AlertDialogTrigger>
-                              <AlertDialogContent>
+                              <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>¿Estás seguro de eliminar esta solicitud?</AlertDialogTitle>
                                   <AlertDialogDescription>
@@ -1132,7 +1276,11 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete, use
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                  <AlertDialogCancel
+                                    className="bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-800 border border-gray-300 dark:border-gray-800 shadow-sm"
+                                  >
+                                    Cancelar
+                                  </AlertDialogCancel>
                                   <AlertDialogAction
                                     onClick={() => {
                                       if (request.requestid) {

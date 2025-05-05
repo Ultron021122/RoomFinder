@@ -41,15 +41,57 @@ export class LeasesModel {
         }
     }
 
+    static async getByPropertyId({ propertyid }) {
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const leases = await client.query(
+                `SELECT * FROM "Usuario"."Arrendamientos" WHERE propertyid = $1;`,
+                [propertyid]
+            );
+            return leases.rowCount > 0 ? leases.rows.map((lease) => new LeasesModel(lease)) : null;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async getByStudentId({ studentid }) {
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const leases = await client.query(
+                `SELECT * FROM "Usuario"."Arrendamientos" WHERE studentid = $1;`,
+                [studentid]
+            );
+            return leases.rowCount > 0 ? leases.rows.map((lease) => new LeasesModel(lease)) : null;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async getByLeaseNumber({ lease_number }) {
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const leases = await client.query(
+                `SELECT * FROM "Usuario"."Arrendamientos" WHERE lease_number = $1;`,
+                [lease_number]
+            );
+            return leases.rowCount > 0 ? leases.rows.map((lease) => new LeasesModel(lease)) : null;
+        } finally {
+            client.release();
+        }
+    }
+
     static async create(input) {
         try {
             const db = new Database();
             const client = await db.pool.connect();
-            const { propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, leasestatusid, lease_number } = input
+            const { propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, leasestatusid, requestid } = input
             try {
                 const newLeases = await client.query(
-                    `INSERT INTO "Usuario"."Arrendamientos" (propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, leasestatusid, lease_number ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;`,
-                    [propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, leasestatusid, lease_number]
+                    `INSERT INTO "Usuario"."Arrendamientos" (propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, leasestatusid, requestid ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;`,
+                    [propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, leasestatusid, requestid]
                 );
 
                 return new LeasesModel(newLeases.rows[0]);
@@ -91,8 +133,7 @@ export class LeasesModel {
             const leasesFields = [
                 'dtenddate',
                 'decmonthlycost',
-                'leasestatusid', 
-                'lease_number'
+                'leasestatusid'
             ];
 
             const leasesData = this.createDataObject(input, leasesFields);

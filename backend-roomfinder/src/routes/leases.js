@@ -45,6 +45,48 @@ export const createLeasesRouter = ({ leasesModel }) => {
         leasesController.getById
     ])
 
+    leasesRouter.get('/property/:propertyid', [
+        // Validation
+        param('propertyid').isInt().withMessage('propertyid must be an integer'),
+        (req, res, next) => {
+            // Check for errors
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        leasesController.getByPropertyId
+    ])
+
+    leasesRouter.get('/student/:studentid', [
+        // Validation
+        param('studentid').isInt().withMessage('studentid must be an integer'),
+        (req, res, next) => {
+            // Check for errors
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        leasesController.getByStudentId
+    ])
+
+    leasesRouter.get('/lease-number/:lease_number', [
+        // Validation
+        param('lease_number').isInt().withMessage('lease_number must be an integer'),
+        (req, res, next) => {
+            // Check for errors
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        leasesController.getByLeaseNumber
+    ])
+
     leasesRouter.post('/', leasesController.create)
 
     leasesRouter.delete('/:id', [

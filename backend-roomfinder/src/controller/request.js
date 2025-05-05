@@ -101,11 +101,21 @@ export class RequestController {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
         const { id } = req.params
-        await this.requestModel.update({ id, input: result.data })
-            .then(updateRequest => {
-                if (!updateRequest) return res.status(404).json({ message: 'Request not found' })
-                return res.json(updateRequest)
-            })
-            .catch(next);
+
+        try {
+            const request = await this.requestModel.update({ id, input: result.data })
+            if (!request) return res.status(404).json({ message: 'Request not found' })
+
+            if (request.statusid === 1) {
+                await this.EmailService.sendRequestAccepted({ input: request });
+            } else {
+                await this.EmailService.sendNotificationUpdateStatus({ input: request });
+            }
+
+
+            return res.json(request)
+        } catch (err) {
+            next(err);
+        }
     }
 }

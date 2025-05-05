@@ -7,7 +7,7 @@ const leasesSchema = z.object({
     dtenddate: z.string(),
     decmonthlycost: z.number().positive(),
     leasestatusid: z.number().optional(),
-    lease_number: z.string()
+    // lease_number: z.string().uuid().default(() => uuidv4()),
 })
 
 export function validateLeases(input) {
