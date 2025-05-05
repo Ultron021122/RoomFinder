@@ -27,21 +27,6 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchPropertyData = async (propertyId: number) => {
-        try {
-            const { data: { data } } = await axios.get(`/api/properties/${propertyId}`, {
-                headers: {
-                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
-                }
-            })
-
-            return data;
-        } catch (err: any) {
-            setError(err.response?.data.message || 'An error occurred');
-            return null;
-        }
-    };
-
     const fetchRequest = async () => {
         setIsLoading(true);
         setError(null);
@@ -115,6 +100,10 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
     }
 
+    const refetchRequest = () => {
+        reload();
+    }
+
     useEffect(() => {
         if (session.status === 'authenticated') {
             const sessionData = session.data.user as UserProfile;
@@ -136,7 +125,7 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 properties,
                 isLoading,
                 error,
-                refetchRequest: fetchRequest,
+                refetchRequest,
                 refetchRequestStatus: fetchRequestStatus,
                 reload,
             }}
