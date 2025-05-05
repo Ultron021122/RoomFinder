@@ -2008,7 +2008,7 @@ export interface LeaseRequest {
     /**
      * Confirmed
      * @example
-     * bitConfirm: false
+     * bitconfirm: false
      */
     bitconfirm?: boolean;
 }

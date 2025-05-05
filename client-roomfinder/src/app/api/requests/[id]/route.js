@@ -92,7 +92,7 @@ export async function PATCH(request, { params }) {
             bnhaspets,
             dtstartdate,
             dtenddate,
-            bitConfirm
+            bitconfirm
         }
             , {
                 headers: {

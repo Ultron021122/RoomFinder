@@ -243,6 +243,7 @@ export default function AdminRequests() {
 
   const handleGuardarCambios = async () => {
     if (requestEdit) {
+      console.log(requestEdit)
       setIsLoading(true)
       try {
         const response = await axios.patch(`/api/requests/${requestEdit.requestid}`, requestEdit, {
