@@ -2,7 +2,7 @@ import { Database } from "./database.js";
 import { v4 as uuidv4 } from 'uuid'
 
 export class LeasesModel {
-    constructor({ leasesid, propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, created_at, leasestatusid, lease_number }) {
+    constructor({ leasesid, propertyid, studentid, dtstartdate, dtenddate, decmonthlycost, created_at, leasestatusid, lease_number, requestid, vchdescription, vchtitle, propertytypeid, vchtypename, vchstatusname, vchstudentname, vchstudentpaternalsurname, vchstudentmaternalsurname, lessorid, vchlessorname, vchlessorpaternalsurname, vchlessormaternalsurname }) {
         this.leasesid = leasesid;
         this.propertyid = propertyid;
         this.studentid = studentid;
@@ -12,6 +12,19 @@ export class LeasesModel {
         this.created_at = created_at;
         this.leasestatusid = leasestatusid;
         this.lease_number = lease_number;
+        this.requestid = requestid;
+        this.vchtitle = vchtitle;
+        this.vchdescription = vchdescription;
+        this.propertytypeid = propertytypeid;
+        this.vchtypename = vchtypename;
+        this.vchstatusname = vchstatusname;
+        this.vchstudentname = vchstudentname;
+        this.vchstudentpaternalsurname = vchstudentpaternalsurname;
+        this.vchstudentmaternalsurname = vchstudentmaternalsurname;
+        this.lessorid = lessorid;
+        this.vchlessorname = vchlessorname;
+        this.vchlessorpaternalsurname = vchlessorpaternalsurname;
+        this.vchlessormaternalsurname = vchlessormaternalsurname;
     }
 
     static async getAll() {
@@ -19,7 +32,7 @@ export class LeasesModel {
         const client = await db.pool.connect();
         try {
             const leases = await client.query(
-                `SELECT * FROM "Usuario"."Arrendamientos";`
+                `SELECT * FROM "Usuario"."vwLeasesGET";`
             );
             return leases.rows.map((lease) => new LeasesModel(lease));
         } finally {
@@ -32,7 +45,7 @@ export class LeasesModel {
         const client = await db.pool.connect();
         try {
             const lease = await client.query(
-                `SELECT * FROM "Usuario"."Arrendamientos" WHERE leasesid = $1;`,
+                `SELECT * FROM "Usuario"."vwLeasesGET" WHERE leasesid = $1;`,
                 [id]
             );
             return lease.rowCount > 0 ? new LeasesModel(lease.rows[0]) : null;
@@ -46,7 +59,7 @@ export class LeasesModel {
         const client = await db.pool.connect();
         try {
             const leases = await client.query(
-                `SELECT * FROM "Usuario"."Arrendamientos" WHERE propertyid = $1;`,
+                `SELECT * FROM "Usuario"."vwLeasesGET" WHERE propertyid = $1;`,
                 [propertyid]
             );
             return leases.rowCount > 0 ? leases.rows.map((lease) => new LeasesModel(lease)) : null;
@@ -60,8 +73,22 @@ export class LeasesModel {
         const client = await db.pool.connect();
         try {
             const leases = await client.query(
-                `SELECT * FROM "Usuario"."Arrendamientos" WHERE studentid = $1;`,
+                `SELECT * FROM "Usuario"."vwLeasesGET" WHERE studentid = $1;`,
                 [studentid]
+            );
+            return leases.rowCount > 0 ? leases.rows.map((lease) => new LeasesModel(lease)) : null;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async getByLessorId({ lessorid }) {
+        const db = new Database();
+        const client = await db.pool.connect();
+        try {
+            const leases = await client.query(
+                `SELECT * FROM "Usuario"."vwLeasesGET" WHERE lessorid = $1;`,
+                [lessorid]
             );
             return leases.rowCount > 0 ? leases.rows.map((lease) => new LeasesModel(lease)) : null;
         } finally {
@@ -74,7 +101,7 @@ export class LeasesModel {
         const client = await db.pool.connect();
         try {
             const leases = await client.query(
-                `SELECT * FROM "Usuario"."Arrendamientos" WHERE lease_number = $1;`,
+                `SELECT * FROM "Usuario"."vwLeasesGET" WHERE lease_number = $1;`,
                 [lease_number]
             );
             return leases.rowCount > 0 ? leases.rows.map((lease) => new LeasesModel(lease)) : null;

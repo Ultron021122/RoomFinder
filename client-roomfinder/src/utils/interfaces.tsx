@@ -2333,3 +2333,142 @@ export interface RequestHistory {
     updated_at: string;
 
 }
+
+/**
+ * Interface representing the request history
+ * @interface
+ */
+export interface vwLeasesGET {
+    /**
+     * Lease id
+     * @example
+     * leasesid: 1
+     */
+    leasesid: number;
+    /**
+     * Property id
+     * @example
+     * propertyid: 1
+     */
+    propertyid: number;
+    /**
+     * Student id
+     * @example
+     * studentid: 1
+     */
+    studentid: number;
+    /**
+     * Start date
+     * @example
+     * dtstartdate: '2025-01-01'
+     */
+    dtstartdate: string;
+    /**
+     * End date
+     * @example
+     * dtenddate: '2025-01-01'
+     */
+    dtenddate: string;
+    /**
+     * Monthly cost
+     * @example
+     * decmonthlycost: 1500.00
+     */
+    decmonthlycost: number;
+    /**
+     * Created date
+     * @example
+     * created_at: '2025-01-01'
+     */
+    created_at: string;
+    /**
+     * Status id
+     * @example
+     * leasestatusid: 1
+     */
+    leasestatusid: number;
+    /**
+     * Lease number
+     * @example
+     * lease_number: 'UU-123456'
+     */
+    lease_number: string;
+    /**
+     * Request id
+     * @example
+     * requestid: 1
+     */
+    requestid: number;
+    /**
+     * Description
+     * @example
+     * vchdescription: 'Description'
+     */
+    vchdescription: string;
+    /**
+     * Property title
+     * @example
+     * vchtitle: 'Property Title'
+     */
+    vchtitle: string;
+    /**
+     * Property type id
+     * @example
+     * propertytypeid: 1
+     */
+    propertytypeid: number;
+    /**
+     * Property type name
+     * @example
+     * vchtypename: 'Property Type Name'
+     */
+    vchtypename: string;
+    /**
+     * Property status name
+     * @example
+     * vchstatusname: 'Property Status Name'
+     */
+    vchstatusname: string;
+    /**
+     * Student name
+     * @example
+     * vchstudentname: 'Student Name'
+     */
+    vchstudentname: string;
+    /**
+     * Student paternal surname
+     * @example
+     * vchstudentpaternalsurname: 'Paternalsurname'
+     */
+    vchstudentpaternalsurname: string;
+    /**
+     * Student maternal surname
+     * @example
+     * vchstudentmaternalsurname: 'Maternal surname';
+     */
+    vchstudentmaternalsurname: string;
+    /**
+     * Lessor ID
+     * @example
+     * lessorid: 1
+     */
+    lessorid: number;
+    /**
+     * Lessor name
+     * @example
+     * vchlessorname: 'Lessor Name'
+     */
+    vchlessorname: string;
+    /**
+     * Lessor paternal surname
+     * @example
+     * vchlessorpaternalsurname: 'Paternalsurname'
+     */
+    vchlessorpaternalsurname: string;
+    /**
+     * Lessor maternal surname
+     * @example
+     * vchlessormaternalsurname: 'Maternal surname';
+     */
+    vchlessormaternalsurname: string;
+}

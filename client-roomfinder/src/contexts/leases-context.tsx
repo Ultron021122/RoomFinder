@@ -1,15 +1,13 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { LeaseRequest, Property, RequestStatus, UserProfile, vwLeaseRequest } from '@/utils/interfaces';
+import { RequestStatus, UserProfile, vwLeasesGET } from '@/utils/interfaces';
 import { createContext, useContext, useState, useEffect } from 'react';
 import { ADMIN, ARRENDADOR, ESTUDIANTE } from '@/utils/constants';
 import axios from 'axios';
 
-interface RequestContextProps {
-    request: vwLeaseRequest[];
-    requestStatus: RequestStatus[];
-    properties: Property[];
+interface LeasesContextProps {
+    request: vwLeasesGET[];
     isLoading: boolean;
     error: string | null;
     refetchRequest: () => void;
@@ -17,25 +15,25 @@ interface RequestContextProps {
     reload: () => void;
 }
 
-const RequestContext = createContext<RequestContextProps | undefined>(undefined);
+const LeasesContext = createContext<LeasesContextProps | undefined>(undefined);
 
-export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const LeasesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const session = useSession();
-    const [properties, setProperties] = useState<Property[]>([])
-    const [request, setRequest] = useState<vwLeaseRequest[]>([]);
+    const [request, setRequest] = useState<vwLeasesGET[]>([]);
     const [requestStatus, setRequestStatus] = useState<RequestStatus[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchRequest = async () => {
+    const fetchLeases = async () => {
         setIsLoading(true);
         setError(null);
         try {
-            const { data: { data } } = await axios.get(`/api/requests`, {
+            const { data: { data } } = await axios.get(`/api/leases`, {
                 headers: {
                     'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
                 }
             });
+
             setRequest(data);
 
         } catch (err: any) {
@@ -45,11 +43,11 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
     };
 
-    const fetchUserLeasingRequests = async (role: number, userId: number) => {
+    const fetchUserLeasingLeases = async (role: number, userId: number) => {
         let url: string;
         switch (role) {
-            case ESTUDIANTE: url = `/api/requests/user/${userId}`; break;
-            case ARRENDADOR: url = `/api/requests/leasor/${userId}`; break;
+            case ESTUDIANTE: url = `/api/leases/user/${userId}`; break;
+            case ARRENDADOR: url = `/api/leases/leasor/${userId}`; break;
             default: url = ''; break;
         }
 
@@ -61,11 +59,7 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
                     'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
                 }
             })
-            const dataAsArray = [...data]; // por si la respuesta no es un arreglo
-            // const propertiesData = await Promise.all(dataAsArray.map(leaseRequest => fetchPropertyData(leaseRequest.propertyid)))
-
             setRequest(data)
-            // setProperties(propertiesData)
 
         } catch (error) {
             console.log(error)
@@ -90,9 +84,9 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const reload = () => {
         const sessionData = session.data?.user as UserProfile;
         if (sessionData.roleid === ADMIN) {
-            fetchRequest();
+            fetchLeases();
         } else {
-            fetchUserLeasingRequests(sessionData.roleid, sessionData.usuarioid)
+            fetchUserLeasingLeases(sessionData.roleid, sessionData.usuarioid)
         }
     }
 
@@ -104,9 +98,9 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (session.status === 'authenticated') {
             const sessionData = session.data.user as UserProfile;
             if (sessionData.roleid === ADMIN) {
-                fetchRequest();
+                fetchLeases();
             } else {
-                fetchUserLeasingRequests(sessionData.roleid, sessionData.usuarioid)
+                fetchUserLeasingLeases(sessionData.roleid, sessionData.usuarioid)
             }
 
             fetchRequestStatus();
@@ -114,11 +108,9 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }, [session]);
 
     return (
-        <RequestContext.Provider
+        <LeasesContext.Provider
             value={{
                 request,
-                requestStatus,
-                properties,
                 isLoading,
                 error,
                 refetchRequest,
@@ -127,14 +119,14 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
             }}
         >
             {children}
-        </RequestContext.Provider>
+        </LeasesContext.Provider>
     );
 };
 
-export const useRequestContext = () => {
-    const context = useContext(RequestContext);
+export const useLeasesContext = () => {
+    const context = useContext(LeasesContext);
     if (!context) {
-        throw new Error('useRequestContext must be used within a RequestProvider');
+        throw new Error('useLeasesContext must be used within a LeasesProvider');
     }
     return context;
 };

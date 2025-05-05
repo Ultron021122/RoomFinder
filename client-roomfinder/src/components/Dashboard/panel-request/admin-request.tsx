@@ -743,7 +743,9 @@ export default function AdminRequests() {
                 }
 
                 return (
-                  <PaginationItem key={i}>
+                  <PaginationItem 
+                    key={i}
+                  >
                     <PaginationLink onClick={() => setPaginaActual(pageNum)} isActive={paginaActual === pageNum}>
                       {pageNum}
                     </PaginationLink>

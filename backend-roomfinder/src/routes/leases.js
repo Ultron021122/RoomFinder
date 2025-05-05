@@ -59,6 +59,20 @@ export const createLeasesRouter = ({ leasesModel }) => {
         leasesController.getByPropertyId
     ])
 
+    leasesRouter.get('/lessor/:lessorid', [
+        // Validation
+        param('lessorid').isInt().withMessage('lessorid must be an integer'),
+        (req, res, next) => {
+            // Check for errors
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        leasesController.getByLessorId
+    ])
+
     leasesRouter.get('/student/:studentid', [
         // Validation
         param('studentid').isInt().withMessage('studentid must be an integer'),
