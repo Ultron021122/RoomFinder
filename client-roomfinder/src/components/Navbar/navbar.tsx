@@ -84,7 +84,7 @@ function Navbar({
                                 Mapa
                             </Link>
                             <Link href="/arrendadores" className={`block lg:inline-block dark:hover:text-white ${pathname === '/arrendadores' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
-                                Arrendadores
+                                Propietarios
                             </Link>
                             <Link href="/properties" className={`block lg:inline-block dark:hover:text-white ${pathname === '/properties' ? 'text-blue-500 dark:text-blue-500' : 'text-neutral-950 dark:text-gray-300'}`}>
                                 Propiedades

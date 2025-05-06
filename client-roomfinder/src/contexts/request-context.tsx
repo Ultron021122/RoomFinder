@@ -36,11 +36,7 @@ export const RequestProvider: React.FC<{ children: React.ReactNode }> = ({ child
                     'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
                 }
             });
-            const dataAsArray = [...data];
-            // const properties = await Promise.all(dataAsArray.map(leaseRequest => fetchPropertyData(leaseRequest.propertyid)))
-
             setRequest(data);
-            // setProperties(properties);
 
         } catch (err: any) {
             setError(err.response?.data.message || 'An error occurred');

@@ -47,6 +47,16 @@ export class LeasesController {
             .catch(next);
     }
 
+    getByLessorId = async (req, res, next) => {
+        const { lessorid } = req.params
+        await this.leasesModel.getByLessorId({ lessorid })
+            .then(leases => {
+                if (leases) return res.json(leases);
+                return res.status(404).json({ message: 'Lease not found ' })
+            })
+            .catch(next);
+    }
+
     getByLeaseNumber = async (req, res, next) => {
         const { lease_number } = req.params
         await this.leasesModel.getByLeaseNumber({ lease_number })
@@ -89,14 +99,14 @@ export class LeasesController {
     updateLease = async (req, res, next) => {
         const result = validatePartialLeases(req.body)
         if (!result.success) {
-            return res.status(400).json({ error: JSON.parse(result.error.message)})
+            return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
 
         const { id } = req.params
         await this.leasesModel.update({ id, input: result.data })
             .then(updateLease => {
-                if (updateLease === false) return res.status(409).json({ message: 'Bad request'});
-                if (!updateLease) return res.status(404).json({ message: 'Lease not found'})
+                if (updateLease === false) return res.status(409).json({ message: 'Bad request' });
+                if (!updateLease) return res.status(404).json({ message: 'Lease not found' })
                 return res.json(updateLease)
             })
             .catch(next);

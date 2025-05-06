@@ -149,7 +149,7 @@ function PropertyComponent({ id }: { id: string }) {
         }
     }
 
-    const statusBlocked = [1, 2, 3]
+    const statusBlocked = [1, 2, 3, 6]
 
     // Errores
     useEffect(() => {
@@ -295,7 +295,7 @@ function PropertyComponent({ id }: { id: string }) {
         3: "Ya tienes una solicitud en revisión para esta propiedad.",
         4: "Tu solicitud fue rechazada. Puedes crear una nueva si lo deseas.",
         5: "Esta solicitud fue cancelada. Si necesitas realizar otra, puedes hacerlo.",
-        6: "Esperando respuesta del solicitante.",
+        6: "Esperando respuesta del solicitante o ya se ha respondido.",
     };
 
     const lastStatusId = requestHistory?.[0]?.statusid as StatusId | undefined;
@@ -328,6 +328,9 @@ function PropertyComponent({ id }: { id: string }) {
                     <main className="py-6 px-4 sm:p-6 md:py-10 md:px-8">
                         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-7xl lg:gap-x-20 lg:grid-cols-2">
                             <div className="relative p-3 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t from-black/75 via-black/0 sm:bg-none sm:row-start-2 sm:p-0 lg:row-start-1 z-30">
+                                <p className="text-xl font-bold text-blue-400 dark:text-blue-300 mt-2">
+                                    ${property?.decrentalcost?.toLocaleString() || "0"} MXN / mes
+                                </p>
                                 <h1 className="mt-1 text-lg font-semibold text-white sm:text-slate-900 md:text-2xl dark:sm:text-white">
                                     {property?.vchtitle}
                                 </h1>
@@ -449,7 +452,7 @@ function PropertyComponent({ id }: { id: string }) {
                                 </CardContent>
                             </Card>
                             {/* Reservación */}
-                            {userProfileData?.roleid == 1 && status === "authenticated" && !isRequestBlocked && (
+                            {userProfileData?.roleid == 1 && status === "authenticated" && !isRequestBlocked && property.bnavailability === true && (
                                 <Card className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-md rounded-xl overflow-hidden lg:row-span-2 lg:sticky lg:top-20">
                                     <CardHeader className="bg-gradient-to-r from-blue-50 to-white dark:from-gray-800 dark:to-gray-800 border-b border-gray-100 dark:border-gray-700">
                                         <CardTitle className="text-blue-800 dark:text-blue-300">Reserva tu estancia</CardTitle>
