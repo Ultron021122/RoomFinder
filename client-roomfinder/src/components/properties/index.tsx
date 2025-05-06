@@ -11,6 +11,7 @@ import CardOwner from "@/components/Main/Card";
 import { useSession } from "next-auth/react";
 import { Separator } from "../ui/separator";
 import { universities } from "@/utils/constants";
+import { Spinner } from "@nextui-org/react";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -187,13 +188,15 @@ export const SectionProperty = () => {
                     </SelectContent>
                 </Select>
             </div>
-
+            
             {/* Mostrar los resultados de la predicción aquí */}
-            {!isLoadingPredict && userProfileData?.roleid === 1 && status === 'authenticated' &&
+            {status === 'authenticated' && userProfileData?.roleid === 1 && (
                 <div className="mt-5">
                     <h3 className="text-xl font-semibold mb-4">Propiedades Recomendadas para Ti</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 p-2">
-                        {allPropertiesPredict.length > 0 ? (
+                        {isLoadingPredict ? (
+                            <Spinner color="success" className="col-span-full" />
+                        ) : allPropertiesPredict.length > 0 ? (
                             allPropertiesPredict.map((property, index) => (
                                 <CardOwner key={index} {...property} />
                             ))
@@ -202,7 +205,7 @@ export const SectionProperty = () => {
                         )}
                     </div>
                 </div>
-            }
+            )}
 
             <Separator className="bg-gray-300 dark:bg-gray-500" />
 

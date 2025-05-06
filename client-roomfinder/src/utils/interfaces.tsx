@@ -2116,7 +2116,7 @@ export interface vwLeaseRequest {
 }
 
 /**
- * Interface representing property type details.
+ * Interface representing request status details.
  */
 export interface RequestStatus {
     /**
@@ -2125,6 +2125,42 @@ export interface RequestStatus {
      * statusid: 1
      */
     statusid: number;
+    /**
+     * Status name
+     * @example
+     * vchstatusid: 'Aceptado'
+     */
+    vchstatusname: string;
+    /**
+     * Active
+     * @example
+     * bnactive: true
+     */
+    bnactive: boolean;
+    /**
+     * Created date
+     * @example
+     * created_at: '1990-01-01'
+     */
+    created_at: string;
+    /**
+     * Updated date
+     * @example
+     * update_at: '1990-01-01'
+     */
+    update_at: string;
+}
+
+/**
+ * Interface representing lease status details.
+ */
+export interface LeaseStatus {
+    /**
+     * Lease status id
+     * @example
+     * leasestatusid: 1
+     */
+    leasestatusid: number;
     /**
      * Status name
      * @example

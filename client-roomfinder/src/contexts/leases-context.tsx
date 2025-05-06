@@ -1,17 +1,18 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { RequestStatus, UserProfile, vwLeasesGET } from '@/utils/interfaces';
 import { createContext, useContext, useState, useEffect } from 'react';
-import { ADMIN, ARRENDADOR, ESTUDIANTE } from '@/utils/constants';
 import axios from 'axios';
+import { ADMIN, ARRENDADOR, ESTUDIANTE } from '@/utils/constants';
+import { LeaseStatus, UserProfile, vwLeasesGET } from '@/utils/interfaces';
 
 interface LeasesContextProps {
-    request: vwLeasesGET[];
+    leases: vwLeasesGET[];
+    leasesStatus: LeaseStatus[];
     isLoading: boolean;
     error: string | null;
-    refetchRequest: () => void;
-    refetchRequestStatus: () => void;
+    refetchLeases: () => void;
+    refetchLeaseStatus: () => void;
     reload: () => void;
 }
 
@@ -19,102 +20,113 @@ const LeasesContext = createContext<LeasesContextProps | undefined>(undefined);
 
 export const LeasesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const session = useSession();
-    const [request, setRequest] = useState<vwLeasesGET[]>([]);
-    const [requestStatus, setRequestStatus] = useState<RequestStatus[]>([]);
+    const [leases, setLeases] = useState<vwLeasesGET[]>([]);
+    const [leaseStatus, setLeaseStatus] = useState<LeaseStatus[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     const fetchLeases = async () => {
+        if (!process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY) {
+            setError('Internal secret key is missing.');
+            return;
+        }
+
         setIsLoading(true);
         setError(null);
         try {
             const { data: { data } } = await axios.get(`/api/leases`, {
                 headers: {
-                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
-                }
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`,
+                },
             });
-
-            setRequest(data);
-
+            setLeases(data);
         } catch (err: any) {
-            setError(err.response?.data.message || 'An error occurred');
+            console.error('Error fetching leases:', err);
+            setError(err.response?.data?.message || 'An error occurred while fetching leases.');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const fetchUserLeasingLeases = async (role: number, userId: number) => {
-        let url: string;
-        switch (role) {
-            case ESTUDIANTE: url = `/api/leases/user/${userId}`; break;
-            case ARRENDADOR: url = `/api/leases/leasor/${userId}`; break;
-            default: url = ''; break;
+    const fetchUserLeases = async (role: number, userId: number) => {
+        if (!process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY) {
+            setError('Internal secret key is missing.');
+            return;
         }
 
-        setIsLoading(true)
-        setError(null)
+        let url = '';
+        switch (role) {
+            case ESTUDIANTE:
+                url = `/api/leases/user/${userId}`;
+                break;
+            case ARRENDADOR:
+                url = `/api/leases/leasor/${userId}`;
+                break;
+            default:
+                setError('Invalid role for fetching leases.');
+                return;
+        }
+
+        setIsLoading(true);
+        setError(null);
         try {
             const { data: { data } } = await axios.get(url, {
                 headers: {
-                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
-                }
-            })
-            setRequest(data)
-
-        } catch (error) {
-            console.log(error)
+                    'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`,
+                },
+            });
+            setLeases(data);
+        } catch (err: any) {
+            console.error('Error fetching user-specific leases:', err);
+            setError(err.response?.data?.message || 'An error occurred while fetching user-specific leases.');
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
 
-    const fetchRequestStatus = async () => {
+    const fetchLeaseStatus = async () => {
         try {
-            const response = await axios.get(`/api/request-status`, {
+            const response = await axios.get(`/api/leases-status`, {
                 headers: {
                     'x-secret-key': `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`
                 }
             });
-            setRequestStatus(response.data.data);
+            setLeaseStatus(response.data.data);
         } catch (err: any) {
             setError(err.response?.data.message || 'An error occurred');
         }
-    };
+    }
 
     const reload = () => {
         const sessionData = session.data?.user as UserProfile;
-        if (sessionData.roleid === ADMIN) {
+        if (sessionData?.roleid === ADMIN) {
             fetchLeases();
-        } else {
-            fetchUserLeasingLeases(sessionData.roleid, sessionData.usuarioid)
+        } else if (sessionData) {
+            fetchUserLeases(sessionData.roleid, sessionData.usuarioid);
         }
-    }
 
-    const refetchRequest = () => {
+        fetchLeaseStatus();
+    };
+
+    const refetchLeases = () => {
         reload();
-    }
+    };
 
     useEffect(() => {
         if (session.status === 'authenticated') {
-            const sessionData = session.data.user as UserProfile;
-            if (sessionData.roleid === ADMIN) {
-                fetchLeases();
-            } else {
-                fetchUserLeasingLeases(sessionData.roleid, sessionData.usuarioid)
-            }
-
-            fetchRequestStatus();
+            reload();
         }
     }, [session]);
 
     return (
         <LeasesContext.Provider
             value={{
-                request,
+                leases,
+                leasesStatus: leaseStatus,
                 isLoading,
                 error,
-                refetchRequest,
-                refetchRequestStatus: fetchRequestStatus,
+                refetchLeases,
+                refetchLeaseStatus: fetchLeaseStatus,
                 reload,
             }}
         >

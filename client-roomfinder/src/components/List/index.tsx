@@ -47,13 +47,13 @@ export default function ListItems() {
 
     const content = useMemo(() => {
         if (isLoading) {
-            return <Spinner />
+            return <div className='flex justify-center'><Spinner /></div>
         }
 
         if (lessors.length > 0) {
             return (
-                <div className='h-[950px] lg:w-4/6'>
-                    <div className="grid grid-cols-1 gap-y-5 pr-1">
+                <div className='lg:w-5/6 mx-auto overflow-y-auto pb-5'>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pr-1">
                         {lessors.map((lessor, index) => (
                             <CardItem key={index} data={lessor} />
                         ))}
@@ -74,9 +74,14 @@ export default function ListItems() {
 
     return (
         <div className='container mx-auto px-4 h-[100vh]'>
-            <h1 className="dark:text-white text-2xl font-bold pt-20 pb-10 text-center">
-                Arrendadores
+            <h1 className="dark:text-white text-3xl font-bold pt-28 text-center">
+                Propietarios
             </h1>
+            <div className='flex flex-col items-center justify-center mb-10'>
+                <p className='dark:text-gray-200 text-center text-lg'>
+                    Aquí puedes ver todos los propietarios registrados en la plataforma. Puedes ver sus propiedades y detalles de contacto.
+                </p>
+            </div>
             {content}
         </div>
     );

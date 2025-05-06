@@ -104,13 +104,32 @@ const SettingsComponent: React.FC = () => {
                             onValueChange={handleThemeChange}
                             value={theme}
                         >
-                            <SelectTrigger className="border-none shadow-none bg-gray-200 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-700 focus:ring-0">
-                                <SelectValue placeholder="Theme"/>
+                            <SelectTrigger
+                                className={`border shadow-sm rounded-lg text-sm px-4 py-2 
+                    bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 
+                    dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-blue-400 transition-colors`}
+                            >
+                                <SelectValue placeholder="Selecciona un tema" />
                             </SelectTrigger>
-                            <SelectContent className="bg-gray-50 dark:bg-gray-800">
-                                <SelectItem value="light" className="hover:bg-gray-100 dark:hover:bg-gray-700">Claro</SelectItem>
-                                <SelectItem value="dark" className="hover:bg-gray-100 dark:hover:bg-gray-700">Oscuro</SelectItem>
-                                <SelectItem value="system" className="hover:bg-gray-100 dark:hover:bg-gray-700">Sistema</SelectItem>
+                            <SelectContent className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
+                                <SelectItem
+                                    value="light"
+                                    className="px-4 py-2 text-gray-800 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                >
+                                    Claro
+                                </SelectItem>
+                                <SelectItem
+                                    value="dark"
+                                    className="px-4 py-2 text-gray-800 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                >
+                                    Oscuro
+                                </SelectItem>
+                                <SelectItem
+                                    value="system"
+                                    className="px-4 py-2 text-gray-800 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                >
+                                    Sistema
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
@@ -134,15 +153,6 @@ const SettingsComponent: React.FC = () => {
                             disabled
                         />
                     </div>
-
-                    {/* <div className="flex justify-end">
-                        <Button
-                            onClick={handleDeleteAccount}
-                            className="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                        >
-                            Eliminar Usuario
-                        </Button>
-                    </div> */}
 
                     <div className='flex justify-end'>
                         <AlertDialog>

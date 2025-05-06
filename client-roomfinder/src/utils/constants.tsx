@@ -1,7 +1,7 @@
 import { UniversityData, Roles, MapCoordenada, Folder } from '@/utils/interfaces';
 import { url } from 'inspector';
 import { icon } from 'leaflet';
-import { AlertCircle, Calendar, Check, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { AlertCircle, BadgePlus, Calendar, Check, CheckCircle, Clock, XCircle } from 'lucide-react';
 import { z } from 'zod';
 
 // Iconos
@@ -729,5 +729,39 @@ export const LEASE_STATUSES = {
     color:
       "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800 hover:bg-red-200 hover:dark:bg-red-800/50",
     icon: XCircle, // Icono para "Cancelado"
+  },
+};
+
+
+export const LEASE_STATUS = {
+  1: {
+    name: "Activo",
+    color:
+      "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800 hover:bg-green-200 hover:text-green-900 hover:border-green-400",
+    icon: CheckCircle,
+  },
+  2: {
+    name: "Pausado",
+    color:
+      "bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800 hover:bg-yellow-200 hover:text-yellow-900 hover:border-yellow-400",
+    icon: Clock,
+  },
+  3: {
+    name: "Completado",
+    color:
+      "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 hover:bg-blue-200 hover:text-blue-900 hover:border-blue-400",
+    icon: CheckCircle,
+  },
+  4: {
+    name: "Ampliado",
+    color:
+      "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 hover:bg-blue-200 hover:text-blue-900 hover:border-blue-400",
+    icon: XCircle,
+  },
+  5: {
+    name: "Generado",
+    color:
+      "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800 hover:bg-green-200 hover:text-green-900 hover:border-green-400",
+    icon: BadgePlus,
   },
 };

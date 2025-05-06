@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(request, { params }){
 
-    const studentId = params.studentId
+    const studentId = params.id;
 
     const secretKey = request.headers.get('x-secret-key');
     if (!secretKey || secretKey !== process.env.INTERNAL_SECRET_KEY) {

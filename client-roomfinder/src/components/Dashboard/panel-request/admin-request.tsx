@@ -237,7 +237,18 @@ export default function AdminRequests() {
       link.click()
       document.body.removeChild(link)
     } catch (err) {
-      console.error('Error al exportar CSV: ', err);
+      console.error("Error al exportar CSV: ", err)
+      toast.error("Error al exportar los datos", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      })
     }
   }
 
@@ -421,7 +432,10 @@ export default function AdminRequests() {
               <Download className="h-4 w-4" />
               Exportar
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1" onClick={() => router.refresh()}>
+            <Button
+              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1"
+              onClick={() => router.refresh()}
+            >
               <RefreshCcw className="h-4 w-4" />
               Actualizar
             </Button>
@@ -743,7 +757,7 @@ export default function AdminRequests() {
                 }
 
                 return (
-                  <PaginationItem 
+                  <PaginationItem
                     key={i}
                   >
                     <PaginationLink onClick={() => setPaginaActual(pageNum)} isActive={paginaActual === pageNum}>
@@ -841,7 +855,7 @@ export default function AdminRequests() {
                       checked={requestEdit.bitconfirm}
                       onCheckedChange={(checked) => setRequestEdit({ ...requestEdit, bitconfirm: checked as boolean })}
                       className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 mr-2"
-                      disabled={userProfileData.roleid === 1}
+                      disabled
                     />
                     <Label htmlFor="bitConfirm" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Confirmar Solicitud
