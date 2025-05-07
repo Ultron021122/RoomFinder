@@ -1,11 +1,12 @@
 import { Database } from "./database.js";
 
 export class PaymentOrderModel {
-    constructor({ orderid, leasesid, amount, status, created_at, updated_at }) {
+    constructor({ orderid, leasesid, amount, status, vchconcept, created_at, updated_at }) {
         this.orderid = orderid;
         this.leasesid = leasesid;
         this.amount = amount;
         this.status = status;
+        this.vchconcept = vchconcept;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
@@ -15,7 +16,7 @@ export class PaymentOrderModel {
         const client = await db.pool.connect();
         try {
             const orders = await client.query(
-                `SELECT * FROM "Usuario"."PaymentsOrders";`
+                `SELECT * FROM "Usuario"."PaymentOrders";`
             );
             return orders.rows.map((order) => new PaymentOrderModel(order));
         } finally {
@@ -28,7 +29,7 @@ export class PaymentOrderModel {
         const client = await db.pool.connect();
         try {
             const orders = await client.query(
-                `SELECT * FROM "Usuario"."PaymentsOrders" WHERE leasesid = $1;`,
+                `SELECT * FROM "Usuario"."PaymentOrders" WHERE leasesid = $1;`,
                 [leasesid]
             );
             return orders.rows.map((order) => new PaymentOrderModel(order));
@@ -42,7 +43,7 @@ export class PaymentOrderModel {
         const client = await db.pool.connect();
         try {
             const order = await client.query(
-                `SELECT * FROM "Usuario"."PaymentsOrders" WHERE orderid = $1;`,
+                `SELECT * FROM "Usuario"."PaymentOrders" WHERE orderid = $1;`,
                 [id]
             );
             return order.rowCount > 0 ? new PaymentOrderModel(order.rows[0]) : null;
@@ -58,7 +59,7 @@ export class PaymentOrderModel {
             const client = await db.pool.connect();
             try {
                 const order = await client.query(
-                    `INSERT INTO "Usuario"."PaymentsOrders" (leasesid, amount, status) VALUES ($1, $2, $3) RETURNING *;`,
+                    `INSERT INTO "Usuario"."PaymentOrders" (leasesid, amount, status) VALUES ($1, $2, $3) RETURNING *;`,
                     [leasesid, amount, status]
                 );
                 return new PaymentOrderModel(order.rows[0]);
@@ -78,7 +79,7 @@ export class PaymentOrderModel {
             const client = await db.pool.connect();
             try {
                 const order = await client.query(
-                    `UPDATE "Usuario"."PaymentsOrders" SET leasesid = $1, amount = $2, status = $3, updated_at=CURRENT_TIMESTAMP WHERE orderid = $4 RETURNING *;`,
+                    `UPDATE "Usuario"."PaymentOrders" SET leasesid = $1, amount = $2, status = $3, updated_at=CURRENT_TIMESTAMP WHERE orderid = $4 RETURNING *;`,
                     [leasesid, amount, status, id]
                 );
                 return order.rowCount > 0 ? new PaymentOrderModel(order.rows[0]) : null;
@@ -97,7 +98,7 @@ export class PaymentOrderModel {
             const client = await db.pool.connect();
             try {
                 const result = await client.query(
-                    `DELETE FROM "Usuario"."PaymentsOrders" WHERE orderid = $1 RETURNING *;`,
+                    `DELETE FROM "Usuario"."PaymentOrders" WHERE orderid = $1 RETURNING *;`,
                     [id]
                 );
                 return result.rowCount > 0 ? new PaymentOrderModel(result.rows[0]) : null;
@@ -116,7 +117,7 @@ export class PaymentOrderModel {
             const client = await db.pool.connect();
             try {
                 const result = await client.query(
-                    `DELETE FROM "Usuario"."PaymentsOrders" WHERE leasesid = $1 RETURNING *;`,
+                    `DELETE FROM "Usuario"."PaymentOrders" WHERE leasesid = $1 RETURNING *;`,
                     [leasesid]
                 );
                 return result.rowCount > 0 ? new PaymentOrderModel(result.rows[0]) : null;
@@ -135,7 +136,7 @@ export class PaymentOrderModel {
             const client = await db.pool.connect();
             try {
                 const result = await client.query(
-                    `DELETE FROM "Usuario"."PaymentsOrders" WHERE orderid = $1 RETURNING *;`,
+                    `DELETE FROM "Usuario"."PaymentOrders" WHERE orderid = $1 RETURNING *;`,
                     [orderid]
                 );
                 return result.rowCount > 0 ? new PaymentOrderModel(result.rows[0]) : null;

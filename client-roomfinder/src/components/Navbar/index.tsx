@@ -23,7 +23,8 @@ const excludedRoutes = [
     '/dashboard/settings',
     '/dashboard/leases',
     '/test',
-    '/checkout'
+    '/checkout',
+    '/dashboard/order-payments'
 ];
 
 const dynamicRoutesPattern = /^\/dashboard\/propertyDetails\/\d+$/;  // Expresión regular para la ruta dinámica

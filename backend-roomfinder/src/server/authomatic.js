@@ -19,9 +19,10 @@ const notification = async () => {
     for (const usuario of usuarios) {
       const fechaPago = moment(usuario.fechaPago);
       
+      const diff = fechaPago.diff(hoy, 'days');
+
       // Verificar si la fecha de pago está dentro de los próximos 3 días
-      if (fechaPago.diff(hoy, 'days') <= 3) {
-        
+      if (diff >= 0 && diff <= 3) {
         // Enviar el correo de verificación o recordatorio
         await emailService.sendNotification(usuario.usuarioid, usuario.vchname, usuario.vchemail, usuario.fechaPago);
         console.log(`Correo enviado a ${usuario.vchname} (${usuario.vchemail})`);
@@ -32,10 +33,12 @@ const notification = async () => {
   }
 };
 
-// Programar la tarea para que se ejecute todos los días a las 8 AM
-cron.schedule('29 2 * * *', () => {
+// Programar la tarea para que se ejecute todos los días a las 12 AM
+cron.schedule('0 0 * * *', () => {
   console.log('Verificando fechas de pago y enviando correos...');
   notification();
+}, {
+  timezone: "America/Mexico_City"
 });
 
 
