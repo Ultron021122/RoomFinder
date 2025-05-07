@@ -6,7 +6,6 @@ export default function Loading() {
     <div className="flex justify-center items-center h-screen bg-gray-50 dark:bg-gray-900">
       <div className="text-center">
         <Spinner />
-        <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg">Cargando órdenes de pago...</p>
       </div>
     </div>
   )

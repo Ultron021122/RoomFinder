@@ -61,6 +61,7 @@ import {
   Home,
   BadgePlus,
   LinkIcon,
+  SquareArrowOutUpRight,
 } from "lucide-react"
 
 // Componentes adicionales
@@ -278,6 +279,52 @@ export default function AdminLeasesPage() {
       })
     }
   }
+
+  const handleUpdateLeaseStatus = async (leasesid: number, leasestatusid: number) => {
+    setIsLoadingState(true)
+    try {
+      const response = await axios.patch(
+        `/api/leases/${leasesid}`,
+        { leasestatusid },
+        {
+          headers: {
+            "x-secret-key": `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`,
+          },
+        },
+      )
+      if (response.status === 200) {
+        toast.success("Estado del arrendamiento actualizado con éxito", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+          style: { fontSize: "0.9rem" },
+          transition: Slide,
+        })
+      } else {
+        toast.error("Error al actualizar el estado del arrendamiento", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        })
+      }
+    } catch (error) {
+      setErrorSystem("Error al actualizar el estado del arrendamiento")
+    } finally {
+      setIsLoadingState(false)
+    }
+  }
+
 
   const handleSaveChanges = async () => {
     if (editLease) {
@@ -664,6 +711,7 @@ export default function AdminLeasesPage() {
               onView={handleViewLease}
               onEdit={handleEditLease}
               onDelete={handleDeleteLease}
+              onUpdateStatus={handleUpdateLeaseStatus}
               user={userProfileData}
             />
           </TabsContent>
@@ -675,6 +723,7 @@ export default function AdminLeasesPage() {
               onView={handleViewLease}
               onEdit={handleEditLease}
               onDelete={handleDeleteLease}
+              onUpdateStatus={handleUpdateLeaseStatus}
               user={userProfileData}
             />
           </TabsContent>
@@ -686,6 +735,7 @@ export default function AdminLeasesPage() {
               onView={handleViewLease}
               onEdit={handleEditLease}
               onDelete={handleDeleteLease}
+              onUpdateStatus={handleUpdateLeaseStatus}
               user={userProfileData}
             />
           </TabsContent>
@@ -697,6 +747,7 @@ export default function AdminLeasesPage() {
               onView={handleViewLease}
               onEdit={handleEditLease}
               onDelete={handleDeleteLease}
+              onUpdateStatus={handleUpdateLeaseStatus}
               user={userProfileData}
             />
           </TabsContent>
@@ -708,6 +759,7 @@ export default function AdminLeasesPage() {
               onView={handleViewLease}
               onEdit={handleEditLease}
               onDelete={handleDeleteLease}
+              onUpdateStatus={handleUpdateLeaseStatus}
               user={userProfileData}
             />
           </TabsContent>
@@ -1040,10 +1092,13 @@ interface AdminLeasesTableProps {
   onView: (lease: any) => void
   onEdit: (lease: any) => void
   onDelete: (id: number) => void
+  onUpdateStatus: (leasesid: number, leasestatusid: number) => void;
   user: any
 }
 
-function AdminLeasesTable({ leases, isLoading, onView, onEdit, onDelete, user }: AdminLeasesTableProps) {
+function AdminLeasesTable({ leases, isLoading, onView, onEdit, onDelete, onUpdateStatus, user }: AdminLeasesTableProps) {
+  const leasestatus = [3, 6]
+  
   return (
     <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
       <CardContent className="p-0">
@@ -1164,27 +1219,27 @@ function AdminLeasesTable({ leases, isLoading, onView, onEdit, onDelete, user }:
                               className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                             >
                               <Link href={`/property/${lease.propertyid}`} className="flex items-center">
-                                <LinkIcon className="h-4 w-4 mr-2" />
+                                <SquareArrowOutUpRight className="h-4 w-4 mr-2" />
                                 <span className="text-sm">Ver propiedad</span>
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <AlertDialog>
-                              <AlertDialogTrigger className="w-full" disabled={user?.roleid === 1}>
+                              <AlertDialogTrigger className="w-full" disabled={user?.roleid !== 1 || (user?.roleid === 1 && leasestatus.includes(lease.leasestatusid))}>
                                 <DropdownMenuItem
                                   onSelect={(e) => e.preventDefault()}
                                   className="cursor-pointer text-red-600 dark:text-red-500 hover:bg-red-300 dark:hover:bg-red-800 hover:text-red-800 dark:hover:text-red-300 w-full"
-                                  disabled={user?.roleid === 1}
+                                  disabled={user?.roleid !== 1 || (user?.roleid === 1 && leasestatus.includes(lease.leasestatusid))}
                                 >
-                                  <Trash2 className="h-4 w-4 mr-2" />
-                                  Eliminar
+                                  <XCircle className="h-4 w-4 mr-2" />
+                                  Cancelar
                                 </DropdownMenuItem>
                               </AlertDialogTrigger>
                               <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>¿Estás seguro de eliminar este arrendamiento?</AlertDialogTitle>
+                                  <AlertDialogTitle>¿Estás seguro de cancelar este arrendamiento?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Esta acción no se puede deshacer. El arrendamiento será eliminado permanentemente.
+                                    Esta acción no se puede deshacer. El arrendamiento será cancelado permanentemente.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -1192,9 +1247,10 @@ function AdminLeasesTable({ leases, isLoading, onView, onEdit, onDelete, user }:
                                     Cancelar
                                   </AlertDialogCancel>
                                   <AlertDialogAction
+                                    className="bg-red-600 hover:bg-red-500 text-white"
                                     onClick={() => {
-                                      if (lease.leasesid) {
-                                        onDelete(lease.leasesid)
+                                      if (lease.leasestatusid) {
+                                        onUpdateStatus(lease.leasesid, 6);
                                       }
                                     }}
                                   >
