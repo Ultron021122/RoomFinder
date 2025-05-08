@@ -1,6 +1,8 @@
 import cron from 'node-cron';
 import moment from 'moment';
-import { EmailService } from '../server/email.js'; 
+import { EmailService } from '../server/email.js';
+import axios from 'axios';
+import dotenv from 'dotenv';
 
 // Crear una instancia de tu servicio de correo
 const emailService = new EmailService();
@@ -15,10 +17,12 @@ const changeStatus = async () => {
         'Authorization': `Bearer ${process.env.TOKEN}`
       }
     });
-    
+
     if (response) {
-        await emailService.sendNotification(0, 'admin', 'admin@roomfinder.website', hoy.format('YYYY-MM-DD'));
+        await emailService.sendNotificationStatus('admin', 'admin@roomfinder.website', hoy.format('YYYY-MM-DD'));
         console.log(`Correo enviado a admin (admin@roomfinder.website)`);
+    } else {
+        console.log('No se encontraron operaciones para cambiar de estatus.');
     }
 
   } catch (error) {

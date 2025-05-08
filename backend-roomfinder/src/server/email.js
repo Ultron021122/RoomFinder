@@ -731,6 +731,138 @@ export class EmailService {
         }
     }
 
+    async sendNotificationStatus( vchname, vchemail, fechaPago) {
+        try {
+            const email = vchemail;
+            const info = {
+                from: `"RoomFinder" <${process.env.EMAIL_USER}>`,
+                to: [`${email}`],
+                subject: 'Notifiación por correo',
+                html: `
+                    <!DOCTYPE html>
+                    <html lang="es">
+
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <link rel="preconnect" href="https://fonts.googleapis.com">
+                        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                        <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+                        <title>Notificación de cambio de estatus</title>
+                        <style>
+                            body {
+                                font-family: 'Roboto Mono', sans-serif;
+                                background-color: #f4f4f7;
+                                margin: 0;
+                                padding: 0;
+                                -webkit-text-size-adjust: none;
+                                -ms-text-size-adjust: none;
+                            }
+
+                            .email-container {
+                                max-width: 600px;
+                                margin: 0 auto;
+                                background-color: #ffffff;
+                                border-radius: 8px;
+                                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                                overflow: hidden;
+                                color: #333333;
+                            }
+
+                            .header {
+                                background-color: #0f172a;
+                                padding: 20px;
+                                color: #ffffff;
+                                text-align: center;
+                            }
+
+                            .header img {
+                                max-width: 120px;
+                                margin-bottom: 10px;
+                            }
+
+                            .header h1 {
+                                margin: 0;
+                                font-size: 24px;
+                                font-weight: 700;
+                            }
+
+                            .content {
+                                padding: 20px;
+                            }
+
+                            .content p {
+                                font-size: 15px;
+                                line-height: 1.5;
+                                margin: 0 0 20px;
+                            }
+
+                            .button {
+                                display: inline-block;
+                                padding: 15px 25px;
+                                font-size: 16px;
+                                color: #ffffff;
+                                background-color: #0f172a;
+                                border-radius: 5px;
+                                text-decoration: none;
+                                font-weight: 500;
+                            }
+
+                            .button:hover {
+                                background-color: #335bcb;
+                            }
+
+                            .footer {
+                                text-align: center;
+                                padding: 20px;
+                                font-size: 14px;
+                                color: #999999;
+                                background-color: #f4f4f7;
+                            }
+
+                            .footer a {
+                                color: #007bff;
+                                text-decoration: none;
+                            }
+
+                            .footer a:hover {
+                                text-decoration: underline;
+                            }
+                        </style>
+                    </head>
+
+                    <body>
+                        <div class="email-container">
+                            <div class="header">
+                                <img src="https://res.cloudinary.com/dal8aivch/image/upload/v1739424183/utils/xoe4vqadlpkfy0d8ux11.png" alt="Logo">
+                                <h1>Notificación cambio de estatus</h1>
+                            </div>
+                            <div class="content">
+                                <p>Hola ${vchname},<br> tienes una nueva notificación.</p>
+                                <p>Se actualizaron los arrendamientos. ${fechaPago}</p>
+                                <p>Si no solicitaste este correo, por favor ignóralo.</p>
+                                <p class="pt-4">
+                                    No responda a este correo electrónico. Si tiene alguna pregunta, por favor <a href="mailto:support@roomfinder.website">contáctenos</a>.
+                                </p>
+                            </div>
+                            <div class="footer">
+                                <p>Gracias,</p>
+                                <p>El equipo de RoomFinder</p>
+                                <p>¿Tienes alguna pregunta? <a href="mailto:support@roomfinder.website">Contacta con soporte</a></p>
+                            </div>
+                        </div>
+                    </body>
+
+                    </html>
+                    `,
+            };
+            const result = await this.transporter.sendMail(info);
+            return result.messageId;
+        } catch (error) {
+            throw new Error(`Error sending mail: ${error.message}`);
+        }
+    }
+
     async sendNotification(usuarioid, vchname, vchemail, fechaPago) {
         try {
             const email = vchemail;

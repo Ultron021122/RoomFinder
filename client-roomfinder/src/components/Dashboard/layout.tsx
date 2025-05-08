@@ -8,7 +8,8 @@ import {
     LayoutDashboard, Mail, MenuIcon, UserCircle, Folder, SlidersHorizontal,
     MoreVerticalIcon, Users, History, CreditCard, NotebookIcon,
     ClipboardList, Search,
-    BookOpenCheck
+    BookOpenCheck,
+    HandCoins
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -106,12 +107,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         alert
                         onClickSidebar={handleSidebarItemClick}
                     />
-                    <SidebarItem
+                    {/* <SidebarItem
                         icon={<History size={22} />}
                         text="Historial"
                         url="/dashboard/history"
                         onClickSidebar={handleSidebarItemClick}
-                    />
+                    /> */}
                     {roleName === 'Arrendador' && (
                         <>
                             <SidebarItem icon={<Folder size={22} />} text="Propiedades" url="/dashboard/properties" onClickSidebar={handleSidebarItemClick} />
@@ -133,7 +134,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 url="/dashboard/rentals"
                                 onClickSidebar={handleSidebarItemClick}
                             />
-                            <SidebarItem icon={<ClipboardList size={22} />} text="Solicitudes" url="/dashboard/request" alert onClickSidebar={handleSidebarItemClick} />
+                            <SidebarItem
+                                icon={<ClipboardList size={22} />}
+                                text="Solicitudes" url="/dashboard/request"
+                                alert onClickSidebar={handleSidebarItemClick}
+                            />
+                            <SidebarItem
+                                icon={<HandCoins size={22} />}
+                                text="Ordenes"
+                                url="/dashboard/order-payments"
+                                onClickSidebar={handleSidebarItemClick}
+                            />
                         </>
                     )}
 
@@ -141,7 +152,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <>
                             <SidebarItem icon={<ClipboardList size={22} />} text="Solicitudes" url="/dashboard/request" alert onClickSidebar={handleSidebarItemClick} />
                             <SidebarItem icon={<Users size={22} />} text="Usuarios" url="/dashboard/users" onClickSidebar={handleSidebarItemClick} />
-                            <SidebarItem icon={<Users size={22} />} text="Arrendadores" url="/dashboard/landlords" onClickSidebar={handleSidebarItemClick} />
+                            {/* <SidebarItem icon={<Users size={22} />} text="Arrendadores" url="/dashboard/landlords" onClickSidebar={handleSidebarItemClick} /> */}
                         </>
                     )}
 

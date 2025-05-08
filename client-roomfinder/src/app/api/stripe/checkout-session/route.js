@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 export async function POST(req) {
   try {
     const { origin } = new URL(req.url);
-    const {property, userId, leaseRequest} = await req.json();
+    const {property, userId, leaseRequest, amount} = await req.json();
 
     // Obtener la fecha y hora actual
     const currentDate = new Date();
@@ -25,7 +25,7 @@ export async function POST(req) {
               name: property.vchtitle,
               images: [property.objphotos[0].url]
             },
-            unit_amount: (parseInt(property.decrentalcost) * 100)
+            unit_amount: (amount * 100)
           },
           quantity: 1
         }
@@ -37,7 +37,7 @@ export async function POST(req) {
         studentid: userId,
         dtstartdate: leaseRequest.dtstartdate,
         dtenddate: leaseRequest.dtenddate,
-        decmonthlycost: property.decrentalcost,
+        decmonthlycost: amount,
         paymentmethodid: 1,
         dtpayment: dtpayment
       },

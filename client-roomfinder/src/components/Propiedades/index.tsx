@@ -70,7 +70,7 @@ function PropertyComponent({ id }: { id: string }) {
     const [errorSystem, setErrorSystem] = useState<string | null>(null)
     const [startDate, setStartDate] = useState<Date | null>(null)
     const [endDate, setEndDate] = useState<Date | null>(null)
-    const [hasStayed, setHasStayed] = useState<boolean>(false)
+    const [hasStayed, setHasStayed] = useState<boolean>(true)
     const [statusRequest, setStatusRequest] = useState<boolean>(false)
     const [requestHistory, setRequestHistory] = useState<RequestHistory[]>()
 

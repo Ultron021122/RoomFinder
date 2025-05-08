@@ -39,6 +39,30 @@ export const createPaymentOrderRouter = ({ paymentOrderModel }) => {
         paymentOrderController.getByLeases
     ])
 
+    paymentOrderRouter.get('/leasor/:id', [
+        param('id').isInt().withMessage('ID id must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        paymentOrderController.getByLeasorId
+    ])
+
+    paymentOrderRouter.get('/student/:id', [
+        param('id').isInt().withMessage('ID id must be an integer'),
+        (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
+            }
+            next()
+        },
+        paymentOrderController.getByStudentId
+    ])
+
     paymentOrderRouter.post('/', paymentOrderController.create)
 
     paymentOrderRouter.delete('/:id', [
@@ -53,7 +77,7 @@ export const createPaymentOrderRouter = ({ paymentOrderModel }) => {
         paymentOrderController.delete
     ])
 
-    paymentOrderRouter.put('/:id', [
+    paymentOrderRouter.patch('/:id', [
         param('id').isInt().withMessage('id must be an integer'),
         (req, res, next) => {
             const errors = validationResult(req)

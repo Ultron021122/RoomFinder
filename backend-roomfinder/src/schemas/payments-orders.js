@@ -4,7 +4,9 @@ const paymentOrderSchema = z.object({
     orderid: z.number(), 
     leasesid: z.number(), 
     amount: z.number(), 
-    status: z.string()
+    status: z.string(),
+    vchcontent: z.string().optional(),
+    bitpayment: z.boolean().optional(),
 })
 
 export function validatePaymentOrder(input) {
