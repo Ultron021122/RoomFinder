@@ -1,5 +1,5 @@
-import { axios } from "axios";
 import { NextResponse } from "next/server";
+import axios from 'axios';
 
 export async function GET(request) {
     const secretKey = request.headers.get('x-secret-key');
