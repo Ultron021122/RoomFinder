@@ -79,7 +79,7 @@ export default function AdminOrdersPage() {
     }
 
     const stats = useMemo(() => {
-        const total = filteredOrders.reduce((acc, o) => acc + parseFloat(o.amount), 0)
+        const total = filteredOrders.reduce((acc, o) => acc + parseFloat(o.amount.toString()), 0)
         const count = filteredOrders.length
         return {
             totalIncome: total,
