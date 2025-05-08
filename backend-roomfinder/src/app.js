@@ -45,6 +45,7 @@ import { RentalHistoryModel } from './model/postgresql/rental-history.js'
 import { PaymentModel } from './model/postgresql/payments.js'
 import { PaymentOrderModel } from './model/postgresql/payments-orders.js'
 import { LeaseStatusModel } from './model/postgresql/leases-status.js'
+import { TasksModel } from './model/postgresql/tasks.js'
 //MySQL 
 // import { UsersModel } from './model/mysql/user.js'
 // import { PropertiesModel } from './model/mysql/propertie.js'
@@ -90,7 +91,7 @@ app.use('/api/payments', verificarJWT, createPaymentRouter({ paymentModel: Payme
 app.use('/api/utils', verificarJWT, createUtilsRouter())
 app.use('/api/leases-status', verificarJWT, createLeaseStatusRouter({ leasestatusModel: LeaseStatusModel}))
 app.use('/api/payments-orders', verificarJWT, createPaymentOrderRouter({ paymentOrderModel: PaymentOrderModel }))
-app.use('/api/tasks', verificarJWT, createTasksRouter({ tasksModel: TasksModel }))
+app.use('/api/tasks', verificarJWT, createTasksRouter({ tasksModel: TasksModel}))
 
 app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swagger)) // Documentation of the API
 app.use(errorHandler) // Middleware for error handling
