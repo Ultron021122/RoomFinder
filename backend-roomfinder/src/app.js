@@ -90,7 +90,7 @@ app.use('/api/payments', verificarJWT, createPaymentRouter({ paymentModel: Payme
 app.use('/api/utils', verificarJWT, createUtilsRouter())
 app.use('/api/leases-status', verificarJWT, createLeaseStatusRouter({ leasestatusModel: LeaseStatusModel}))
 app.use('/api/payments-orders', verificarJWT, createPaymentOrderRouter({ paymentOrderModel: PaymentOrderModel }))
-app.use('/api/tasks', verificarJWT, createTasksRouter({ tasksModel: TasksModel }))
+app.use('/api/tasks', verificarJWT, createTasksRouter({ tasksModel: TasksModel}))
 
 app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swagger)) // Documentation of the API
 app.use(errorHandler) // Middleware for error handling
