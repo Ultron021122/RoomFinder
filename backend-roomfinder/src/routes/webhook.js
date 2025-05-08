@@ -58,14 +58,6 @@ const webhookHandler = async(req, res) => {
 
       // crear el arrendamiento e informacion de pago
       try {
-        const lease = await LeasesModel.create({
-          propertyid: sessionCompleted.metadata.propertyid,
-          studentid: sessionCompleted.metadata.studentid,
-          dtstartdate: sessionCompleted.metadata.dtstartdate,
-          dtenddate: sessionCompleted.metadata.dtenddate,
-          decmonthlycost: sessionCompleted.metadata.decmonthlycost
-        })
-        
         await PaymentModel.create({
           leasesid: lease.leasesid,
           paymentmethodid: sessionCompleted.metadata.paymentmethodid,
@@ -74,7 +66,7 @@ const webhookHandler = async(req, res) => {
           vchpaymentstatus: sessionCompleted.status,
           stripesessionid: sessionCompleted.id,
           stripe_payment_intent_id: sessionCompleted.payment_intent,
-          client_reference_id: sessionCompleted.metadata.studentid // ¿id del usuario que hace el pago?, de ser así NO modificar, de lo contrario revisar esta parte
+          client_reference_id: sessionCompleted.metadata.studentid
         })
 
       } catch (error) {

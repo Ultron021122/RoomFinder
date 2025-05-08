@@ -12,7 +12,7 @@ export default function PaymentsOrders() {
             <BreadcrumbWithCustomSeparator pageName="Órdenes de pago" />
             <div className="mx-auto">
                 {/* Componente */}
-                <PaymentOrders />
+                {/* <PaymentOrders /> */}
             </div>
         </div>
     );

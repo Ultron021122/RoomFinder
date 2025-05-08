@@ -2508,3 +2508,265 @@ export interface vwLeasesGET {
      */
     vchlessormaternalsurname: string;
 }
+
+/**
+ * Interface representing the orders of the properties
+ * @interface
+ */
+export interface Orders {
+    /**
+     * Order id
+     * @example
+     * orderid: 1
+     */
+    orderid: number;
+    /**
+     * Leases id
+     * @example
+     * leasesid: 1
+     */
+    leasesid: number;
+    /**
+     * Amount
+     * @example
+     * amount: 1500.00
+     */
+    amount: number;
+    /**
+     * Status
+     * @example
+     * status: 'Pending'
+     */
+    status: string;
+    /**
+     * Created date
+     * @example
+     * created_at: '2025-01-01'
+     */
+    created_at: string;
+    /**
+     * Updated date
+     * @example
+     * updated_at: '2025-01-01'
+     */
+    updated_at: string;
+    /**
+     * Concept
+     * @example
+     * vchconcept: 'Rent payment'
+     */
+    vchconcept: string;
+    /**
+     * Bit payment
+     * @example
+     * bitpayment: true
+     */
+    bitpayment: boolean;
+}
+
+/**
+ * Interface representing the orders of the properties
+ * @interface
+ */
+export interface vwOrders {
+    /**
+     * Order id
+     * @example
+     * orderid: 1
+     */
+    orderid: number;
+    /**
+     * Leases id
+     * @example
+     * leasesid: 1
+     */
+    leasesid: number;
+    /**
+     * Amount
+     * @example
+     * amount: 1500.00
+     */
+    amount: number;
+    /**
+     * Status
+     * @example
+     * status: 'Pending'
+     */
+    status: string;
+    /**
+     * Created date
+     * @example
+     * created_at: '2025-01-01'
+     */
+    created_at: string;
+    /**
+     * Updated date
+     * @example
+     * updated_at: '2025-01-01'
+     */
+    updated_at: string;
+    /**
+     * Concept
+     * @example
+     * vchconcept: 'Rent payment'
+     */
+    vchconcept: string;
+    /**
+     * Bit payment
+     * @example
+     * bitpayment: true
+     */
+    bitpayment: boolean;
+    /**
+     * Property id
+     * @example
+     * propertyid: 101
+     */
+    propertyid: number;
+    /**
+     * Student id
+     * @example
+     * studentid: 202
+     */
+    studentid: number;
+    /**
+     * Start date
+     * @example
+     * dtstartdate: '2025-01-01'
+     */
+    dtstartdate: string;
+    /**
+     * End date
+     * @example
+     * dtenddate: '2025-12-31'
+     */
+    dtenddate: string;
+    /**
+     * Monthly cost
+     * @example
+     * decmonthlycost: 1500.00
+     */
+    decmonthlycost: number;
+    /**
+     * Lease status id
+     * @example
+     * leasestatusid: 1
+     */
+    leasestatusid: number;
+    /**
+     * Lease number
+     * @example
+     * lease_number: 'A123'
+     */
+    lease_number: string;
+    /**
+     * Request id
+     * @example
+     * requestid: 303
+     */
+    requestid: number;
+    /**
+     * Lessor id
+     * @example
+     * lessorid: 404
+     */
+    lessorid: number;
+    /**
+     * Lessor name
+     * @example
+     * vchlessorname: 'John'
+     */
+    vchlessorname: string;
+    /**
+     * Lessor paternal surname
+     * @example
+     * vchlessorpaternalsurname: 'Doe'
+     */
+    vchlessorpaternalsurname: string;
+    /**
+     * Lessor maternal surname
+     * @example
+     * vchlessormaternalsurname: 'Smith'
+     */
+    vchlessormaternalsurname: string;
+    /**
+     * Lessor email
+     * @example
+     * vchlessoremail: 'john.doe@example.com'
+     */
+    vchlessoremail: string;
+    /**
+     * Lessor status
+     * @example
+     * bnstatus: true
+     */
+    bnstatus: boolean;
+    /**
+     * Lessor role id
+     * @example
+     * roleid: 1
+     */
+    roleid: number;
+    /**
+     * Lessor cover image
+     * @example
+     * vchleassorcoverimage: 'image_url_here'
+     */
+    vchleassorcoverimage: string;
+    /**
+     * Lessor biography
+     * @example
+     * vchleassorbiography: 'Lessor biography here...'
+     */
+    vchleassorbiography: string;
+    /**
+     * Student name
+     * @example
+     * vchstudentname: 'Alice'
+     */
+    vchstudentname: string;
+    /**
+     * Student paternal surname
+     * @example
+     * vchstudentpaternalsurname: 'Johnson'
+     */
+    vchstudentpaternalsurname: string;
+    /**
+     * Student maternal surname
+     * @example
+     * vchstudentmaternalsurname: 'Brown'
+     */
+    vchstudentmaternalsurname: string;
+    /**
+     * Student email
+     * @example
+     * vchstudentemail: 'alice.johnson@example.com'
+     */
+    vchstudentemail: string;
+    /**
+     * Student image
+     * @example
+     * vchimage: 'student_image_url_here'
+     */
+    vchimage: string;
+    /**
+     * Student role id
+     * @example
+     * studentroleid: 2
+     */
+    studentroleid: number;
+    /**
+     * Student cover image
+     * @example
+     * vchstudentcoverimage: 'student_cover_image_url_here'
+     */
+    vchstudentcoverimage: string;
+    /**
+     * Student biography
+     * @example
+     * vchstudentbiography: 'Student biography here...'
+     */
+    vchstudentbiography: string;
+
+    objphotos: Photos[];
+}

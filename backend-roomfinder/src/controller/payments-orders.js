@@ -36,6 +36,29 @@ export class PaymentOrderController {
             .catch(next);
     };
 
+    getByLeasorId = async (req, res, next) => {
+        const { id } = req.params;
+        await this.paymentOrderModel
+            .getByLeasorId({ leasorid: id })
+            .then((orders) => {
+                if (orders) return res.json(orders);
+                return res.status(404).json({ message: "Orders not found" });
+            })
+            .catch(next);
+    };
+
+    getByStudentId = async (req, res, next) => {
+        const { id } = req.params;
+        await this.paymentOrderModel
+            .getByStudentId({ studentid: id })
+            .then((orders) => {
+                if (orders) return res.json(orders);
+                return res.status(404).json({ message: "Orders not found" });
+            })
+            .catch(next);
+    };
+
+
     create = async (req, res, next) => {
         const result = validatePaymentOrder(req.body);
         if (result.error) {
@@ -75,7 +98,7 @@ export class PaymentOrderController {
 
     update = async (req, res, next) => {
         const { id } = req.params;
-        const result = validatePaymentOrder(req.body);
+        const result = validatePartialPaymentOrder(req.body);
         if (result.error) {
             return res.status(404).json({ error: JSON.parse(result.error.message) });
         }
