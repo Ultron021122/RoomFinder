@@ -45,6 +45,7 @@ import { RentalHistoryModel } from './model/postgresql/rental-history.js'
 import { PaymentModel } from './model/postgresql/payments.js'
 import { PaymentOrderModel } from './model/postgresql/payments-orders.js'
 import { LeaseStatusModel } from './model/postgresql/leases-status.js'
+import { TasksModel } from './model/postgresql/tasks.js'
 //MySQL 
 // import { UsersModel } from './model/mysql/user.js'
 // import { PropertiesModel } from './model/mysql/propertie.js'
