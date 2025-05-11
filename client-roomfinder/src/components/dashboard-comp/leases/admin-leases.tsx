@@ -45,7 +45,6 @@ import CopyText from "@/components/ui/copy-text"
 import {
   Search,
   Edit,
-  Trash2,
   Filter,
   RefreshCcw,
   CheckCircle,
@@ -59,9 +58,10 @@ import {
   Calendar,
   DollarSign,
   Home,
-  BadgePlus,
-  LinkIcon,
   SquareArrowOutUpRight,
+  ChevronDown,
+  ChevronUp,
+  FileCheck,
 } from "lucide-react"
 
 // Componentes adicionales
@@ -86,7 +86,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { UserProfile, vwLeasesGET } from "@/utils/interfaces"
+import type { UserProfile, vwLeasesGET } from "@/utils/interfaces"
 import { Spinner } from "@nextui-org/react"
 import { LEASE_STATUS } from "@/utils/constants"
 import { HomeIcon } from "@radix-ui/react-icons"
@@ -98,7 +98,7 @@ export default function AdminLeasesPage() {
   const { data: session } = useSession()
   const router = useRouter()
   const { leases, isLoading, refetchLeases, leasesStatus } = useLeasesContext()
-  const userProfileData = session?.user as UserProfile;
+  const userProfileData = session?.user as UserProfile
 
   // Estado
   const [searchTerm, setSearchTerm] = useState<string>("")
@@ -117,6 +117,7 @@ export default function AdminLeasesPage() {
   const [activeTab, setActiveTab] = useState<string>("all")
   const [itemsPerPage, setItemsPerPage] = useState<number>(10)
   const [currentPage, setCurrentPage] = useState<number>(1)
+  const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({})
 
   // Estadísticas
   const stats = useMemo(() => {
@@ -139,9 +140,9 @@ export default function AdminLeasesPage() {
       extend: leases.filter((lease) => lease.leasestatusid === 4).length,
       generate: leases.filter((lease) => lease.leasestatusid === 5).length,
       totalIncome: leases.reduce((sum, lease) => {
-        const monthlyCost = Number(lease.decmonthlycost) || 0;
+        const monthlyCost = Number(lease.decmonthlycost) || 0
         if (lease.leasestatusid === 1 || lease.leasestatusid === 3) {
-          return sum + monthlyCost;
+          return sum + monthlyCost
         }
         return sum
       }, 0),
@@ -175,7 +176,7 @@ export default function AdminLeasesPage() {
   const filterLeases = useCallback(() => {
     // Verificar que leases sea un array antes de usar filter
     if (!Array.isArray(leases)) {
-      return [];
+      return []
     }
 
     return leases.filter((lease) => {
@@ -183,10 +184,10 @@ export default function AdminLeasesPage() {
       const matchesSearch =
         lease.vchtitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         lease.lease_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        lease.vchstudentname?.toLowerCase().includes(searchTerm.toLowerCase());
+        lease.vchstudentname?.toLowerCase().includes(searchTerm.toLowerCase())
 
       // Filtro de estado
-      const matchesStatus = statusFilter === "all" || statusFilter === String(lease.leasestatusid);
+      const matchesStatus = statusFilter === "all" || statusFilter === String(lease.leasestatusid)
 
       // Filtro de pestaña
       const matchesTab =
@@ -195,22 +196,22 @@ export default function AdminLeasesPage() {
         (activeTab === "pending" && lease.leasestatusid === 2) ||
         (activeTab === "completed" && lease.leasestatusid === 3) ||
         (activeTab === "extended" && lease.leasestatusid === 4) ||
-        (activeTab === "generate" && lease.leasestatusid === 5);
+        (activeTab === "generate" && lease.leasestatusid === 5)
 
       // Filtro de fecha
-      let matchesDate = true;
+      let matchesDate = true
       if (dateRange.start && dateRange.end) {
-        const leaseDate = new Date(lease.dtstartdate);
-        const startDate = new Date(dateRange.start);
-        const endDate = new Date(dateRange.end);
-        endDate.setHours(23, 59, 59, 999); // Incluir todo el día final
+        const leaseDate = new Date(lease.dtstartdate)
+        const startDate = new Date(dateRange.start)
+        const endDate = new Date(dateRange.end)
+        endDate.setHours(23, 59, 59, 999) // Incluir todo el día final
 
-        matchesDate = leaseDate >= startDate && leaseDate <= endDate;
+        matchesDate = leaseDate >= startDate && leaseDate <= endDate
       }
 
-      return matchesSearch && matchesStatus && matchesTab && matchesDate;
-    });
-  }, [leases, searchTerm, statusFilter, activeTab, dateRange]);
+      return matchesSearch && matchesStatus && matchesTab && matchesDate
+    })
+  }, [leases, searchTerm, statusFilter, activeTab, dateRange])
 
   const filteredLeases = filterLeases()
   const totalPages = Math.ceil(filteredLeases.length / itemsPerPage)
@@ -243,6 +244,13 @@ export default function AdminLeasesPage() {
   const handleEditLease = (lease: any) => {
     setEditLease(lease)
     setDialogOpen(true)
+  }
+
+  const toggleRowExpansion = (leaseId: number) => {
+    setExpandedRows((prev) => ({
+      ...prev,
+      [leaseId]: !prev[leaseId],
+    }))
   }
 
   const exportLeases = async (leasesToExport: vwLeasesGET[]) => {
@@ -324,7 +332,6 @@ export default function AdminLeasesPage() {
       setIsLoadingState(false)
     }
   }
-
 
   const handleSaveChanges = async () => {
     if (editLease) {
@@ -493,9 +500,7 @@ export default function AdminLeasesPage() {
 
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium text-gray-700 dark:text-gray-300">
-                Activos
-              </CardTitle>
+              <CardTitle className="text-lg font-medium text-gray-700 dark:text-gray-300">Activos</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center">
@@ -512,9 +517,7 @@ export default function AdminLeasesPage() {
 
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium text-gray-700 dark:text-gray-300">
-                Pausados
-              </CardTitle>
+              <CardTitle className="text-lg font-medium text-gray-700 dark:text-gray-300">Pausados</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center">
@@ -531,9 +534,7 @@ export default function AdminLeasesPage() {
 
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium text-gray-700 dark:text-gray-300">
-                Completados
-              </CardTitle>
+              <CardTitle className="text-lg font-medium text-gray-700 dark:text-gray-300">Completados</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center">
@@ -713,6 +714,8 @@ export default function AdminLeasesPage() {
               onDelete={handleDeleteLease}
               onUpdateStatus={handleUpdateLeaseStatus}
               user={userProfileData}
+              expandedRows={expandedRows}
+              toggleRowExpansion={toggleRowExpansion}
             />
           </TabsContent>
 
@@ -725,6 +728,8 @@ export default function AdminLeasesPage() {
               onDelete={handleDeleteLease}
               onUpdateStatus={handleUpdateLeaseStatus}
               user={userProfileData}
+              expandedRows={expandedRows}
+              toggleRowExpansion={toggleRowExpansion}
             />
           </TabsContent>
 
@@ -737,6 +742,8 @@ export default function AdminLeasesPage() {
               onDelete={handleDeleteLease}
               onUpdateStatus={handleUpdateLeaseStatus}
               user={userProfileData}
+              expandedRows={expandedRows}
+              toggleRowExpansion={toggleRowExpansion}
             />
           </TabsContent>
 
@@ -749,6 +756,8 @@ export default function AdminLeasesPage() {
               onDelete={handleDeleteLease}
               onUpdateStatus={handleUpdateLeaseStatus}
               user={userProfileData}
+              expandedRows={expandedRows}
+              toggleRowExpansion={toggleRowExpansion}
             />
           </TabsContent>
 
@@ -761,6 +770,8 @@ export default function AdminLeasesPage() {
               onDelete={handleDeleteLease}
               onUpdateStatus={handleUpdateLeaseStatus}
               user={userProfileData}
+              expandedRows={expandedRows}
+              toggleRowExpansion={toggleRowExpansion}
             />
           </TabsContent>
         </Tabs>
@@ -1060,7 +1071,7 @@ export default function AdminLeasesPage() {
                 </div>
 
                 <div className="pt-4 flex justify-end space-x-2">
-                  <Button variant="close" onClick={() => setViewDialogOpen(false)}>
+                  <Button variant="outline" onClick={() => setViewDialogOpen(false)}>
                     Cerrar
                   </Button>
                   <Button
@@ -1092,13 +1103,35 @@ interface AdminLeasesTableProps {
   onView: (lease: any) => void
   onEdit: (lease: any) => void
   onDelete: (id: number) => void
-  onUpdateStatus: (leasesid: number, leasestatusid: number) => void;
+  onUpdateStatus: (leasesid: number, leasestatusid: number) => void
   user: any
+  expandedRows: Record<number, boolean>
+  toggleRowExpansion: (leaseId: number) => void
 }
 
-function AdminLeasesTable({ leases, isLoading, onView, onEdit, onDelete, onUpdateStatus, user }: AdminLeasesTableProps) {
+function AdminLeasesTable({
+  leases,
+  isLoading,
+  onView,
+  onEdit,
+  onDelete,
+  onUpdateStatus,
+  user,
+  expandedRows,
+  toggleRowExpansion
+}: AdminLeasesTableProps) {
   const leasestatus = [3, 6]
-  
+
+  // Formatear fecha
+  const formatDate = (dateString: string) => {
+    return format(new Date(dateString), "dd MMM yyyy", { locale: es })
+  }
+
+  // Formatear moneda
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(amount)
+  }
+
   return (
     <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
       <CardContent className="p-0">
@@ -1140,129 +1173,182 @@ function AdminLeasesTable({ leases, isLoading, onView, onEdit, onDelete, onUpdat
                   const StatusIcon = LEASE_STATUS[lease.leasestatusid as keyof typeof LEASE_STATUS]?.icon || Clock
 
                   return (
-                    <TableRow
-                      key={lease.leasesid}
-                      className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/60"
-                    >
-                      <TableCell className="font-medium">
-                        {`S-${lease.leasesid.toString().padStart(6, "0")}`}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
-                          <HomeIcon className="h-4 w-4 text-gray-500 dark:text-gray-400 " />
-                          <CopyText text={lease.vchtitle || `ID: ${lease.propertyid}`} />
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
-                          <User className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
-                          <span>{lease.vchstudentname || `ID: ${lease.studentid}`}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
-                          {format(new Date(lease.dtstartdate), "dd MMM yyyy", { locale: es })} -
-                          {format(new Date(lease.dtenddate), "dd MMM yyyy", { locale: es })}
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(
-                          lease.decmonthlycost,
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          className={
-                            LEASE_STATUS[lease.leasestatusid as keyof typeof LEASE_STATUS]?.color ||
-                            "bg-gray-100 text-gray-800"
-                          }
-                        >
-                          <StatusIcon className="h-3 w-3 mr-1" />
-                          {LEASE_STATUS[lease.leasestatusid as keyof typeof LEASE_STATUS]?.name || "Desconocido"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu modal={false}>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              className="h-8 w-8 p-0 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900 border hover:border-gray-300 dark:hover:border-gray-800 shadow-sm"
-                              aria-label="Opciones de arrendamiento"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent
-                            align="end"
-                            sideOffset={5}
-                            collisionPadding={10}
-                            className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm"
+                    <>
+                      <TableRow
+                        key={lease.leasesid}
+                        className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/60"
+                      >
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-2">
+                            {`S-${lease.leasesid.toString().padStart(6, "0")}`}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center">
+                            <HomeIcon className="h-4 w-4 text-gray-500 dark:text-gray-400 " />
+                            <CopyText text={lease.vchtitle || `ID: ${lease.propertyid}`} />
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center">
+                            <User className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
+                            <span>{lease.vchstudentname || `ID: ${lease.studentid}`}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          <div className="flex items-center">
+                            <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
+                            {format(new Date(lease.dtstartdate), "dd MMM yyyy", { locale: es })} -
+                            {format(new Date(lease.dtenddate), "dd MMM yyyy", { locale: es })}
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(
+                            lease.decmonthlycost,
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            className={
+                              LEASE_STATUS[lease.leasestatusid as keyof typeof LEASE_STATUS]?.color ||
+                              "bg-gray-100 text-gray-800"
+                            }
                           >
-                            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                            <DropdownMenuItem
-                              className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
-                              onSelect={() => onView(lease)}
+                            <StatusIcon className="h-3 w-3 mr-1" />
+                            {LEASE_STATUS[lease.leasestatusid as keyof typeof LEASE_STATUS]?.name || "Desconocido"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu modal={false}>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                className="h-8 w-8 p-0 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900 border hover:border-gray-300 dark:hover:border-gray-800 shadow-sm"
+                                aria-label="Opciones de arrendamiento"
+                              >
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                              align="end"
+                              sideOffset={5}
+                              collisionPadding={10}
+                              className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm"
                             >
-                              <Eye className="h-4 w-4 mr-2" />
-                              Ver detalles
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
-                              onSelect={() => onEdit(lease)}
-                              disabled={user?.roleid === 1}
-                            >
-                              <Edit className="h-4 w-4 mr-2" />
-                              Editar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
-                            >
-                              <Link href={`/property/${lease.propertyid}`} className="flex items-center">
-                                <SquareArrowOutUpRight className="h-4 w-4 mr-2" />
-                                <span className="text-sm">Ver propiedad</span>
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <AlertDialog>
-                              <AlertDialogTrigger className="w-full" disabled={user?.roleid !== 1 || (user?.roleid === 1 && leasestatus.includes(lease.leasestatusid))}>
-                                <DropdownMenuItem
-                                  onSelect={(e) => e.preventDefault()}
-                                  className="cursor-pointer text-red-600 dark:text-red-500 hover:bg-red-300 dark:hover:bg-red-800 hover:text-red-800 dark:hover:text-red-300 w-full"
-                                  disabled={user?.roleid !== 1 || (user?.roleid === 1 && leasestatus.includes(lease.leasestatusid))}
-                                >
-                                  <XCircle className="h-4 w-4 mr-2" />
-                                  Cancelar
-                                </DropdownMenuItem>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>¿Estás seguro de cancelar este arrendamiento?</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Esta acción no se puede deshacer. El arrendamiento será cancelado permanentemente.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel className="bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-800 border border-gray-300 dark:border-gray-800 shadow-sm">
-                                    Cancelar
-                                  </AlertDialogCancel>
-                                  <AlertDialogAction
-                                    className="bg-red-600 hover:bg-red-500 text-white"
-                                    onClick={() => {
-                                      if (lease.leasestatusid) {
-                                        onUpdateStatus(lease.leasesid, 6);
-                                      }
-                                    }}
+                              <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                              <DropdownMenuItem
+                                className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                                onSelect={() => onView(lease)}
+                              >
+                                <Eye className="h-4 w-4 mr-2" />
+                                Ver detalles
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                                onSelect={() => onEdit(lease)}
+                                disabled={user?.roleid === 1}
+                              >
+                                <Edit className="h-4 w-4 mr-2" />
+                                Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                              >
+                                <Link href={`/property/${lease.propertyid}`} className="flex items-center">
+                                  <SquareArrowOutUpRight className="h-4 w-4 mr-2" />
+                                  <span className="text-sm">Ver propiedad</span>
+                                </Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <AlertDialog>
+                                <AlertDialogTrigger className="w-full" disabled={user?.roleid !== 1 || (user?.roleid === 1 && leasestatus.includes(lease.leasestatusid))}>
+                                  <DropdownMenuItem
+                                    onSelect={(e) => e.preventDefault()}
+                                    className="cursor-pointer text-red-600 dark:text-red-500 hover:bg-red-300 dark:hover:bg-red-800 hover:text-red-800 dark:hover:text-red-300 w-full"
+                                    disabled={user?.roleid !== 1 || (user?.roleid === 1 && leasestatus.includes(lease.leasestatusid))}
                                   >
-                                    Continuar
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
+                                    <XCircle className="h-4 w-4 mr-2" />
+                                    Cancelar
+                                  </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>¿Estás seguro de cancelar este arrendamiento?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Esta acción no se puede deshacer. El arrendamiento será cancelado permanentemente.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel className="bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-800 border border-gray-300 dark:border-gray-800 shadow-sm">
+                                      Cancelar
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                      className="bg-red-600 hover:bg-red-500 text-white"
+                                      onClick={() => {
+                                        if (lease.leasestatusid) {
+                                          onUpdateStatus(lease.leasesid, 6);
+                                        }
+                                      }}
+                                    >
+                                      Continuar
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 px-2 flex items-center gap-1 text-xs hover:bg-gray-200 dark:hover:bg-gray-900 border hover:border-gray-300 dark:hover:border-gray-800 shadow-sm"
+                            onClick={() => toggleRowExpansion(lease.leasesid)}
+                          >
+                            {expandedRows[lease.leasesid] ? (
+                              <>
+                                <ChevronUp className="h-4 w-4" />
+                              </>
+                            ) : (
+                              <>
+                                <ChevronDown className="h-4 w-4" />
+                              </>
+                            )}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                      {/* Fila expandible con detalles */}
+                      {expandedRows[lease.leasesid] && (
+                        <TableRow>
+                          <TableCell colSpan={8} className="p-0 border-t-0">
+                            <div className="space-y-3 text-sm p-4 bg-gray-50 dark:bg-gray-800/50 rounded-md m-2">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {/* Columna 1: Información del contrato */}
+                                <div className="space-y-2">
+                                  <h3 className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                                    <FileCheck className="h-4 w-4 text-blue-600" />
+                                    Información del Contrato
+                                  </h3>
+                                  <div className="space-y-1">
+
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-500 dark:text-gray-400">Número:</span>
+                                      <span className="font-medium">{`S-${lease.leasesid.toString().padStart(6, "0")}`}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-500 dark:text-gray-400">Estado:</span>
+                                      <Badge className={LEASE_STATUS[lease.leasestatusid as keyof typeof LEASE_STATUS]?.color || "bg-gray-100 text-gray-800"}>
+                                        {LEASE_STATUS[lease.leasestatusid as keyof typeof LEASE_STATUS]?.name || "Desconocido"}
+                                      </Badge>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </>
                   )
                 })
               )}

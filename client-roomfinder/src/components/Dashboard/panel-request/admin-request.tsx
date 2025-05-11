@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React from "react"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import axios from "axios"
@@ -21,7 +21,15 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose, DialogDescription } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+  DialogDescription,
+} from "@/components/ui/dialog"
 import {
   Pagination,
   PaginationContent,
@@ -49,8 +57,9 @@ import {
   Eye,
   Download,
   MoreHorizontal,
-  Circle,
   CircleCheck,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react"
 
 // Contexto y utilidades
@@ -67,18 +76,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Spinner, user } from "@nextui-org/react"
+import { Spinner } from "@nextui-org/react"
 import { useRouter } from "next/navigation"
 import { HomeIcon } from "@radix-ui/react-icons"
 import { REQUEST_STATUS } from "@/utils/constants"
 import { useSession } from "next-auth/react"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
-const estadosPermitidos = [1, 3, 6];
+const estadosPermitidos = [1, 3, 6]
 
 export default function AdminRequests() {
-  const { data: session } = useSession();
-  const userProfileData = session?.user as UserProfile;
+  const { data: session } = useSession()
+  const userProfileData = session?.user as UserProfile
 
   // Contexto y estado
   const { request, requestStatus, isLoading, error, refetchRequest } = useRequestContext()
@@ -98,7 +117,16 @@ export default function AdminRequests() {
     end: "",
   })
   const [activeTab, setActiveTab] = useState<string>("all")
+  const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({})
   const router = useRouter()
+
+  // Función para alternar la expansión de filas
+  const toggleRowExpansion = (requestId: number) => {
+    setExpandedRows((prev) => ({
+      ...prev,
+      [requestId]: !prev[requestId],
+    }))
+  }
 
   // Estadísticas
   const stats = useMemo(() => {
@@ -219,20 +247,20 @@ export default function AdminRequests() {
 
   const exportarSolicitudes = async (solicitudes: vwLeaseRequest[]) => {
     try {
-      const response = await axios.post('/api/csv', solicitudes, {
+      const response = await axios.post("/api/csv", solicitudes, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           "x-secret-key": `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`,
         },
-        responseType: 'blob',
+        responseType: "blob",
       })
 
-      const blob = new Blob([response.data], { type: 'text/csv' })
+      const blob = new Blob([response.data], { type: "text/csv" })
       const url = window.URL.createObjectURL(blob)
 
-      const link = document.createElement('a')
+      const link = document.createElement("a")
       link.href = url
-      link.setAttribute('download', 'solicitudes.csv')
+      link.setAttribute("download", "solicitudes.csv")
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -374,9 +402,8 @@ export default function AdminRequests() {
   }
 
   const handleUpdateRequestStatus = async (id: number, newStatusId: number, bitConfirm: boolean) => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-
       const response = await axios.patch(
         `/api/requests/${id}`,
         { statusid: newStatusId, bitconfirm: bitConfirm },
@@ -384,8 +411,8 @@ export default function AdminRequests() {
           headers: {
             "x-secret-key": `${process.env.NEXT_PUBLIC_INTERNAL_SECRET_KEY}`,
           },
-        }
-      );
+        },
+      )
       toast.success(`Solicitud actualizada a ${newStatusId === 1 ? "confirmada" : "rechazada"} exitosamente.`, {
         position: "bottom-right",
         autoClose: 5000,
@@ -396,8 +423,8 @@ export default function AdminRequests() {
         progress: undefined,
         theme: "colored",
         transition: Bounce,
-      });
-      refetchRequest(); // Actualiza la lista de solicitudes
+      })
+      refetchRequest() // Actualiza la lista de solicitudes
     } catch (error: any) {
       toast.error(error.response?.data.message || "Error al actualizar la solicitud.", {
         position: "bottom-right",
@@ -409,11 +436,11 @@ export default function AdminRequests() {
         progress: undefined,
         theme: "colored",
         transition: Bounce,
-      });
+      })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="p-2 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
@@ -575,10 +602,7 @@ export default function AdminRequests() {
                 Filtros
               </Button>
 
-              <Button
-                variant="refresh"
-                onClick={resetFilters}
-              >
+              <Button variant="refresh" onClick={resetFilters}>
                 <RefreshCcw className="h-4 w-4 mr-1" />
                 Resetear
               </Button>
@@ -675,6 +699,8 @@ export default function AdminRequests() {
               onDelete={handleEliminarRequest}
               onUpdateStatus={handleUpdateRequestStatus}
               user={userProfileData}
+              expandedRows={expandedRows}
+              toggleRowExpansion={toggleRowExpansion}
             />
           </TabsContent>
 
@@ -687,6 +713,8 @@ export default function AdminRequests() {
               onDelete={handleEliminarRequest}
               onUpdateStatus={handleUpdateRequestStatus}
               user={userProfileData}
+              expandedRows={expandedRows}
+              toggleRowExpansion={toggleRowExpansion}
             />
           </TabsContent>
 
@@ -699,6 +727,8 @@ export default function AdminRequests() {
               onDelete={handleEliminarRequest}
               onUpdateStatus={handleUpdateRequestStatus}
               user={userProfileData}
+              expandedRows={expandedRows}
+              toggleRowExpansion={toggleRowExpansion}
             />
           </TabsContent>
 
@@ -711,6 +741,8 @@ export default function AdminRequests() {
               onDelete={handleEliminarRequest}
               onUpdateStatus={handleUpdateRequestStatus}
               user={userProfileData}
+              expandedRows={expandedRows}
+              toggleRowExpansion={toggleRowExpansion}
             />
           </TabsContent>
 
@@ -723,6 +755,8 @@ export default function AdminRequests() {
               onDelete={handleEliminarRequest}
               onUpdateStatus={handleUpdateRequestStatus}
               user={userProfileData}
+              expandedRows={expandedRows}
+              toggleRowExpansion={toggleRowExpansion}
             />
           </TabsContent>
         </Tabs>
@@ -757,9 +791,7 @@ export default function AdminRequests() {
                 }
 
                 return (
-                  <PaginationItem
-                    key={i}
-                  >
+                  <PaginationItem key={i}>
                     <PaginationLink onClick={() => setPaginaActual(pageNum)} isActive={paginaActual === pageNum}>
                       {pageNum}
                     </PaginationLink>
@@ -798,9 +830,7 @@ export default function AdminRequests() {
         >
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">Editar Solicitud</DialogTitle>
-            <DialogDescription>
-              Modifica tu solicitud aqui. Guarda los cambios cuando termines.
-            </DialogDescription>
+            <DialogDescription>Modifica tu solicitud aqui. Guarda los cambios cuando termines.</DialogDescription>
           </DialogHeader>
           <ScrollArea className="h-[500px]">
             {requestEdit && (
@@ -952,9 +982,7 @@ export default function AdminRequests() {
             <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
               Detalles de la Solicitud
             </DialogTitle>
-            <DialogDescription>
-              Visualiza los detalles de la solicitud seleccionada.
-            </DialogDescription>
+            <DialogDescription>Visualiza los detalles de la solicitud seleccionada.</DialogDescription>
           </DialogHeader>
           {viewRequest && (
             <ScrollArea className="h-[500px]">
@@ -1067,17 +1095,32 @@ export default function AdminRequests() {
 
 // Componente de tabla de solicitudes
 interface AdminRequestsTableProps {
-  requests: vwLeaseRequest[];
-  isLoading: boolean;
-  onView: (request: vwLeaseRequest) => void;
-  onEdit: (request: vwLeaseRequest) => void;
-  onDelete: (id: number) => void;
-  onUpdateStatus: (id: number, newStatusId: number, bitConfirm: boolean) => void;
-  user: UserProfile;
+  requests: vwLeaseRequest[]
+  isLoading: boolean
+  onView: (request: vwLeaseRequest) => void
+  onEdit: (request: vwLeaseRequest) => void
+  onDelete: (id: number) => void
+  onUpdateStatus: (id: number, newStatusId: number, bitConfirm: boolean) => void
+  user: UserProfile
+  expandedRows: Record<number, boolean>
+  toggleRowExpansion: (requestId: number) => void
 }
 
-function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete, onUpdateStatus, user }: AdminRequestsTableProps) {
+function AdminRequestsTable({
+  requests,
+  isLoading,
+  onView,
+  onEdit,
+  onDelete,
+  onUpdateStatus,
+  user,
+  expandedRows,
+  toggleRowExpansion,
+}: AdminRequestsTableProps) {
   const statusRequest = [2]
+  const formatDate = (dateString: string) => {
+    return format(new Date(dateString), "dd MMM yyyy", { locale: es })
+  }
 
   return (
     <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
@@ -1092,15 +1135,12 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete, onU
                 <TableHead className="font-semibold">Mensaje</TableHead>
                 <TableHead className="font-semibold">Mascotas</TableHead>
                 <TableHead className="font-semibold">Fecha</TableHead>
-                <TableHead className="font-semibold">Periodo</TableHead>
                 <TableHead className="text-right font-semibold">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <TableRow
-                  className="bg-transparent hover:bg-slate-100 dark:hover:bg-gray-800/60"
-                >
+                <TableRow className="bg-transparent hover:bg-slate-100 dark:hover:bg-gray-800/60">
                   <TableCell colSpan={8}>
                     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[40vh] lg:py-0">
                       <Spinner className="h-8 w-8 text-blue-600" />
@@ -1123,197 +1163,280 @@ function AdminRequestsTable({ requests, isLoading, onView, onEdit, onDelete, onU
                   const StatusIcon = REQUEST_STATUS[request.statusid as keyof typeof REQUEST_STATUS].icon
 
                   return (
-                    <TableRow
-                      key={request.requestid}
-                      className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/60"
-                    >
-                      <TableCell className="font-medium">{request.requestid}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
-                          <HomeIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                          <CopyText text={request.vchtitle} />
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={REQUEST_STATUS[request.statusid as keyof typeof REQUEST_STATUS].color}>
-                          <StatusIcon className="h-3 w-3 mr-1" />
-                          {REQUEST_STATUS[request.statusid as keyof typeof REQUEST_STATUS].name}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="max-w-xs">
-                          <CopyText text={request.vchmessage} /> {/* maxLength={30} /> */}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Checkbox
-                          checked={request.bnhaspets}
-                          disabled
-                          className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                        />
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {format(new Date(request.dtrequest), "dd MMM yyyy", { locale: es })}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {format(new Date(request.dtstartdate), "dd MMM yyyy", { locale: es })} -
-                        {format(new Date(request.dtenddate), "dd MMM yyyy", { locale: es })}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu modal={false}>
-                          <DropdownMenuTrigger asChild>
+                    <React.Fragment key={request.requestid}>
+                      <TableRow className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/60">
+                        <TableCell className="font-medium">{request.requestid}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center">
+                            <HomeIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                            <CopyText text={request.vchtitle} />
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={REQUEST_STATUS[request.statusid as keyof typeof REQUEST_STATUS].color}>
+                            <StatusIcon className="h-3 w-3 mr-1" />
+                            {REQUEST_STATUS[request.statusid as keyof typeof REQUEST_STATUS].name}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="max-w-xs">
+                            <CopyText text={request.vchmessage} />
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Checkbox
+                            checked={request.bnhaspets}
+                            disabled
+                            className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                          />
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          {format(new Date(request.dtrequest), "dd MMM yyyy", { locale: es })}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end items-center space-x-2">
                             <Button
                               variant="ghost"
-                              className="h-8 w-8 p-0 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900 border hover:border-gray-300 dark:hover:border-gray-800 shadow-sm" // Agrega cursor-pointer
-                              aria-label="Opciones de solicitud"
+                              size="sm"
+                              className="h-8 px-2 flex items-center gap-1 text-xs hover:bg-gray-200 dark:hover:bg-gray-900 border hover:border-gray-300 dark:hover:border-gray-800"
+                              onClick={() => toggleRowExpansion(request.requestid)}
                             >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent
-                            align="end"
-                            sideOffset={5}
-                            collisionPadding={10}
-                            className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm"
-                          >
-                            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                            <DropdownMenuItem
-                              className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white" // Hover para "Ver detalles"
-                              onSelect={() => onView(request)}
-                            >
-                              <Eye className="h-4 w-4 mr-2" />
-                              Ver detalles
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white" // Hover para "Editar"
-                              onSelect={() => onEdit(request)}
-                              disabled={!statusRequest.includes(request.statusid) && user.roleid === 1}
-                            >
-                              <Edit className="h-4 w-4 mr-2" />
-                              Editar
-                            </DropdownMenuItem>
-                            {
-                              user.roleid === 1 && request.statusid === 1 && (
+                              {expandedRows[request.requestid] ? (
                                 <>
-                                  <AlertDialog>
-                                    <AlertDialogTrigger
-                                      className="w-full"
-                                      disabled={request.statusid !== 1 && user.roleid === 1}
-                                    >
-                                      <DropdownMenuItem
-                                        onSelect={(e) => e.preventDefault()} // 👈 Evita el cierre automático
-                                        className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white w-full"
-                                        disabled={request.statusid !== 1 && user.roleid === 1}
-                                      >
-                                        <XCircle className="h-4 w-4 mr-2" />
-                                        Rechazar
-                                      </DropdownMenuItem>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
-                                      <AlertDialogHeader>
-                                        <AlertDialogTitle>¿Estás seguro de rechazar esta solicitud?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                          Esta acción no se puede deshacer. La solicitud será Rechazada permanentemente.
-                                        </AlertDialogDescription>
-                                      </AlertDialogHeader>
-                                      <AlertDialogFooter>
-                                        <AlertDialogCancel
-                                          className="bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-800 border border-gray-300 dark:border-gray-800 shadow-sm"
-                                        >
-                                          Cancelar
-                                        </AlertDialogCancel>
-                                        <AlertDialogAction
-                                          className="bg-red-600 hover:bg-red-700 text-white"
-                                          onClick={() => onUpdateStatus(request.requestid, 4, false)}
-                                        >
-                                          Rechazar
-                                        </AlertDialogAction>
-                                      </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialog>
-                                  <AlertDialog>
-                                    <AlertDialogTrigger
-                                      className="w-full"
-                                      disabled={request.statusid !== 1 && user.roleid === 1}
-                                    >
-                                      <DropdownMenuItem
-                                        onSelect={(e) => e.preventDefault()} // 👈 Evita el cierre automático
-                                        className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white w-full"
-                                        disabled={request.statusid !== 1 && user.roleid === 1}
-                                      >
-                                        <CircleCheck className="h-4 w-4 mr-2" />
-                                        Confirmar
-                                      </DropdownMenuItem>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
-                                      <AlertDialogHeader>
-                                        <AlertDialogTitle>¿Estás seguro de confirmar esta solicitud?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                          Esta acción no se puede deshacer. La solicitud será aceptada permanentemente.
-                                        </AlertDialogDescription>
-                                      </AlertDialogHeader>
-                                      <AlertDialogFooter>
-                                        <AlertDialogCancel
-                                          className="bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-800 border border-gray-300 dark:border-gray-800 shadow-sm"
-                                        >
-                                          Cancelar
-                                        </AlertDialogCancel>
-                                        <AlertDialogAction
-                                          className="bg-green-600 hover:bg-green-700 text-white dark:hover:bg-green-700 *:hover:bg-green-600 *:text-white"
-                                          onClick={() => onUpdateStatus(request.requestid, 6, true)}
-                                        >
-                                          Confirmar
-                                        </AlertDialogAction>
-                                      </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialog>
+                                  <ChevronUp className="h-4 w-4" />
                                 </>
-                              )
-                            }
-                            <DropdownMenuSeparator />
-                            <AlertDialog>
-                              <AlertDialogTrigger
-                                className="w-full"
-                                disabled={estadosPermitidos.includes(request.statusid) || user.roleid !== 1}
-                              >
-                                <DropdownMenuItem
-                                  onSelect={(e) => e.preventDefault()} // 👈 Evita el cierre automático
-                                  className="cursor-pointer text-red-600 dark:text-red-500 hover:bg-red-300 dark:hover:bg-red-800 hover:text-red-800 dark:hover:text-red-300 w-full"
-                                  disabled={estadosPermitidos.includes(request.statusid) || user.roleid !== 1}
+                              ) : (
+                                <>
+                                  <ChevronDown className="h-4 w-4" />
+                                </>
+                              )}
+                            </Button>
+                            <DropdownMenu modal={false}>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  className="h-8 w-8 p-0 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900 border hover:border-gray-300 dark:hover:border-gray-800 shadow-sm"
+                                  aria-label="Opciones de solicitud"
                                 >
-                                  <Trash2 className="h-4 w-4 mr-2" />
-                                  Eliminar
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                align="end"
+                                sideOffset={5}
+                                collisionPadding={10}
+                                className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm"
+                              >
+                                <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                                <DropdownMenuItem
+                                  className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                                  onSelect={() => onView(request)}
+                                >
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  Ver detalles
                                 </DropdownMenuItem>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>¿Estás seguro de eliminar esta solicitud?</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Esta acción no se puede deshacer. La solicitud será eliminada permanentemente.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel
-                                    className="bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-800 border border-gray-300 dark:border-gray-800 shadow-sm"
+                                <DropdownMenuItem
+                                  className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                                  onSelect={() => onEdit(request)}
+                                  disabled={!statusRequest.includes(request.statusid) && user.roleid === 1}
+                                >
+                                  <Edit className="h-4 w-4 mr-2" />
+                                  Editar
+                                </DropdownMenuItem>
+                                {user.roleid === 1 && request.statusid === 1 && (
+                                  <>
+                                    <AlertDialog>
+                                      <AlertDialogTrigger
+                                        className="w-full"
+                                        disabled={request.statusid !== 1 && user.roleid === 1}
+                                      >
+                                        <DropdownMenuItem
+                                          onSelect={(e) => e.preventDefault()}
+                                          className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white w-full"
+                                          disabled={request.statusid !== 1 && user.roleid === 1}
+                                        >
+                                          <XCircle className="h-4 w-4 mr-2" />
+                                          Rechazar
+                                        </DropdownMenuItem>
+                                      </AlertDialogTrigger>
+                                      <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
+                                        <AlertDialogHeader>
+                                          <AlertDialogTitle>¿Estás seguro de rechazar esta solicitud?</AlertDialogTitle>
+                                          <AlertDialogDescription>
+                                            Esta acción no se puede deshacer. La solicitud será Rechazada
+                                            permanentemente.
+                                          </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                          <AlertDialogCancel className="bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-800 border border-gray-300 dark:border-gray-800 shadow-sm">
+                                            Cancelar
+                                          </AlertDialogCancel>
+                                          <AlertDialogAction
+                                            className="bg-red-600 hover:bg-red-700 text-white"
+                                            onClick={() => onUpdateStatus(request.requestid, 4, false)}
+                                          >
+                                            Rechazar
+                                          </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
+                                    <AlertDialog>
+                                      <AlertDialogTrigger
+                                        className="w-full"
+                                        disabled={request.statusid !== 1 && user.roleid === 1}
+                                      >
+                                        <DropdownMenuItem
+                                          onSelect={(e) => e.preventDefault()}
+                                          className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white w-full"
+                                          disabled={request.statusid !== 1 && user.roleid === 1}
+                                        >
+                                          <CircleCheck className="h-4 w-4 mr-2" />
+                                          Confirmar
+                                        </DropdownMenuItem>
+                                      </AlertDialogTrigger>
+                                      <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
+                                        <AlertDialogHeader>
+                                          <AlertDialogTitle>
+                                            ¿Estás seguro de confirmar esta solicitud?
+                                          </AlertDialogTitle>
+                                          <AlertDialogDescription>
+                                            Esta acción no se puede deshacer. La solicitud será aceptada
+                                            permanentemente.
+                                          </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                          <AlertDialogCancel className="bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-800 border border-gray-300 dark:border-gray-800 shadow-sm">
+                                            Cancelar
+                                          </AlertDialogCancel>
+                                          <AlertDialogAction
+                                            className="bg-green-600 hover:bg-green-700 text-white dark:hover:bg-green-700 *:hover:bg-green-600 *:text-white"
+                                            onClick={() => onUpdateStatus(request.requestid, 6, true)}
+                                          >
+                                            Confirmar
+                                          </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
+                                  </>
+                                )}
+                                <DropdownMenuSeparator />
+                                <AlertDialog>
+                                  <AlertDialogTrigger
+                                    className="w-full"
+                                    disabled={estadosPermitidos.includes(request.statusid) || user.roleid !== 1}
                                   >
-                                    Cancelar
-                                  </AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => {
-                                      if (request.requestid) {
-                                        onDelete(request.requestid);
-                                      }
-                                    }}
-                                  >
-                                    Continuar
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
+                                    <DropdownMenuItem
+                                      onSelect={(e) => e.preventDefault()}
+                                      className="cursor-pointer text-red-600 dark:text-red-500 hover:bg-red-300 dark:hover:bg-red-800 hover:text-red-800 dark:hover:text-red-300 w-full"
+                                      disabled={estadosPermitidos.includes(request.statusid) || user.roleid !== 1}
+                                    >
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      Eliminar
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent className="bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-sm">
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>¿Estás seguro de eliminar esta solicitud?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Esta acción no se puede deshacer. La solicitud será eliminada permanentemente.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel className="bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-800 border border-gray-300 dark:border-gray-800 shadow-sm">
+                                        Cancelar
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => {
+                                          if (request.requestid) {
+                                            onDelete(request.requestid)
+                                          }
+                                        }}
+                                      >
+                                        Continuar
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+
+                      {/* Fila expandible con detalles */}
+                      {expandedRows[request.requestid] && (
+                        <TableRow className="bg-gray-200 dark:bg-gray-700/50">
+                          <TableCell colSpan={7} className="p-0 border-t-0">
+                            <div className="space-y-3 text-sm p-4 rounded-md m-2">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                    Periodo de arrendamiento
+                                  </h3>
+                                  <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                                    {formatDate(request.dtstartdate)} - {formatDate(request.dtenddate)}
+                                  </p>
+                                </div>
+                                <div>
+                                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Estudiante</h3>
+                                  <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                                    {request.vchstudentname} {request.vchstudentpaternalsurname}{" "}
+                                    {request.vchstudentmaternalsurname}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                  Mensaje completo
+                                </h3>
+                                <div className="mt-1 p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
+                                  <p className="text-gray-900 dark:text-gray-300 text-sm">{request.vchmessage}</p>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                    Fecha de solicitud
+                                  </h3>
+                                  <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                                    {format(new Date(request.dtrequest), "dd MMM yyyy HH:mm", { locale: es })}
+                                  </p>
+                                </div>
+                                <div>
+                                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Confirmado</h3>
+                                  <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                                    {request.bitconfirm ? "Sí" : "No"}
+                                  </p>
+                                </div>
+                                <div>
+                                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Mascotas</h3>
+                                  <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                                    {request.bnhaspets ? "Sí" : "No"}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="flex justify-end space-x-2 pt-2">
+                                <Button variant="outline" size="sm" onClick={() => onView(request)} className="h-8 hover:bg-gray-200 dark:hover:bg-gray-900 border hover:border-gray-300 dark:hover:border-gray-800">
+                                  <Eye className="h-4 w-4 mr-1" /> Ver completo
+                                </Button>
+                                <Button
+                                  variant="default"
+                                  size="sm"
+                                  className="bg-blue-600 hover:bg-blue-700 text-white h-8"
+                                  onClick={() => onEdit(request)}
+                                  disabled={!statusRequest.includes(request.statusid) && user.roleid === 1}
+                                >
+                                  <Edit className="h-4 w-4 mr-1" /> Editar
+                                </Button>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
                   )
                 })
               )}

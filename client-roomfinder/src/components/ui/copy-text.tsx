@@ -7,9 +7,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tool
 
 interface CopyTextProps {
     text: string;
+    maxLength?: number;
 }
 
-const CopyText: React.FC<CopyTextProps> = ({ text }) => {
+const CopyText: React.FC<CopyTextProps> = ({ text, maxLength }) => {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = async () => {
@@ -30,13 +31,13 @@ const CopyText: React.FC<CopyTextProps> = ({ text }) => {
                     <TooltipTrigger asChild>
                         <Button
                             onClick={handleCopy}
-                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-auto"
+                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-auto bg-gray-200 dark:bg-gray-700/50"
                             variant="copyText"
                         >
                             {copied ? <Check/> : <Copy/>}
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent >
+                    <TooltipContent side="top" className="w-auto">
                         <p>Copiar</p>
                     </TooltipContent>
                 </Tooltip>
